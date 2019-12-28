@@ -1,42 +1,46 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:mission_out/BLoC/bloc_provider.dart';
+import 'package:mission_out/BLoC/missions_bloc.dart';
 import 'package:mission_out/DataLayer/mission.dart';
 import 'package:mission_out/UI/create_screen.dart';
+import 'package:mission_out/UI/detail_screen.dart';
 
 class OverviewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final mission0 = Mission.fromJson(jsonDecode(
-        '{"description": "Lost hikers on Yale", "needForAction": "need some hikers"}'));
-    final mission1 = Mission.fromJson(jsonDecode(
-        '{"description": "Missing snowshoers", "needForAction": "need snowmobilers"}'));
+    final bloc = MissionsBloc();
+    bloc.getMissions();
 
-    final missions = [mission0, mission1, mission0, mission1];
-    return Scaffold(
-      body: _buildResults(missions),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.create),
-        onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (BuildContext context) => CreateScreen()));
-        },
-      ),
-    );
+    return BlocProvider<MissionsBloc>(
+        bloc: bloc,
+        child: Scaffold(
+            body: _buildResults(bloc),
+            floatingActionButton: FloatingActionButton(
+                child: Icon(Icons.create),
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (BuildContext context) => CreateScreen()));
+                })));
   }
 
-  Widget _buildResults(List<Mission> missions) {
-    if (missions == null) {
-      return Center(
-        child: Text('There was an error.'),
-      );
-    }
-    if (missions.isEmpty) {
-      return Center(
-        child: Text('No results'),
-      );
-    }
-    return _buildMissionResults(missions);
+  Widget _buildResults(MissionsBloc bloc) {
+    return StreamBuilder<List<Mission>>(
+        stream: bloc.missionsStream,
+        builder: (context, snapshot) {
+          final missions = snapshot.data;
+
+          if (missions == null) {
+            return Center(
+              child: Text('There was an error.'),
+            );
+          }
+          if (missions.isEmpty) {
+            return Center(
+              child: Text('No recent results.'),
+            );
+          }
+          return _buildMissionResults(missions);
+        });
   }
 
   Widget _buildMissionResults(List<Mission> missions) {
@@ -48,7 +52,10 @@ class OverviewScreen extends StatelessWidget {
             subtitle: Text(mission.needForAction),
             onTap: () => {
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => CreateScreen()))
+                  builder: (BuildContext context) => DetailScreen(
+                        mission: Mission('Lost snowmobilers',
+                            'need snowmobile team', 'cottonwood pass'),
+                      )))
             },
           );
         },

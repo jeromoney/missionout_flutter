@@ -1,22 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:mission_out/DataLayer/mission.dart';
+import 'package:mission_out/UI/response_screen.dart';
 
 class DetailScreen extends StatelessWidget {
   DetailScreen({Key key, @required this.mission}) : super(key: key);
   final Mission mission;
-  int _value = 2;
-  List<String> responseChips = [
-    'Responding',
-    'Delayed',
-    'Standby',
-    'Unavailble'
-  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text(mission.description),
@@ -25,28 +20,39 @@ class DetailScreen extends StatelessWidget {
             Text(mission.needForAction),
             Divider(),
             Text('Response'),
-            Wrap(
-              spacing: 8.0, // gap between adjacent chips
-              runSpacing: 4.0, // gap between lines
-              children:
-                  List<Widget>.generate(responseChips.length, (int index) {
-                return ChoiceChip(
-                  label: Text(responseChips[index]),
-                  selected: _value == index,
-                  onSelected: (bool selected) {
-                    _value = selected ? index : null;
+            ResponseOptions(),
+            ButtonBar(
+              children: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.chat),
+                  onPressed: () {},
+                ),
+                IconButton(
+                  icon: Icon(Icons.map),
+                  onPressed: () {},
+                ),
+                IconButton(
+                  icon: Icon(Icons.people),
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (BuildContext context) => ResponseScreen()));
                   },
-                );
-              }).toList(),
+                ),
+              ],
             ),
+            Divider(),
             ButtonBar(
               children: <Widget>[
                 FlatButton(
-                  child: const Text('BUY TICKETS'),
+                  child: const Text('Page Team'),
                   onPressed: () {/* ... */},
                 ),
                 FlatButton(
-                  child: const Text('LISTEN'),
+                  child: const Text('Edit'),
+                  onPressed: () {/* ... */},
+                ),
+                FlatButton(
+                  child: const Text('Stand down'),
                   onPressed: () {/* ... */},
                 ),
               ],
@@ -54,6 +60,37 @@ class DetailScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class ResponseOptions extends StatefulWidget {
+  @override
+  _ResponseOptionsState createState() => _ResponseOptionsState();
+}
+
+class _ResponseOptionsState extends State<ResponseOptions> {
+  int _value = 2;
+  List<String> responseChips = [
+    'Responding',
+    'Delayed',
+    'Standby',
+    'Unavailble'
+  ];
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      spacing: 8.0, // gap between adjacent chips
+      runSpacing: 4.0, // gap between lines
+      children: List<Widget>.generate(responseChips.length, (int index) {
+        return ChoiceChip(
+          label: Text(responseChips[index]),
+          selected: _value == index,
+          onSelected: (bool selected) {
+            _value = selected ? index : null;
+          },
+        );
+      }).toList(),
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mission_out/UI/overview_screen.dart';
+import 'package:mission_out/UI/signedin_screen.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -25,7 +26,7 @@ class SigninScreen extends StatelessWidget {
               child: Icon(Icons.dashboard),
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (BuildContext context) => OverviewScreen()));
+                    builder: (BuildContext context) => SignedinScreen()));
               },
             ),
           ],
