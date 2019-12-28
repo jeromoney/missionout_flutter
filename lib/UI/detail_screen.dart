@@ -4,7 +4,7 @@ import 'package:mission_out/DataLayer/mission.dart';
 class DetailScreen extends StatelessWidget {
   DetailScreen({Key key, @required this.mission}) : super(key: key);
   final Mission mission;
-  int _value = -1;
+  int _value = 2;
   List<String> responseChips = [
     'Responding',
     'Delayed',
