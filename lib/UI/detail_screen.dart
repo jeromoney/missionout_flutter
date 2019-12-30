@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mission_out/DataLayer/mission.dart';
-import 'package:mission_out/UI/response_screen.dart';
+import 'package:missionout/DataLayer/mission.dart';
+import 'package:missionout/UI/response_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DetailScreen extends StatelessWidget {
   DetailScreen({Key key, @required this.mission}) : super(key: key);
@@ -8,56 +9,107 @@ class DetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _scaffoldKey = GlobalKey<ScaffoldState>();
+
     return Scaffold(
+      key: _scaffoldKey,
       body: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Text(mission.description),
-            Text(mission.time.toString()),
-            Text(mission.locationDescription),
-            Text(mission.needForAction),
-            Divider(),
-            Text('Response'),
-            ResponseOptions(),
-            ButtonBar(
-              children: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.chat),
-                  onPressed: () {},
+        child: Padding(
+          padding: const EdgeInsets.only(left: 16.0, right: 24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Baseline(
+                baseline: 44,
+                baselineType: TextBaseline.alphabetic,
+                child: Text(
+                  mission.description,
+                  style: Theme.of(context).textTheme.headline,
                 ),
-                IconButton(
-                  icon: Icon(Icons.map),
-                  onPressed: () {},
+              ),
+              Baseline(
+                baseline: 24,
+                baselineType: TextBaseline.alphabetic,
+                child: Text(
+                  mission.time.toString(),
+                  style: Theme.of(context).textTheme.subtitle,
                 ),
-                IconButton(
-                  icon: Icon(Icons.people),
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) => ResponseScreen()));
-                  },
+              ),
+              Baseline(
+                  baseline: 32,
+                  baselineType: TextBaseline.alphabetic,
+                  child: Text(
+                    mission.locationDescription,
+                    style: Theme.of(context).textTheme.title,
+                  )),
+              Baseline(
+                baseline: 26,
+                baselineType: TextBaseline.alphabetic,
+                child: Text(
+                  mission.needForAction,
+                  style: Theme.of(context).textTheme.body1,
                 ),
-              ],
-            ),
-            Divider(),
-            ButtonBar(
-              children: <Widget>[
-                FlatButton(
-                  child: const Text('Page Team'),
-                  onPressed: () {/* ... */},
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 24.0),
+                child: Divider(
+                  thickness: 1,
                 ),
-                FlatButton(
-                  child: const Text('Edit'),
-                  onPressed: () {/* ... */},
-                ),
-                FlatButton(
-                  child: const Text('Stand down'),
-                  onPressed: () {/* ... */},
-                ),
-              ],
-            ),
-          ],
+              ),
+              Baseline(
+                  baseline: 36,
+                  baselineType: TextBaseline.alphabetic,
+                  child: Text('Response')),
+              ResponseOptions(),
+              ButtonBar(
+                children: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.chat),
+                    onPressed: () {
+                      launch('slack://channel?team=T7XTWLJAH&id=C87SW4NTA');
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.map),
+                    onPressed: () {
+                      if (mission.location == null) {
+                        _scaffoldKey.currentState.showSnackBar(SnackBar(
+                          content: Text('No location available'),
+                        ));
+                        return;
+                      }
+                      launch('geo:0,0?q=-33.8666,151.1957(Google+Sydney)');
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.people),
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) => ResponseScreen()));
+                    },
+                  ),
+                ],
+              ),
+              Divider(),
+              ButtonBar(
+                children: <Widget>[
+                  FlatButton(
+                    child: const Text('Page Team'),
+                    onPressed: () {/* ... */},
+                  ),
+                  FlatButton(
+                    child: const Text('Edit'),
+                    onPressed: () {/* ... */},
+                  ),
+                  FlatButton(
+                    child: const Text('Stand down'),
+                    onPressed: () {/* ... */},
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

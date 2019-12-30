@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mission_out/UI/signin_screen.dart';
+import 'package:missionout/UI/signin_screen.dart';
 
 class MainScreen extends StatelessWidget{
   @override

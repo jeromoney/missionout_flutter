@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:mission_out/UI/overview_screen.dart';
-import 'package:mission_out/UI/signedin_screen.dart';
+import 'package:missionout/UI/overview_screen.dart';
+import 'package:missionout/UI/signedin_screen.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -37,7 +37,7 @@ class SigninScreen extends StatelessWidget {
 }
 
 Future<FirebaseUser> _handleSignIn() async {
-  await _auth.signOut();
+
   final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
   final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 

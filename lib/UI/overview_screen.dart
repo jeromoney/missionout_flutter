@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mission_out/BLoC/bloc_provider.dart';
-import 'package:mission_out/BLoC/missions_bloc.dart';
-import 'package:mission_out/DataLayer/mission.dart';
-import 'package:mission_out/UI/create_screen.dart';
-import 'package:mission_out/UI/detail_screen.dart';
+import 'package:missionout/BLoC/bloc_provider.dart';
+import 'package:missionout/BLoC/missions_bloc.dart';
+import 'package:missionout/DataLayer/mission.dart';
+import 'package:missionout/UI/create_screen.dart';
+import 'package:missionout/UI/detail_screen.dart';
 
 class OverviewScreen extends StatelessWidget {
   @override
@@ -54,7 +54,7 @@ class OverviewScreen extends StatelessWidget {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (BuildContext context) => DetailScreen(
                         mission: Mission('Lost snowmobilers',
-                            'need snowmobile team', 'cottonwood pass'),
+                            'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'cottonwood pass'),
                       )))
             },
           );

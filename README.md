@@ -1,4 +1,4 @@
-# mission_out
+# missionout
 
 A concise dispatch app aimed at Search and Rescue
 

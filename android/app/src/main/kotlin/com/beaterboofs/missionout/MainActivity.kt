@@ -1,4 +1,4 @@
-package com.beaterboofs.mission_out
+package com.beaterboofs.missionout
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

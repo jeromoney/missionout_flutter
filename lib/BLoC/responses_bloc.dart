@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:mission_out/BLoC/bloc.dart';
-import 'package:mission_out/DataLayer/response.dart';
-import 'package:mission_out/DataLayer/response_client.dart';
+import 'package:missionout/BLoC/bloc.dart';
+import 'package:missionout/DataLayer/response.dart';
+import 'package:missionout/DataLayer/response_client.dart';
 
 class ResponsesBloc implements Bloc {
   final _client = ResponsesClient();

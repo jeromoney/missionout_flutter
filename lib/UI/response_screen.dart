@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mission_out/BLoC/bloc_provider.dart';
-import 'package:mission_out/BLoC/responses_bloc.dart';
-import 'package:mission_out/DataLayer/response.dart';
+import 'package:missionout/BLoC/bloc_provider.dart';
+import 'package:missionout/BLoC/responses_bloc.dart';
+import 'package:missionout/DataLayer/response.dart';
 
 class ResponseScreen extends StatelessWidget {
   @override
@@ -38,26 +38,18 @@ class ResponseScreen extends StatelessWidget {
   }
 
   Widget _buildResponsesResults(List<Response> responses) {
-    return DataTable(columns: [
-      DataColumn(label: Text('Team Member')),
-      DataColumn(label: Text('Status')),
-      DataColumn(label: Text('Driving Time')),
-    ], rows: [
-      DataRow(cells: [
-        DataCell(Text(responses[1].team_member)),
-        DataCell(Text('Responding')),
-        DataCell(Text('21 minutes'))
-      ]),
-      DataRow(cells: [
-        DataCell(Text('Dash')),
-        DataCell(Text('Responding')),
-        DataCell(Text('21 minutes'))
-      ]),
-      DataRow(cells: [
-        DataCell(Text('Dash')),
-        DataCell(Text('Responding')),
-        DataCell(Text('21 minutes'))
-      ])
-    ]);
+    return DataTable(
+        columns: [
+          DataColumn(label: Text('Team Member')),
+          DataColumn(label: Text('Status')),
+          DataColumn(label: Text('Driving Time')),
+        ],
+        rows: responses
+            .map((response) => DataRow(cells: <DataCell>[
+                  DataCell(Text(response.team_member)),
+                  DataCell(Text(response.status)),
+                  DataCell(Text(response.driving_time ?? '' ))
+                ]))
+            .toList());
   }
 }

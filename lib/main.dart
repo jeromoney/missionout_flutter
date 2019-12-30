@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mission_out/BLoC/bloc_provider.dart';
-import 'package:mission_out/BLoC/missions_bloc.dart';
-import 'package:mission_out/UI/main_screen.dart';
+import 'package:missionout/BLoC/bloc_provider.dart';
+import 'package:missionout/BLoC/missions_bloc.dart';
+import 'package:missionout/UI/main_screen.dart';
 
 void main() => runApp(MissionOut());
 
@@ -16,6 +16,7 @@ class MissionOut extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
+        darkTheme: ThemeData.dark(),
         home: MainScreen(),
       ),
     );

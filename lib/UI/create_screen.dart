@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mission_out/DataLayer/mission.dart';
-import 'package:mission_out/UI/detail_screen.dart';
+import 'package:missionout/DataLayer/mission.dart';
+import 'package:missionout/UI/detail_screen.dart';
 
 class CreateScreen extends StatelessWidget {
   @override
