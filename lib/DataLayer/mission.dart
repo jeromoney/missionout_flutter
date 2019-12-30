@@ -1,27 +1,31 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Mission {
-  final String key;
   final String description;
-  final DateTime time;
-  final String location;
+  final Timestamp time;
+  final GeoPoint location;
   final String needForAction;
   final String locationDescription;
   final bool isStoodDown;
+  final DocumentReference reference;
 
-  Mission(description, needForAction, locationDescription)
-      : this.key = null,
-        this.description = description,
+  Mission(description, needForAction, locationDescription, geoPoint)
+      : this.description = description,
         this.time = null,
-        this.location = null,
+        this.location = geoPoint,
         this.needForAction = needForAction,
         this.locationDescription = locationDescription,
-        this.isStoodDown = false;
+        this.isStoodDown = false,
+        this.reference = null;
 
-  Mission.fromJson(Map json)
-      : key = json['key'],
-        description = json['description'],
-        time = json['time'],
-        location = json['location'],
-        needForAction = json['needForAction'],
-        locationDescription = json['locationDescription'],
-        isStoodDown = json['isStoodDown'];
+  Mission.fromMap(Map<String, dynamic> map, {this.reference})
+      : description = map['description'],
+        time = map['time'],
+        location = map['location'],
+        needForAction = map['needForAction'],
+        locationDescription = map['locationDescription'],
+        isStoodDown = map['isStoodDown'];
+
+  Mission.fromSnapshot(DocumentSnapshot snapshot)
+      : this.fromMap(snapshot.data, reference: snapshot.reference);
 }

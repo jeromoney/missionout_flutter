@@ -1,11 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:missionout/DataLayer/mission.dart';
 
 class MissionsClient {
-  Future<List<Mission>> fetchMissions() async {
-    final mission0 = Mission('Lost hikers', 'need ground team', 'mt yale');
-    final mission1 =
-        Mission('Lost snowmobilers', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'cottonwood pass');
-    final missions = [mission0, mission1, mission0, mission1,mission0, mission1, mission0, mission1];
-    return missions;
+  Stream<QuerySnapshot> fetchMissions() {
+
+    final TEAM_ID = 'raux5KIhuIL84bBmPSPs';
+    final QUERY_LIMIT = 10;
+    return Firestore.instance.collection('teams/$TEAM_ID/missions').orderBy('time',descending: true).limit(QUERY_LIMIT).snapshots();
   }
 }

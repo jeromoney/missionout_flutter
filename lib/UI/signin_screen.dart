@@ -37,7 +37,6 @@ class SigninScreen extends StatelessWidget {
 }
 
 Future<FirebaseUser> _handleSignIn() async {
-
   final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
   final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 

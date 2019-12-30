@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/UI/response_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:intl/intl.dart';
 
 class DetailScreen extends StatelessWidget {
   DetailScreen({Key key, @required this.mission}) : super(key: key);
@@ -32,7 +34,7 @@ class DetailScreen extends StatelessWidget {
                 baseline: 24,
                 baselineType: TextBaseline.alphabetic,
                 child: Text(
-                  mission.time.toString(),
+                  formatTime(mission.time),
                   style: Theme.of(context).textTheme.subtitle,
                 ),
               ),
@@ -67,19 +69,25 @@ class DetailScreen extends StatelessWidget {
                   IconButton(
                     icon: Icon(Icons.chat),
                     onPressed: () {
-                      launch('slack://channel?team=T7XTWLJAH&id=C87SW4NTA');
+                      launch('slack://channel?team=T7XTWLJAH&id=C87SW4NTA').catchError((e){
+                        _scaffoldKey.currentState.showSnackBar(SnackBar(
+                          content: Text('Error: Is Slack installed?'),
+                        ));
+                      });
+
                     },
                   ),
                   IconButton(
                     icon: Icon(Icons.map),
-                    onPressed: () {
-                      if (mission.location == null) {
-                        _scaffoldKey.currentState.showSnackBar(SnackBar(
-                          content: Text('No location available'),
-                        ));
-                        return;
-                      }
-                      launch('geo:0,0?q=-33.8666,151.1957(Google+Sydney)');
+                    // If no location is provided, disable the button
+                    onPressed: mission.location == null ? null : () {
+                      final geoPoint = mission.location;
+                      final lat = geoPoint.latitude;
+                      final lon = geoPoint.longitude;
+                      // launches location in external map application.
+                      // currently optimized for gmaps. The location is opened
+                      // as a query "?q=" so the label is displayed.
+                      launch('geo:0,0?q=$lat,$lon');
                     },
                   ),
                   IconButton(
@@ -114,6 +122,11 @@ class DetailScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+String formatTime(Timestamp time) {
+  final dateTime = time.toDate();
+  return DateFormat('yyyy-MM-dd kk:mm').format(dateTime);
 }
 
 class ResponseOptions extends StatefulWidget {

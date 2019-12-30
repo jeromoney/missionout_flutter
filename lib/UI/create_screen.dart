@@ -1,3 +1,6 @@
+import 'dart:ffi';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/UI/detail_screen.dart';
@@ -93,10 +96,11 @@ class MissionFormState extends State<MissionForm> {
                   final description = descriptionController.text;
                   final needForAction = actionController.text;
                   final locationDescription = locationController.text;
-                  final lat = latitudeController.text;
-                  final lon = longitudeController.text;
+                  final latitude = double.parse(latitudeController.text);
+                  final longitude = double.parse(longitudeController.text);
+                  final geoPoint = GeoPoint(latitude,longitude);
 
-                  final mission = Mission(description, needForAction, locationDescription);
+                  final mission = Mission(description, needForAction, locationDescription, geoPoint);
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (BuildContext context) => DetailScreen(mission: mission)));
                 }

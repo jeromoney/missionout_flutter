@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/BLoC/bloc_provider.dart';
 import 'package:missionout/BLoC/missions_bloc.dart';
@@ -9,7 +10,6 @@ class OverviewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = MissionsBloc();
-    bloc.getMissions();
 
     return BlocProvider<MissionsBloc>(
         bloc: bloc,
@@ -24,21 +24,34 @@ class OverviewScreen extends StatelessWidget {
   }
 
   Widget _buildResults(MissionsBloc bloc) {
-    return StreamBuilder<List<Mission>>(
+    return StreamBuilder<QuerySnapshot>(
         stream: bloc.missionsStream,
         builder: (context, snapshot) {
-          final missions = snapshot.data;
+          // handle waiting
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return LinearProgressIndicator();
+          }
 
-          if (missions == null) {
+          // handle error
+          if (snapshot.data == null) {
             return Center(
               child: Text('There was an error.'),
             );
           }
-          if (missions.isEmpty) {
+
+          // handle sucessful query
+          final documents = snapshot.data.documents;
+          final missions =
+              documents.map((data) => Mission.fromSnapshot(data)).toList();
+          // removing missions with incomplete fields. This is a little crude
+          missions.removeWhere((mission) => mission == null);
+
+          if (documents.length == 0) {
             return Center(
               child: Text('No recent results.'),
             );
           }
+
           return _buildMissionResults(missions);
         });
   }
@@ -48,13 +61,12 @@ class OverviewScreen extends StatelessWidget {
         itemBuilder: (BuildContext context, int index) {
           final mission = missions[index];
           return ListTile(
-            title: Text(mission.description),
-            subtitle: Text(mission.needForAction),
+            title: Text(mission.description ?? ''),
+            subtitle: Text(mission.needForAction ?? ''),
             onTap: () => {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (BuildContext context) => DetailScreen(
-                        mission: Mission('Lost snowmobilers',
-                            'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'cottonwood pass'),
+                        mission: mission,
                       )))
             },
           );

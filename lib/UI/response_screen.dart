@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/BLoC/bloc_provider.dart';
 import 'package:missionout/BLoC/responses_bloc.dart';
@@ -7,7 +8,6 @@ class ResponseScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = ResponsesBloc();
-    bloc.getResponses();
 
     return BlocProvider<ResponsesBloc>(
       bloc: bloc,
@@ -18,7 +18,7 @@ class ResponseScreen extends StatelessWidget {
   }
 
   Widget _buildResults(ResponsesBloc bloc) {
-    return StreamBuilder<List<Response>>(
+    return StreamBuilder<QuerySnapshot>(
       stream: bloc.responsesStream,
       builder: (context, snapshot) {
         final responses = snapshot.data;
@@ -27,12 +27,13 @@ class ResponseScreen extends StatelessWidget {
             child: Text('There was an error.'),
           );
         }
-        if (responses.isEmpty) {
+        if (false) {
           return Center(
             child: Text('No results.'),
           );
         }
-        return _buildResponsesResults(responses);
+        return Center();
+        return _buildResponsesResults(null);
       },
     );
   }
