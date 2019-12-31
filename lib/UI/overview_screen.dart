@@ -5,6 +5,7 @@ import 'package:missionout/BLoC/missions_bloc.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/UI/create_screen.dart';
 import 'package:missionout/UI/detail_screen.dart';
+import 'package:missionout/UI/my_appbar.dart';
 
 class OverviewScreen extends StatelessWidget {
   @override
@@ -14,6 +15,7 @@ class OverviewScreen extends StatelessWidget {
     return BlocProvider<MissionsBloc>(
         bloc: bloc,
         child: Scaffold(
+          appBar: MyAppBar(title: Text('Missions Overview'),),
             body: _buildResults(bloc),
             floatingActionButton: FloatingActionButton(
                 child: Icon(Icons.create),

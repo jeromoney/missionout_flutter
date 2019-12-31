@@ -4,11 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/UI/detail_screen.dart';
+import 'package:missionout/UI/my_appbar.dart';
 
 class CreateScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: MyAppBar(title: Text('Create a mission'),),
       body: MissionForm(),
     );
   }

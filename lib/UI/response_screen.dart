@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:missionout/BLoC/bloc_provider.dart';
 import 'package:missionout/BLoC/responses_bloc.dart';
 import 'package:missionout/DataLayer/response.dart';
+import 'package:missionout/UI/my_appbar.dart';
 
 class ResponseScreen extends StatelessWidget {
   @override
@@ -11,17 +12,19 @@ class ResponseScreen extends StatelessWidget {
 
     return BlocProvider<ResponsesBloc>(
       bloc: bloc,
-      child: Material(
-        child: _buildResults(bloc),
+      child: Scaffold(
+        appBar: MyAppBar(title: Text('Responses'),),
+        body: _buildResults(bloc),
       ),
     );
   }
 
   Widget _buildResults(ResponsesBloc bloc) {
-    return StreamBuilder<QuerySnapshot>(
+    return StreamBuilder<List<Response>>(
       stream: bloc.responsesStream,
       builder: (context, snapshot) {
-        final responses = snapshot.data;
+        final responses = ResponsesBloc().getResponses();
+
         if (responses == null) {
           return Center(
             child: Text('There was an error.'),
@@ -32,8 +35,7 @@ class ResponseScreen extends StatelessWidget {
             child: Text('No results.'),
           );
         }
-        return Center();
-        return _buildResponsesResults(null);
+        return _buildResponsesResults(responses);
       },
     );
   }
@@ -49,7 +51,7 @@ class ResponseScreen extends StatelessWidget {
             .map((response) => DataRow(cells: <DataCell>[
                   DataCell(Text(response.team_member)),
                   DataCell(Text(response.status)),
-                  DataCell(Text(response.driving_time ?? '' ))
+                  DataCell(Text(response.driving_time ?? ''))
                 ]))
             .toList());
   }

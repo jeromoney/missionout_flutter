@@ -7,10 +7,16 @@ import 'package:missionout/DataLayer/response_client.dart';
 
 class ResponsesBloc implements Bloc {
   final _client = ResponsesClient();
+  final _responsesController = StreamController<List<Response>>();
 
-  Stream<QuerySnapshot> get responsesStream => _client.fetchResponses();
+  Stream<List<Response>> get responsesStream => _responsesController.stream;
+
+  List<Response> getResponses()  {
+    return _client.fetchResponses();
+  }
 
   @override
   void dispose() {
+    _responsesController.close();
   }
 }

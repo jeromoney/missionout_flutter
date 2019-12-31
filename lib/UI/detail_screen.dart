@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/DataLayer/mission.dart';
+import 'package:missionout/UI/my_appbar.dart';
 import 'package:missionout/UI/response_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
@@ -14,6 +15,7 @@ class DetailScreen extends StatelessWidget {
     final _scaffoldKey = GlobalKey<ScaffoldState>();
 
     return Scaffold(
+      appBar: MyAppBar(title: Text('Mission Detail'),),
       key: _scaffoldKey,
       body: Center(
         child: Padding(
