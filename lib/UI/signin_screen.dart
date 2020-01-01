@@ -3,8 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:missionout/UI/overview_screen.dart';
 
-final FirebaseAuth _auth = FirebaseAuth.instance;
-final GoogleSignIn _googleSignIn = GoogleSignIn();
+
 
 class SigninScreen extends StatelessWidget {
   @override
@@ -16,9 +15,9 @@ class SigninScreen extends StatelessWidget {
             MaterialButton(
               child: Icon(Icons.restaurant),
               onPressed: () {
-                _handleSignIn()
-                    .then((FirebaseUser user) => print(user))
-                    .catchError((e) => print(e));
+                _handleSignIn();
+//                    .then((FirebaseUser user) => print(user))
+//                    .catchError((e) => print(e));
               },
             ),
             MaterialButton(
@@ -36,6 +35,8 @@ class SigninScreen extends StatelessWidget {
 }
 
 Future<FirebaseUser> _handleSignIn() async {
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
   final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 

@@ -12,16 +12,13 @@ class MissionOut extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<UserBloc>(
       bloc: UserBloc(),
-      child: BlocProvider<MissionsBloc>(
-        bloc: MissionsBloc(),
-        child: MaterialApp(
-          title: 'Flutter Demo',
-          theme: ThemeData(
-            primarySwatch: Colors.blueGrey,
-          ),
-          darkTheme: ThemeData.dark(),
-          home: MainScreen(),
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blueGrey,
         ),
+        darkTheme: ThemeData.dark(),
+        home: MainScreen(),
       ),
     );
   }

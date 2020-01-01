@@ -3,26 +3,40 @@ import 'package:flutter/material.dart';
 import 'package:missionout/BLoC/bloc_provider.dart';
 import 'package:missionout/BLoC/missions_bloc.dart';
 import 'package:missionout/DataLayer/mission.dart';
+import 'package:missionout/DataLayer/user.dart';
 import 'package:missionout/UI/create_screen.dart';
 import 'package:missionout/UI/detail_screen.dart';
+import 'package:missionout/BLoC/user_bloc.dart';
 import 'package:missionout/UI/my_appbar.dart';
 
 class OverviewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final bloc = MissionsBloc();
+    return StreamBuilder<User>(
+      stream: BlocProvider.of<UserBloc>(context).userStream,
+      builder: (context, snapshot) {
+        final user = snapshot.data;
+        if (snapshot.connectionState == ConnectionState.waiting){
+          return Center();
+        }
 
-    return BlocProvider<MissionsBloc>(
-        bloc: bloc,
-        child: Scaffold(
-          appBar: MyAppBar(title: Text('Missions Overview'),),
-            body: _buildResults(bloc),
-            floatingActionButton: FloatingActionButton(
-                child: Icon(Icons.create),
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) => CreateScreen()));
-                })));
+        assert(user != null);
+        final bloc = MissionsBloc(user.TEAM_ID);
+        return BlocProvider<MissionsBloc>(
+            bloc: bloc,
+            child: Scaffold(
+                appBar: MyAppBar(
+                  title: Text('Missions Overview'),
+                ),
+                body: _buildResults(bloc),
+                floatingActionButton: FloatingActionButton(
+                    child: Icon(Icons.create),
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) => CreateScreen()));
+                    })));
+      },
+    );
   }
 
   Widget _buildResults(MissionsBloc bloc) {
