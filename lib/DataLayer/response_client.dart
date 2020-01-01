@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:missionout/DataLayer/response.dart';
 
 class ResponsesClient {
@@ -68,13 +67,13 @@ class ResponsesClient {
       final responseIndex = numGenerator.nextInt(responses.length);
       final responseValue = responses[responseIndex];
 
-      var driving_time = null;
+      var drivingTime;
       if (responseValue == 'Responding') {
-        final random_time = numGenerator.nextInt(60);
-        driving_time = '$random_time mins';
+        final randomTime = numGenerator.nextInt(60);
+        drivingTime = '$randomTime mins';
       }
 
-      responseList.add(Response(name, responseValue, driving_time));
+      responseList.add(Response(name, responseValue, drivingTime));
     }
 
     return responseList;

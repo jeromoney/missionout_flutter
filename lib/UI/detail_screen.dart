@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:missionout/BLoC/bloc_provider.dart';
+import 'package:missionout/BLoC/user_bloc.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/UI/my_appbar.dart';
 import 'package:missionout/UI/response_screen.dart';
@@ -13,9 +15,10 @@ class DetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _scaffoldKey = GlobalKey<ScaffoldState>();
+    final userBloc = BlocProvider.of<UserBloc>(context);
 
     return Scaffold(
-      appBar: MyAppBar(title: Text('Mission Detail'),),
+      appBar: MyAppBar(title: Text('Mission Detail'),photoURL: userBloc.user.photoUrl,),
       key: _scaffoldKey,
       body: Center(
         child: Padding(

@@ -1,22 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 
 class Response {
-  final String team_member;
+  final String teamMember;
   final String status;
-  final String driving_time;
+  final String drivingTime;
   final DocumentReference reference;
 
-  Response(@required team_member, status, driving_time)
-      : this.team_member = team_member,
+  Response(teamMember, status, drivingTime)
+      : this.teamMember = teamMember,
         this.status = status,
-        this.driving_time = driving_time,
+        this.drivingTime = drivingTime,
         this.reference = null;
 
   Response.fromMap(Map<String, dynamic> map, {this.reference})
-      : team_member = map['name'],
+      : teamMember = map['name'],
         status = map['response'],
-        driving_time = map['driving_time'];
+        drivingTime = map['driving_time'];
 
   Response.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data, reference: snapshot.reference);

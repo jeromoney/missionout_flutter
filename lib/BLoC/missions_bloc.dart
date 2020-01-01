@@ -7,16 +7,16 @@ import 'package:missionout/DataLayer/mission_client.dart';
 
 class MissionsBloc implements Bloc {
   var _missions = <Mission>[];
-  final String _team_id;
+  final String _teamId;
 
-  MissionsBloc(String team_id) : this._team_id = team_id;
+  MissionsBloc(String teamId) : this._teamId = teamId;
 
   List<Mission> get missions => _missions;
   final _client = MissionsClient();
 
   final missionsController = StreamController();
 
-  Stream<QuerySnapshot> get missionsStream => _client.fetchMissions(_team_id);
+  Stream<QuerySnapshot> get missionsStream => _client.fetchMissions(_teamId);
 
   void addMission(Mission mission) {
     missionsController.sink.add(mission);

@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/BLoC/bloc_provider.dart';
 import 'package:missionout/BLoC/responses_bloc.dart';
@@ -30,7 +29,7 @@ class ResponseScreen extends StatelessWidget {
             child: Text('There was an error.'),
           );
         }
-        if (false) {
+        if (responses.length == 0) {
           return Center(
             child: Text('No results.'),
           );
@@ -49,9 +48,9 @@ class ResponseScreen extends StatelessWidget {
         ],
         rows: responses
             .map((response) => DataRow(cells: <DataCell>[
-                  DataCell(Text(response.team_member)),
+                  DataCell(Text(response.teamMember)),
                   DataCell(Text(response.status)),
-                  DataCell(Text(response.driving_time ?? ''))
+                  DataCell(Text(response.drivingTime?? ''))
                 ]))
             .toList());
   }
