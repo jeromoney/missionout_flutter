@@ -11,4 +11,8 @@ class UserBloc implements Bloc {
   void dispose() {
     // TODO: implement dispose
   }
+
+  handleSignIn() {
+    _client.handleSignIn();
+  }
 }
