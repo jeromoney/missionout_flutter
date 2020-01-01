@@ -13,7 +13,7 @@ class MainScreen extends StatelessWidget {
       builder: (context, snapshot) {
         final user = snapshot.data;
         if (user == null) {
-          return SigninScreen();
+          return SigninScreen(title: 'sometitle');
         }
         else{
           return OverviewScreen();
