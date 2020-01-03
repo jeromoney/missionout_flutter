@@ -22,15 +22,14 @@ class OverviewScreen extends StatelessWidget {
             appBar: MyAppBar(
               title: Text('Missions Overview'),
               photoURL: user.photoUrl,
+              context: context,
             ),
             body: _buildResults(missionsBloc),
             floatingActionButton: FloatingActionButton(
                 child: Icon(Icons.create),
                 onPressed: () {
-                  userBloc.handleSignOut();
-
-                  /*Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) => CreateScreen()));*/
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (BuildContext context) => CreateScreen()));
                 })));
   }
 
@@ -38,19 +37,19 @@ class OverviewScreen extends StatelessWidget {
     return StreamBuilder<QuerySnapshot>(
         stream: bloc.missionsStream,
         builder: (context, snapshot) {
-          // handle waiting
+          // waiting
           if (snapshot.connectionState == ConnectionState.waiting) {
             return LinearProgressIndicator();
           }
 
-          // handle error
+          // error
           if (snapshot.data == null) {
             return Center(
               child: Text('There was an error.'),
             );
           }
 
-          // handle successful query
+          // successful query
           final documents = snapshot.data.documents;
           final missions =
               documents.map((data) => Mission.fromSnapshot(data)).toList();

@@ -18,6 +18,9 @@ class MissionsBloc implements Bloc {
 
   Stream<QuerySnapshot> get missionsStream => _client.fetchMissions(_teamId);
 
+  Stream<DocumentSnapshot> singleMissionStream(String docId) =>
+      _client.fetchSingleMissions(teamId: _teamId, docId: docId);
+
   void addMission(Mission mission) {
     missionsController.sink.add(mission);
   }

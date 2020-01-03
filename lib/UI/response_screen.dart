@@ -12,7 +12,10 @@ class ResponseScreen extends StatelessWidget {
     return BlocProvider<ResponsesBloc>(
       bloc: bloc,
       child: Scaffold(
-        appBar: MyAppBar(title: Text('Responses'),),
+        appBar: MyAppBar(
+          title: Text('Responses'),
+          context: context,
+        ),
         body: _buildResults(bloc),
       ),
     );
@@ -50,7 +53,7 @@ class ResponseScreen extends StatelessWidget {
             .map((response) => DataRow(cells: <DataCell>[
                   DataCell(Text(response.teamMember)),
                   DataCell(Text(response.status)),
-                  DataCell(Text(response.drivingTime?? ''))
+                  DataCell(Text(response.drivingTime ?? ''))
                 ]))
             .toList());
   }

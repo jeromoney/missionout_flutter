@@ -1,6 +1,7 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:missionout/BLoC/bloc_provider.dart';
+import 'package:missionout/BLoC/user_bloc.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/UI/detail_screen.dart';
 import 'package:missionout/UI/my_appbar.dart';
@@ -8,8 +9,13 @@ import 'package:missionout/UI/my_appbar.dart';
 class CreateScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final bloc = BlocProvider.of<UserBloc>(context);
     return Scaffold(
-      appBar: MyAppBar(title: Text('Create a mission'),),
+      appBar: MyAppBar(
+        title: Text('Create a mission'),
+        context: context,
+        photoURL: bloc.user.photoUrl,
+      ),
       body: MissionForm(),
     );
   }
@@ -61,30 +67,29 @@ class MissionFormState extends State<MissionForm> {
             decoration: InputDecoration(labelText: 'Lat'),
             validator: (value) {
               final valueAsDouble = double.tryParse(value);
-              if (valueAsDouble == null){
+              if (valueAsDouble == null) {
                 return 'Enter a valid number';
               }
-              if (-90.0 > valueAsDouble || valueAsDouble > 90.0){
+              if (-90.0 > valueAsDouble || valueAsDouble > 90.0) {
                 return 'Enter a valid latitude';
               }
               return null;
             },
           ),
           TextFormField(
-            controller: longitudeController,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(labelText: 'Lon'),
+              controller: longitudeController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(labelText: 'Lon'),
               validator: (value) {
                 final valueAsDouble = double.tryParse(value);
-                if (valueAsDouble == null){
+                if (valueAsDouble == null) {
                   return 'Enter a valid number';
                 }
-                if (-180.0 > valueAsDouble || valueAsDouble > 180.0){
+                if (-180.0 > valueAsDouble || valueAsDouble > 180.0) {
                   return 'Enter a valid longitude';
                 }
                 return null;
-              }
-          ),
+              }),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: RaisedButton(
@@ -99,11 +104,13 @@ class MissionFormState extends State<MissionForm> {
                   final locationDescription = locationController.text;
                   final latitude = double.parse(latitudeController.text);
                   final longitude = double.parse(longitudeController.text);
-                  final geoPoint = GeoPoint(latitude,longitude);
+                  final geoPoint = GeoPoint(latitude, longitude);
 
-                  final mission = Mission(description, needForAction, locationDescription, geoPoint);
+                  final mission = Mission(description, needForAction,
+                      locationDescription, geoPoint);
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) => DetailScreen(mission: mission)));
+                      builder: (BuildContext context) =>
+                          DetailScreen(mission: mission)));
                 }
               },
             ),
