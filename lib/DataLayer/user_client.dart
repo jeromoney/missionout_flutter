@@ -1,15 +1,12 @@
+
+import 'dart:collection';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:missionout/DataLayer/user.dart';
+import 'package:tuple/tuple.dart';
 
 class UserClient {
-  Stream<User> fetchUser() {
-    var userStream =
-        Stream<User>.periodic(Duration(seconds: 40), (x) => User(null)).take(2);
-    return userStream;
-  }
-
-  Future<FirebaseUser> handleSignIn() async {
+  Future<Tuple2<FirebaseUser, HashMap<dynamic, dynamic>>> handleSignIn() async {
     final GoogleSignIn _googleSignIn = GoogleSignIn();
     final FirebaseAuth _auth = FirebaseAuth.instance;
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
@@ -24,7 +21,12 @@ class UserClient {
     final FirebaseUser user =
         (await _auth.signInWithCredential(credential)).user;
     print("signed in " + user.displayName);
-    return user;
+
+    // got the user, now get the custom claims
+
+    final idTokenResult = await user.getIdToken();
+    final claims = HashMap.from(idTokenResult.claims);
+    return Tuple2(user, claims);
   }
 
   Future<FirebaseUser> handleSignOut() async {

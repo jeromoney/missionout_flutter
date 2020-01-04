@@ -4,25 +4,28 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:missionout/BLoC/bloc.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/DataLayer/mission_client.dart';
+import 'package:flutter/foundation.dart';
 
 class MissionsBloc implements Bloc {
   var _missions = <Mission>[];
-  final String _teamId;
+  Mission _singleMission;
+  final String _domain;
 
-  MissionsBloc(String teamId) : this._teamId = teamId;
+  MissionsBloc({@required String domain}) : this._domain = domain;
 
   List<Mission> get missions => _missions;
   final _client = MissionsClient();
 
   final missionsController = StreamController();
 
-  Stream<QuerySnapshot> get missionsStream => _client.fetchMissions(_teamId);
+  Stream<QuerySnapshot> get missionsStream =>
+      _client.fetchMissions(teamId: _domain);
 
-  Stream<DocumentSnapshot> singleMissionStream(String docId) =>
-      _client.fetchSingleMissions(teamId: _teamId, docId: docId);
+  Stream<DocumentSnapshot> singleMissionStream({@required String docId}) =>
+      _client.fetchSingleMissions(teamId: _domain, docId: docId);
 
-  void addMission(Mission mission) {
-    missionsController.sink.add(mission);
+  Future<DocumentReference> addMission({@required Mission mission}) async {
+    return await _client.addMission(teamId: _domain, mission: mission);
   }
 
   @override

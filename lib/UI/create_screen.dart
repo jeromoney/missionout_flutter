@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/BLoC/bloc_provider.dart';
+import 'package:missionout/BLoC/missions_bloc.dart';
 import 'package:missionout/BLoC/user_bloc.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/UI/detail_screen.dart';
@@ -36,86 +37,105 @@ class MissionFormState extends State<MissionForm> {
   final latitudeController = TextEditingController();
   final longitudeController = TextEditingController();
 
+
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          TextFormField(
-            controller: descriptionController,
-            decoration: InputDecoration(labelText: 'Description'),
-            validator: (value) {
-              if (value.isEmpty) {
-                return 'Description required';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            controller: actionController,
-            decoration: InputDecoration(labelText: 'Need for action'),
-          ),
-          TextFormField(
-            controller: locationController,
-            decoration: InputDecoration(labelText: 'Location description'),
-          ),
-          TextFormField(
-            controller: latitudeController,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(labelText: 'Lat'),
-            validator: (value) {
-              final valueAsDouble = double.tryParse(value);
-              if (valueAsDouble == null) {
-                return 'Enter a valid number';
-              }
-              if (-90.0 > valueAsDouble || valueAsDouble > 90.0) {
-                return 'Enter a valid latitude';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-              controller: longitudeController,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            TextFormField(
+              controller: descriptionController,
+              decoration: InputDecoration(labelText: 'Description'),
+              validator: (value) {
+                if (value.isEmpty) {
+                  return 'Description required';
+                }
+                return null;
+              },
+            ),
+            TextFormField(
+              controller: actionController,
+              decoration: InputDecoration(labelText: 'Need for action'),
+            ),
+            TextFormField(
+              controller: locationController,
+              decoration: InputDecoration(labelText: 'Location description'),
+            ),
+            TextFormField(
+              controller: latitudeController,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(labelText: 'Lon'),
+              decoration: InputDecoration(labelText: 'Lat'),
               validator: (value) {
                 final valueAsDouble = double.tryParse(value);
                 if (valueAsDouble == null) {
                   return 'Enter a valid number';
                 }
-                if (-180.0 > valueAsDouble || valueAsDouble > 180.0) {
-                  return 'Enter a valid longitude';
+                if (-90.0 > valueAsDouble || valueAsDouble > 90.0) {
+                  return 'Enter a valid latitude';
                 }
                 return null;
-              }),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: RaisedButton(
-              child: Text('Submit'),
-              onPressed: () {
-                if (_formKey.currentState.validate()) {
-                  Scaffold.of(context).showSnackBar(SnackBar(
-                    content: Text('Processing'),
-                  ));
-                  final description = descriptionController.text;
-                  final needForAction = actionController.text;
-                  final locationDescription = locationController.text;
-                  final latitude = double.parse(latitudeController.text);
-                  final longitude = double.parse(longitudeController.text);
-                  final geoPoint = GeoPoint(latitude, longitude);
-
-                  final mission = Mission(description, needForAction,
-                      locationDescription, geoPoint);
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) =>
-                          DetailScreen(mission: mission)));
-                }
               },
             ),
-          )
-        ],
+            TextFormField(
+                controller: longitudeController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(labelText: 'Lon'),
+                validator: (value) {
+                  final valueAsDouble = double.tryParse(value);
+                  if (valueAsDouble == null) {
+                    return 'Enter a valid number';
+                  }
+                  if (-180.0 > valueAsDouble || valueAsDouble > 180.0) {
+                    return 'Enter a valid longitude';
+                  }
+                  return null;
+                }),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: RaisedButton(
+                child: Text('Submit'),
+                onPressed: () {
+                  if (_formKey.currentState.validate()) {
+                    Scaffold.of(context).showSnackBar(SnackBar(
+                      content: Text('Processing'),
+                    ));
+                    final description = descriptionController.text;
+                    final needForAction = actionController.text;
+                    final locationDescription = locationController.text;
+                    final latitude = double.parse(latitudeController.text);
+                    final longitude = double.parse(longitudeController.text);
+                    final geoPoint = GeoPoint(latitude, longitude);
+
+                    final mission = Mission(description, needForAction,
+                        locationDescription, geoPoint);
+                    final missionsBloc =
+                        MissionsBloc(domain: 'chaffeecountysarnorth.org');
+
+                    missionsBloc
+                        .addMission(mission: mission)
+                        .then((documentReference) {
+                      if (documentReference == null) {
+                        // there was an error adding mission to database
+                        Scaffold.of(context).showSnackBar(SnackBar(
+                          content: Text('Error uploading mission'),
+                        ));
+                        return;
+                      }
+                      mission.reference = documentReference;
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              DetailScreen(mission: mission)));
+                    });
+                  }
+                },
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

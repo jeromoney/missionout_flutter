@@ -2,12 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Mission {
   final String description;
-  final Timestamp time;
+  Timestamp time;
   final GeoPoint location;
   final String needForAction;
   final String locationDescription;
   final bool isStoodDown;
-  final DocumentReference reference;
+  DocumentReference
+      reference; // A document reference is created once the mission is uploaded
 
   Mission(description, needForAction, locationDescription, geoPoint)
       : this.description = description,
@@ -28,4 +29,13 @@ class Mission {
 
   Mission.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data, reference: snapshot.reference);
+
+  Map<String, dynamic> toJson() => {
+        'description': description,
+        'location': location,
+        'needForAction': needForAction,
+        'locationDescription': locationDescription,
+        'stoodDown': isStoodDown,
+        'time': FieldValue.serverTimestamp(),
+      };
 }

@@ -12,10 +12,9 @@ class OverviewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userBloc = BlocProvider.of<UserBloc>(context);
-
     final user = userBloc.user;
     assert(user != null);
-    final missionsBloc = MissionsBloc('raux5KIhuIL84bBmPSPs');
+    final missionsBloc = MissionsBloc(domain: userBloc.domain);
     return BlocProvider<MissionsBloc>(
         bloc: missionsBloc,
         child: Scaffold(
@@ -25,12 +24,14 @@ class OverviewScreen extends StatelessWidget {
               context: context,
             ),
             body: _buildResults(missionsBloc),
-            floatingActionButton: FloatingActionButton(
-                child: Icon(Icons.create),
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) => CreateScreen()));
-                })));
+            floatingActionButton: userBloc.isEditor
+                ? FloatingActionButton(
+                    child: Icon(Icons.create),
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) => CreateScreen()));
+                    })
+                : null));
   }
 
   Widget _buildResults(MissionsBloc bloc) {

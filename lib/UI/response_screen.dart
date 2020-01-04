@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:missionout/BLoC/bloc_provider.dart';
 import 'package:missionout/BLoC/responses_bloc.dart';
+import 'package:missionout/BLoC/user_bloc.dart';
 import 'package:missionout/DataLayer/response.dart';
 import 'package:missionout/UI/my_appbar.dart';
 
@@ -8,12 +9,15 @@ class ResponseScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = ResponsesBloc();
+    final userBloc = BlocProvider.of<UserBloc>(context);
+    final user = userBloc.user;
 
     return BlocProvider<ResponsesBloc>(
       bloc: bloc,
       child: Scaffold(
         appBar: MyAppBar(
           title: Text('Responses'),
+          photoURL: user.photoUrl,
           context: context,
         ),
         body: _buildResults(bloc),
