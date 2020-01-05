@@ -14,9 +14,15 @@ class Response {
 
   Response.fromMap(Map<String, dynamic> map, {this.reference})
       : teamMember = map['name'],
-        status = map['response'],
+        status = map['status'],
         drivingTime = map['driving_time'];
 
   Response.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data, reference: snapshot.reference);
+
+  Map<String, dynamic> toJson() => {
+    'teamMember': teamMember,
+    'status': status,
+    'time': FieldValue.serverTimestamp(),
+  };
 }

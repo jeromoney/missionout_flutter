@@ -28,6 +28,12 @@ class MissionsBloc implements Bloc {
     return await _client.addMission(teamId: _domain, mission: mission);
   }
 
+  Future<DocumentReference> addResponse(
+      {@required String missionDocID, @required String uid}) async {
+    return await _client.addResponse(
+        teamId: _domain, missionDocID: missionDocID, uid: uid);
+  }
+
   @override
   void dispose() {
     missionsController.close();

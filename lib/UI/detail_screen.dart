@@ -127,7 +127,7 @@ class DetailScreen extends StatelessWidget {
                           onPressed: () {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (BuildContext context) =>
-                                    ResponseScreen()));
+                                    ResponseScreen(docID: docId)));
                           },
                         ),
                       ],

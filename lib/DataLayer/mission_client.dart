@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:flutter/foundation.dart';
+import 'package:missionout/DataLayer/response.dart';
 
 class MissionsClient {
   Stream<QuerySnapshot> fetchMissions({@required String teamId}) {
@@ -31,5 +32,19 @@ class MissionsClient {
       return null; // returning null indicates problem with firebase. user probably should just retry
     });
     return result;
+  }
+
+  Future<void> addResponse(
+      {@required String teamId,
+      @required String missionDocID,
+      @required String uid,
+      @required Response response}) async {
+    await Firestore.instance
+        .collection('teams/$teamId/missions/$missionDocID/responses')
+        .document(uid)
+        .setData(response.toJson())
+        .catchError((error) {
+      return error;
+    });
   }
 }

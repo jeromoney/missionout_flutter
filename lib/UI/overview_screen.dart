@@ -24,7 +24,7 @@ class OverviewScreen extends StatelessWidget {
               context: context,
             ),
             body: _buildResults(missionsBloc),
-            floatingActionButton: userBloc.isEditor
+            floatingActionButton: userBloc.isEditor // only show FAB to editors
                 ? FloatingActionButton(
                     child: Icon(Icons.create),
                     onPressed: () {
