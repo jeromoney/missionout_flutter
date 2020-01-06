@@ -4,11 +4,12 @@ import 'package:missionout/BLoC/bloc_provider.dart';
 import 'package:missionout/BLoC/missions_bloc.dart';
 import 'package:missionout/BLoC/user_bloc.dart';
 import 'package:missionout/DataLayer/mission.dart';
-import 'package:missionout/UI/create_screen.dart';
 import 'package:missionout/UI/my_appbar.dart';
 import 'package:missionout/UI/response_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
+import 'package:missionout/UI/create_screen.dart';
+
 
 class DetailScreen extends StatelessWidget {
   Mission
@@ -147,7 +148,7 @@ class DetailScreen extends StatelessWidget {
                               FlatButton(
                                 child: const Text('Edit'),
                                 onPressed: () {
-                                  /* ... */
+                                  Navigator.of(context).pushReplacement(CreatePopupRoute(mission));
                                 },
                               ),
                               FlatButton(

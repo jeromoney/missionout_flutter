@@ -31,7 +31,6 @@ class OverviewScreen extends StatelessWidget {
             : null);
   }
 
-
   Widget _buildResults(MissionsBloc bloc) {
     return StreamBuilder<QuerySnapshot>(
         stream: bloc.missionsStream,
@@ -70,35 +69,17 @@ class OverviewScreen extends StatelessWidget {
         itemBuilder: (BuildContext context, int index) {
           final mission = missions[index];
           final missionsBloc = BlocProvider.of<MissionsBloc>(context);
-          // store mission as mission of focus in Bloc
-          missionsBloc.detailMission = mission;
+
           return ListTile(
             title: Text(mission.description ?? ''),
             subtitle: Text(mission.needForAction ?? ''),
-            onTap: () => {Navigator.of(context).pushNamed('/detail')},
+            onTap: () {
+              missionsBloc.detailMission = mission;
+              Navigator.of(context).pushNamed('/detail');
+            },
           );
         },
         separatorBuilder: (context, index) => Divider(),
         itemCount: missions.length);
-  }
-}
-
-class CreatePopupRoute extends PopupRoute{
-  // A popup route is used so back navigation doesn't go back to this screen.
-
-  @override
-  Color get barrierColor => Colors.red;
-
-  @override
-  bool get barrierDismissible => false;
-  @override
-  String get barrierLabel => "Close";
-
-  @override
-  Duration get transitionDuration => const Duration(milliseconds: 300);
-  @override
-  Widget buildPage(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation) {
-      return CreateScreen();
   }
 }

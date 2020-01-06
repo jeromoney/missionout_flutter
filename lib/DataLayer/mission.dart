@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Mission {
-  final String description;
+  String description;
   Timestamp time;
-  final GeoPoint location;
-  final String needForAction;
-  final String locationDescription;
-  final bool isStoodDown;
+  GeoPoint location;
+  String needForAction;
+  String locationDescription;
+  bool isStoodDown;
   DocumentReference
       reference; // A document reference is created once the mission is uploaded
 

@@ -8,28 +8,40 @@ import 'package:missionout/UI/detail_screen.dart';
 import 'package:missionout/UI/my_appbar.dart';
 
 class CreateScreen extends StatelessWidget {
+  final Mission mission;
+
+  CreateScreen([Mission mission]) : this.mission = mission;
+
   @override
   Widget build(BuildContext context) {
     final bloc = BlocProvider.of<UserBloc>(context);
     return Scaffold(
       appBar: MyAppBar(
-        title: Text('Create a mission'),
+        title: Text(mission == null ? 'Create a mission' : 'Edit mission'),
         context: context,
         photoURL: bloc.user.photoUrl,
       ),
-      body: MissionForm(),
+      body: MissionForm(mission),
     );
   }
 }
 
 class MissionForm extends StatefulWidget {
+  final Mission mission;
+
+  MissionForm([Mission mission]) : this.mission = mission;
+
   @override
   MissionFormState createState() {
-    return MissionFormState();
+    return MissionFormState(mission);
   }
 }
 
 class MissionFormState extends State<MissionForm> {
+  final Mission mission;
+
+  MissionFormState([Mission mission]) : this.mission = mission;
+
   final _formKey = GlobalKey<FormState>();
   final descriptionController = TextEditingController();
   final actionController = TextEditingController();
@@ -37,9 +49,21 @@ class MissionFormState extends State<MissionForm> {
   final latitudeController = TextEditingController();
   final longitudeController = TextEditingController();
 
-
   @override
   Widget build(BuildContext context) {
+    // set the value if editing an existing mission
+    if (mission != null) {
+      descriptionController.value =
+          TextEditingValue(text: mission.description ?? '');
+      actionController.value =
+          TextEditingValue(text: mission.needForAction ?? '');
+      locationController.value =
+          TextEditingValue(text: mission.locationDescription ?? '');
+      latitudeController.value =
+          TextEditingValue(text: mission.location.latitude.toString() ?? '');
+      longitudeController.value =
+          TextEditingValue(text: mission.location.longitude.toString() ?? '');
+    }
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Form(
@@ -109,14 +133,23 @@ class MissionFormState extends State<MissionForm> {
                     final latitude = double.parse(latitudeController.text);
                     final longitude = double.parse(longitudeController.text);
                     final geoPoint = GeoPoint(latitude, longitude);
-
-                    final mission = Mission(description, needForAction,
-                        locationDescription, geoPoint);
+                    Mission firebaseMission = mission;
+                    if (firebaseMission == null) {
+                      // if mission is null that means we are creating new mission
+                      firebaseMission = Mission(description, needForAction,
+                          locationDescription, geoPoint);
+                    }
+                    else {
+                      // update existing mission
+                      firebaseMission.description = description;
+                      firebaseMission.needForAction = needForAction;
+                      firebaseMission.locationDescription = locationDescription;
+                      firebaseMission.location = geoPoint;
+                    }
                     final missionsBloc = BlocProvider.of<MissionsBloc>(context);
 
-
                     missionsBloc
-                        .addMission(mission: mission)
+                        .addMission(mission: firebaseMission)
                         .then((documentReference) {
                       if (documentReference == null) {
                         // there was an error adding mission to database
@@ -125,8 +158,8 @@ class MissionFormState extends State<MissionForm> {
                         ));
                         return;
                       }
-                      mission.reference = documentReference;
-                      missionsBloc.detailMission = mission;
+                      firebaseMission.reference = documentReference;
+                      missionsBloc.detailMission = firebaseMission;
                       Navigator.of(context).pushReplacementNamed('/detail');
                     });
                   }
@@ -148,5 +181,30 @@ class MissionFormState extends State<MissionForm> {
     latitudeController.dispose();
     longitudeController.dispose();
     super.dispose();
+  }
+}
+
+class CreatePopupRoute extends PopupRoute {
+  // A popup route is used so back navigation doesn't go back to this screen.
+  final Mission _mission;
+
+  CreatePopupRoute([Mission mission]) : this._mission = mission;
+
+  @override
+  Color get barrierColor => Colors.red;
+
+  @override
+  bool get barrierDismissible => false;
+
+  @override
+  String get barrierLabel => "Close";
+
+  @override
+  Duration get transitionDuration => const Duration(milliseconds: 300);
+
+  @override
+  Widget buildPage(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation) {
+    return CreateScreen(_mission);
   }
 }
