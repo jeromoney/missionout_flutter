@@ -25,6 +25,7 @@ class MyAppBar extends AppBar {
                         onPressed: () {
                           BlocProvider.of<UserBloc>(context).handleSignOut();
                           Navigator.pop(context);
+                          Navigator.of(context).pushReplacementNamed('/');
                         }),
                   ]);
 

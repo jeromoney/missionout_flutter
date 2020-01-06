@@ -12,27 +12,25 @@ class OverviewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userBloc = BlocProvider.of<UserBloc>(context);
+    final missionsBloc = BlocProvider.of<MissionsBloc>(context);
     final user = userBloc.user;
     assert(user != null);
-    final missionsBloc = MissionsBloc(domain: userBloc.domain);
-    return BlocProvider<MissionsBloc>(
-        bloc: missionsBloc,
-        child: Scaffold(
-            appBar: MyAppBar(
-              title: Text('Missions Overview'),
-              photoURL: user.photoUrl,
-              context: context,
-            ),
-            body: _buildResults(missionsBloc),
-            floatingActionButton: userBloc.isEditor // only show FAB to editors
-                ? FloatingActionButton(
-                    child: Icon(Icons.create),
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (BuildContext context) => CreateScreen()));
-                    })
-                : null));
+    return Scaffold(
+        appBar: MyAppBar(
+          title: Text('Missions Overview'),
+          photoURL: user.photoUrl,
+          context: context,
+        ),
+        body: _buildResults(missionsBloc),
+        floatingActionButton: userBloc.isEditor // only show FAB to editors
+            ? FloatingActionButton(
+                child: Icon(Icons.create),
+                onPressed: () {
+                  Navigator.of(context).push(CreatePopupRoute());
+                })
+            : null);
   }
+
 
   Widget _buildResults(MissionsBloc bloc) {
     return StreamBuilder<QuerySnapshot>(
@@ -71,18 +69,36 @@ class OverviewScreen extends StatelessWidget {
     return ListView.separated(
         itemBuilder: (BuildContext context, int index) {
           final mission = missions[index];
+          final missionsBloc = BlocProvider.of<MissionsBloc>(context);
+          // store mission as mission of focus in Bloc
+          missionsBloc.detailMission = mission;
           return ListTile(
             title: Text(mission.description ?? ''),
             subtitle: Text(mission.needForAction ?? ''),
-            onTap: () => {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => DetailScreen(
-                        mission: mission,
-                      )))
-            },
+            onTap: () => {Navigator.of(context).pushNamed('/detail')},
           );
         },
         separatorBuilder: (context, index) => Divider(),
         itemCount: missions.length);
+  }
+}
+
+class CreatePopupRoute extends PopupRoute{
+  // A popup route is used so back navigation doesn't go back to this screen.
+
+  @override
+  Color get barrierColor => Colors.red;
+
+  @override
+  bool get barrierDismissible => false;
+  @override
+  String get barrierLabel => "Close";
+
+  @override
+  Duration get transitionDuration => const Duration(milliseconds: 300);
+  @override
+  Widget buildPage(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation) {
+      return CreateScreen();
   }
 }

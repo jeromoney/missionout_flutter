@@ -4,22 +4,24 @@ import 'package:missionout/BLoC/bloc_provider.dart';
 import 'package:missionout/BLoC/missions_bloc.dart';
 import 'package:missionout/BLoC/user_bloc.dart';
 import 'package:missionout/DataLayer/mission.dart';
+import 'package:missionout/UI/create_screen.dart';
 import 'package:missionout/UI/my_appbar.dart';
 import 'package:missionout/UI/response_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
 
 class DetailScreen extends StatelessWidget {
-  DetailScreen({Key key, @required this.mission}) : super(key: key);
   Mission
       mission; // this is the mission passed by the overview or create screen.
 
   @override
   Widget build(BuildContext context) {
+    // Remove route if accessed from create screen
+
     final _scaffoldKey = GlobalKey<ScaffoldState>();
     final userBloc = BlocProvider.of<UserBloc>(context);
-    final missionsBloc = MissionsBloc(
-        domain: userBloc.domain); // i shouldn't need to recreate bloc
+    final missionsBloc = BlocProvider.of<MissionsBloc>(context);
+    mission = missionsBloc.detailMission;
     final docId = mission.reference.documentID;
     return Scaffold(
       appBar: MyAppBar(

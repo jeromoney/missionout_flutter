@@ -20,16 +20,13 @@ class ResponseScreen extends StatelessWidget {
     final responsesBloc =
         ResponsesBloc(teamDocID: userBloc.domain, docID: _docID);
 
-    return BlocProvider<ResponsesBloc>(
-      bloc: responsesBloc,
-      child: Scaffold(
-        appBar: MyAppBar(
-          title: Text('Responses'),
-          photoURL: user.photoUrl,
-          context: context,
-        ),
-        body: _buildResults(responsesBloc),
+    return Scaffold(
+      appBar: MyAppBar(
+        title: Text('Responses'),
+        photoURL: user.photoUrl,
+        context: context,
       ),
+      body: _buildResults(responsesBloc),
     );
   }
 

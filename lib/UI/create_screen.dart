@@ -112,8 +112,8 @@ class MissionFormState extends State<MissionForm> {
 
                     final mission = Mission(description, needForAction,
                         locationDescription, geoPoint);
-                    final missionsBloc =
-                        MissionsBloc(domain: 'chaffeecountysarnorth.org');
+                    final missionsBloc = BlocProvider.of<MissionsBloc>(context);
+
 
                     missionsBloc
                         .addMission(mission: mission)
@@ -126,9 +126,8 @@ class MissionFormState extends State<MissionForm> {
                         return;
                       }
                       mission.reference = documentReference;
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              DetailScreen(mission: mission)));
+                      missionsBloc.detailMission = mission;
+                      Navigator.of(context).pushReplacementNamed('/detail');
                     });
                   }
                 },
