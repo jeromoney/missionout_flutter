@@ -31,8 +31,8 @@ class ResponseScreen extends StatelessWidget {
   }
 
   Widget _buildResults(ResponsesBloc responsesBloc) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: responsesBloc.responsesStream,
+    return StreamBuilder<List<Response>>(
+      stream: responsesBloc.stream,
       builder: (context, snapshot) {
         // waiting
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -44,17 +44,15 @@ class ResponseScreen extends StatelessWidget {
           return Text('There was an error.');
         }
 
+        final responses = snapshot.data;
+
         // no results
-        if (snapshot.data.documents.length == 0) {
+        if (responses.length == 0) {
           return Center(child: Text('No responses yet.'));
         }
 
         // success
-        final documents = snapshot.data.documents;
-        final responses =
-            documents.map((data) => Response.fromSnapshot(data)).toList();
-        // removing responses with incomplete fields. This is a little crude
-        responses.removeWhere((mission) => mission == null);
+        responses.removeWhere((response) => response == null);
         return _buildResponsesResults(responses);
       },
     );
@@ -69,8 +67,8 @@ class ResponseScreen extends StatelessWidget {
         ],
         rows: responses
             .map((response) => DataRow(cells: <DataCell>[
-                  DataCell(Text(response.teamMember)),
-                  DataCell(Text(response.status)),
+                  DataCell(Text(response.teamMember??'')),
+                  DataCell(Text(response.status??'')),
                   DataCell(Text(response.drivingTime ?? ''))
                 ]))
             .toList());

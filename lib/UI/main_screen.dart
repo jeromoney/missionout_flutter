@@ -18,7 +18,7 @@ class MainScreen extends StatelessWidget {
           return SigninScreen(title: 'sometitle');
         } else {
           final missionsBloc = BlocProvider.of<MissionsBloc>(context);
-          missionsBloc.domain = userBloc.domain;
+          missionsBloc.teamID = userBloc.domain;
           return OverviewScreen();
         }
       },

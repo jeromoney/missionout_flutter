@@ -1,19 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
 class Response {
   final String teamMember;
   final String status;
-  final String drivingTime;
-  final DocumentReference reference;
+  String drivingTime;
+  DocumentReference reference;
 
-  Response(teamMember, status, drivingTime)
+  Response({@required String teamMember, @required String status})
       : this.teamMember = teamMember,
         this.status = status,
-        this.drivingTime = drivingTime,
+        this.drivingTime = null,
         this.reference = null;
 
   Response.fromMap(Map<String, dynamic> map, {this.reference})
-      : teamMember = map['name'],
+      : teamMember = map['teamMember'],
         status = map['status'],
         drivingTime = map['driving_time'];
 
@@ -21,8 +22,8 @@ class Response {
       : this.fromMap(snapshot.data, reference: snapshot.reference);
 
   Map<String, dynamic> toJson() => {
-    'teamMember': teamMember,
-    'status': status,
-    'time': FieldValue.serverTimestamp(),
-  };
+        'teamMember': teamMember,
+        'status': status,
+        'time': FieldValue.serverTimestamp(),
+      };
 }

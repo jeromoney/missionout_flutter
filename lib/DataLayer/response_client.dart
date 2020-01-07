@@ -2,10 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
 class ResponsesClient {
-  Stream<QuerySnapshot> fetchResponses(
-      {@required String teamDocID, @required String docID}) {
+  final String _teamDocID;
+  final String _docID;
+
+  ResponsesClient({@required String teamDocID, @required String docID})
+      : this._teamDocID = teamDocID,
+        this._docID = docID;
+
+  Stream<QuerySnapshot> fetchResponses() {
     return Firestore.instance
-        .collection('teams/$teamDocID/missions/$docID/responses')
+        .collection('teams/$_teamDocID/missions/$_docID/responses')
         .snapshots();
   }
 }

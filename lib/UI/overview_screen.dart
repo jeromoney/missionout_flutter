@@ -4,7 +4,6 @@ import 'package:missionout/BLoC/bloc_provider.dart';
 import 'package:missionout/BLoC/missions_bloc.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/UI/create_screen.dart';
-import 'package:missionout/UI/detail_screen.dart';
 import 'package:missionout/BLoC/user_bloc.dart';
 import 'package:missionout/UI/my_appbar.dart';
 

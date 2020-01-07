@@ -2,14 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/BLoC/bloc_provider.dart';
 import 'package:missionout/BLoC/missions_bloc.dart';
+import 'package:missionout/BLoC/single_mission_bloc.dart';
 import 'package:missionout/BLoC/user_bloc.dart';
 import 'package:missionout/DataLayer/mission.dart';
+import 'package:missionout/DataLayer/response.dart';
 import 'package:missionout/UI/my_appbar.dart';
 import 'package:missionout/UI/response_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
 import 'package:missionout/UI/create_screen.dart';
-
 
 class DetailScreen extends StatelessWidget {
   Mission
@@ -24,6 +25,9 @@ class DetailScreen extends StatelessWidget {
     final missionsBloc = BlocProvider.of<MissionsBloc>(context);
     mission = missionsBloc.detailMission;
     final docId = mission.reference.documentID;
+    final SingleMissionBloc singleMissionBloc = SingleMissionBloc(
+        teamDocID: userBloc.domain, docID: docId, uid: userBloc.user.uid);
+
     return Scaffold(
       appBar: MyAppBar(
         title: Text('Mission Detail'),
@@ -31,8 +35,8 @@ class DetailScreen extends StatelessWidget {
         context: context,
       ),
       key: _scaffoldKey,
-      body: StreamBuilder<DocumentSnapshot>(
-          stream: missionsBloc.singleMissionStream(docId: docId),
+      body: StreamBuilder<Mission>(
+          stream: singleMissionBloc.mission,
           builder: (context, snapshot) {
             // waiting
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -45,8 +49,8 @@ class DetailScreen extends StatelessWidget {
             }
 
             // success
-            mission = Mission.fromSnapshot(
-                snapshot.data); // replace the old mission with current data
+            mission =
+                snapshot.data; // replace the old mission with current data
 
             return Center(
               child: Padding(
@@ -96,7 +100,7 @@ class DetailScreen extends StatelessWidget {
                         baseline: 36,
                         baselineType: TextBaseline.alphabetic,
                         child: Text('Response')),
-                    ResponseOptions(),
+                    ResponseOptions(singleMissionBloc),
                     ButtonBar(
                       children: <Widget>[
                         IconButton(
@@ -142,19 +146,20 @@ class DetailScreen extends StatelessWidget {
                               FlatButton(
                                 child: const Text('Page Team'),
                                 onPressed: () {
-                                  /* ... */
+                                  /** Create**/
                                 },
                               ),
                               FlatButton(
                                 child: const Text('Edit'),
                                 onPressed: () {
-                                  Navigator.of(context).pushReplacement(CreatePopupRoute(mission));
+                                  Navigator.of(context).pushReplacement(
+                                      CreatePopupRoute(mission));
                                 },
                               ),
                               FlatButton(
                                 child: const Text('Stand down'),
                                 onPressed: () {
-                                  /* ... */
+                                  missionsBloc.standDownMission();
                                 },
                               ),
                             ],
@@ -178,11 +183,17 @@ String formatTime(Timestamp time) {
 }
 
 class ResponseOptions extends StatefulWidget {
+  final SingleMissionBloc singleMissionBloc;
+
+  ResponseOptions(this.singleMissionBloc);
+
   @override
-  _ResponseOptionsState createState() => _ResponseOptionsState();
+  _ResponseOptionsState createState() =>
+      _ResponseOptionsState(singleMissionBloc);
 }
 
 class _ResponseOptionsState extends State<ResponseOptions> {
+  final SingleMissionBloc singleMissionBloc;
   int _value = null;
   List<String> responseChips = [
     'Responding',
@@ -190,6 +201,8 @@ class _ResponseOptionsState extends State<ResponseOptions> {
     'Standby',
     'Unavailble'
   ];
+
+  _ResponseOptionsState(this.singleMissionBloc);
 
   @override
   Widget build(BuildContext context) {
@@ -201,7 +214,18 @@ class _ResponseOptionsState extends State<ResponseOptions> {
           label: Text(responseChips[index]),
           selected: _value == index,
           onSelected: (bool selected) {
+            final userBloc = BlocProvider.of<UserBloc>(context);
+
+            Response response;
+            if (selected) {
+              // If selected is equal to false, that means the user deselected the chip so we should pass a null value.
+              response = Response(
+                  teamMember: userBloc.user.displayName,
+                  status: responseChips[index]);
+            }
+
             setState(() {
+              singleMissionBloc.addResponse(response: response);
               _value = selected ? index : null;
             });
           },

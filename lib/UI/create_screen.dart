@@ -59,10 +59,12 @@ class MissionFormState extends State<MissionForm> {
           TextEditingValue(text: mission.needForAction ?? '');
       locationController.value =
           TextEditingValue(text: mission.locationDescription ?? '');
+      final latValue = mission.location?.latitude ?? '';
+      final lonValue = mission.location?.latitude ?? '';
       latitudeController.value =
-          TextEditingValue(text: mission.location.latitude.toString() ?? '');
+          TextEditingValue(text: latValue.toString());
       longitudeController.value =
-          TextEditingValue(text: mission.location.longitude.toString() ?? '');
+          TextEditingValue(text: lonValue.toString());
     }
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -89,12 +91,18 @@ class MissionFormState extends State<MissionForm> {
               controller: locationController,
               decoration: InputDecoration(labelText: 'Location description'),
             ),
+            Row(children: <Widget>[],),
             TextFormField(
               controller: latitudeController,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(labelText: 'Lat'),
               validator: (value) {
                 final valueAsDouble = double.tryParse(value);
+                if (longitudeController.text.isEmpty && valueAsDouble == null) {
+                  // allow null values if both lat and lon are blank
+                  return null;
+                }
+
                 if (valueAsDouble == null) {
                   return 'Enter a valid number';
                 }
@@ -110,6 +118,11 @@ class MissionFormState extends State<MissionForm> {
                 decoration: InputDecoration(labelText: 'Lon'),
                 validator: (value) {
                   final valueAsDouble = double.tryParse(value);
+                  if (latitudeController.text.isEmpty &&
+                      valueAsDouble == null) {
+                    // allow null values if both lat and lon are blank
+                    return null;
+                  }
                   if (valueAsDouble == null) {
                     return 'Enter a valid number';
                   }
@@ -119,50 +132,13 @@ class MissionFormState extends State<MissionForm> {
                   return null;
                 }),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              padding: EdgeInsets.only(
+                top: 16.0,
+              ),
               child: RaisedButton(
                 child: Text('Submit'),
                 onPressed: () {
-                  if (_formKey.currentState.validate()) {
-                    Scaffold.of(context).showSnackBar(SnackBar(
-                      content: Text('Processing'),
-                    ));
-                    final description = descriptionController.text;
-                    final needForAction = actionController.text;
-                    final locationDescription = locationController.text;
-                    final latitude = double.parse(latitudeController.text);
-                    final longitude = double.parse(longitudeController.text);
-                    final geoPoint = GeoPoint(latitude, longitude);
-                    Mission firebaseMission = mission;
-                    if (firebaseMission == null) {
-                      // if mission is null that means we are creating new mission
-                      firebaseMission = Mission(description, needForAction,
-                          locationDescription, geoPoint);
-                    }
-                    else {
-                      // update existing mission
-                      firebaseMission.description = description;
-                      firebaseMission.needForAction = needForAction;
-                      firebaseMission.locationDescription = locationDescription;
-                      firebaseMission.location = geoPoint;
-                    }
-                    final missionsBloc = BlocProvider.of<MissionsBloc>(context);
-
-                    missionsBloc
-                        .addMission(mission: firebaseMission)
-                        .then((documentReference) {
-                      if (documentReference == null) {
-                        // there was an error adding mission to database
-                        Scaffold.of(context).showSnackBar(SnackBar(
-                          content: Text('Error uploading mission'),
-                        ));
-                        return;
-                      }
-                      firebaseMission.reference = documentReference;
-                      missionsBloc.detailMission = firebaseMission;
-                      Navigator.of(context).pushReplacementNamed('/detail');
-                    });
-                  }
+                  _submitForm();
                 },
               ),
             )
@@ -181,6 +157,56 @@ class MissionFormState extends State<MissionForm> {
     latitudeController.dispose();
     longitudeController.dispose();
     super.dispose();
+  }
+
+  void _submitForm() {
+    if (_formKey.currentState.validate()) {
+      Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text('Processing'),
+      ));
+      final description = descriptionController.text;
+      final needForAction = actionController.text;
+      final locationDescription = locationController.text;
+
+      GeoPoint geoPoint;
+      if (latitudeController.text.isEmpty) {
+        // no lat/lon is given so just set to null
+        geoPoint = null;
+      } else {
+        final latitude = double.parse(latitudeController.text);
+        final longitude = double.parse(longitudeController.text);
+        geoPoint = GeoPoint(latitude, longitude);
+      }
+
+      Mission firebaseMission = mission;
+      if (firebaseMission == null) {
+        // if mission is null that means we are creating new mission
+        firebaseMission =
+            Mission(description, needForAction, locationDescription, geoPoint);
+      } else {
+        // update existing mission
+        firebaseMission.description = description;
+        firebaseMission.needForAction = needForAction;
+        firebaseMission.locationDescription = locationDescription;
+        firebaseMission.location = geoPoint;
+      }
+      final missionsBloc = BlocProvider.of<MissionsBloc>(context);
+
+      missionsBloc
+          .addMission(mission: firebaseMission)
+          .then((documentReference) {
+        if (documentReference == null) {
+          // there was an error adding mission to database
+          Scaffold.of(context).showSnackBar(SnackBar(
+            content: Text('Error uploading mission'),
+          ));
+          return;
+        }
+        firebaseMission.reference = documentReference;
+        missionsBloc.detailMission = firebaseMission;
+        Navigator.of(context).pushReplacementNamed('/detail');
+      });
+    }
   }
 }
 

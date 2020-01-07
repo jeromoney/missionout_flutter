@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:missionout/DataLayer/alarm.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:flutter/foundation.dart';
 import 'package:missionout/DataLayer/response.dart';
@@ -10,13 +11,6 @@ class MissionsClient {
         .collection('teams/$teamId/missions')
         .orderBy('time', descending: true)
         .limit(QUERY_LIMIT)
-        .snapshots();
-  }
-
-  Stream<DocumentSnapshot> fetchSingleMissions(
-      {@required String teamId, @required String docId}) {
-    return Firestore.instance
-        .document('teams/$teamId/missions/$docId')
         .snapshots();
   }
 
@@ -38,24 +32,27 @@ class MissionsClient {
       return result;
     } else {
       // reference is not null so we just update mission.
-      final dickbutt = mission.toJson();
-      await mission.reference.setData(dickbutt, merge: true);
+      await mission.reference.setData(mission.toJson(), merge: true);
       result = mission.reference;
     }
     return result;
   }
 
-  Future<void> addResponse(
+  Future<void> addAlarm(
       {@required String teamId,
       @required String missionDocID,
-      @required String uid,
-      @required Response response}) async {
+      @required Alarm alarm}) async {
     await Firestore.instance
-        .collection('teams/$teamId/missions/$missionDocID/responses')
-        .document(uid)
-        .setData(response.toJson())
-        .catchError((error) {
-      return error;
+        .collection('teams/$teamId/missions/$missionDocID/alarms')
+        .add(alarm.toJson())
+        .then((documentReference) {
+      return;
+    }).catchError((error) {
+      print('error');
     });
+  }
+
+  void standDownMission(Mission detailMission) {
+    detailMission.reference.setData({'stoodDown': true}, merge: true);
   }
 }

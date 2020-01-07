@@ -7,22 +7,22 @@ import 'package:missionout/DataLayer/response.dart';
 import 'package:missionout/DataLayer/response_client.dart';
 
 class ResponsesBloc implements Bloc {
-  final _client = ResponsesClient();
-  final String _teamDocID;
-  final String _docID;
-
-  final _responsesController = StreamController<List<Response>>();
-
   ResponsesBloc({@required String teamDocID, @required String docID})
-      : this._teamDocID = teamDocID,
-        this._docID = docID;
+      : this._client = ResponsesClient(teamDocID: teamDocID, docID: docID);
+  final _client;
 
-  Stream<QuerySnapshot> get responsesStream =>
-      _client.fetchResponses(teamDocID: _teamDocID, docID: _docID);
-
+  Stream<List<Response>> get stream {
+    Stream<QuerySnapshot> _clientStream = _client.fetchResponses();
+    return _clientStream.map((querySnapshot) {
+      List<Response> responses = querySnapshot.documents
+          .map((snapshot) => Response.fromSnapshot(snapshot))
+          .toList();
+      return responses;
+    });
+  }
 
   @override
   void dispose() {
-    _responsesController.close();
+    stream.drain();
   }
 }

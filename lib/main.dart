@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:missionout/BLoC/bloc_provider.dart';
 import 'package:missionout/BLoC/missions_bloc.dart';
+import 'package:missionout/BLoC/single_mission_bloc.dart';
 import 'package:missionout/BLoC/user_bloc.dart';
 import 'package:missionout/UI/create_screen.dart';
 import 'package:missionout/UI/detail_screen.dart';
@@ -16,18 +17,21 @@ class MissionOut extends StatelessWidget {
       bloc: UserBloc(),
       child: BlocProvider<MissionsBloc>(
         bloc: MissionsBloc(),
-        child: MaterialApp(
-          title: 'Mission Out',
-          theme: ThemeData(
-            primarySwatch: Colors.blueGrey,
+        child: BlocProvider<SingleMissionBloc>(
+          bloc: null,
+          child: MaterialApp(
+            title: 'Mission Out',
+            theme: ThemeData(
+              primarySwatch: Colors.blueGrey,
+            ),
+            darkTheme: ThemeData.dark(),
+            initialRoute: '/',
+            routes: {
+              '/': (context) => MainScreen(),
+              '/detail': (context) => DetailScreen(),
+              '/create': (context) => CreateScreen(),
+            },
           ),
-          darkTheme: ThemeData.dark(),
-          initialRoute: '/',
-          routes: {
-            '/': (context) => MainScreen(),
-            '/detail': (context) => DetailScreen(),
-            '/create': (context) => CreateScreen(),
-          },
         ),
       ),
     );
