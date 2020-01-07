@@ -4,6 +4,7 @@ import 'package:missionout/BLoC/bloc_provider.dart';
 import 'package:missionout/BLoC/missions_bloc.dart';
 import 'package:missionout/BLoC/single_mission_bloc.dart';
 import 'package:missionout/BLoC/user_bloc.dart';
+import 'package:missionout/DataLayer/page.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/DataLayer/response.dart';
 import 'package:missionout/UI/my_appbar.dart';
@@ -71,7 +72,7 @@ class DetailScreen extends StatelessWidget {
                       baseline: 24,
                       baselineType: TextBaseline.alphabetic,
                       child: Text(
-                        formatTime(mission.time),
+                        formatTime(mission.time)+(mission.isStoodDown?' stood down':''),
                         style: Theme.of(context).textTheme.subtitle,
                       ),
                     ),
@@ -87,7 +88,7 @@ class DetailScreen extends StatelessWidget {
                       baselineType: TextBaseline.alphabetic,
                       child: Text(
                         mission.needForAction,
-                        style: Theme.of(context).textTheme.body1,
+                        style: mission.isStoodDown ? TextStyle(decoration: TextDecoration.lineThrough): Theme.of(context).textTheme.body1,
                       ),
                     ),
                     Padding(
@@ -146,7 +147,8 @@ class DetailScreen extends StatelessWidget {
                               FlatButton(
                                 child: const Text('Page Team'),
                                 onPressed: () {
-                                  /** Create**/
+                                  final page = Page(action: mission.needForAction, description: mission.description);
+                                  singleMissionBloc.pageTeam(page);
                                 },
                               ),
                               FlatButton(
@@ -157,9 +159,9 @@ class DetailScreen extends StatelessWidget {
                                 },
                               ),
                               FlatButton(
-                                child: const Text('Stand down'),
+                                child: Text(mission.isStoodDown? '(un)Standown' : 'Stand down'),
                                 onPressed: () {
-                                  missionsBloc.standDownMission();
+                                  singleMissionBloc.standDownMission(standDown: !mission.isStoodDown);
                                 },
                               ),
                             ],

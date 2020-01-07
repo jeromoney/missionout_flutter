@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:missionout/DataLayer/page.dart';
 import 'package:missionout/DataLayer/response.dart';
 
 class SingleMissionClient {
@@ -30,5 +31,14 @@ class SingleMissionClient {
     } else {
       await document.delete();
     }
+  }
+
+  void addPage(Page page) {
+    Firestore.instance.collection('teams/$_teamID/missions/$_docID/alarms').add(page.toJson());
+  }
+
+  void standDown({@required bool standDown}) {
+    Firestore.instance
+        .document('teams/$_teamID/missions/$_docID').updateData({'stoodDown':standDown});
   }
 }

@@ -10,7 +10,6 @@ class SigninScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = BlocProvider.of<UserBloc>(context);
-
     return Scaffold(
         body: Center(
       child: GoogleSignInButton(

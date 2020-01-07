@@ -32,6 +32,8 @@ dependencies:
   intl: ^0.16.0
   flutter_auth_buttons: ^0.6.0
   tuple: ^1.0.3
+  flutter_local_notifications: ^0.9.1+2
+
 
 
 

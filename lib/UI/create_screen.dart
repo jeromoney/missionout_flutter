@@ -61,10 +61,8 @@ class MissionFormState extends State<MissionForm> {
           TextEditingValue(text: mission.locationDescription ?? '');
       final latValue = mission.location?.latitude ?? '';
       final lonValue = mission.location?.latitude ?? '';
-      latitudeController.value =
-          TextEditingValue(text: latValue.toString());
-      longitudeController.value =
-          TextEditingValue(text: lonValue.toString());
+      latitudeController.value = TextEditingValue(text: latValue.toString());
+      longitudeController.value = TextEditingValue(text: lonValue.toString());
     }
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -91,7 +89,6 @@ class MissionFormState extends State<MissionForm> {
               controller: locationController,
               decoration: InputDecoration(labelText: 'Location description'),
             ),
-            Row(children: <Widget>[],),
             TextFormField(
               controller: latitudeController,
               keyboardType: TextInputType.number,
@@ -152,7 +149,6 @@ class MissionFormState extends State<MissionForm> {
   void dispose() {
     actionController.dispose();
     descriptionController.dispose();
-    actionController.dispose();
     locationController.dispose();
     latitudeController.dispose();
     longitudeController.dispose();

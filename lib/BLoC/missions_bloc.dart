@@ -2,11 +2,10 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:missionout/BLoC/bloc.dart';
-import 'package:missionout/DataLayer/alarm.dart';
+import 'package:missionout/DataLayer/page.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/DataLayer/mission_client.dart';
 import 'package:flutter/foundation.dart';
-import 'package:missionout/DataLayer/response.dart';
 
 class MissionsBloc implements Bloc {
   var _missions = <Mission>[];
@@ -15,7 +14,6 @@ class MissionsBloc implements Bloc {
 
   List<Mission> get missions => _missions;
   final _client = MissionsClient();
-
   final missionsController = StreamController();
 
   Stream<QuerySnapshot> get missionsStream =>
@@ -25,12 +23,7 @@ class MissionsBloc implements Bloc {
     return await _client.addMission(teamId: teamID, mission: mission);
   }
 
-
-  void standDownMission() {
-    _client.standDownMission(detailMission);
-  }
-
-  void addAlarm(Alarm alarm) {
+  void addAlarm(Page alarm) {
     _client.addAlarm(
       teamId: teamID,
       missionDocID: detailMission.reference.documentID,

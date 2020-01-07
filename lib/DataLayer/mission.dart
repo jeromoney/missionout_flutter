@@ -25,7 +25,7 @@ class Mission {
         location = map['location'],
         needForAction = map['needForAction'],
         locationDescription = map['locationDescription'],
-        isStoodDown = map['isStoodDown'];
+        isStoodDown = map['stoodDown']??false;
 
   Mission.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data, reference: snapshot.reference);

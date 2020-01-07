@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:missionout/DataLayer/alarm.dart';
+import 'package:missionout/DataLayer/page.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:flutter/foundation.dart';
 import 'package:missionout/DataLayer/response.dart';
@@ -41,7 +41,7 @@ class MissionsClient {
   Future<void> addAlarm(
       {@required String teamId,
       @required String missionDocID,
-      @required Alarm alarm}) async {
+      @required Page alarm}) async {
     await Firestore.instance
         .collection('teams/$teamId/missions/$missionDocID/alarms')
         .add(alarm.toJson())
