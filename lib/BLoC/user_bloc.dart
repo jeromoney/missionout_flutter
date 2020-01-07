@@ -8,11 +8,10 @@ import 'package:missionout/DataLayer/user_client.dart';
 import 'package:tuple/tuple.dart';
 
 class UserBloc implements Bloc {
-  UserBloc(){
+  UserBloc() {
     // check if user is already signed in
     fetchCurrentUser();
-}
-
+  }
 
   FirebaseUser user;
   HashMap<dynamic, dynamic> _claims;
@@ -21,7 +20,9 @@ class UserBloc implements Bloc {
   final _controller = StreamController<FirebaseUser>.broadcast();
 
   bool get isEditor => _claims['editor'] ?? false;
+
   String get teamDocId => _claims['teamDocID'];
+
   String get domain => user.email.split('@')[1];
 
   Stream<FirebaseUser> get userStream => _controller.stream;
@@ -38,16 +39,10 @@ class UserBloc implements Bloc {
     _controller.sink.add(user);
   }
 
-  Future<bool> fetchCurrentUser() async{
-    FirebaseUser user = await _client.fetchCurrentUser();
-    if (user == null){
-      return false;
-    }
-    this.user = user;
-
-    final idTokenResult = await user.getIdToken();
-    final claims = HashMap.from(idTokenResult.claims);
-    _claims = claims;
+  Future<bool> fetchCurrentUser() async {
+    Tuple2<FirebaseUser, HashMap<dynamic, dynamic>> userTuple = await _client.fetchCurrentUser();
+    this.user = userTuple.item1;
+    _claims = userTuple.item2;
     _controller.sink.add(user);
     return (user != null);
   }

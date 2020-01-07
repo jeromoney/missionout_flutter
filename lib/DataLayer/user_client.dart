@@ -10,8 +10,14 @@ import 'dart:io' show Platform;
 
 class UserClient {
 
-  Future<FirebaseUser> fetchCurrentUser() async{
-   return await FirebaseAuth.instance.currentUser();
+  Future<Tuple2<FirebaseUser, HashMap<dynamic, dynamic>>> fetchCurrentUser() async{
+   FirebaseUser user = await FirebaseAuth.instance.currentUser();
+   if (user == null) {
+     return Tuple2<FirebaseUser, HashMap<dynamic, dynamic>>(null,null);
+   }
+   final idTokenResult = await user.getIdToken();
+   final claims = HashMap.from(idTokenResult.claims);
+   return Tuple2<FirebaseUser, HashMap<dynamic, dynamic>>(user,claims);
   }
 
   Future<Tuple2<FirebaseUser, HashMap<dynamic, dynamic>>> handleSignIn() async {
