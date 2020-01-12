@@ -22,6 +22,20 @@ class SingleMissionClient {
         .snapshots();
   }
 
+  Future<void> addAlarm(
+      {@required String teamId,
+        @required String missionDocID,
+        @required Page alarm}) async {
+    await Firestore.instance
+        .collection('teams/$teamId/missions/$missionDocID/alarms')
+        .add(alarm.toJson())
+        .then((documentReference) {
+      return;
+    }).catchError((error) {
+      print('error');
+    });
+  }
+
   Future<void> addResponse({@required Response response}) async {
     DocumentReference document = Firestore.instance
         .collection('teams/$_teamID/missions/$_docID/responses')

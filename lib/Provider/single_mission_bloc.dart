@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:missionout/BLoC/bloc.dart';
+import 'package:missionout/Provider/bloc.dart';
 import 'package:missionout/DataLayer/page.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/DataLayer/response.dart';
@@ -25,7 +25,13 @@ class SingleMissionBloc extends Bloc {
       {@required Response response}) async {
     return await _client.addResponse(response: response);
   }
-
+  void addAlarm(Page alarm) {
+    _client.addAlarm(
+      teamId: '_teamID',
+      missionDocID: 'docID',
+      alarm: alarm,
+    );
+  }
   @override
   void dispose() {
     mission.drain();

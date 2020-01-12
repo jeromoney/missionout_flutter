@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:missionout/BLoC/bloc_provider.dart';
-import 'package:missionout/BLoC/user_bloc.dart';
+import 'package:missionout/DataLayer/user_client.dart';
+import 'package:missionout/Provider/bloc_provider.dart';
+import 'package:missionout/Provider/user_bloc.dart';
 
 class MyAppBar extends AppBar {
   MyAppBar({Key key, Widget title, String photoURL, BuildContext context})
@@ -27,8 +27,7 @@ class MyAppBar extends AppBar {
                           FlatButton(
                               child: Text('Sign out'),
                               onPressed: () {
-                                BlocProvider.of<UserBloc>(context)
-                                    .handleSignOut();
+                                UserClient().handleSignOut();
                                 Navigator.pop(context);
                                 Navigator.of(context).pushReplacementNamed('/');
                               }),

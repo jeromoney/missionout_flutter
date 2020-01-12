@@ -19,7 +19,7 @@ class Mission {
         this.isStoodDown = false,
         this.reference = null;
 
-  Mission.fromMap(Map<String, dynamic> map, {this.reference})
+   Mission.fromMap(Map<String, dynamic> map, {this.reference})
       : description = map['description'],
         time = map['time'],
         location = map['location'],

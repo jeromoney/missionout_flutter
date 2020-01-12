@@ -1,43 +1,43 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:missionout/BLoC/bloc_provider.dart';
-import 'package:missionout/BLoC/missions_bloc.dart';
-import 'package:missionout/BLoC/single_mission_bloc.dart';
-import 'package:missionout/BLoC/user_bloc.dart';
+import 'package:missionout/Provider/FirestoreService.dart';
+import 'package:missionout/Provider/bloc_provider.dart';
+import 'package:missionout/Provider/missions_provider.dart';
+import 'package:missionout/Provider/single_mission_bloc.dart';
+import 'package:missionout/Provider/user_bloc.dart';
 import 'package:missionout/DataLayer/page.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/DataLayer/response.dart';
 import 'package:missionout/UI/my_appbar.dart';
 import 'package:missionout/UI/response_screen.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
 import 'package:missionout/UI/create_screen.dart';
 
 class DetailScreen extends StatelessWidget {
-  Mission
-      mission; // this is the mission passed by the overview or create screen.
+  final db = FirestoreService();
+
+  
 
   @override
   Widget build(BuildContext context) {
     // Remove route if accessed from create screen
 
     final _scaffoldKey = GlobalKey<ScaffoldState>();
-    final userBloc = BlocProvider.of<UserBloc>(context);
-    final missionsBloc = BlocProvider.of<MissionsBloc>(context);
-    mission = missionsBloc.detailMission;
-    final docId = mission.reference.documentID;
-    final SingleMissionBloc singleMissionBloc = SingleMissionBloc(
-        teamDocID: userBloc.domain, docID: docId, uid: userBloc.user.uid);
+    final user = Provider.of<FirebaseUser>(context);
+
 
     return Scaffold(
       appBar: MyAppBar(
         title: Text('Mission Detail'),
-        photoURL: userBloc.user.photoUrl,
+        photoURL: user.photoUrl,
         context: context,
       ),
       key: _scaffoldKey,
       body: StreamBuilder<Mission>(
-          stream: singleMissionBloc.mission,
+          stream: db.fetchSingleMission(teamID: 'chaffeecountysarnorth.org', docID: 'BiOKUEFXeYL1y4x8ziCn'),
           builder: (context, snapshot) {
             // waiting
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -50,7 +50,7 @@ class DetailScreen extends StatelessWidget {
             }
 
             // success
-            mission =
+            final mission =
                 snapshot.data; // replace the old mission with current data
 
             return Center(
@@ -101,7 +101,7 @@ class DetailScreen extends StatelessWidget {
                         baseline: 36,
                         baselineType: TextBaseline.alphabetic,
                         child: Text('Response')),
-                    ResponseOptions(singleMissionBloc),
+                    ResponseOptions(null),
                     ButtonBar(
                       children: <Widget>[
                         IconButton(
@@ -135,20 +135,20 @@ class DetailScreen extends StatelessWidget {
                           onPressed: () {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (BuildContext context) =>
-                                    ResponseScreen(docID: docId)));
+                                    ResponseScreen(docID: null)));
                           },
                         ),
                       ],
                     ),
-                    userBloc.isEditor ? Divider() : SizedBox.shrink(),
-                    userBloc.isEditor
+                    true ? Divider() : SizedBox.shrink(),
+                    true
                         ? ButtonBar(
                             children: <Widget>[
                               FlatButton(
                                 child: const Text('Page Team'),
                                 onPressed: () {
                                   final page = Page(action: mission.needForAction, description: mission.description);
-                                  singleMissionBloc.pageTeam(page);
+                                  //singleMissionBloc.pageTeam(page);
                                 },
                               ),
                               FlatButton(
@@ -161,7 +161,7 @@ class DetailScreen extends StatelessWidget {
                               FlatButton(
                                 child: Text(mission.isStoodDown? '(un)Standown' : 'Stand down'),
                                 onPressed: () {
-                                  singleMissionBloc.standDownMission(standDown: !mission.isStoodDown);
+                                  //singleMissionBloc.standDownMission(standDown: !mission.isStoodDown);
                                 },
                               ),
                             ],

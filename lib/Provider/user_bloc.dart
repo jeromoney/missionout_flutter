@@ -2,15 +2,14 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:missionout/BLoC/bloc.dart';
+import 'package:missionout/Provider/bloc.dart';
 import 'package:missionout/DataLayer/user_client.dart';
 import 'package:tuple/tuple.dart';
 
 class UserBloc implements Bloc {
   UserBloc() {
     // check if user is already signed in
-    fetchCurrentUser();
+    _fetchCurrentUser();
   }
 
   FirebaseUser user;
@@ -23,7 +22,12 @@ class UserBloc implements Bloc {
 
   String get teamDocId => _claims['teamDocID'];
 
-  String get domain => user.email.split('@')[1];
+  String get teamID {
+    if (user == null) {
+      return null;
+    }
+     return user.email.split('@')[1];
+  }
 
   Stream<FirebaseUser> get userStream => _controller.stream;
 
@@ -39,10 +43,11 @@ class UserBloc implements Bloc {
     _controller.sink.add(user);
   }
 
-  Future<bool> fetchCurrentUser() async {
-    Tuple2<FirebaseUser, HashMap<dynamic, dynamic>> userTuple = await _client.fetchCurrentUser();
+  Future<bool> _fetchCurrentUser() async {
+    Tuple2<FirebaseUser, HashMap<dynamic, dynamic>> userTuple =
+        await _client.fetchCurrentUser();
     this.user = userTuple.item1;
-    _claims = userTuple.item2;
+    this._claims = userTuple.item2;
     _controller.sink.add(user);
     return (user != null);
   }

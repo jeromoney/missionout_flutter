@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:missionout/BLoC/bloc.dart';
+import 'package:missionout/Provider/bloc.dart';
 
 class BlocProvider<T extends Bloc> extends StatefulWidget {
   final Widget child;

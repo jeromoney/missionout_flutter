@@ -38,19 +38,7 @@ class MissionsClient {
     return result;
   }
 
-  Future<void> addAlarm(
-      {@required String teamId,
-      @required String missionDocID,
-      @required Page alarm}) async {
-    await Firestore.instance
-        .collection('teams/$teamId/missions/$missionDocID/alarms')
-        .add(alarm.toJson())
-        .then((documentReference) {
-      return;
-    }).catchError((error) {
-      print('error');
-    });
-  }
+
 
   void standDownMission(Mission detailMission) {
     detailMission.reference.setData({'stoodDown': true}, merge: true);

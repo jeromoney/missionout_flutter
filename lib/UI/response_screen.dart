@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:missionout/BLoC/bloc_provider.dart';
-import 'package:missionout/BLoC/responses_bloc.dart';
-import 'package:missionout/BLoC/user_bloc.dart';
+import 'package:missionout/Provider/bloc_provider.dart';
+import 'package:missionout/Provider/responses_bloc.dart';
+import 'package:missionout/Provider/user_bloc.dart';
 import 'package:missionout/DataLayer/response.dart';
 import 'package:missionout/UI/my_appbar.dart';
 
@@ -18,7 +18,7 @@ class ResponseScreen extends StatelessWidget {
     final user = userBloc.user;
 
     final responsesBloc =
-        ResponsesBloc(teamDocID: userBloc.domain, docID: _docID);
+        ResponsesBloc(teamDocID: userBloc.teamID, docID: _docID);
 
     return Scaffold(
       appBar: MyAppBar(

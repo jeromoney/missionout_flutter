@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:missionout/BLoC/bloc.dart';
+import 'package:missionout/Provider/bloc.dart';
 import 'package:missionout/DataLayer/response.dart';
 import 'package:missionout/DataLayer/response_client.dart';
 
@@ -13,6 +13,7 @@ class ResponsesBloc implements Bloc {
 
   Stream<List<Response>> get stream {
     Stream<QuerySnapshot> _clientStream = _client.fetchResponses();
+    // Transform querySnapshot into a list of responses
     return _clientStream.map((querySnapshot) {
       List<Response> responses = querySnapshot.documents
           .map((snapshot) => Response.fromSnapshot(snapshot))

@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:missionout/BLoC/bloc_provider.dart';
-import 'package:missionout/BLoC/missions_bloc.dart';
-import 'package:missionout/BLoC/user_bloc.dart';
+import 'package:missionout/Provider/bloc_provider.dart';
+import 'package:missionout/Provider/user_bloc.dart';
 import 'package:missionout/DataLayer/mission.dart';
-import 'package:missionout/UI/detail_screen.dart';
 import 'package:missionout/UI/my_appbar.dart';
 
 class CreateScreen extends StatelessWidget {
@@ -186,7 +184,7 @@ class MissionFormState extends State<MissionForm> {
         firebaseMission.locationDescription = locationDescription;
         firebaseMission.location = geoPoint;
       }
-      final missionsBloc = BlocProvider.of<MissionsBloc>(context);
+      final missionsBloc = null;
 
       missionsBloc
           .addMission(mission: firebaseMission)

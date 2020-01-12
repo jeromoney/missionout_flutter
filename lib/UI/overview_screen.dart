@@ -1,19 +1,20 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:missionout/BLoC/bloc_provider.dart';
-import 'package:missionout/BLoC/missions_bloc.dart';
+import 'package:missionout/Provider/FirestoreService.dart';
+import 'package:missionout/Provider/missions_provider.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/UI/create_screen.dart';
-import 'package:missionout/BLoC/user_bloc.dart';
 import 'package:missionout/UI/my_appbar.dart';
+import 'package:provider/provider.dart';
 
 class OverviewScreen extends StatelessWidget {
+  final db = FirestoreService();
   @override
   Widget build(BuildContext context) {
-    final userBloc = BlocProvider.of<UserBloc>(context);
-    final missionsBloc = BlocProvider.of<MissionsBloc>(context);
-    final user = userBloc.user;
+    final user = Provider.of<FirebaseUser>(context);
     assert(user != null);
+
+    final missionsBloc = MissionsProvider(teamID: 'chaffeecountysarnorth.org');
     return Scaffold(
         appBar: MyAppBar(
           title: Text('Missions Overview'),
@@ -21,7 +22,7 @@ class OverviewScreen extends StatelessWidget {
           context: context,
         ),
         body: _buildResults(missionsBloc),
-        floatingActionButton: userBloc.isEditor // only show FAB to editors
+        floatingActionButton: true // only show FAB to editors
             ? FloatingActionButton(
                 child: Icon(Icons.create),
                 onPressed: () {
@@ -30,9 +31,9 @@ class OverviewScreen extends StatelessWidget {
             : null);
   }
 
-  Widget _buildResults(MissionsBloc bloc) {
-    return StreamBuilder<QuerySnapshot>(
-        stream: bloc.missionsStream,
+  Widget _buildResults(MissionsProvider bloc) {
+    return StreamBuilder<List<Mission>>(
+        stream: db.streamMissions('chaffeecountysarnorth.org'),
         builder: (context, snapshot) {
           // waiting
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -47,13 +48,11 @@ class OverviewScreen extends StatelessWidget {
           }
 
           // successful query
-          final documents = snapshot.data.documents;
-          final missions =
-              documents.map((data) => Mission.fromSnapshot(data)).toList();
+          final missions = snapshot.data;
           // removing missions with incomplete fields. This is a little crude
           missions.removeWhere((mission) => mission == null);
 
-          if (documents.length == 0) {
+          if (missions.length == 0) {
             return Center(
               child: Text('No recent results.'),
             );
@@ -67,13 +66,12 @@ class OverviewScreen extends StatelessWidget {
     return ListView.separated(
         itemBuilder: (BuildContext context, int index) {
           final mission = missions[index];
-          final missionsBloc = BlocProvider.of<MissionsBloc>(context);
 
           return ListTile(
             title: Text(mission.description ?? ''),
             subtitle: Text(mission.needForAction ?? ''),
             onTap: () {
-              missionsBloc.detailMission = mission;
+              //TODO - need to pass mission as argument
               Navigator.of(context).pushNamed('/detail');
             },
           );
