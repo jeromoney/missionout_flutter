@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:missionout/DataLayer/firestore_path.dart';
 import 'package:missionout/DataLayer/mission.dart';
+import 'package:missionout/Provider/FirestoreService.dart';
 import 'package:missionout/UI/my_appbar.dart';
 import 'package:provider/provider.dart';
 
@@ -158,37 +160,11 @@ class MissionFormState extends State<MissionForm> {
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text('Processing'),
       ));
-      final description = descriptionController.text;
-      final needForAction = actionController.text;
-      final locationDescription = locationController.text;
+      final firebaseMission = fetchMission();
 
-      GeoPoint geoPoint;
-      if (latitudeController.text.isEmpty) {
-        // no lat/lon is given so just set to null
-        geoPoint = null;
-      } else {
-        final latitude = double.parse(latitudeController.text);
-        final longitude = double.parse(longitudeController.text);
-        geoPoint = GeoPoint(latitude, longitude);
-      }
+      final db = FirestoreService();
 
-      Mission firebaseMission = mission;
-      if (firebaseMission == null) {
-        // if mission is null that means we are creating new mission
-        firebaseMission =
-            Mission(description, needForAction, locationDescription, geoPoint);
-      } else {
-        // update existing mission
-        firebaseMission.description = description;
-        firebaseMission.needForAction = needForAction;
-        firebaseMission.locationDescription = locationDescription;
-        firebaseMission.location = geoPoint;
-      }
-      final missionsBloc = null;
-
-      missionsBloc
-          .addMission(mission: firebaseMission)
-          .then((documentReference) {
+      db.addMission(mission: firebaseMission, teamId:'chaffeecountysarnorth.org').then((documentReference) {
         if (documentReference == null) {
           // there was an error adding mission to database
           Scaffold.of(context).showSnackBar(SnackBar(
@@ -197,10 +173,42 @@ class MissionFormState extends State<MissionForm> {
           return;
         }
         firebaseMission.reference = documentReference;
-        missionsBloc.detailMission = firebaseMission;
+        final firestorePath = Provider.of<FirestorePath>(context, listen: false);
+        firestorePath.missionID = firebaseMission.reference.documentID;
         Navigator.of(context).pushReplacementNamed('/detail');
       });
     }
+  }
+
+  Mission fetchMission() {
+    // Create a mission from the form fields
+    final description = descriptionController.text;
+    final needForAction = actionController.text;
+    final locationDescription = locationController.text;
+
+    GeoPoint geoPoint;
+    if (latitudeController.text.isEmpty) {
+      // no lat/lon is given so just set to null
+      geoPoint = null;
+    } else {
+      final latitude = double.parse(latitudeController.text);
+      final longitude = double.parse(longitudeController.text);
+      geoPoint = GeoPoint(latitude, longitude);
+    }
+
+    Mission firebaseMission = mission;
+    if (firebaseMission == null) {
+      // if mission is null that means we are creating new mission
+      firebaseMission =
+          Mission(description, needForAction, locationDescription, geoPoint);
+    } else {
+      // update existing mission
+      firebaseMission.description = description;
+      firebaseMission.needForAction = needForAction;
+      firebaseMission.locationDescription = locationDescription;
+      firebaseMission.location = geoPoint;
+    }
+    return firebaseMission;
   }
 }
 

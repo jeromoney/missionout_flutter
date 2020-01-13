@@ -164,7 +164,7 @@ class DetailScreen extends StatelessWidget {
                                     ? '(un)Standown'
                                     : 'Stand down'),
                                 onPressed: () {
-                                  db.standDownMission(standDown: !mission.isStoodDown);
+                                  db.standDownMission(standDown: !mission.isStoodDown, docID: mission.reference.documentID, teamID: 'chaffeecountysarnorth.org');
                                   //singleMissionBloc.standDownMission(standDown: !mission.isStoodDown);
                                 },
                               ),
@@ -216,7 +216,7 @@ class _ResponseOptionsState extends State<ResponseOptions> {
           label: Text(responseChips[index]),
           selected: _value == index,
           onSelected: (bool selected) {
-            final user = Provider.of<FirebaseUser>(context);
+            final user = Provider.of<FirebaseUser>(context, listen: false);
 
             Response response;
             if (selected) {
@@ -226,8 +226,8 @@ class _ResponseOptionsState extends State<ResponseOptions> {
             }
 
             setState(() {
-              final user = Provider.of<FirebaseUser>(context);
-              final firestorePath = Provider.of<FirestorePath>(context);
+              final user = Provider.of<FirebaseUser>(context, listen: false);
+              final firestorePath = Provider.of<FirestorePath>(context, listen: false);
 
               FirestoreService().addResponse(
                   response: response,

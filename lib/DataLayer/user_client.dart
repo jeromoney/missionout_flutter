@@ -61,7 +61,7 @@ class UserClient {
         .document(idToken.token)
         .setData(data)
         .then((value) {
-      debugPrint('hello world');
+      debugPrint('Added token to database');
     }).catchError((error) {
       debugPrint('there was an error');
     });
