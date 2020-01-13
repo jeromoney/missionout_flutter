@@ -1,24 +1,20 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:missionout/Provider/bloc_provider.dart';
-import 'package:missionout/Provider/responses_bloc.dart';
-import 'package:missionout/Provider/user_bloc.dart';
+import 'package:missionout/DataLayer/firestore_path.dart';
+import 'package:missionout/Provider/FirestoreService.dart';
 import 'package:missionout/DataLayer/response.dart';
 import 'package:missionout/UI/my_appbar.dart';
+import 'package:provider/provider.dart';
 
 class ResponseScreen extends StatelessWidget {
-  ResponseScreen({Key key, @required String docID})
-      : this._docID = docID,
-        super(key: key);
-  final String _docID;
+  final db = FirestoreService();
 
   @override
   Widget build(BuildContext context) {
-    final userBloc = BlocProvider.of<UserBloc>(context);
-    final user = userBloc.user;
-
-    final responsesBloc =
-        ResponsesBloc(teamDocID: userBloc.teamID, docID: _docID);
+    final user = Provider.of<FirebaseUser>(context);
+    final firestorePath = Provider.of<FirestorePath>(context);
 
     return Scaffold(
       appBar: MyAppBar(
@@ -26,13 +22,15 @@ class ResponseScreen extends StatelessWidget {
         photoURL: user.photoUrl,
         context: context,
       ),
-      body: _buildResults(responsesBloc),
+      body: _buildResults(firestorePath),
     );
   }
 
-  Widget _buildResults(ResponsesBloc responsesBloc) {
+  Widget _buildResults(FirestorePath firestorePath) {
     return StreamBuilder<List<Response>>(
-      stream: responsesBloc.stream,
+      stream: db.fetchResponses(
+          teamID: firestorePath.teamID,
+          docID: firestorePath.missionID),
       builder: (context, snapshot) {
         // waiting
         if (snapshot.connectionState == ConnectionState.waiting) {

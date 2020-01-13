@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:missionout/DataLayer/firestore_path.dart';
 import 'package:missionout/Provider/FirestoreService.dart';
-import 'package:missionout/Provider/missions_provider.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/UI/create_screen.dart';
 import 'package:missionout/UI/my_appbar.dart';
@@ -9,19 +9,18 @@ import 'package:provider/provider.dart';
 
 class OverviewScreen extends StatelessWidget {
   final db = FirestoreService();
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<FirebaseUser>(context);
     assert(user != null);
-
-    final missionsBloc = MissionsProvider(teamID: 'chaffeecountysarnorth.org');
     return Scaffold(
         appBar: MyAppBar(
           title: Text('Missions Overview'),
           photoURL: user.photoUrl,
           context: context,
         ),
-        body: _buildResults(missionsBloc),
+        body: _buildResults(),
         floatingActionButton: true // only show FAB to editors
             ? FloatingActionButton(
                 child: Icon(Icons.create),
@@ -31,9 +30,9 @@ class OverviewScreen extends StatelessWidget {
             : null);
   }
 
-  Widget _buildResults(MissionsProvider bloc) {
+  Widget _buildResults() {
     return StreamBuilder<List<Mission>>(
-        stream: db.streamMissions('chaffeecountysarnorth.org'),
+        stream: db.fetchMissions('chaffeecountysarnorth.org'),
         builder: (context, snapshot) {
           // waiting
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -71,7 +70,8 @@ class OverviewScreen extends StatelessWidget {
             title: Text(mission.description ?? ''),
             subtitle: Text(mission.needForAction ?? ''),
             onTap: () {
-              //TODO - need to pass mission as argument
+              Provider.of<FirestorePath>(context, listen: false).missionID =
+                  mission.reference.documentID;
               Navigator.of(context).pushNamed('/detail');
             },
           );

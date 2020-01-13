@@ -1,11 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:missionout/DataLayer/firestore_path.dart';
 import 'package:missionout/Provider/FirestoreService.dart';
-import 'package:missionout/Provider/bloc_provider.dart';
-import 'package:missionout/Provider/missions_provider.dart';
-import 'package:missionout/Provider/single_mission_bloc.dart';
-import 'package:missionout/Provider/user_bloc.dart';
 import 'package:missionout/DataLayer/page.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/DataLayer/response.dart';
@@ -19,15 +16,12 @@ import 'package:missionout/UI/create_screen.dart';
 class DetailScreen extends StatelessWidget {
   final db = FirestoreService();
 
-  
-
   @override
   Widget build(BuildContext context) {
     // Remove route if accessed from create screen
 
     final _scaffoldKey = GlobalKey<ScaffoldState>();
     final user = Provider.of<FirebaseUser>(context);
-
 
     return Scaffold(
       appBar: MyAppBar(
@@ -37,7 +31,9 @@ class DetailScreen extends StatelessWidget {
       ),
       key: _scaffoldKey,
       body: StreamBuilder<Mission>(
-          stream: db.fetchSingleMission(teamID: 'chaffeecountysarnorth.org', docID: 'BiOKUEFXeYL1y4x8ziCn'),
+          stream: db.fetchSingleMission(
+              teamID: Provider.of<FirestorePath>(context).teamID,
+              docID: Provider.of<FirestorePath>(context).missionID),
           builder: (context, snapshot) {
             // waiting
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -72,7 +68,8 @@ class DetailScreen extends StatelessWidget {
                       baseline: 24,
                       baselineType: TextBaseline.alphabetic,
                       child: Text(
-                        formatTime(mission.time)+(mission.isStoodDown?' stood down':''),
+                        formatTime(mission.time) +
+                            (mission.isStoodDown ? ' stood down' : ''),
                         style: Theme.of(context).textTheme.subtitle,
                       ),
                     ),
@@ -88,7 +85,9 @@ class DetailScreen extends StatelessWidget {
                       baselineType: TextBaseline.alphabetic,
                       child: Text(
                         mission.needForAction,
-                        style: mission.isStoodDown ? TextStyle(decoration: TextDecoration.lineThrough): Theme.of(context).textTheme.body1,
+                        style: mission.isStoodDown
+                            ? TextStyle(decoration: TextDecoration.lineThrough)
+                            : Theme.of(context).textTheme.body1,
                       ),
                     ),
                     Padding(
@@ -101,7 +100,7 @@ class DetailScreen extends StatelessWidget {
                         baseline: 36,
                         baselineType: TextBaseline.alphabetic,
                         child: Text('Response')),
-                    ResponseOptions(null),
+                    ResponseOptions(),
                     ButtonBar(
                       children: <Widget>[
                         IconButton(
@@ -135,7 +134,7 @@ class DetailScreen extends StatelessWidget {
                           onPressed: () {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (BuildContext context) =>
-                                    ResponseScreen(docID: null)));
+                                    ResponseScreen()));
                           },
                         ),
                       ],
@@ -147,8 +146,10 @@ class DetailScreen extends StatelessWidget {
                               FlatButton(
                                 child: const Text('Page Team'),
                                 onPressed: () {
-                                  final page = Page(action: mission.needForAction, description: mission.description);
-                                  //singleMissionBloc.pageTeam(page);
+                                  final page = Page(
+                                      action: mission.needForAction,
+                                      description: mission.description);
+                                  db.addPage(teamID: 'chaffeecountysarnorth.org', missionDocID: mission.reference.documentID, page: page);
                                 },
                               ),
                               FlatButton(
@@ -159,8 +160,11 @@ class DetailScreen extends StatelessWidget {
                                 },
                               ),
                               FlatButton(
-                                child: Text(mission.isStoodDown? '(un)Standown' : 'Stand down'),
+                                child: Text(mission.isStoodDown
+                                    ? '(un)Standown'
+                                    : 'Stand down'),
                                 onPressed: () {
+                                  db.standDownMission(standDown: !mission.isStoodDown);
                                   //singleMissionBloc.standDownMission(standDown: !mission.isStoodDown);
                                 },
                               ),
@@ -185,17 +189,13 @@ String formatTime(Timestamp time) {
 }
 
 class ResponseOptions extends StatefulWidget {
-  final SingleMissionBloc singleMissionBloc;
-
-  ResponseOptions(this.singleMissionBloc);
+  ResponseOptions();
 
   @override
-  _ResponseOptionsState createState() =>
-      _ResponseOptionsState(singleMissionBloc);
+  _ResponseOptionsState createState() => _ResponseOptionsState();
 }
 
 class _ResponseOptionsState extends State<ResponseOptions> {
-  final SingleMissionBloc singleMissionBloc;
   int _value = null;
   List<String> responseChips = [
     'Responding',
@@ -204,7 +204,7 @@ class _ResponseOptionsState extends State<ResponseOptions> {
     'Unavailble'
   ];
 
-  _ResponseOptionsState(this.singleMissionBloc);
+  _ResponseOptionsState();
 
   @override
   Widget build(BuildContext context) {
@@ -216,18 +216,24 @@ class _ResponseOptionsState extends State<ResponseOptions> {
           label: Text(responseChips[index]),
           selected: _value == index,
           onSelected: (bool selected) {
-            final userBloc = BlocProvider.of<UserBloc>(context);
+            final user = Provider.of<FirebaseUser>(context);
 
             Response response;
             if (selected) {
               // If selected is equal to false, that means the user deselected the chip so we should pass a null value.
               response = Response(
-                  teamMember: userBloc.user.displayName,
-                  status: responseChips[index]);
+                  teamMember: user.displayName, status: responseChips[index]);
             }
 
             setState(() {
-              singleMissionBloc.addResponse(response: response);
+              final user = Provider.of<FirebaseUser>(context);
+              final firestorePath = Provider.of<FirestorePath>(context);
+
+              FirestoreService().addResponse(
+                  response: response,
+                  uid: user.uid,
+                  teamID: firestorePath.teamID,
+                  docID: firestorePath.missionID);
               _value = selected ? index : null;
             });
           },

@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:missionout/Provider/bloc_provider.dart';
-import 'package:missionout/Provider/user_bloc.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/UI/my_appbar.dart';
+import 'package:provider/provider.dart';
 
 class CreateScreen extends StatelessWidget {
   final Mission mission;
@@ -12,12 +12,12 @@ class CreateScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = BlocProvider.of<UserBloc>(context);
+    final user = Provider.of<FirebaseUser>(context);
     return Scaffold(
       appBar: MyAppBar(
         title: Text(mission == null ? 'Create a mission' : 'Edit mission'),
         context: context,
-        photoURL: bloc.user.photoUrl,
+        photoURL: user.photoUrl,
       ),
       body: MissionForm(mission),
     );

@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/DataLayer/user_client.dart';
-import 'package:missionout/Provider/bloc_provider.dart';
-import 'package:missionout/Provider/user_bloc.dart';
+import 'package:provider/provider.dart';
+
 
 class MyAppBar extends AppBar {
   MyAppBar({Key key, Widget title, String photoURL, BuildContext context})
@@ -41,8 +41,8 @@ class MyAppBar extends AppBar {
 
                 case 2:
                   {
-                    final userBloc = BlocProvider.of<UserBloc>(context);
-                    _printUserToken(userBloc.user);
+                    final user = Provider.of<FirebaseUser>(context);
+                    _printUserToken(user);
 
                   }
                   break;
