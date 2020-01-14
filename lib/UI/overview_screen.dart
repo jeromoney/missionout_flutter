@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:missionout/DataLayer/firestore_path.dart';
-import 'package:missionout/Provider/FirestoreService.dart';
+import 'package:missionout/DataLayer/extended_user.dart';
+import 'package:missionout/Provider/firestore_service.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/UI/create_screen.dart';
 import 'package:missionout/UI/my_appbar.dart';
@@ -13,15 +13,13 @@ class OverviewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<FirebaseUser>(context);
+    final extendedUser = Provider.of<ExtendedUser>(context);
     assert(user != null);
+    assert(extendedUser.teamID != null);
     return Scaffold(
-        appBar: MyAppBar(
-          title: Text('Missions Overview'),
-          photoURL: user.photoUrl,
-          context: context,
-        ),
-        body: _buildResults(),
-        floatingActionButton: true // only show FAB to editors
+        appBar: MyAppBar(title: 'Missions Overview'),
+        body: _buildResults(extendedUser),
+        floatingActionButton: extendedUser.isEditor // only show FAB to editors
             ? FloatingActionButton(
                 child: Icon(Icons.create),
                 onPressed: () {
@@ -30,9 +28,9 @@ class OverviewScreen extends StatelessWidget {
             : null);
   }
 
-  Widget _buildResults() {
+  Widget _buildResults(ExtendedUser extendedUser) {
     return StreamBuilder<List<Mission>>(
-        stream: db.fetchMissions('chaffeecountysarnorth.org'),
+        stream: db.fetchMissions(extendedUser.teamID),
         builder: (context, snapshot) {
           // waiting
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -70,8 +68,7 @@ class OverviewScreen extends StatelessWidget {
             title: Text(mission.description ?? ''),
             subtitle: Text(mission.needForAction ?? ''),
             onTap: () {
-              Provider.of<FirestorePath>(context, listen: false).missionID =
-                  mission.reference.documentID;
+              Provider.of<ExtendedUser>(context, listen: false).missionID = mission.reference.documentID;
               Navigator.of(context).pushNamed('/detail');
             },
           );

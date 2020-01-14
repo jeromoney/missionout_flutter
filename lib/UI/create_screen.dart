@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:missionout/DataLayer/firestore_path.dart';
+import 'package:missionout/DataLayer/extended_user.dart';
 import 'package:missionout/DataLayer/mission.dart';
-import 'package:missionout/Provider/FirestoreService.dart';
+import 'package:missionout/Provider/firestore_service.dart';
 import 'package:missionout/UI/my_appbar.dart';
 import 'package:provider/provider.dart';
 
@@ -16,11 +16,8 @@ class CreateScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = Provider.of<FirebaseUser>(context);
     return Scaffold(
-      appBar: MyAppBar(
-        title: Text(mission == null ? 'Create a mission' : 'Edit mission'),
-        context: context,
-        photoURL: user.photoUrl,
-      ),
+      appBar:
+          MyAppBar(title: mission == null ? 'Create a mission' : 'Edit mission'),
       body: MissionForm(mission),
     );
   }
@@ -163,8 +160,11 @@ class MissionFormState extends State<MissionForm> {
       final firebaseMission = fetchMission();
 
       final db = FirestoreService();
+      final extendedUser = Provider.of<ExtendedUser>(context);
 
-      db.addMission(mission: firebaseMission, teamId:'chaffeecountysarnorth.org').then((documentReference) {
+      db
+          .addMission(mission: firebaseMission, teamId: extendedUser.teamID)
+          .then((documentReference) {
         if (documentReference == null) {
           // there was an error adding mission to database
           Scaffold.of(context).showSnackBar(SnackBar(
@@ -173,8 +173,7 @@ class MissionFormState extends State<MissionForm> {
           return;
         }
         firebaseMission.reference = documentReference;
-        final firestorePath = Provider.of<FirestorePath>(context, listen: false);
-        firestorePath.missionID = firebaseMission.reference.documentID;
+        // TODO - pass mission as argument
         Navigator.of(context).pushReplacementNamed('/detail');
       });
     }

@@ -1,9 +1,7 @@
-
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:missionout/DataLayer/firestore_path.dart';
-import 'package:missionout/Provider/FirestoreService.dart';
+import 'package:missionout/DataLayer/extended_user.dart';
+import 'package:missionout/Provider/firestore_service.dart';
 import 'package:missionout/DataLayer/response.dart';
 import 'package:missionout/UI/my_appbar.dart';
 import 'package:provider/provider.dart';
@@ -14,23 +12,18 @@ class ResponseScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<FirebaseUser>(context);
-    final firestorePath = Provider.of<FirestorePath>(context);
+    final extendedUser = Provider.of<ExtendedUser>(context);
 
     return Scaffold(
-      appBar: MyAppBar(
-        title: Text('Responses'),
-        photoURL: user.photoUrl,
-        context: context,
-      ),
-      body: _buildResults(firestorePath),
+      appBar: MyAppBar( title: 'Responses'),
+      body: _buildResults(extendedUser),
     );
   }
 
-  Widget _buildResults(FirestorePath firestorePath) {
+  Widget _buildResults(ExtendedUser extendedUser) {
     return StreamBuilder<List<Response>>(
       stream: db.fetchResponses(
-          teamID: firestorePath.teamID,
-          docID: firestorePath.missionID),
+          teamID: extendedUser.teamID, docID: extendedUser.missionID),
       builder: (context, snapshot) {
         // waiting
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -65,8 +58,8 @@ class ResponseScreen extends StatelessWidget {
         ],
         rows: responses
             .map((response) => DataRow(cells: <DataCell>[
-                  DataCell(Text(response.teamMember??'')),
-                  DataCell(Text(response.status??'')),
+                  DataCell(Text(response.teamMember ?? '')),
+                  DataCell(Text(response.status ?? '')),
                   DataCell(Text(response.drivingTime ?? ''))
                 ]))
             .toList());
