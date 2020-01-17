@@ -3,7 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:missionout/DataLayer/user_client.dart';
 import 'package:provider/provider.dart';
 
-class MyAppBar extends StatelessWidget implements PreferredSizeWidget  {
+enum Menu {
+  signOut,
+  userOptions,
+  editorOptions,
+  printToken
+}
+
+class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   String _title;
 
   MyAppBar({@required String title}) {
@@ -27,10 +34,10 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget  {
                 fit: BoxFit.cover,
                 image: NetworkImage(user.photoUrl),
               ))),
-      PopupMenuButton<int>(
-        onSelected: (int result) {
+      PopupMenuButton<Menu>(
+        onSelected: (Menu result) {
           switch (result) {
-            case 1:
+            case Menu.signOut:
               {
                 final alert = AlertDialog(
                     title: Text('Sign out?'),
@@ -51,21 +58,42 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget  {
               }
               break;
 
-            case 2:
+            case Menu.userOptions:
               {
-                final user = Provider.of<FirebaseUser>(context);
-                _printUserToken(user);
+                Navigator.pop(context);
+                Navigator.of(context).pushReplacementNamed('/userOptions');
               }
               break;
+
+            case Menu.editorOptions:
+              {
+                Navigator.pop(context);
+                Navigator.of(context).pushReplacementNamed('/editorOptions');
+              }
+              break;
+
+            case Menu.printToken:
+              {
+                final user = Provider.of<FirebaseUser>(context, listen: false);
+                _printUserToken(user);
+              }
           }
         },
-        itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
-          const PopupMenuItem<int>(
-            value: 1,
+        itemBuilder: (BuildContext context) => const <PopupMenuEntry<Menu>>[
+          PopupMenuItem<Menu>(
+            value: Menu.signOut,
             child: Text('Sign out'),
           ),
-          const PopupMenuItem<int>(
-            value: 2,
+          PopupMenuItem<Menu>(
+            value: Menu.userOptions,
+            child: Text('User Options'),
+          ),
+          PopupMenuItem<Menu>(
+            value: Menu.editorOptions,
+            child: Text('Editor Options'),
+          ),
+          PopupMenuItem<Menu>(
+            value: Menu.printToken,
             child: Text('Print token'),
           ),
         ],
