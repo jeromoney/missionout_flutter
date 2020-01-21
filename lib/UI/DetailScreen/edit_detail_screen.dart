@@ -6,13 +6,13 @@ import 'package:missionout/UI/create_screen.dart';
 import 'package:provider/provider.dart';
 
 class EditDetailScreen extends StatelessWidget {
-  final db = FirestoreService();
+  final _db = FirestoreService();
 
   @override
   Widget build(BuildContext context) {
     final extendedUser = Provider.of<ExtendedUser>(context);
     return StreamBuilder(
-      stream: db.fetchSingleMission(
+      stream: _db.fetchSingleMission(
         teamID: extendedUser.teamID,
         docID: extendedUser.missionID,
       ),
@@ -43,7 +43,7 @@ class EditDetailScreen extends StatelessWidget {
                     final page = Page(
                         action: mission.needForAction,
                         description: mission.description);
-                    db.addPage(
+                    _db.addPage(
                         teamID: extendedUser.teamID,
                         missionDocID: mission.reference.documentID,
                         page: page);
@@ -61,7 +61,7 @@ class EditDetailScreen extends StatelessWidget {
                       ? '(un)Standown'
                       : 'Stand down'),
                   onPressed: () {
-                    db.standDownMission(
+                    _db.standDownMission(
                         standDown: !mission.isStoodDown,
                         docID: mission.reference.documentID,
                         teamID: extendedUser.teamID);

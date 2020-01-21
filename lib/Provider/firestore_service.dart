@@ -1,11 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:missionout/DataLayer/extended_user.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/DataLayer/page.dart';
 import 'package:missionout/DataLayer/response.dart';
 
 class FirestoreService {
   final Firestore _db = Firestore.instance;
+
+  Stream<ExtendedUser> fetchUser(FirebaseUser user) {
+    final ref = _db.collection('users').document(user.uid);
+  }
 
   Stream<List<Mission>> fetchMissions(String teamID) {
     const QUERY_LIMIT = 10;
@@ -22,7 +28,7 @@ class FirestoreService {
     return _db
         .document('teams/$teamID/missions/$docID')
         .snapshots()
-        .map((snap) => Mission.fromSnapshot(snap));
+        .map((snapshot) => Mission.fromSnapshot(snapshot));
   }
 
   fetchResponses({@required String teamID, @required String docID}) {
@@ -73,7 +79,8 @@ class FirestoreService {
     }
   }
 
-  void standDownMission({bool standDown,@required String teamID, @required String docID}) {
+  void standDownMission(
+      {bool standDown, @required String teamID, @required String docID}) {
     _db
         .document('teams/$teamID/missions/$docID')
         .updateData({'stoodDown': standDown});
@@ -81,8 +88,8 @@ class FirestoreService {
 
   Future<void> addPage(
       {@required String teamID,
-        @required String missionDocID,
-        @required Page page}) async {
+      @required String missionDocID,
+      @required Page page}) async {
     await Firestore.instance
         .collection('teams/$teamID/missions/$missionDocID/pages')
         .add(page.toJson())

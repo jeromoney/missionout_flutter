@@ -10,6 +10,9 @@ class ExtendedUser {
   bool isEditor;
   String chatURI;
   String missionID;
+  String textPhoneNumber;
+  String voicePhoneNumber;
+  DocumentReference reference;
 
   Future<void> setUserPermissions(FirebaseUser user) async {
     final Firestore db = Firestore.instance;
@@ -21,6 +24,9 @@ class ExtendedUser {
         ? isEditor = data['isEditor']
         : isEditor = false;
     teamID = data['teamID'];
+    textPhoneNumber = data['textPhoneNumber'] ?? '';
+    voicePhoneNumber = data['voicePhoneNumber'] ?? '';
+    reference = document.reference;
 
     // team settings
     document = await db.collection('teams').document(teamID).get();

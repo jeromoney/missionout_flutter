@@ -160,7 +160,7 @@ class MissionFormState extends State<MissionForm> {
       final firebaseMission = fetchMission();
 
       final db = FirestoreService();
-      final extendedUser = Provider.of<ExtendedUser>(context);
+      final extendedUser = Provider.of<ExtendedUser>(context, listen: false);
 
       db
           .addMission(mission: firebaseMission, teamId: extendedUser.teamID)
