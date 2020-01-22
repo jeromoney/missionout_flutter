@@ -10,8 +10,9 @@ class ExtendedUser {
   bool isEditor;
   String chatURI;
   String missionID;
-  String textPhoneNumber;
+  String mobilePhoneNumber;
   String voicePhoneNumber;
+  String region;
   DocumentReference reference;
 
   Future<void> setUserPermissions(FirebaseUser user) async {
@@ -24,8 +25,10 @@ class ExtendedUser {
         ? isEditor = data['isEditor']
         : isEditor = false;
     teamID = data['teamID'];
-    textPhoneNumber = data['textPhoneNumber'] ?? '';
+    mobilePhoneNumber = data['mobilePhoneNumber'] ?? '';
     voicePhoneNumber = data['voicePhoneNumber'] ?? '';
+    region = data['region'] ?? '';
+
     reference = document.reference;
 
     // team settings
