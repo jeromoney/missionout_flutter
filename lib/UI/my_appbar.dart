@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/DataLayer/user_client.dart';
 import 'package:missionout/UI/editor_screen.dart';
-import 'package:missionout/UI/user_screen.dart';
+import 'package:missionout/UI/UserScreen/user_screen.dart';
 import 'package:provider/provider.dart';
 
 enum Menu { signOut, userOptions, editorOptions, printToken }
