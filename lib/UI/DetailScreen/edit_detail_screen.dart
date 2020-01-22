@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:missionout/DataLayer/extended_user.dart';
 import 'package:missionout/DataLayer/page.dart';
 import 'package:missionout/Provider/firestore_service.dart';
-import 'package:missionout/UI/create_screen.dart';
+import 'package:missionout/UI/CreateScreen/create_screen.dart';
 import 'package:provider/provider.dart';
 
 class EditDetailScreen extends StatelessWidget {

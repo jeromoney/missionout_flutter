@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/DataLayer/extended_user.dart';
-import 'package:missionout/UI/create_screen.dart';
+import 'package:missionout/UI/CreateScreen/create_screen.dart';
 import 'package:missionout/UI/DetailScreen/detail_screen.dart';
 import 'package:missionout/UI/main_screen.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +16,7 @@ class MissionOut extends StatelessWidget {
       providers: [
         StreamProvider<FirebaseUser>.value(
             value: FirebaseAuth.instance.onAuthStateChanged),
-        Provider<ExtendedUser>.value(value: ExtendedUser()),
+        Provider(create: (_) => ExtendedUser(),),
       ],
       child: MaterialApp(
         title: 'Mission Out',

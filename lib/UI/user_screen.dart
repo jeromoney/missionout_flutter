@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:missionout/DataLayer/extended_user.dart';
 import 'package:missionout/Provider/firestore_service.dart';
 import 'package:missionout/UI/my_appbar.dart';
 import 'package:provider/provider.dart';
-import 'package:phone_number/phone_number.dart';
 
 class UserScreen extends StatelessWidget {
   final _db = FirestoreService();
@@ -34,16 +34,22 @@ class UserScreen extends StatelessWidget {
                   Text(user.email),
                   Text(extendedUser.textPhoneNumber),
                   Text(extendedUser.voicePhoneNumber),
+                  InternationalPhoneNumberInput(
+                    onInputChanged: (PhoneNumber number) {
+                      print(number.phoneNumber);
+                    },
+                    isEnabled: true,
+                    autoValidate: true,
+                    formatInput: true,
+                  ),
                   TextFormField(
                     inputFormatters: <TextInputFormatter>[
                       WhitelistingTextInputFormatter.digitsOnly,
                     ],
                     keyboardType: TextInputType.number,
                     onChanged: (value) async {
-                      var formattedNumber = await PhoneNumber().format(value, 'US');
                       final oldSelection = mobileController.value.selection;
-                      mobileController.value =
-                          TextEditingValue(text: formattedNumber['formatted'], selection: oldSelection);
+
                     },
                     controller: mobileController,
                     decoration: InputDecoration(
@@ -70,7 +76,6 @@ class UserScreen extends StatelessWidget {
                           : null;
                     },
                   ),
-                  RegionsDropDownButton(),
                   RaisedButton(
                       child: Text('Submit'),
                       onPressed: () {
@@ -82,59 +87,11 @@ class UserScreen extends StatelessWidget {
   }
 
   void _submitForm() {
-    _formKey.currentState.validate();
+    if (_formKey.currentState.validate()){
+      debugPrint('Form is good');
+    };
   }
 
   Future<void> someMethod() async {}
 }
 
-class RegionsDropDownButton extends StatefulWidget {
-  @override
-  State createState() => _RegionsDropDownButtonState();
-}
-
-class _RegionsDropDownButtonState extends State<RegionsDropDownButton> {
-  List<String> _regionList;
-  String _defaultRegion = 'US';
-
-  _RegionsDropDownButtonState() {
-    allSupportedRegions().then((regions) => setState(() {
-          _regionList = regions;
-        }));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return DropdownButton<String>(
-      value: _defaultRegion,
-      icon: Icon(Icons.arrow_downward),
-      iconSize: 24,
-      elevation: 16,
-      underline: Container(
-        height: 2,
-        color: Colors.deepPurpleAccent,
-      ),
-      onChanged: (region) {
-        setState(() {
-          _defaultRegion = region;
-        });
-      },
-      items: _regionList.map<DropdownMenuItem<String>>(((value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      })).toList(),
-    );
-  }
-
-  Future<List<String>> allSupportedRegions() async {
-    var regions = await PhoneNumber().allSupportedRegions();
-    return regions.keys.toList()..sort();
-  }
-}
-
-class PhoneNumberFormatter with ChangeNotifier {
-  int _numberString;
-  String _region;
-}

@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:missionout/DataLayer/extended_user.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/Provider/firestore_service.dart';
+import 'package:missionout/UI/CreateScreen/gps_text_form_field.dart';
 import 'package:missionout/UI/my_appbar.dart';
 import 'package:provider/provider.dart';
 
@@ -16,8 +18,8 @@ class CreateScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = Provider.of<FirebaseUser>(context);
     return Scaffold(
-      appBar:
-          MyAppBar(title: mission == null ? 'Create a mission' : 'Edit mission'),
+      appBar: MyAppBar(
+          title: mission == null ? 'Create a mission' : 'Edit mission'),
       body: MissionForm(mission),
     );
   }
@@ -86,45 +88,8 @@ class MissionFormState extends State<MissionForm> {
               controller: locationController,
               decoration: InputDecoration(labelText: 'Location description'),
             ),
-            TextFormField(
-              controller: latitudeController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(labelText: 'Lat'),
-              validator: (value) {
-                final valueAsDouble = double.tryParse(value);
-                if (longitudeController.text.isEmpty && valueAsDouble == null) {
-                  // allow null values if both lat and lon are blank
-                  return null;
-                }
-
-                if (valueAsDouble == null) {
-                  return 'Enter a valid number';
-                }
-                if (-90.0 > valueAsDouble || valueAsDouble > 90.0) {
-                  return 'Enter a valid latitude';
-                }
-                return null;
-              },
-            ),
-            TextFormField(
-                controller: longitudeController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(labelText: 'Lon'),
-                validator: (value) {
-                  final valueAsDouble = double.tryParse(value);
-                  if (latitudeController.text.isEmpty &&
-                      valueAsDouble == null) {
-                    // allow null values if both lat and lon are blank
-                    return null;
-                  }
-                  if (valueAsDouble == null) {
-                    return 'Enter a valid number';
-                  }
-                  if (-180.0 > valueAsDouble || valueAsDouble > 180.0) {
-                    return 'Enter a valid longitude';
-                  }
-                  return null;
-                }),
+            GPSTextFormFieldX(controller: latitudeController, gpsType: GPS.latitude, companionController: longitudeController,),
+            GPSTextFormFieldX(controller: longitudeController, gpsType: GPS.longitude, companionController: latitudeController,),
             Padding(
               padding: EdgeInsets.only(
                 top: 16.0,
@@ -173,7 +138,7 @@ class MissionFormState extends State<MissionForm> {
           return;
         }
         firebaseMission.reference = documentReference;
-        // TODO - pass mission as argument
+        extendedUser.missionID = documentReference.documentID;
         Navigator.of(context).pushReplacementNamed('/detail');
       });
     }
