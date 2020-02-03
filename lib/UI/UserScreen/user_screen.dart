@@ -9,7 +9,6 @@ import 'phone_entry.dart';
 
 class UserScreen extends StatelessWidget {
   final myAppBar = MyAppBar(title: 'User Options');
-  final _formKey = GlobalKey<FormState>();
   final mobilePhoneController = TextEditingController();
   final voicePhoneController = TextEditingController();
 
@@ -22,7 +21,6 @@ class UserScreen extends StatelessWidget {
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Form(
-              key: _formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
@@ -37,7 +35,6 @@ class UserScreen extends StatelessWidget {
                       child: PhoneEntry(controller: voicePhoneController),
                       value: PhoneType.voicePhoneNumber),
                   SubmitButton(
-                    formKey: _formKey,
                     voicePhoneNumberController: voicePhoneController,
                     mobilePhoneNumberController: mobilePhoneController,
                   ),
@@ -48,23 +45,21 @@ class UserScreen extends StatelessWidget {
 }
 
 class SubmitButton extends StatelessWidget {
-  final GlobalKey<FormState> formKey;
   final TextEditingController mobilePhoneNumberController;
   final TextEditingController voicePhoneNumberController;
 
   SubmitButton({Key key,
-    @required this.formKey,
     @required this.mobilePhoneNumberController,
     @required this.voicePhoneNumberController})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    
+
     return RaisedButton(
         child: Text('Submit'),
         onPressed: () async {
-          if (formKey.currentState.validate()) {
+          if (Form.of(context).validate()) {
           Scaffold.of(context).showSnackBar(SnackBar(
               content: Text('Processing'),
             ));

@@ -1,12 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:missionout/DataLayer/extended_user.dart';
 import 'package:missionout/DataLayer/mission.dart';
-import 'package:missionout/Provider/firestore_service.dart';
 import 'package:missionout/UI/CreateScreen/gps_text_form_field.dart';
+import 'package:missionout/UI/CreateScreen/submit_mission_button.dart';
 import 'package:missionout/UI/my_appbar.dart';
-import 'package:provider/provider.dart';
 
 class CreateScreen extends StatelessWidget {
   final Mission mission;
@@ -39,7 +36,6 @@ class MissionFormState extends State<MissionForm> {
 
   MissionFormState([Mission mission]) : this.mission = mission;
 
-  final _formKey = GlobalKey<FormState>();
   final descriptionController = TextEditingController();
   final actionController = TextEditingController();
   final locationController = TextEditingController();
@@ -64,7 +60,6 @@ class MissionFormState extends State<MissionForm> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Form(
-        key: _formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -86,17 +81,27 @@ class MissionFormState extends State<MissionForm> {
               controller: locationController,
               decoration: InputDecoration(labelText: 'Location description'),
             ),
-            GPSTextFormFieldX(controller: latitudeController, gpsType: GPS.latitude, companionController: longitudeController,),
-            GPSTextFormFieldX(controller: longitudeController, gpsType: GPS.longitude, companionController: latitudeController,),
+            GPSTextFormFieldX(
+              controller: latitudeController,
+              gpsType: GPS.latitude,
+              companionController: longitudeController,
+            ),
+            GPSTextFormFieldX(
+              controller: longitudeController,
+              gpsType: GPS.longitude,
+              companionController: latitudeController,
+            ),
             Padding(
               padding: EdgeInsets.only(
                 top: 16.0,
               ),
-              child: RaisedButton(
-                child: Text('Submit'),
-                onPressed: () {
-                  _submitForm();
-                },
+              child: SubmitMissionButton(
+                mission: mission,
+                locationController: locationController,
+                latitudeController: latitudeController,
+                longitudeController: longitudeController,
+                actionController: actionController,
+                descriptionController: descriptionController,
               ),
             )
           ],
@@ -114,65 +119,9 @@ class MissionFormState extends State<MissionForm> {
     longitudeController.dispose();
     super.dispose();
   }
-
-  void _submitForm() {
-    if (_formKey.currentState.validate()) {
-      Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text('Processing'),
-      ));
-      final firebaseMission = fetchMission();
-
-      final db = FirestoreService();
-      final extendedUser = Provider.of<ExtendedUser>(context, listen: false);
-
-      db
-          .addMission(mission: firebaseMission, teamId: extendedUser.teamID)
-          .then((documentReference) {
-        if (documentReference == null) {
-          // there was an error adding mission to database
-          Scaffold.of(context).showSnackBar(SnackBar(
-            content: Text('Error uploading mission'),
-          ));
-          return;
-        }
-        firebaseMission.reference = documentReference;
-        extendedUser.missionID = documentReference.documentID;
-        Navigator.of(context).pushReplacementNamed('/detail');
-      });
-    }
-  }
-
-  Mission fetchMission() {
-    // Create a mission from the form fields
-    final description = descriptionController.text;
-    final needForAction = actionController.text;
-    final locationDescription = locationController.text;
-
-    GeoPoint geoPoint;
-    if (latitudeController.text.isEmpty) {
-      // no lat/lon is given so just set to null
-      geoPoint = null;
-    } else {
-      final latitude = double.parse(latitudeController.text);
-      final longitude = double.parse(longitudeController.text);
-      geoPoint = GeoPoint(latitude, longitude);
-    }
-
-    Mission firebaseMission = mission;
-    if (firebaseMission == null) {
-      // if mission is null that means we are creating new mission
-      firebaseMission =
-          Mission(description, needForAction, locationDescription, geoPoint);
-    } else {
-      // update existing mission
-      firebaseMission.description = description;
-      firebaseMission.needForAction = needForAction;
-      firebaseMission.locationDescription = locationDescription;
-      firebaseMission.location = geoPoint;
-    }
-    return firebaseMission;
-  }
 }
+
+
 
 class CreatePopupRoute extends PopupRoute {
   // A popup route is used so back navigation doesn't go back to this screen.
