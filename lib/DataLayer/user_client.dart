@@ -56,7 +56,7 @@ class UserClient {
       'platform': Platform.operatingSystem,
       'createdAt': FieldValue.serverTimestamp()
     };
-    final DocumentReference document = await Firestore.instance
+    await Firestore.instance
         .collection('users/${user.uid}/tokens')
         .document(idToken.token)
         .setData(data)

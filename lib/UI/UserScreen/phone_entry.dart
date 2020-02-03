@@ -15,30 +15,32 @@ class PhoneEntry extends StatefulWidget {
 }
 
 class _PhoneEntryState extends State<PhoneEntry> {
-  /**
-   * If user selects checkbox, phone text entry appears.
-   */
+  /// If user selects checkbox, phone text entry appears.
   final TextEditingController controller;
+  PhoneType _phoneType;
   bool _phoneEntryVisible;
 
   _PhoneEntryState(this.controller);
 
   @override
   void initState() {
+    super.initState();
     String phoneStr;
-    if (Provider.of<PhoneType>(context, listen: false) ==
-        PhoneType.mobilePhoneNumber) {
-      phoneStr =
-          Provider.of<ExtendedUser>(context, listen: false).mobilePhoneNumber;
+    final extendedUser = Provider.of<ExtendedUser>(context, listen: false);
+    _phoneType = Provider.of<PhoneType>(context, listen: false);
+    if (_phoneType == PhoneType.mobilePhoneNumber) {
+      phoneStr = extendedUser.mobilePhoneNumber;
     } else {
-      phoneStr =
-          Provider.of<ExtendedUser>(context, listen: false).voicePhoneNumber;
+      phoneStr = extendedUser.voicePhoneNumber;
     }
     _phoneEntryVisible = phoneStr.isNotEmpty;
   }
 
-  void _phoneEntryChanged(bool value) =>
-      setState(() => _phoneEntryVisible = value);
+  void _phoneEntryChanged(bool checked) {
+    setState(() {
+      _phoneEntryVisible = checked;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,17 +48,13 @@ class _PhoneEntryState extends State<PhoneEntry> {
       width: double.infinity,
       child: Column(
         children: <Widget>[
-          Row(
-            children: <Widget>[
-              Text((Provider.of<PhoneType>(context, listen: false) ==
-                      PhoneType.mobilePhoneNumber)
-                  ? 'Receive mobile pages'
-                  : 'Receive voice calls'),
-              Checkbox(
-                value: _phoneEntryVisible,
-                onChanged: _phoneEntryChanged,
-              ),
-            ],
+          CheckboxListTile(
+            title: Text((Provider.of<PhoneType>(context, listen: false) ==
+                    PhoneType.mobilePhoneNumber)
+                ? 'Receive mobile pages'
+                : 'Receive voice calls'),
+            value: _phoneEntryVisible,
+            onChanged: _phoneEntryChanged,
           ),
           Visibility(
               maintainState: true,
@@ -118,15 +116,16 @@ class _MyInternationalPhoneNumberInputState
         }
 
         return InternationalPhoneNumberInput(
+          // This means that if the user deletes their number, they are opting to not receive pages.
+          ignoreBlank: true,
           inputDecoration: InputDecoration(labelText: labelText),
           initialCountry2LetterCode: region,
           hintText: hintText,
           textFieldController: controller,
-          onInputChanged: (PhoneNumber number) {
-            print(number.phoneNumber);
-          },
+          autoValidate: true,
           isEnabled: true,
           formatInput: true,
+          onInputChanged: (PhoneNumber phoneNumber) {},
         );
       },
     );

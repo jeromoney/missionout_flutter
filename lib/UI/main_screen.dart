@@ -41,6 +41,7 @@ class InitWidgetState extends State<InitWidget> {
 
   @override
   void initState() {
+    super.initState();
     final user = Provider.of<FirebaseUser>(context, listen: false);
     Provider.of<ExtendedUser>(context, listen: false)
         .setUserPermissions(user)

@@ -1,11 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/Provider/firestore_service.dart';
 import 'package:missionout/UI/DetailScreen/actions_detail_screen.dart';
 import 'package:missionout/UI/DetailScreen/edit_detail_screen.dart';
 import 'package:missionout/UI/DetailScreen/info_detail_screen.dart';
 import 'package:missionout/UI/my_appbar.dart';
-import 'package:provider/provider.dart';
 
 class DetailScreen extends StatelessWidget {
   final db = FirestoreService();
@@ -13,7 +11,6 @@ class DetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Remove route if accessed from create screen
-    final user = Provider.of<FirebaseUser>(context);
     return Scaffold(
         appBar: MyAppBar(title: 'Mission Detail',),
         body: Center(

@@ -1,10 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 
-/**
- * Once the user is logged into Firebase Auth, additional data is downloaded from the /users firestore
- */
+/// Once the user is logged into Firebase Auth, additional data is downloaded from the /users firestore
 class ExtendedUser {
   String teamID;
   bool isEditor;

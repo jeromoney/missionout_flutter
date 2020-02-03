@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:missionout/DataLayer/extended_user.dart';
@@ -16,7 +15,6 @@ class CreateScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<FirebaseUser>(context);
     return Scaffold(
       appBar: MyAppBar(
           title: mission == null ? 'Create a mission' : 'Edit mission'),

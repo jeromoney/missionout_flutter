@@ -1,17 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:missionout/DataLayer/extended_user.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/DataLayer/page.dart';
 import 'package:missionout/DataLayer/response.dart';
 
 class FirestoreService {
   final Firestore _db = Firestore.instance;
-
-  Stream<ExtendedUser> fetchUser(FirebaseUser user) {
-    final ref = _db.collection('users').document(user.uid);
-  }
 
   Stream<List<Mission>> fetchMissions(String teamID) {
     const QUERY_LIMIT = 10;
@@ -46,7 +40,7 @@ class FirestoreService {
     DocumentReference result;
     if (mission.reference == null) {
       // reference doesn't existm so create new mission
-      result = await Firestore.instance
+      result = await _db
           .collection('teams/$teamId/missions')
           .add(mission.toJson())
           .then((value) {
@@ -69,9 +63,8 @@ class FirestoreService {
       @required String teamID,
       @required String docID,
       @required String uid}) async {
-    DocumentReference document = Firestore.instance
-        .collection('teams/$teamID/missions/$docID/responses')
-        .document(uid);
+    DocumentReference document =
+        _db.collection('teams/$teamID/missions/$docID/responses').document(uid);
     if (response != null) {
       await document.setData(response.toJson());
     } else {
@@ -90,13 +83,25 @@ class FirestoreService {
       {@required String teamID,
       @required String missionDocID,
       @required Page page}) async {
-    await Firestore.instance
+    await _db
         .collection('teams/$teamID/missions/$missionDocID/pages')
         .add(page.toJson())
         .then((documentReference) {
       return;
     }).catchError((error) {
       print('error');
+    });
+  }
+
+  Future<void> updatePhoneNumbers({@required String uid,
+    @required String mobilePhoneNumber, @required String voicePhoneNumber}) async {
+    await _db.document('users/$uid').updateData({
+      'mobilePhoneNumber': mobilePhoneNumber,
+      'voicePhoneNumber': voicePhoneNumber
+    }).then((value) {
+      return true;
+    }).catchError((error) {
+      throw error;
     });
   }
 }

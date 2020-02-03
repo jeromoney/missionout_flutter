@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/DataLayer/user_client.dart';
@@ -29,7 +30,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
               shape: BoxShape.circle,
               image: DecorationImage(
                 fit: BoxFit.cover,
-                image: NetworkImage(user.photoUrl),
+                image: CachedNetworkImageProvider(user.photoUrl),
               ))),
       PopupMenuButton<Menu>(
         onSelected: (Menu result) {

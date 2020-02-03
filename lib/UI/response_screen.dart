@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/DataLayer/extended_user.dart';
 import 'package:missionout/Provider/firestore_service.dart';
@@ -11,7 +10,6 @@ class ResponseScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<FirebaseUser>(context);
     final extendedUser = Provider.of<ExtendedUser>(context);
 
     return Scaffold(
