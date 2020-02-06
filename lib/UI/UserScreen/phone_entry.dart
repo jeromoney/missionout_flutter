@@ -125,7 +125,9 @@ class _MyInternationalPhoneNumberInputState
           autoValidate: true,
           isEnabled: true,
           formatInput: true,
-          onInputChanged: (PhoneNumber phoneNumber) {},
+          onInputChanged: (PhoneNumber phoneNumber) {
+            debugPrint('hello world');
+          },
         );
       },
     );

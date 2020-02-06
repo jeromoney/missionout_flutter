@@ -29,14 +29,17 @@ void main() {
         ),
       ),
     ));
-    expect(find.text('+17199662421'),findsNothing);
-    expect(find.text('+14154966279'),findsOneWidget);
+    expect(find.text('+17199662421'), findsNothing);
+    expect(find.text('+14154966279'), findsOneWidget);
     await tester.pump(Duration(seconds: 2));
     await tester.tap(find.byType(Checkbox));
     await tester.pump();
-    expect(find.text('+14154966279'),findsNothing);
+    expect(find.text('+14154966279'), findsNothing);
     await tester.tap(find.byType(Checkbox));
     await tester.pump();
-    expect(find.text('+14154966279'),findsOneWidget);
+    expect(find.text('+14154966279'), findsOneWidget);
+
+    final Finder textEntry = find.widgetWithText(TextFormField, 'Voice number');
+    await tester.enterText(textEntry, '+34343');
   });
 }
