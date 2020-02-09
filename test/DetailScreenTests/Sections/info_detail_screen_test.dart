@@ -3,19 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:missionout/DataLayer/mission.dart';
-import 'package:missionout/Provider/firestore_service.dart';
-import 'package:missionout/UI/DetailScreen/info_detail_screen.dart';
+import 'package:missionout/UI/DetailScreen/Sections/info_detail_screen.dart';
 
-import '../Mock/firebase_mock.dart';
 
 void main() {
-  testWidgets('Testing stream to mock connection', (WidgetTester tester) {
-    Widget widget = Directionality(
-        textDirection: TextDirection.ltr,
-        child: InfoDetailScreen(db: FirestoreServiceMock(),),
-        );
-  });
-
   test('formatTime test', () {
     Timestamp timestamp;
     var result = formatTime(timestamp);
@@ -28,7 +19,7 @@ void main() {
   testWidgets('Info screen handles error', (WidgetTester tester) async {
     Widget widget = Directionality(
         textDirection: TextDirection.ltr,
-        child: InfoDetailScreenBuild(
+        child: InfoDetailScreen(
           snapshot: AsyncSnapshot.withError(ConnectionState.done, Error()),
         ));
     await tester.pumpWidget(widget);
@@ -38,7 +29,7 @@ void main() {
   testWidgets('Info screen handles waiting', (WidgetTester tester) async {
     Widget widget = Directionality(
         textDirection: TextDirection.ltr,
-        child: InfoDetailScreenBuild(
+        child: InfoDetailScreen(
           snapshot: AsyncSnapshot.withError(ConnectionState.waiting, null),
         ));
     await tester.pumpWidget(widget);
@@ -54,7 +45,7 @@ void main() {
 
     Widget widget = Directionality(
         textDirection: TextDirection.ltr,
-        child: InfoDetailScreenBuild(
+        child: InfoDetailScreen(
           snapshot: snapshot,
         ));
     await tester.pumpWidget(widget);
@@ -74,7 +65,7 @@ void main() {
 
     Widget widget = Directionality(
         textDirection: TextDirection.ltr,
-        child: InfoDetailScreenBuild(
+        child: InfoDetailScreen(
           snapshot: snapshot,
         ));
     await tester.pumpWidget(widget);
@@ -88,4 +79,5 @@ void main() {
         TextStyle(inherit: true, decoration: TextDecoration.lineThrough));
     expect(find.text('Squaw Creek'), findsOneWidget);
   });
+  return;
 }

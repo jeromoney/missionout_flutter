@@ -9,7 +9,8 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ActionsDetailScreen extends StatelessWidget {
-  final db = FirestoreService();
+  final AsyncSnapshot snapshot;
+  const ActionsDetailScreen({Key key, this.snapshot}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,53 +32,45 @@ class ActionsDetailScreen extends StatelessWidget {
               onPressed: extendedUser.chatURI == null
                   ? null
                   : () {
-                launch(extendedUser.chatURI).catchError((e) {
-                  Scaffold.of(context).showSnackBar(SnackBar(
-                    content: Text('Error: Is Slack installed?'),
-                  ));
-                });
-              },
+                      launch(extendedUser.chatURI).catchError((e) {
+                        Scaffold.of(context).showSnackBar(SnackBar(
+                          content: Text('Error: Is Slack installed?'),
+                        ));
+                      });
+                    },
             ),
-            StreamBuilder<Mission>(
-              stream: db.fetchSingleMission(
-                teamID: extendedUser.teamID,
-                docID: extendedUser.missionID,
-              ),
-              builder: (context, snapshot) {
-                // waiting
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return LinearProgressIndicator();
-                }
-                // error
-                if (snapshot.data == null) {
-                  return Text("There was an error.");
-                }
-                // success
-                final mission =
-                    snapshot.data;
-                return IconButton(
-                  icon: Icon(Icons.map),
-                  // If no location is provided, disable the button
-                  onPressed: mission.location == null
-                      ? null
-                      : () {
-                    final geoPoint = mission.location;
-                    final lat = geoPoint.latitude;
-                    final lon = geoPoint.longitude;
-                    // launches location in external map application.
-                    // currently optimized for gmaps. The location is opened
-                    // as a query "?q=" so the label is displayed.
-                    launch('geo:0,0?q=$lat,$lon');
-                  },
-                );
+            Builder(builder: (context) {
+              // waiting -- just show button as disabled
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return IconButton(onPressed: null, icon: Icon(Icons.map),);
               }
-            ),
+              // error
+              if (snapshot.data == null) {
+                return Text("There was an error.");
+              }
+              // success
+              final mission = snapshot.data;
+              return IconButton(
+                icon: Icon(Icons.map),
+                // If no location is provided, disable the button
+                onPressed: mission.location == null
+                    ? null
+                    : () {
+                        final geoPoint = mission.location;
+                        final lat = geoPoint.latitude;
+                        final lon = geoPoint.longitude;
+                        // launches location in external map application.
+                        // currently optimized for gmaps. The location is opened
+                        // as a query "?q=" so the label is displayed.
+                        launch('geo:0,0?q=$lat,$lon');
+                      },
+              );
+            }),
             IconButton(
               icon: Icon(Icons.people),
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (BuildContext context) =>
-                        ResponseScreen()));
+                    builder: (BuildContext context) => ResponseScreen()));
               },
             ),
           ],
@@ -127,7 +120,7 @@ class _ResponseOptionsState extends State<ResponseOptions> {
             setState(() {
               final user = Provider.of<FirebaseUser>(context, listen: false);
               final extendedUser =
-              Provider.of<ExtendedUser>(context, listen: false);
+                  Provider.of<ExtendedUser>(context, listen: false);
 
               FirestoreService().addResponse(
                   response: response,

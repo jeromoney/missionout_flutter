@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:missionout/DataLayer/mission.dart';
-import 'package:missionout/UI/CreateScreen/gps_text_form_field.dart';
-import 'package:missionout/UI/CreateScreen/submit_mission_button.dart';
+import 'package:missionout/UI/CreateScreen/Sections/gps_text_form_field.dart';
+import 'package:missionout/UI/CreateScreen/Sections/submit_mission_button.dart';
 import 'package:missionout/UI/my_appbar.dart';
 
 class CreateScreen extends StatelessWidget {

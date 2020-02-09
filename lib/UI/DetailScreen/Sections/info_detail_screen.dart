@@ -1,39 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:missionout/DataLayer/extended_user.dart';
 import 'package:missionout/DataLayer/mission.dart';
-import 'package:missionout/Provider/firestore_service.dart';
-import 'package:provider/provider.dart';
 
 class InfoDetailScreen extends StatelessWidget {
-  FirestoreService db;
-  InfoDetailScreen({Key key, this.db}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    if (db == null){
-      db = FirestoreService();
-    }
-    final extendedUser = Provider.of<ExtendedUser>(context);
-    return StreamBuilder<Mission>(
-        stream: db.fetchSingleMission(
-          teamID: extendedUser.teamID,
-          docID: extendedUser.missionID,
-        ),
-        builder: (context, snapshot) {
-          return InfoDetailScreenBuild(
-            snapshot: snapshot,
-          );
-        });
-  }
-}
-
-@visibleForTesting
-class InfoDetailScreenBuild extends StatelessWidget {
   final AsyncSnapshot snapshot;
-
-  const InfoDetailScreenBuild({Key key, this.snapshot}) : super(key: key);
+  const InfoDetailScreen({Key key, this.snapshot}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +20,7 @@ class InfoDetailScreenBuild extends StatelessWidget {
     }
 
     // success
-    final mission = snapshot.data;
+    final Mission mission = snapshot.data;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
