@@ -1,18 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:missionout/DataLayer/mission.dart';
 
 class Page {
-  final String _description;
-  final String _action;
+  final Mission _mission;
   Timestamp time;
 
-  Page({@required String description, @required String action})
-      : this._description = description,
-        this._action = action;
+  Page({@required Mission mission})
+      : _mission = mission;
 
   Map<String, dynamic> toJson() => {
-        'description': _description,
-        'action': _action,
+        'description': _mission.description,
+        'action': _mission.needForAction,
         'time': FieldValue.serverTimestamp(),
       };
 }

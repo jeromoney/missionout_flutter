@@ -1,19 +1,20 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/DataLayer/extended_user.dart';
-import 'package:missionout/Provider/firestore_service.dart';
+import 'package:missionout/Provider/database.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/UI/CreateScreen/create_screen.dart';
 import 'package:missionout/UI/my_appbar.dart';
 import 'package:provider/provider.dart';
 
 class OverviewScreen extends StatelessWidget {
-  final db = FirestoreService();
-
+  Database _database;
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<FirebaseUser>(context);
     final extendedUser = Provider.of<ExtendedUser>(context);
+    _database = Provider.of<Database>(context);
+
     assert(user != null);
     assert(extendedUser.teamID != null);
     return Scaffold(
@@ -30,7 +31,7 @@ class OverviewScreen extends StatelessWidget {
 
   Widget _buildResults(ExtendedUser extendedUser) {
     return StreamBuilder<List<Mission>>(
-        stream: db.fetchMissions(extendedUser.teamID),
+        stream: _database.fetchMissions(extendedUser.teamID),
         builder: (context, snapshot) {
           // waiting
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -68,7 +69,8 @@ class OverviewScreen extends StatelessWidget {
             title: Text(mission.description ?? ''),
             subtitle: Text(mission.needForAction ?? ''),
             onTap: () {
-              Provider.of<ExtendedUser>(context, listen: false).missionID = mission.reference.documentID;
+              Provider.of<ExtendedUser>(context, listen: false).missionID =
+                  mission.reference.documentID;
               Navigator.of(context).pushNamed('/detail');
             },
           );

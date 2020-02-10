@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:missionout/DataLayer/extended_user.dart';
-import 'package:missionout/Provider/firestore_service.dart';
+import 'package:missionout/Provider/database.dart';
+import 'package:missionout/Provider/firestore_database.dart';
 import 'package:missionout/DataLayer/response.dart';
 import 'package:missionout/UI/my_appbar.dart';
 import 'package:provider/provider.dart';
 
 class ResponseScreen extends StatelessWidget {
-  final db = FirestoreService();
+  Database _database;
 
   @override
   Widget build(BuildContext context) {
     final extendedUser = Provider.of<ExtendedUser>(context);
+    _database = Provider.of<Database>(context);
 
     return Scaffold(
       appBar: MyAppBar( title: 'Responses'),
@@ -20,7 +22,7 @@ class ResponseScreen extends StatelessWidget {
 
   Widget _buildResults(ExtendedUser extendedUser) {
     return StreamBuilder<List<Response>>(
-      stream: db.fetchResponses(
+      stream: _database.fetchResponses(
           teamID: extendedUser.teamID, docID: extendedUser.missionID),
       builder: (context, snapshot) {
         // waiting

@@ -3,10 +3,12 @@ import 'package:flutter/foundation.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/DataLayer/page.dart';
 import 'package:missionout/DataLayer/response.dart';
+import 'package:missionout/Provider/database.dart';
 
-class FirestoreService {
+class FirestoreDatabase implements Database {
   final Firestore _db = Firestore.instance;
 
+  @override
   Stream<List<Mission>> fetchMissions(String teamID) {
     const QUERY_LIMIT = 10;
     final ref = _db
@@ -17,6 +19,7 @@ class FirestoreService {
         snapShots.documents.map((data) => Mission.fromSnapshot(data)).toList());
   }
 
+  @override
   Stream<Mission> fetchSingleMission(
       {@required String teamID, @required String docID}) {
     return _db
@@ -25,7 +28,8 @@ class FirestoreService {
         .map((snapshot) => Mission.fromSnapshot(snapshot));
   }
 
-  fetchResponses({@required String teamID, @required String docID}) {
+  @override
+  Stream<List<Response>> fetchResponses({@required String teamID, @required String docID}) {
     final ref = _db
         .collection('teams/$teamID/missions/$docID/responses')
         .orderBy('status', descending: true);
@@ -33,7 +37,7 @@ class FirestoreService {
         .map((data) => Response.fromSnapshot(data))
         .toList());
   }
-
+  @override
   Future<DocumentReference> addMission(
       {@required String teamId, @required Mission mission}) async {
     // if document reference exists in mission variable, than we are updating an existing mission rather than creating a new one.
@@ -57,7 +61,7 @@ class FirestoreService {
     }
     return result;
   }
-
+  @override
   Future<void> addResponse(
       {@required Response response,
       @required String teamID,
@@ -71,14 +75,14 @@ class FirestoreService {
       await document.delete();
     }
   }
-
+  @override
   void standDownMission(
-      {bool standDown, @required String teamID, @required String docID}) {
+      {@required Mission mission, @required String teamID}) {
     _db
-        .document('teams/$teamID/missions/$docID')
-        .updateData({'stoodDown': standDown});
+        .document('teams/$teamID/missions/${mission.reference.documentID}')
+        .updateData({'stoodDown': mission.isStoodDown});
   }
-
+  @override
   Future<void> addPage(
       {@required String teamID,
       @required String missionDocID,
@@ -92,7 +96,7 @@ class FirestoreService {
       print('error');
     });
   }
-
+  @override
   Future<void> updatePhoneNumbers({@required String uid,
     @required String mobilePhoneNumber, @required String voicePhoneNumber}) async {
     await _db.document('users/$uid').updateData({

@@ -1,9 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/DataLayer/extended_user.dart';
-import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/DataLayer/response.dart';
-import 'package:missionout/Provider/firestore_service.dart';
+import 'package:missionout/Provider/database.dart';
 import 'package:missionout/UI/response_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -29,20 +28,25 @@ class ActionsDetailScreen extends StatelessWidget {
           children: <Widget>[
             IconButton(
               icon: Icon(Icons.chat),
-              onPressed: extendedUser.chatURI == null
-                  ? null
-                  : () {
-                      launch(extendedUser.chatURI).catchError((e) {
+              onPressed: extendedUser.chatURIisAvailable()
+                  ? () {
+                      try {
+                        extendedUser.launchChat();
+                      } catch (e) {
                         Scaffold.of(context).showSnackBar(SnackBar(
                           content: Text('Error: Is Slack installed?'),
                         ));
-                      });
-                    },
+                      }
+                    }
+                  : null,
             ),
             Builder(builder: (context) {
               // waiting -- just show button as disabled
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return IconButton(onPressed: null, icon: Icon(Icons.map),);
+                return IconButton(
+                  onPressed: null,
+                  icon: Icon(Icons.map),
+                );
               }
               // error
               if (snapshot.data == null) {
@@ -121,8 +125,8 @@ class _ResponseOptionsState extends State<ResponseOptions> {
               final user = Provider.of<FirebaseUser>(context, listen: false);
               final extendedUser =
                   Provider.of<ExtendedUser>(context, listen: false);
-
-              FirestoreService().addResponse(
+              final database = Provider.of<Database>(context, listen: false);
+              database.addResponse(
                   response: response,
                   uid: user.uid,
                   teamID: extendedUser.teamID,

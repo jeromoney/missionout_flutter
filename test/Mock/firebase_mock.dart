@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:missionout/DataLayer/mission.dart';
-import 'package:missionout/Provider/firestore_service.dart';
+import 'package:missionout/Provider/firestore_database.dart';
 import 'package:mockito/mockito.dart';
 
 class FirebaseAuthMock extends Mock implements FirebaseUser {
@@ -19,7 +19,7 @@ class FirebaseAuthMock extends Mock implements FirebaseUser {
       'https://lh3.googleusercontent.com/a-/AAuE7mByjukLd7ebZ-v9isPAYYiEkrlQmbOqiZeiOLPN=s96-c';
 }
 
-class FirestoreServiceMock extends Mock implements FirestoreService {
+class FirestoreServiceMock extends Mock implements FirestoreDatabase {
   @override
   Stream<Mission> fetchSingleMission(
       {@required String teamID,@required String docID}) {

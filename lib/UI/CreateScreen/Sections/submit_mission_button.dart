@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/DataLayer/extended_user.dart';
 import 'package:missionout/DataLayer/mission.dart';
-import 'package:missionout/Provider/firestore_service.dart';
+import 'package:missionout/Provider/firestore_database.dart';
 import 'package:provider/provider.dart';
 
 class SubmitMissionButton extends StatelessWidget {
@@ -65,7 +65,7 @@ class SubmitMissionButton extends StatelessWidget {
           ));
           final firebaseMission = fetchMission();
 
-          final db = FirestoreService();
+          final db = FirestoreDatabase();
           final extendedUser =
           Provider.of<ExtendedUser>(context, listen: false);
 

@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/DataLayer/extended_user.dart';
-import 'package:missionout/Provider/firestore_service.dart';
+import 'package:missionout/Provider/firestore_database.dart';
 import 'package:missionout/UI/my_appbar.dart';
 import 'package:provider/provider.dart';
 
@@ -64,7 +64,7 @@ class SubmitButton extends StatelessWidget {
               content: Text('Processing'),
             ));
             final user = Provider.of<FirebaseUser>(context, listen: false);
-            await FirestoreService().updatePhoneNumbers(
+            await FirestoreDatabase().updatePhoneNumbers(
                 uid: user.uid, mobilePhoneNumber: mobilePhoneNumberController.text, voicePhoneNumber: voicePhoneNumberController.text);
             // success
             //update ExtendedUSer

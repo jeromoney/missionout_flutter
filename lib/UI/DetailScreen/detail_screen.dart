@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:missionout/DataLayer/extended_user.dart';
 import 'package:missionout/DataLayer/mission.dart';
-import 'package:missionout/Provider/firestore_service.dart';
+import 'package:missionout/Provider/database.dart';
 import 'package:missionout/UI/DetailScreen/Sections/actions_detail_screen.dart';
 import 'package:missionout/UI/DetailScreen/Sections/edit_detail_screen.dart';
 import 'package:missionout/UI/DetailScreen/Sections/info_detail_screen.dart';
@@ -29,7 +29,7 @@ class DetailScreen extends StatelessWidget {
                   ),
                 ),
                 DetailScreenStreamWrapper(detailItem: ActionsDetailScreen),
-                EditDetailScreen(),
+                DetailScreenStreamWrapper(detailItem: EditDetailScreen),
               ],
             ),
           ),
@@ -47,10 +47,10 @@ class DetailScreenStreamWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final extendedUser = Provider.of<ExtendedUser>(context);
-    final db = Provider.of<FirestoreService>(context);
+    final database = Provider.of<Database>(context);
 
     return StreamBuilder<Mission>(
-        stream: db.fetchSingleMission(
+        stream: database.fetchSingleMission(
           teamID: extendedUser.teamID,
           docID: extendedUser.missionID,
         ),
@@ -63,6 +63,10 @@ class DetailScreenStreamWrapper extends StatelessWidget {
             case ActionsDetailScreen:
               {
                 return ActionsDetailScreen(snapshot: snapshot);
+              }
+            case EditDetailScreen:
+              {
+                return EditDetailScreen(snapshot: snapshot);
               }
 
             default:

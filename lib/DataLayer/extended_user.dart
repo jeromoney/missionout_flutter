@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// Once the user is logged into Firebase Auth, additional data is downloaded from the /users firestore
 class ExtendedUser {
@@ -11,9 +12,15 @@ class ExtendedUser {
   String voicePhoneNumber;
   String region;
   DocumentReference reference;
+  bool chatURIisAvailable() => chatURI != null;
+
+  launchChat(){
+    launch(chatURI);
+  }
 
   Future<void> setUserPermissions(FirebaseUser user) async {
     final Firestore db = Firestore.instance;
+
 
     // user specific permissions
     var document = await db.collection('users').document(user.uid).get();
