@@ -1,6 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/DataLayer/extended_user.dart';
+import 'package:missionout/DataLayer/mission_address.dart';
 import 'package:missionout/Provider/database.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/UI/CreateScreen/create_screen.dart';
@@ -8,18 +8,12 @@ import 'package:missionout/UI/my_appbar.dart';
 import 'package:provider/provider.dart';
 
 class OverviewScreen extends StatelessWidget {
-  Database _database;
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<FirebaseUser>(context);
     final extendedUser = Provider.of<ExtendedUser>(context);
-    _database = Provider.of<Database>(context);
-
-    assert(user != null);
-    assert(extendedUser.teamID != null);
     return Scaffold(
         appBar: MyAppBar(title: 'Missions Overview'),
-        body: _buildResults(extendedUser),
+        body: BuildMissionStream(),
         floatingActionButton: extendedUser.isEditor // only show FAB to editors
             ? FloatingActionButton(
                 child: Icon(Icons.create),
@@ -28,10 +22,16 @@ class OverviewScreen extends StatelessWidget {
                 })
             : null);
   }
+}
 
-  Widget _buildResults(ExtendedUser extendedUser) {
+@visibleForTesting
+class BuildMissionStream extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final extendedUser = Provider.of<ExtendedUser>(context);
+    final database = Provider.of<Database>(context);
     return StreamBuilder<List<Mission>>(
-        stream: _database.fetchMissions(extendedUser.teamID),
+        stream: database.fetchMissions(extendedUser.teamID),
         builder: (context, snapshot) {
           // waiting
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -56,11 +56,22 @@ class OverviewScreen extends StatelessWidget {
             );
           }
 
-          return _buildMissionResults(missions);
+          return BuildMissionResults(
+            missions: missions,
+          );
         });
   }
+}
 
-  Widget _buildMissionResults(List<Mission> missions) {
+@visibleForTesting
+class BuildMissionResults extends StatelessWidget {
+  final List<Mission> missions;
+
+  const BuildMissionResults({Key key, @required this.missions})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return ListView.separated(
         itemBuilder: (BuildContext context, int index) {
           final mission = missions[index];
@@ -69,8 +80,8 @@ class OverviewScreen extends StatelessWidget {
             title: Text(mission.description ?? ''),
             subtitle: Text(mission.needForAction ?? ''),
             onTap: () {
-              Provider.of<ExtendedUser>(context, listen: false).missionID =
-                  mission.reference.documentID;
+              Provider.of<MissionAddress>(context, listen: false).address =
+                  mission.address;
               Navigator.of(context).pushNamed('/detail');
             },
           );

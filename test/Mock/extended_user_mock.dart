@@ -5,6 +5,9 @@ import 'package:mockito/mockito.dart';
 class ExtendedUserMock extends Mock implements ExtendedUser {
   final String chatURI;
   final isEditor;
+  final missionID = '123456';
+  final teamID = 'something';
+
   ExtendedUserMock({this.isEditor = true, this.chatURI});
 
 

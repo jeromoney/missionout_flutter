@@ -1,12 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/DataLayer/extended_user.dart';
+import 'package:missionout/DataLayer/mission_address.dart';
 import 'package:missionout/Provider/database.dart';
 import 'package:missionout/Provider/firestore_database.dart';
 import 'package:missionout/UI/CreateScreen/create_screen.dart';
 import 'package:missionout/UI/DetailScreen/detail_screen.dart';
 import 'package:missionout/UI/main_screen.dart';
 import 'package:provider/provider.dart';
+
+import 'DataLayer/mission.dart';
 
 const bool USE_FAKE_DATABASE = false;
 
@@ -21,7 +24,8 @@ class MissionOut extends StatelessWidget {
         StreamProvider<FirebaseUser>.value(
             value: FirebaseAuth.instance.onAuthStateChanged),
         Provider(create: (_) => ExtendedUser(),),
-        Provider<Database>(create: (_) => FirestoreDatabase(),)
+        Provider<Database>(create: (_) => FirestoreDatabase(),),
+        Provider<MissionAddress>(create: (_) => MissionAddress(),)
       ],
       child: MaterialApp(
         title: 'Mission Out',

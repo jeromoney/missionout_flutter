@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:missionout/DataLayer/extended_user.dart';
+import 'package:missionout/DataLayer/mission.dart';
+import 'package:missionout/DataLayer/mission_address.dart';
 import 'package:missionout/Provider/database.dart';
 import 'package:missionout/Provider/firestore_database.dart';
 import 'package:missionout/DataLayer/response.dart';
@@ -7,23 +9,28 @@ import 'package:missionout/UI/my_appbar.dart';
 import 'package:provider/provider.dart';
 
 class ResponseScreen extends StatelessWidget {
-  Database _database;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: MyAppBar(title: 'Responses'),
+      body: BuildResponseStream(),
+    );
+  }
+}
 
+@visibleForTesting
+class BuildResponseStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final extendedUser = Provider.of<ExtendedUser>(context);
-    _database = Provider.of<Database>(context);
+    final missionAddress = Provider.of<MissionAddress>(context);
+    final database = Provider.of<Database>(context);
 
-    return Scaffold(
-      appBar: MyAppBar( title: 'Responses'),
-      body: _buildResults(extendedUser),
-    );
-  }
-
-  Widget _buildResults(ExtendedUser extendedUser) {
     return StreamBuilder<List<Response>>(
-      stream: _database.fetchResponses(
-          teamID: extendedUser.teamID, docID: extendedUser.missionID),
+      stream: database.fetchResponses(
+        teamID: extendedUser.teamID,
+        docID: missionAddress.address,
+      ),
       builder: (context, snapshot) {
         // waiting
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -44,12 +51,23 @@ class ResponseScreen extends StatelessWidget {
 
         // success
         responses.removeWhere((response) => response == null);
-        return _buildResponsesResults(responses);
+        return BuildResponsesResult(
+          responses: responses,
+        );
       },
     );
   }
+}
 
-  Widget _buildResponsesResults(List<Response> responses) {
+@visibleForTesting
+class BuildResponsesResult extends StatelessWidget {
+  final List<Response> responses;
+
+  const BuildResponsesResult({Key key, @required this.responses})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return DataTable(
         columns: [
           DataColumn(label: Text('Team Member')),

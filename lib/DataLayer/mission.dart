@@ -30,6 +30,8 @@ class Mission {
   Mission.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data, reference: snapshot.reference);
 
+  String get address => reference.documentID;
+
   Map<String, dynamic> toJson() => {
         'description': description,
         'location': location,

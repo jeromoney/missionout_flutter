@@ -1,11 +1,10 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:missionout/DataLayer/extended_user.dart';
 import 'package:missionout/DataLayer/mission.dart';
+import 'package:missionout/DataLayer/mission_address.dart';
 import 'package:missionout/Provider/database.dart';
 import 'package:missionout/UI/DetailScreen/Sections/actions_detail_screen.dart';
 import 'package:missionout/UI/response_screen.dart';
@@ -61,7 +60,8 @@ void main() async {
           create: (_) => DatabaseFake(),
         ),
         Provider<ExtendedUser>(
-            create: (_) => ExtendedUserMock(chatURI: 'https://www.cnn.com/'))
+            create: (_) => ExtendedUserMock(chatURI: 'https://www.cnn.com/')),
+        Provider<MissionAddress>(create: (_)=> MissionAddress(),)
       ],
       child: MaterialApp(
         home: Scaffold(
@@ -88,8 +88,6 @@ void main() async {
     await tester.tap(finder);
     await tester.pumpAndSettle();
     expect(find.byType(ResponseScreen), findsOneWidget);
-
-
   });
 
   testWidgets('action segment handles mission without location',
@@ -137,43 +135,35 @@ void main() async {
     expect(find.byType(SnackBar), findsOneWidget); // snackbar shows error
   });
 
-  testWidgets('ResponseOptions test',
-          (WidgetTester tester) async {
+  testWidgets('ResponseOptions test', (WidgetTester tester) async {
+    Widget widget = MultiProvider(
+      providers: [
+        Provider<FirebaseUser>(
+          create: (_) => FirebaseAuthMock(),
+        ),
+        Provider<Database>(
+          create: (_) => DatabaseFake(),
+        ),
+        Provider<ExtendedUser>(
+            create: (_) =>
+                ExtendedUserMock(chatURI: 'this will cause an error'))
+      ],
+      child: MaterialApp(
+        home: Scaffold(
+          body: ResponseOptions(),
+        ),
+      ),
+    );
+    await tester.pumpWidget(widget);
+    await tester.pumpAndSettle();
+    var finder = find.byType(ChoiceChip);
+    expect(finder, findsNWidgets(4));
 
-        Widget widget = MultiProvider(
-          providers: [
-            Provider<FirebaseUser>(
-              create: (_) => FirebaseAuthMock(),
-            ),
-            Provider<Database>(
-              create: (_) => DatabaseFake(),
-            ),
-            Provider<ExtendedUser>(
-                create: (_) =>
-                    ExtendedUserMock(chatURI: 'this will cause an error'))
-          ],
-          child: MaterialApp(
-            home: Scaffold(
-              body: ResponseOptions(),
-            ),
-          ),
-        );
-        await tester.pumpWidget(widget);
-        await tester.pumpAndSettle();
-        var finder = find.byType(ChoiceChip);
-        expect(finder, findsNWidgets(4));
+    finder = find.byType(ChoiceChip).at(0);
+    await tester.tap(finder);
+    await tester.pumpAndSettle();
 
-        finder = find.byType(ChoiceChip).at(0);
-        await tester.tap(finder);
-        await tester.pumpAndSettle();
-
-        await tester.tap(finder);
-        await tester.pumpAndSettle();
-
-
-
-
-          });
-
-
+    await tester.tap(finder);
+    await tester.pumpAndSettle();
+  });
 }

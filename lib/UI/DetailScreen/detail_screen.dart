@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:missionout/DataLayer/extended_user.dart';
 import 'package:missionout/DataLayer/mission.dart';
+import 'package:missionout/DataLayer/mission_address.dart';
 import 'package:missionout/Provider/database.dart';
 import 'package:missionout/UI/DetailScreen/Sections/actions_detail_screen.dart';
 import 'package:missionout/UI/DetailScreen/Sections/edit_detail_screen.dart';
@@ -48,11 +49,13 @@ class DetailScreenStreamWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     final extendedUser = Provider.of<ExtendedUser>(context);
     final database = Provider.of<Database>(context);
+    final missionAddress = Provider.of<MissionAddress>(context);
+
 
     return StreamBuilder<Mission>(
         stream: database.fetchSingleMission(
           teamID: extendedUser.teamID,
-          docID: extendedUser.missionID,
+          docID: missionAddress.address,
         ),
         builder: (context, snapshot) {
           switch (detailItem) {
