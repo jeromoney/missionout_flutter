@@ -10,8 +10,6 @@ import 'package:provider/provider.dart';
 
 import 'Provider/user.dart';
 
-const bool USE_FAKE_DATABASE = false;
-
 void main() => runApp(MissionOut());
 
 class MissionOut extends StatelessWidget {
@@ -20,9 +18,23 @@ class MissionOut extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<User>(create: (_) => MyFirebaseUser(),),
-        Provider<Database>(create: (_) => FirestoreDatabase(),),
-        Provider<MissionAddress>(create: (_) => MissionAddress(),)
+        ChangeNotifierProvider<User>(
+          create: (_) => MyFirebaseUser(),
+        ),
+        ProxyProvider<User, Database>(
+          create: (_) => FirestoreDatabase(),
+          update: (_, user, database) {
+            database.teamID = user.teamID;
+            return database;
+          },
+          updateShouldNotify: (Database a, Database b) {
+            // TODO - understand what this does
+            return true;
+          },
+        ),
+        Provider<MissionAddress>(
+          create: (_) => MissionAddress(),
+        )
       ],
       child: MaterialApp(
         title: 'Mission Out',

@@ -8,6 +8,8 @@ import 'package:missionout/DataLayer/response.dart';
 // TODO - Organize parameters to have more consistency
 
 abstract class Database {
+  String teamID;
+
   Stream<List<Mission>> fetchMissions(String teamID) {}
 
   Stream<Mission> fetchSingleMission(

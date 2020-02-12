@@ -7,6 +7,8 @@ import 'package:missionout/Provider/database.dart';
 
 class FirestoreDatabase implements Database {
   final Firestore _db = Firestore.instance;
+  @override
+  String teamID;
 
   @override
   Stream<List<Mission>> fetchMissions(String teamID) {
@@ -108,4 +110,6 @@ class FirestoreDatabase implements Database {
       throw error;
     });
   }
+
+
 }
