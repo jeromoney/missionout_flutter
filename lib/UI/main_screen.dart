@@ -6,8 +6,6 @@ import 'package:missionout/UI/signin_screen.dart';
 import 'package:provider/provider.dart';
 
 class MainScreen extends StatelessWidget {
-  final auth = FirebaseAuth.instance;
-
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<FirebaseUser>(context);
@@ -33,7 +31,9 @@ class InitWidgetState extends State<InitWidget> {
   @override
   Widget build(BuildContext context) {
     if (!_initialized) {
-      return Scaffold(body: Center(child: CircularProgressIndicator()),);
+      return Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
     } else {
       return OverviewScreen();
     }

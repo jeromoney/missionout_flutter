@@ -9,8 +9,6 @@ import 'package:missionout/UI/DetailScreen/detail_screen.dart';
 import 'package:missionout/UI/main_screen.dart';
 import 'package:provider/provider.dart';
 
-import 'DataLayer/mission.dart';
-
 const bool USE_FAKE_DATABASE = false;
 
 void main() => runApp(MissionOut());

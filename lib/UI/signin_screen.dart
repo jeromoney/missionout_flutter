@@ -22,7 +22,7 @@ class SigninScreen extends StatelessWidget{
               alignment: Alignment.bottomCenter,
               child: GoogleSignInButton(
                 onPressed: () {
-                  UserClient().handleSignIn();
+                  UserClient().signIn();
                 },
                 darkMode: true,
               ),

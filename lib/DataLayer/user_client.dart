@@ -10,17 +10,17 @@ import 'dart:io' show Platform;
 
 class UserClient {
 
-  Future<Tuple2<FirebaseUser, HashMap<dynamic, dynamic>>> fetchCurrentUser() async{
-   FirebaseUser user = await FirebaseAuth.instance.currentUser();
-   if (user == null) {
-     return Tuple2<FirebaseUser, HashMap<dynamic, dynamic>>(null,null);
-   }
-   final idTokenResult = await user.getIdToken();
-   final claims = HashMap.from(idTokenResult.claims);
-   return Tuple2<FirebaseUser, HashMap<dynamic, dynamic>>(user,claims);
-  }
+//  Future<Tuple2<FirebaseUser, HashMap<dynamic, dynamic>>> fetchCurrentUser() async{
+//   FirebaseUser user = await FirebaseAuth.instance.currentUser();
+//   if (user == null) {
+//     return Tuple2<FirebaseUser, HashMap<dynamic, dynamic>>(null,null);
+//   }
+//   final idTokenResult = await user.getIdToken();
+//   final claims = HashMap.from(idTokenResult.claims);
+//   return Tuple2<FirebaseUser, HashMap<dynamic, dynamic>>(user,claims);
+//  }
 
-  Future<Tuple2<FirebaseUser, HashMap<dynamic, dynamic>>> handleSignIn() async {
+  Future<Tuple2<FirebaseUser, HashMap<dynamic, dynamic>>> signIn() async {
     //check if user is signed in
     final GoogleSignIn _googleSignIn = GoogleSignIn();
     final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -67,7 +67,7 @@ class UserClient {
     });
   }
 
-  Future<FirebaseUser> handleSignOut() async {
+  Future<FirebaseUser> signOut() async {
     final FirebaseAuth _auth = FirebaseAuth.instance;
     final GoogleSignIn _googleSignIn = GoogleSignIn();
     await _googleSignIn.signOut();
