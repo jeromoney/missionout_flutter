@@ -1,11 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:missionout/DataLayer/extended_user.dart';
 import 'package:missionout/DataLayer/mission.dart';
-import 'package:missionout/Provider/user.dart';
 import 'package:missionout/UI/DetailScreen/Sections/actions_detail_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:mockito/mockito.dart';
 
 
 class XXX extends StatelessWidget{

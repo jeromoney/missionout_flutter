@@ -48,4 +48,6 @@ class UserFake with ChangeNotifier implements User {
 
   @override
   void onAuthStateChanged() {}
+  @override
+  String region;
 }
