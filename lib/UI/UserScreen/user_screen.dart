@@ -66,7 +66,6 @@ class SubmitButton extends StatelessWidget {
             final database = Provider.of<Database>(context, listen: false);
 
             await database.updatePhoneNumbers(
-                uid: user.uid,
                 mobilePhoneNumber: mobilePhoneNumberController.text,
                 voicePhoneNumber: voicePhoneNumberController.text);
             // success

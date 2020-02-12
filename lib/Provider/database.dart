@@ -5,36 +5,29 @@ import 'package:missionout/DataLayer/page.dart';
 import 'package:missionout/DataLayer/response.dart';
 
 // TODO - Make Document Reference an abstract class
-// TODO - Organize parameters to have more consistency
 
 abstract class Database {
   String teamID;
+  String uid;
 
-  Stream<List<Mission>> fetchMissions(String teamID) {}
+  Stream<List<Mission>> fetchMissions() {}
 
-  Stream<Mission> fetchSingleMission(
-      {@required String teamID, @required String docID}) {}
+  Stream<Mission> fetchSingleMission({@required String docID}) {}
 
-  Stream<List<Response>> fetchResponses({@required String teamID, @required String docID}) {}
+  Stream<List<Response>> fetchResponses({@required String docID}) {}
 
-  Future<DocumentReference> addMission(
-      {@required String teamId, @required Mission mission}) async {}
+  Future<DocumentReference> addMission({@required Mission mission}) async {}
 
-  Future<void> addResponse(
-      {@required Response response,
-      @required String teamID,
-      @required String docID,
-      @required String uid}) async {}
+  Future<void> addResponse({
+    @required Response response,
+    @required String docID,
+  }) async {}
 
-  void standDownMission(
-      {@required Mission mission, @required String teamID}) {}
+  void standDownMission({@required Mission mission}) {}
 
-  Future<void> addPage(
-      {@required String teamID,
-      @required Page page}) async {}
+  Future<void> addPage({@required Page page}) async {}
 
   Future<void> updatePhoneNumbers(
-      {@required String uid,
-      @required String mobilePhoneNumber,
+      {@required String mobilePhoneNumber,
       @required String voicePhoneNumber}) async {}
 }

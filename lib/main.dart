@@ -25,6 +25,7 @@ class MissionOut extends StatelessWidget {
           create: (_) => FirestoreDatabase(),
           update: (_, user, database) {
             database.teamID = user.teamID;
+            database.uid = user.uid;
             return database;
           },
           updateShouldNotify: (Database a, Database b) {

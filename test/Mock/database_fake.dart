@@ -29,7 +29,7 @@ class DatabaseFake implements Database {
   }
 
   @override
-  Stream<List<Mission>> fetchMissions(String teamID) async* {
+  Stream<List<Mission>> fetchMissions() async* {
     await Future.delayed(Duration(milliseconds: 100));
     switch (yieldValue) {
       case Yield.results:
@@ -78,4 +78,9 @@ class DatabaseFake implements Database {
   void standDownMission({Mission mission, String teamID}) {
     return;
   }
+
+  @override
+  String teamID = 'some team';
+  @override
+  String uid = '12345';
 }

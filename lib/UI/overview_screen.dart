@@ -31,7 +31,7 @@ class BuildMissionStream extends StatelessWidget {
     final user = Provider.of<User>(context);
     final database = Provider.of<Database>(context);
     return StreamBuilder<List<Mission>>(
-        stream: database.fetchMissions(user.teamID),
+        stream: database.fetchMissions(),
         builder: (context, snapshot) {
           // waiting
           if (snapshot.connectionState == ConnectionState.waiting) {

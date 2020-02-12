@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/DataLayer/mission_address.dart';
 import 'package:missionout/Provider/database.dart';
-import 'package:missionout/Provider/user.dart';
 import 'package:provider/provider.dart';
 
 class SubmitMissionButton extends StatelessWidget {
@@ -66,12 +65,9 @@ class SubmitMissionButton extends StatelessWidget {
           ));
           final firebaseMission = fetchMission();
 
-          final db = Provider.of<Database>(context, listen: false);
-          final user = Provider.of<User>(context, listen: false);
+          final database = Provider.of<Database>(context, listen: false);
 
-          db
-              .addMission(mission: firebaseMission, teamId: user.teamID)
-              .then((documentReference) {
+          database.addMission(mission: firebaseMission).then((documentReference) {
             if (documentReference == null) {
               // there was an error adding mission to database
               Scaffold.of(context).showSnackBar(SnackBar(

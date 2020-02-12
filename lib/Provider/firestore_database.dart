@@ -9,9 +9,11 @@ class FirestoreDatabase implements Database {
   final Firestore _db = Firestore.instance;
   @override
   String teamID;
+  @override
+  String uid;
 
   @override
-  Stream<List<Mission>> fetchMissions(String teamID) {
+  Stream<List<Mission>> fetchMissions() {
     const QUERY_LIMIT = 10;
     final ref = _db
         .collection('teams/$teamID/missions')
@@ -22,8 +24,7 @@ class FirestoreDatabase implements Database {
   }
 
   @override
-  Stream<Mission> fetchSingleMission(
-      {@required String teamID, @required String docID}) {
+  Stream<Mission> fetchSingleMission({@required String docID}) {
     return _db
         .document('teams/$teamID/missions/$docID')
         .snapshots()
@@ -31,7 +32,7 @@ class FirestoreDatabase implements Database {
   }
 
   @override
-  Stream<List<Response>> fetchResponses({@required String teamID, @required String docID}) {
+  Stream<List<Response>> fetchResponses({@required String docID}) {
     final ref = _db
         .collection('teams/$teamID/missions/$docID/responses')
         .orderBy('status', descending: true);
@@ -39,6 +40,7 @@ class FirestoreDatabase implements Database {
         .map((data) => Response.fromSnapshot(data))
         .toList());
   }
+
   @override
   Future<DocumentReference> addMission(
       {@required String teamId, @required Mission mission}) async {
@@ -63,12 +65,10 @@ class FirestoreDatabase implements Database {
     }
     return result;
   }
+
   @override
   Future<void> addResponse(
-      {@required Response response,
-      @required String teamID,
-      @required String docID,
-      @required String uid}) async {
+      {@required Response response, @required String docID}) async {
     DocumentReference document =
         _db.collection('teams/$teamID/missions/$docID/responses').document(uid);
     if (response != null) {
@@ -77,18 +77,17 @@ class FirestoreDatabase implements Database {
       await document.delete();
     }
   }
+
   @override
-  void standDownMission(
-      {@required Mission mission, @required String teamID}) {
+  void standDownMission({@required Mission mission}) {
     _db
         .document('teams/$teamID/missions/${mission.reference.documentID}')
         .updateData({'stoodDown': mission.isStoodDown});
   }
+
   @override
   Future<void> addPage(
-      {@required String teamID,
-      @required String missionDocID,
-      @required Page page}) async {
+      {@required String missionDocID, @required Page page}) async {
     await _db
         .collection('teams/$teamID/missions/$missionDocID/pages')
         .add(page.toJson())
@@ -98,9 +97,11 @@ class FirestoreDatabase implements Database {
       print('error');
     });
   }
+
   @override
-  Future<void> updatePhoneNumbers({@required String uid,
-    @required String mobilePhoneNumber, @required String voicePhoneNumber}) async {
+  Future<void> updatePhoneNumbers(
+      {@required String mobilePhoneNumber,
+      @required String voicePhoneNumber}) async {
     await _db.document('users/$uid').updateData({
       'mobilePhoneNumber': mobilePhoneNumber,
       'voicePhoneNumber': voicePhoneNumber
@@ -110,6 +111,4 @@ class FirestoreDatabase implements Database {
       throw error;
     });
   }
-
-
 }

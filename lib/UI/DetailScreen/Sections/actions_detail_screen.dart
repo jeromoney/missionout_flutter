@@ -130,8 +130,6 @@ class _ResponseOptionsState extends State<ResponseOptions> {
 
               database.addResponse(
                   response: response,
-                  uid: user.uid,
-                  teamID: user.teamID,
                   docID: missionAddress.address);
               _value = selected ? index : null;
             });

@@ -44,7 +44,6 @@ class EditDetailScreen extends StatelessWidget {
                       final page = Page(
                           mission: mission);
                       database.addPage(
-                          teamID: user.teamID,
                           page: page);
                     },
                   ),
@@ -62,7 +61,6 @@ class EditDetailScreen extends StatelessWidget {
                       mission.isStoodDown = !mission.isStoodDown;
                       database.standDownMission(
                         mission: mission,
-                        teamID: user.teamID,
                       );
                     },
                   ),
