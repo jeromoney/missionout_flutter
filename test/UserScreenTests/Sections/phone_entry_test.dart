@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:missionout/Provider/user.dart';
 import 'package:missionout/UI/UserScreen/Sections/phone_entry.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +14,9 @@ void main() {
     await tester.pumpWidget(MultiProvider(
       providers: [
         ChangeNotifierProvider<User>(
-          create: (_) => UserFake(mobilePhoneNumber: '+17199662421',voicePhoneNumber: '+14154966279'),
+          create: (_) => UserFake(
+              mobilePhoneNumber: '+17199662421',
+              voicePhoneNumber: '+14154966279'),
         ),
         Provider<PhoneType>(
           create: (BuildContext context) => PhoneType.voicePhoneNumber,
@@ -39,5 +42,57 @@ void main() {
 
     final Finder textEntry = find.widgetWithText(TextFormField, 'Voice number');
     await tester.enterText(textEntry, '+34343');
+  });
+
+  group('InternationalPhoneNumberInputFutureBuilder widget tests', () {
+    testWidgets(
+        'InternationalPhoneNumberInputFutureBuilder widget with error snapshot',
+        (WidgetTester tester) async {
+      Widget widget = MaterialApp(
+          home: Scaffold(
+        body: InternationalPhoneNumberInputFutureBuilder(
+          controller: null,
+          labelText: null,
+          snapshot: AsyncSnapshot.withError(
+              ConnectionState.done, DiagnosticLevel.error),
+          hintText: null,
+        ),
+      ));
+      await tester.pumpWidget(widget);
+      await tester.pumpAndSettle();
+      // In error, the widget should just use the default region of US
+      // TODO - verify error handling works as it should
+    });
+
+    testWidgets(
+        'InternationalPhoneNumberInputFutureBuilder widget with sucessful snapshot',
+        (WidgetTester tester) async {
+      Widget widget = MaterialApp(
+          home: Scaffold(
+        body: InternationalPhoneNumberInputFutureBuilder(
+          controller: null,
+          labelText: null,
+          snapshot: AsyncSnapshot.withData(ConnectionState.done, 'US'),
+          hintText: null,
+        ),
+      ));
+      await tester.pumpWidget(widget);
+      await tester.pumpAndSettle();
+      // In error, the widget should just use the default region of US
+      // TODO - verify sucessful handling of data
+      var finder = find.byType(InternationalPhoneNumberInput);
+      await tester.enterText(finder, 'a');
+      await tester.pumpAndSettle();
+      // TODO - app should do something with the phone number
+    });
+  });
+
+  group('getRegion unit testing', (){
+    test('testing different values', () async{
+      assert(await getRegion('') == 'US');
+      assert(await getRegion(null) == 'US');
+      //assert(await getRegion('+12122535678') == 'US'); Unable to run this outside of an app
+
+    });
   });
 }

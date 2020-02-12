@@ -4,7 +4,7 @@ import 'package:missionout/DataLayer/page.dart';
 import 'package:missionout/DataLayer/response.dart';
 import 'package:missionout/Provider/database.dart';
 
-enum Yield { error, zeroResults, results }
+enum Yield { error, zeroResults, results, waiting }
 
 class DatabaseFake implements Database {
   final Yield yieldValue;
@@ -59,8 +59,39 @@ class DatabaseFake implements Database {
   }
 
   @override
-  Stream<List<Response>> fetchResponses({String teamID, String docID}) {
-    return null;
+  Stream<List<Response>> fetchResponses({String docID}) async* {
+    await Future.delayed(Duration(milliseconds: 100));
+    switch (yieldValue) {
+      case Yield.waiting:
+        {
+          await Future.delayed(Duration(seconds: 1));
+        }
+        break;
+
+      case Yield.results:
+        {
+          yield [Response(status: 'late',teamMember: 'john doe')];
+        }
+        break;
+
+      case Yield.error:
+        {
+          yield null;
+        }
+        break;
+
+      case Yield.zeroResults:
+        {
+          yield [];
+        }
+        break;
+
+      default:
+        {
+          ;
+        }
+        break;
+    }
   }
 
   @override

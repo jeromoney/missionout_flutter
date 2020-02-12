@@ -106,40 +106,67 @@ class _MyInternationalPhoneNumberInputState
     return FutureBuilder(
       future: getRegion(phoneNumberStr),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
-        String region = 'US'; // default value
-        if (snapshot.hasError) {
-          debugPrint('Error retrieving region info');
-        } else if (snapshot.connectionState == ConnectionState.waiting) {
-          // do nothing, just use default value
-        } else if (snapshot.connectionState == ConnectionState.done) {
-          region = snapshot.data;
-        }
-
-        return InternationalPhoneNumberInput(
-          // This means that if the user deletes their number, they are opting to not receive pages.
-          ignoreBlank: true,
-          inputDecoration: InputDecoration(labelText: labelText),
-          initialCountry2LetterCode: region,
+        return InternationalPhoneNumberInputFutureBuilder(
+          snapshot: snapshot,
+          labelText: labelText,
+          controller: controller,
           hintText: hintText,
-          textFieldController: controller,
-          autoValidate: true,
-          isEnabled: true,
-          formatInput: true,
-          onInputChanged: (PhoneNumber phoneNumber) {
-            debugPrint('hello world');
-          },
         );
       },
     );
   }
+}
 
-  Future<String> getRegion(String phoneNumberStr) async {
-    if (phoneNumberStr.isEmpty) {
-      return 'US';
+@visibleForTesting
+Future<String> getRegion(String phoneNumberStr) async {
+  if (phoneNumberStr == null || phoneNumberStr.isEmpty) {
+    return 'US';
+  }
+
+  PhoneNumber number =
+      await PhoneNumber.getRegionInfoFromPhoneNumber(phoneNumberStr);
+  return number.isoCode;
+}
+
+@visibleForTesting
+class InternationalPhoneNumberInputFutureBuilder extends StatelessWidget {
+  final AsyncSnapshot snapshot;
+  final String labelText;
+  final String hintText;
+  final TextEditingController controller;
+
+  const InternationalPhoneNumberInputFutureBuilder(
+      {Key key,
+      @required this.snapshot,
+      @required this.labelText,
+      @required this.hintText,
+      @required this.controller})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    String region = 'US'; // default value
+    if (snapshot.hasError) {
+      debugPrint('Error retrieving region info');
+    } else if (snapshot.connectionState == ConnectionState.waiting) {
+      // do nothing, just use default value
+    } else if (snapshot.connectionState == ConnectionState.done) {
+      region = snapshot.data;
     }
 
-    PhoneNumber number =
-        await PhoneNumber.getRegionInfoFromPhoneNumber(phoneNumberStr);
-    return number.isoCode;
+    return InternationalPhoneNumberInput(
+      // This means that if the user deletes their number, they are opting to not receive pages.
+      ignoreBlank: true,
+      inputDecoration: InputDecoration(labelText: labelText),
+      initialCountry2LetterCode: region,
+      hintText: hintText,
+      textFieldController: controller,
+      autoValidate: true,
+      isEnabled: true,
+      formatInput: true,
+      onInputChanged: (PhoneNumber phoneNumber) {
+        debugPrint('hello world');
+      },
+    );
   }
 }

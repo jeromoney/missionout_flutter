@@ -81,12 +81,12 @@ class MissionFormState extends State<MissionForm> {
               controller: locationController,
               decoration: InputDecoration(labelText: 'Location description'),
             ),
-            GPSTextFormFieldX(
+            GPSTextFormField(
               controller: latitudeController,
               gpsType: GPS.latitude,
               companionController: longitudeController,
             ),
-            GPSTextFormFieldX(
+            GPSTextFormField(
               controller: longitudeController,
               gpsType: GPS.longitude,
               companionController: latitudeController,

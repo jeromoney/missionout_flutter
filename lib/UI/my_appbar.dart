@@ -27,6 +27,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                 image: CachedNetworkImageProvider(user.photoUrl),
               ))),
       PopupMenuButton<Menu>(
+        key: Key('PopupMenuButton'), // Used for testing, since I can't find this with find.byType
         onSelected: (Menu result) {
           switch (result) {
             case Menu.signOut:

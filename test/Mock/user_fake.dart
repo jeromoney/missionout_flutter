@@ -2,7 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:missionout/Provider/user.dart';
 
 class UserFake with ChangeNotifier implements User {
-  UserFake({this.chatURI, this.isEditor = true, this.mobilePhoneNumber, this.voicePhoneNumber});
+  bool signedIn = true;
+
+  UserFake({this.chatURI, this.isEditor = true, this.mobilePhoneNumber = '+3455', this.voicePhoneNumber = '+344'});
 
   @override
   String chatURI;
@@ -22,7 +24,7 @@ class UserFake with ChangeNotifier implements User {
   String get email => 'john@doe.com';
 
   @override
-  String get photoUrl => 'https://www.something.com/pic.jpg';
+  String get photoUrl => 'https://images2.minutemediacdn.com/image/upload/c_fit,f_auto,fl_lossy,q_auto,w_728/v1555919852/shape/mentalfloss/magic-eye.jpg';
 
   @override
   String get uid => '123456';
@@ -37,7 +39,9 @@ class UserFake with ChangeNotifier implements User {
   void signIn() {}
 
   @override
-  void signOut() {}
+  void signOut() {
+    signedIn = false;
+  }
 
   @override
   void launchChat() {
