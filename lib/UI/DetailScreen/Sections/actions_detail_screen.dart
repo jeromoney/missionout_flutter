@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/DataLayer/mission_address.dart';
 import 'package:missionout/DataLayer/response.dart';
@@ -114,7 +113,7 @@ class _ResponseOptionsState extends State<ResponseOptions> {
           label: Text(responseChips[index]),
           selected: _value == index,
           onSelected: (bool selected) {
-            final user = Provider.of<FirebaseUser>(context, listen: false);
+            final user = Provider.of<User>(context, listen: false);
 
             Response response;
             if (selected) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
-import 'package:missionout/DataLayer/user_client.dart';
+import 'package:missionout/Provider/user.dart';
+import 'package:provider/provider.dart';
 
 class SigninScreen extends StatelessWidget{
 
@@ -22,7 +23,8 @@ class SigninScreen extends StatelessWidget{
               alignment: Alignment.bottomCenter,
               child: GoogleSignInButton(
                 onPressed: () {
-                  UserClient().signIn();
+                  final user = Provider.of<User>(context, listen: false);
+                  user.signIn();
                 },
                 darkMode: true,
               ),

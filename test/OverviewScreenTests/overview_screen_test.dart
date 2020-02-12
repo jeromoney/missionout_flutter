@@ -1,18 +1,16 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:missionout/DataLayer/extended_user.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/DataLayer/mission_address.dart';
 import 'package:missionout/Provider/database.dart';
+import 'package:missionout/Provider/user.dart';
 import 'package:missionout/UI/CreateScreen/create_screen.dart';
 import 'package:missionout/UI/DetailScreen/detail_screen.dart';
 import 'package:missionout/UI/overview_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../Mock/database_fake.dart';
-import '../Mock/extended_user_mock.dart';
-import '../Mock/firebase_mock.dart';
+import '../Mock/user_fake.dart';
 import '../Mock/mission_mock.dart';
 
 void main() async {
@@ -22,8 +20,7 @@ void main() async {
           // The widget tree should never pass down zero results.
           Widget widget = MultiProvider(
             providers: [
-              Provider<FirebaseUser>(create: (_) => FirebaseAuthMock()),
-              Provider<ExtendedUser>(create: (_) => ExtendedUserMock()),
+              ChangeNotifierProvider<User>(create: (_) => UserFake()),
               Provider<Database>(create: (_) => DatabaseFake()),
             ],
             child: MaterialApp(home: Scaffold(body: OverviewScreen())),
@@ -38,8 +35,7 @@ void main() async {
           // The widget tree should never pass down zero results.
           Widget widget = MultiProvider(
             providers: [
-              Provider<FirebaseUser>(create: (_) => FirebaseAuthMock()),
-              Provider<ExtendedUser>(create: (_) => ExtendedUserMock(isEditor: true)),
+              ChangeNotifierProvider<User>(create: (_) => UserFake(isEditor: true)),
               Provider<Database>(create: (_) => DatabaseFake()),
             ],
             child: MaterialApp(home: Scaffold(body: OverviewScreen())),
@@ -59,8 +55,7 @@ void main() async {
           // The widget tree should never pass down zero results.
           Widget widget = MultiProvider(
             providers: [
-              Provider<FirebaseUser>(create: (_) => FirebaseAuthMock()),
-              Provider<ExtendedUser>(create: (_) => ExtendedUserMock(isEditor: false)),
+              ChangeNotifierProvider<User>(create: (_) => UserFake(isEditor: false)),
               Provider<Database>(create: (_) => DatabaseFake()),
             ],
             child: MaterialApp(home: Scaffold(body: OverviewScreen())),
@@ -77,7 +72,7 @@ void main() async {
           // The widget tree should never pass down zero results.
           Widget widget = MultiProvider(
             providers: [
-              Provider<ExtendedUser>(create: (_) => ExtendedUserMock()),
+              ChangeNotifierProvider<User>(create: (_) => UserFake()),
               Provider<Database>(create: (_) => DatabaseFake()),
             ],
             child: MaterialApp(home: Scaffold(body: BuildMissionStream())),
@@ -92,7 +87,7 @@ void main() async {
           // The widget tree should never pass down zero results.
           Widget widget = MultiProvider(
             providers: [
-              Provider<ExtendedUser>(create: (_) => ExtendedUserMock()),
+              ChangeNotifierProvider<User>(create: (_) => UserFake()),
               Provider<Database>(
                   create: (_) => DatabaseFake(yieldValue: Yield.error)),
             ],
@@ -108,7 +103,7 @@ void main() async {
           // The widget tree should never pass down zero results.
           Widget widget = MultiProvider(
             providers: [
-              Provider<ExtendedUser>(create: (_) => ExtendedUserMock()),
+              ChangeNotifierProvider<User>(create: (_) => UserFake()),
               Provider<Database>(
                 create: (_) => DatabaseFake(yieldValue: Yield.zeroResults),
               ),
@@ -161,8 +156,7 @@ void main() async {
       List<Mission> missions = [mission, mission, mission, mission, mission];
       Widget widget = MultiProvider(
         providers: [
-          Provider<FirebaseUser>(create: (_) => FirebaseAuthMock()),
-          Provider<ExtendedUser>(create: (_) => ExtendedUserMock()),
+          ChangeNotifierProvider<User>(create: (_) => UserFake()),
           Provider<Database>(create: (_) => DatabaseFake()),
         ],
         child: MaterialApp(
@@ -186,8 +180,7 @@ void main() async {
       List<Mission> missions = [mission, mission, mission, mission, mission];
       Widget widget = MultiProvider(
         providers: [
-          Provider<FirebaseUser>(create: (_) => FirebaseAuthMock()),
-          Provider<ExtendedUser>(create: (_) => ExtendedUserMock()),
+          ChangeNotifierProvider<User>(create: (_) => UserFake()),
           Provider<Database>(create: (_) => DatabaseFake()),
           Provider<MissionAddress>(
             create: (_) => MissionAddress(),

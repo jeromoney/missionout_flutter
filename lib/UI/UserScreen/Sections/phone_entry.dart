@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-import 'package:missionout/DataLayer/extended_user.dart';
+import 'package:missionout/Provider/user.dart';
 import 'package:provider/provider.dart';
 
 enum PhoneType { mobilePhoneNumber, voicePhoneNumber }
@@ -26,12 +26,12 @@ class _PhoneEntryState extends State<PhoneEntry> {
   void initState() {
     super.initState();
     String phoneStr;
-    final extendedUser = Provider.of<ExtendedUser>(context, listen: false);
+    final user = Provider.of<User>(context, listen: false);
     _phoneType = Provider.of<PhoneType>(context, listen: false);
     if (_phoneType == PhoneType.mobilePhoneNumber) {
-      phoneStr = extendedUser.mobilePhoneNumber;
+      phoneStr = user.mobilePhoneNumber;
     } else {
-      phoneStr = extendedUser.voicePhoneNumber;
+      phoneStr = user.voicePhoneNumber;
     }
     _phoneEntryVisible = phoneStr.isNotEmpty;
   }
@@ -86,18 +86,18 @@ class _MyInternationalPhoneNumberInputState
 
   @override
   Widget build(BuildContext context) {
-    final extendedUser = Provider.of<ExtendedUser>(context, listen: false);
+    final user = Provider.of<User>(context, listen: false);
     String phoneNumberStr;
     String labelText;
     String hintText;
     if (Provider.of<PhoneType>(context, listen: false) ==
         PhoneType.mobilePhoneNumber) {
-      phoneNumberStr = extendedUser.mobilePhoneNumber;
+      phoneNumberStr = user.mobilePhoneNumber;
       labelText = 'Mobile number';
       hintText = 'Number for SMS pages';
     } else {
       // phoneType is a voicePhoneNumber
-      phoneNumberStr = extendedUser.voicePhoneNumber;
+      phoneNumberStr = user.voicePhoneNumber;
       labelText = 'Voice number';
       hintText = 'Number for voice pages';
     }

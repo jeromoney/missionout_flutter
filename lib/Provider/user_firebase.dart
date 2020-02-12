@@ -11,14 +11,24 @@ import 'package:url_launcher/url_launcher.dart';
 class MyFirebaseUser with ChangeNotifier implements User {
   FirebaseUser _firebaseUser;
   @override
-  bool isEditor = true; //TODO - need to modify
+  String voicePhoneNumber;
+  @override
+  String mobilePhoneNumber;
+  @override
+  String region;
+  @override
+  bool isEditor = false;
   @override
   String chatURI;
   @override
-  String teamID = 'chaffeecountysarnorth.org'; //TODO - need to modify
+  String teamID;
 
   @override
   String get displayName => _firebaseUser.displayName;
+
+  @override
+  String get email => _firebaseUser.email;
+
   @override
   String get uid => _firebaseUser.uid;
 
@@ -31,11 +41,16 @@ class MyFirebaseUser with ChangeNotifier implements User {
   @override
   bool get chatURIisAvailable => chatURI != null;
 
-
-
   MyFirebaseUser() {
-    FirebaseAuth.instance.onAuthStateChanged.listen((firebaseUser) {
+    FirebaseAuth.instance.onAuthStateChanged.listen((firebaseUser) async {
       _firebaseUser = firebaseUser;
+      if (_firebaseUser == null) {
+        // clear out stored fields. TODO- A little clunky, should just get a new instance
+        clearUserPermissions();
+      } else {
+        // Got a new user, so check firestore for user settings
+        await setUserPermissions();
+      }
       onAuthStateChanged();
     });
   }
@@ -105,9 +120,31 @@ class MyFirebaseUser with ChangeNotifier implements User {
     launch(chatURI);
   }
 
+  Future<void> setUserPermissions() async {
+    final Firestore db = Firestore.instance;
 
+    // user specific permissions
+    var document =
+        await db.collection('users').document(_firebaseUser.uid).get();
+    var data = document.data;
+    data.containsKey('isEditor')
+        ? isEditor = data['isEditor']
+        : isEditor = false;
+    teamID = data['teamID'];
+    mobilePhoneNumber = data['mobilePhoneNumber'] ?? '';
+    voicePhoneNumber = data['voicePhoneNumber'] ?? '';
+    region = data['region'] ?? '';
+    // team settings
+    document = await db.collection('teams').document(teamID).get();
+    data = document.data;
+    data.containsKey('chatURI') ? chatURI = data['chatURI'] : chatURI = null;
+  }
 
-
-
-
+  clearUserPermissions() {
+    voicePhoneNumber = null;
+    mobilePhoneNumber = null;
+    isEditor = false;
+    chatURI = null;
+    teamID = null;
+  }
 }

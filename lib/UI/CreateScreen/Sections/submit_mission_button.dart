@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:missionout/DataLayer/extended_user.dart';
 import 'package:missionout/DataLayer/mission.dart';
-import 'package:missionout/Provider/firestore_database.dart';
+import 'package:missionout/DataLayer/mission_address.dart';
+import 'package:missionout/Provider/database.dart';
+import 'package:missionout/Provider/user.dart';
 import 'package:provider/provider.dart';
 
 class SubmitMissionButton extends StatelessWidget {
@@ -15,12 +16,12 @@ class SubmitMissionButton extends StatelessWidget {
 
   const SubmitMissionButton(
       {Key key,
-        @required this.descriptionController,
-        @required this.actionController,
-        @required this.locationController,
-        @required this.latitudeController,
-        @required this.longitudeController,
-        @required this.mission})
+      @required this.descriptionController,
+      @required this.actionController,
+      @required this.locationController,
+      @required this.latitudeController,
+      @required this.longitudeController,
+      @required this.mission})
       : super(key: key);
 
   Mission fetchMission() {
@@ -65,12 +66,11 @@ class SubmitMissionButton extends StatelessWidget {
           ));
           final firebaseMission = fetchMission();
 
-          final db = FirestoreDatabase();
-          final extendedUser =
-          Provider.of<ExtendedUser>(context, listen: false);
+          final db = Provider.of<Database>(context, listen: false);
+          final user = Provider.of<User>(context, listen: false);
 
           db
-              .addMission(mission: firebaseMission, teamId: extendedUser.teamID)
+              .addMission(mission: firebaseMission, teamId: user.teamID)
               .then((documentReference) {
             if (documentReference == null) {
               // there was an error adding mission to database
@@ -80,7 +80,10 @@ class SubmitMissionButton extends StatelessWidget {
               return;
             }
             firebaseMission.reference = documentReference;
-            extendedUser.missionID = documentReference.documentID;
+            final missionAddress =
+                Provider.of<MissionAddress>(context, listen: false);
+            missionAddress.address = documentReference
+                .documentID; // TODO - refactor this to make it more abstract
             Navigator.of(context).pushReplacementNamed('/detail');
           });
         }

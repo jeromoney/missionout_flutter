@@ -72,7 +72,6 @@ class DatabaseFake implements Database {
   Future<void> updatePhoneNumbers(
       {String uid, String mobilePhoneNumber, String voicePhoneNumber}) {
     // TODO: implement updatePhoneNumbers
-    throw UnimplementedError();
   }
 
   @override

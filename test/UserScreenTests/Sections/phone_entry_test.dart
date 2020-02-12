@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:missionout/DataLayer/extended_user.dart';
-import 'package:missionout/UI/UserScreen/phone_entry.dart';
+import 'package:missionout/Provider/user.dart';
+import 'package:missionout/UI/UserScreen/Sections/phone_entry.dart';
 import 'package:provider/provider.dart';
+
+import '../../Mock/user_fake.dart';
 
 void main() {
   testWidgets('Phone Entry Widge smoke test', (WidgetTester tester) async {
-    final _phoneType = PhoneType.voicePhoneNumber;
-    final _extendedUser = ExtendedUser();
     final _controller = TextEditingController();
-    _extendedUser.mobilePhoneNumber = '+17199662421';
-    _extendedUser.voicePhoneNumber = '+14154966279';
 
     await tester.pumpWidget(MultiProvider(
       providers: [
-        Provider<ExtendedUser>(
-          create: (BuildContext context) => _extendedUser,
+        ChangeNotifierProvider<User>(
+          create: (_) => UserFake(mobilePhoneNumber: '+17199662421',voicePhoneNumber: '+14154966279'),
         ),
         Provider<PhoneType>(
-          create: (BuildContext context) => _phoneType,
+          create: (BuildContext context) => PhoneType.voicePhoneNumber,
         ),
       ],
       child: MaterialApp(
@@ -31,7 +29,7 @@ void main() {
     ));
     expect(find.text('+17199662421'), findsNothing);
     expect(find.text('+14154966279'), findsOneWidget);
-    await tester.pump(Duration(seconds: 2));
+    await tester.pumpAndSettle();
     await tester.tap(find.byType(Checkbox));
     await tester.pump();
     expect(find.text('+14154966279'), findsNothing);

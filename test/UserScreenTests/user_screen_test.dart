@@ -1,55 +1,137 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:missionout/DataLayer/extended_user.dart';
+import 'package:missionout/Provider/database.dart';
+import 'package:missionout/Provider/user.dart';
 import 'package:missionout/UI/UserScreen/user_screen.dart';
+import 'package:provider/provider.dart';
 
-import '../my_app_test_environment.dart';
+import '../Mock/database_fake.dart';
+import '../Mock/user_fake.dart';
 
 void main() {
-  testWidgets('User screen sucessful test', (WidgetTester tester) async {
-    // setup
+  group('UserScreen widget tests', () {
+    testWidgets('User screen sucessful test', (WidgetTester tester) async {
+      // run test
+      Widget widget = MultiProvider(
+        providers: [
+          ChangeNotifierProvider<User>(
+              create: (_) => UserFake(
+                  mobilePhoneNumber: '+17199662421',
+                  voicePhoneNumber: '+14154966279')),
+          Provider<Database>(create: (_) => DatabaseFake()),
+        ],
+        child: MaterialApp(
+          home: Scaffold(
+            body: UserScreen(),
+          ),
+        ),
+      );
 
-    final _extendedUser = ExtendedUser();
-    _extendedUser.mobilePhoneNumber = '+17199662421';
-    _extendedUser.voicePhoneNumber = '+14154966279';
+      await tester.pumpWidget(widget);
+      await tester.pumpAndSettle();
+      await tester.tap(find.byType(RaisedButton));
+    });
 
-    // run test
-    await tester.pumpWidget(MyAppTest(
-      screen: UserScreen(),
-      extendedUser: _extendedUser,
-    ));
+    testWidgets('Erroneous Number Test', (WidgetTester tester) async {
+      // setup
+      Widget widget = MultiProvider(
+        providers: [
+          ChangeNotifierProvider<User>(
+              create: (_) => UserFake(
+                  mobilePhoneNumber: '+17199662421',
+                  voicePhoneNumber: '+3333')),
+          Provider<Database>(create: (_) => DatabaseFake()),
+        ],
+        child: MaterialApp(
+          home: Scaffold(
+            body: UserScreen(),
+          ),
+        ),
+      );
 
-    await tester.pump(Duration(microseconds: 10));
+      await tester.pumpWidget(widget);
 
-    await tester.tap(find.byType(RaisedButton));
+      await tester.pumpAndSettle();
+      final Finder mobilePhoneNumber =
+          find.widgetWithText(TextFormField, 'Mobile number');
+      await tester.enterText(mobilePhoneNumber, '8791');
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byType(RaisedButton));
+      await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
+
+      // Find Snackbar
+      expect(find.text('Processing'), findsOneWidget);
+    });
   });
 
-  testWidgets('Erroneous Number Test', (WidgetTester tester) async {
-    // setup
+  group('SubmitButton widget tests', () {
+    testWidgets('SubmitButton widget tests with validated form',
+        (WidgetTester tester) async {
+      final someController = TextEditingController();
+      final anotherController = TextEditingController();
+      Widget widget = MultiProvider(
+        providers: [
+          ChangeNotifierProvider<User>(
+              create: (_) => UserFake(
+                  mobilePhoneNumber: '+17199662421',
+                  voicePhoneNumber: '+14154966279')),
+          Provider<Database>(create: (_) => DatabaseFake()),
+        ],
+        child: MaterialApp(
+          home: Scaffold(
+            body: Form(
+              child: SubmitButton(
+                mobilePhoneNumberController: someController,
+                voicePhoneNumberController: anotherController,
+              ),
+            ),
+          ),
+        ),
+      );
 
-    final _extendedUser = ExtendedUser();
-    _extendedUser.mobilePhoneNumber = '+17199662421';
-    _extendedUser.voicePhoneNumber = '+3333';
+      await tester.pumpWidget(widget);
+      await tester.pumpAndSettle();
+      await tester.tap(find.byType(RaisedButton));
+    });
 
-    // run test
-    await tester.pumpWidget(MyAppTest(
-      screen: UserScreen(),
-      extendedUser: _extendedUser,
-    ));
+    testWidgets('SubmitButton widget tests with invalidated form',
+        (WidgetTester tester) async {
+      final someController = TextEditingController();
+      final anotherController = TextEditingController();
+      Widget widget = MultiProvider(
+          providers: [
+            ChangeNotifierProvider<User>(
+                create: (_) => UserFake(
+                    mobilePhoneNumber: '+17199662421',
+                    voicePhoneNumber: '+14154966279')),
+            Provider<Database>(create: (_) => DatabaseFake()),
+          ],
+          child: MaterialApp(
+            home: Scaffold(
+              body: Form(
+                child: Column(
+                  children: <Widget>[
+                    TextFormField(
+                      validator: (_) => 'some error message',
+                    ),
+                    SubmitButton(
+                      mobilePhoneNumberController: someController,
+                      voicePhoneNumberController: anotherController,
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ));
 
-
-    await tester.pump(Duration(microseconds: 10));
-
-    final Finder mobilePhoneNumber =
-        find.widgetWithText(TextFormField, 'Mobile number');
-    await tester.enterText(mobilePhoneNumber, '8791');
-    await tester.pump(Duration(microseconds: 10));
-
-    await tester.tap(find.byType(RaisedButton));
-    await tester.pump(Duration(seconds: 1));
-    await tester.pumpAndSettle();
-
-    // Find Snackbar
-    expect(find.text('Processing'), findsOneWidget);
+      await tester.pumpWidget(widget);
+      await tester.pumpAndSettle();
+      await tester.tap(find.byType(RaisedButton));
+      // Should find error snackbar
+      await tester.pumpAndSettle();
+      expect(find.byType(SnackBar), findsOneWidget);
+    });
   });
 }

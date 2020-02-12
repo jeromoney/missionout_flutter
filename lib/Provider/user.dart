@@ -4,8 +4,13 @@ abstract class User with ChangeNotifier {
   String chatURI;
   bool isEditor;
   String teamID;
+  String voicePhoneNumber;
+  String mobilePhoneNumber;
+  String region;
+
 
   String get displayName;
+  String get email;
 
   String get photoUrl;
   String get uid;
