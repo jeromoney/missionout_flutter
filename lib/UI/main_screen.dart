@@ -9,37 +9,9 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
     if (user.isLoggedIn) {
-      return InitWidget();
+      return OverviewScreen();
     } else {
       return SigninScreen();
     }
-  }
-}
-
-// Once the user is logged in, we still need to pull some additional information
-// from firestore, so the app pauses until the operation is completed
-class InitWidget extends StatefulWidget {
-  @override
-  State createState() => InitWidgetState();
-}
-
-class InitWidgetState extends State<InitWidget> {
-  var _initialized = false;
-
-  @override
-  Widget build(BuildContext context) {
-    if (!_initialized) {
-      return Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
-    } else {
-      return OverviewScreen();
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    setState(() => _initialized = true);
   }
 }
