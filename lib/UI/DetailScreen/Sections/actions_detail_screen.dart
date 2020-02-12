@@ -1,19 +1,21 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:missionout/DataLayer/extended_user.dart';
+import 'package:missionout/DataLayer/mission_address.dart';
 import 'package:missionout/DataLayer/response.dart';
 import 'package:missionout/Provider/database.dart';
+import 'package:missionout/Provider/user.dart';
 import 'package:missionout/UI/response_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ActionsDetailScreen extends StatelessWidget {
   final AsyncSnapshot snapshot;
+
   const ActionsDetailScreen({Key key, this.snapshot}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final extendedUser = Provider.of<ExtendedUser>(context);
+    final user = Provider.of<User>(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -28,10 +30,10 @@ class ActionsDetailScreen extends StatelessWidget {
           children: <Widget>[
             IconButton(
               icon: Icon(Icons.chat),
-              onPressed: extendedUser.chatURIisAvailable()
+              onPressed: user.chatURIisAvailable
                   ? () {
                       try {
-                        extendedUser.launchChat();
+                        user.launchChat();
                       } catch (e) {
                         Scaffold.of(context).showSnackBar(SnackBar(
                           content: Text('Error: Is Slack installed?'),
@@ -122,15 +124,16 @@ class _ResponseOptionsState extends State<ResponseOptions> {
             }
 
             setState(() {
-              final user = Provider.of<FirebaseUser>(context, listen: false);
-              final extendedUser =
-                  Provider.of<ExtendedUser>(context, listen: false);
+              final user = Provider.of<User>(context, listen: false);
               final database = Provider.of<Database>(context, listen: false);
+              final missionAddress =
+                  Provider.of<MissionAddress>(context, listen: false);
+
               database.addResponse(
                   response: response,
                   uid: user.uid,
-                  teamID: extendedUser.teamID,
-                  docID: extendedUser.missionID);
+                  teamID: user.teamID,
+                  docID: missionAddress.address);
               _value = selected ? index : null;
             });
           },

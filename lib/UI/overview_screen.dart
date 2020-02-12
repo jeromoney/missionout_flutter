@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:missionout/DataLayer/extended_user.dart';
 import 'package:missionout/DataLayer/mission_address.dart';
 import 'package:missionout/Provider/database.dart';
 import 'package:missionout/DataLayer/mission.dart';
+import 'package:missionout/Provider/user.dart';
 import 'package:missionout/UI/CreateScreen/create_screen.dart';
 import 'package:missionout/UI/my_appbar.dart';
 import 'package:provider/provider.dart';
@@ -10,11 +10,11 @@ import 'package:provider/provider.dart';
 class OverviewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final extendedUser = Provider.of<ExtendedUser>(context);
+    final user = Provider.of<User>(context);
     return Scaffold(
         appBar: MyAppBar(title: 'Missions Overview'),
         body: BuildMissionStream(),
-        floatingActionButton: extendedUser.isEditor // only show FAB to editors
+        floatingActionButton: user.isEditor // only show FAB to editors
             ? FloatingActionButton(
                 child: Icon(Icons.create),
                 onPressed: () {
@@ -28,10 +28,10 @@ class OverviewScreen extends StatelessWidget {
 class BuildMissionStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final extendedUser = Provider.of<ExtendedUser>(context);
+    final user = Provider.of<User>(context);
     final database = Provider.of<Database>(context);
     return StreamBuilder<List<Mission>>(
-        stream: database.fetchMissions(extendedUser.teamID),
+        stream: database.fetchMissions(user.teamID),
         builder: (context, snapshot) {
           // waiting
           if (snapshot.connectionState == ConnectionState.waiting) {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:missionout/DataLayer/extended_user.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/DataLayer/page.dart';
 import 'package:missionout/Provider/database.dart';
+import 'package:missionout/Provider/user.dart';
 import 'package:missionout/UI/CreateScreen/create_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -13,7 +13,7 @@ class EditDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final extendedUser = Provider.of<ExtendedUser>(context);
+    final user = Provider.of<User>(context);
     final database = Provider.of<Database>(context);
     // waiting
     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -30,12 +30,12 @@ class EditDetailScreen extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         // TODO - think there is a way to do this with one call, syntactic sugar
-        extendedUser.isEditor
+        user.isEditor
             ? Divider(
                 thickness: 1,
               )
             : SizedBox.shrink(),
-        extendedUser.isEditor
+        user.isEditor
             ? ButtonBar(
                 children: <Widget>[
                   FlatButton(
@@ -44,7 +44,7 @@ class EditDetailScreen extends StatelessWidget {
                       final page = Page(
                           mission: mission);
                       database.addPage(
-                          teamID: extendedUser.teamID,
+                          teamID: user.teamID,
                           page: page);
                     },
                   ),
@@ -62,7 +62,7 @@ class EditDetailScreen extends StatelessWidget {
                       mission.isStoodDown = !mission.isStoodDown;
                       database.standDownMission(
                         mission: mission,
-                        teamID: extendedUser.teamID,
+                        teamID: user.teamID,
                       );
                     },
                   ),

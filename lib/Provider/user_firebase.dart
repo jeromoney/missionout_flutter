@@ -10,15 +10,26 @@ import 'package:url_launcher/url_launcher.dart';
 
 class MyFirebaseUser with ChangeNotifier implements User {
   FirebaseUser _firebaseUser;
-
+  @override
+  bool isEditor = true; //TODO - need to modify
   @override
   String chatURI;
+  @override
+  String teamID = 'chaffeecountysarnorth.org'; //TODO - need to modify
 
   @override
   String get displayName => _firebaseUser.displayName;
+  @override
+  String get uid => _firebaseUser.uid;
 
   @override
   String get photoUrl => _firebaseUser.photoUrl;
+
+  @override
+  bool get isLoggedIn => _firebaseUser != null;
+
+  @override
+  bool get chatURIisAvailable => chatURI != null;
 
 
 
@@ -55,6 +66,8 @@ class MyFirebaseUser with ChangeNotifier implements User {
     final googleSignIn = GoogleSignIn();
     await googleSignIn.signOut();
     await auth.signOut();
+    _firebaseUser = null;
+    onAuthStateChanged();
   }
 
   Future<void> addTokenToFirestore(FirebaseUser user) async {
@@ -91,6 +104,8 @@ class MyFirebaseUser with ChangeNotifier implements User {
   void launchChat() {
     launch(chatURI);
   }
+
+
 
 
 

@@ -1,9 +1,18 @@
 import 'package:flutter/foundation.dart';
 
-abstract class User {
+abstract class User with ChangeNotifier {
   String chatURI;
+  bool isEditor;
+  String teamID;
+
   String get displayName;
 
+  String get photoUrl;
+  String get uid;
+
+  bool get isLoggedIn;
+
+  bool get chatURIisAvailable;
 
   void signIn() {}
 
@@ -11,6 +20,5 @@ abstract class User {
 
   void launchChat() {}
 
-  void onAuthStateChanged() {
-  }
+  void onAuthStateChanged() {}
 }

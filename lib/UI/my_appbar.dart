@@ -1,12 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:missionout/DataLayer/user_client.dart';
+import 'package:missionout/Provider/user.dart';
 import 'package:missionout/UI/editor_screen.dart';
 import 'package:missionout/UI/UserScreen/user_screen.dart';
 import 'package:provider/provider.dart';
 
-enum Menu { signOut, userOptions, editorOptions, printToken }
+enum Menu { signOut, userOptions, editorOptions }
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   String _title;
@@ -15,14 +14,9 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
     _title = title;
   }
 
-  static Future<void> _printUserToken(FirebaseUser user) async {
-    var token = await user.getIdToken();
-    debugPrint(token.token);
-  }
-
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<FirebaseUser>(context);
+    final user = Provider.of<User>(context);
     return AppBar(title: Text(_title), actions: <Widget>[
       Container(
           width: AppBar().preferredSize.height,
@@ -44,7 +38,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                       FlatButton(
                           child: Text('Sign out'),
                           onPressed: () {
-                            UserClient().signOut();
+                            user.signOut();
                             Navigator.pop(context);
                             Navigator.of(context).pushReplacementNamed('/');
                           }),
@@ -69,12 +63,6 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                     builder: (BuildContext context) => EditorScreen()));
               }
               break;
-
-            case Menu.printToken:
-              {
-                final user = Provider.of<FirebaseUser>(context, listen: false);
-                _printUserToken(user);
-              }
           }
         },
         itemBuilder: (BuildContext context) => const <PopupMenuEntry<Menu>>[
@@ -89,10 +77,6 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
           PopupMenuItem<Menu>(
             value: Menu.editorOptions,
             child: Text('Editor Options'),
-          ),
-          PopupMenuItem<Menu>(
-            value: Menu.printToken,
-            child: Text('Print token'),
           ),
         ],
       )
