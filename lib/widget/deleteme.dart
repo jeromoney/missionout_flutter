@@ -1,19 +1,26 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:missionout/UI/CreateScreen/Sections/submit_mission_button.dart';
+import 'package:provider/provider.dart';
+void main() => runApp(XXX());
 
-void main() async{
-  WidgetsFlutterBinding.ensureInitialized();
-  PhoneNumber number =
-  await PhoneNumber.getRegionInfoFromPhoneNumber('+15105406718');
+class XXX extends StatelessWidget{
 
-}
-
-Future<String> getRegion(String phoneNumberStr) async {
-  if (phoneNumberStr == null || phoneNumberStr.isEmpty) {
-    return 'US';
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        body: SubmitMissionButton(
+          mission: null,
+          actionController: TextEditingController(),
+          longitudeController: TextEditingController(),
+          latitudeController: TextEditingController(),
+          descriptionController: TextEditingController(),
+          locationController: TextEditingController(),
+        ),
+      ),
+    );
   }
-
-  PhoneNumber number =
-  await PhoneNumber.getRegionInfoFromPhoneNumber(phoneNumberStr);
-  return number.isoCode;
 }
+

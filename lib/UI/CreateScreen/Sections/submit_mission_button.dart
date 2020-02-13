@@ -23,6 +23,7 @@ class SubmitMissionButton extends StatelessWidget {
       @required this.mission})
       : super(key: key);
 
+  @visibleForTesting
   Mission fetchMission() {
     // Create a mission from the form fields
     final description = descriptionController.text;
@@ -39,19 +40,19 @@ class SubmitMissionButton extends StatelessWidget {
       geoPoint = GeoPoint(latitude, longitude);
     }
 
-    Mission firebaseMission = mission;
-    if (firebaseMission == null) {
+    Mission myMission = mission;
+    if (myMission == null) {
       // if mission is null that means we are creating new mission
-      firebaseMission =
+      myMission =
           Mission(description, needForAction, locationDescription, geoPoint);
     } else {
       // update existing mission
-      firebaseMission.description = description;
-      firebaseMission.needForAction = needForAction;
-      firebaseMission.locationDescription = locationDescription;
-      firebaseMission.location = geoPoint;
+      myMission.description = description;
+      myMission.needForAction = needForAction;
+      myMission.locationDescription = locationDescription;
+      myMission.location = geoPoint;
     }
-    return firebaseMission;
+    return myMission;
   }
 
   @override
@@ -63,11 +64,11 @@ class SubmitMissionButton extends StatelessWidget {
           Scaffold.of(context).showSnackBar(SnackBar(
             content: Text('Processing'),
           ));
-          final firebaseMission = fetchMission();
+          final myMission = fetchMission();
 
           final database = Provider.of<Database>(context, listen: false);
 
-          database.addMission(mission: firebaseMission).then((documentReference) {
+          database.addMission(mission: myMission).then((documentReference) {
             if (documentReference == null) {
               // there was an error adding mission to database
               Scaffold.of(context).showSnackBar(SnackBar(
@@ -75,7 +76,7 @@ class SubmitMissionButton extends StatelessWidget {
               ));
               return;
             }
-            firebaseMission.reference = documentReference;
+            myMission.reference = documentReference;
             final missionAddress =
                 Provider.of<MissionAddress>(context, listen: false);
             missionAddress.address = documentReference

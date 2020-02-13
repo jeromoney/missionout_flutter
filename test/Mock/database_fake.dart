@@ -12,9 +12,32 @@ class DatabaseFake implements Database {
   DatabaseFake({this.yieldValue = Yield.results});
 
   @override
-  Future<DocumentReference> addMission({String teamId, Mission mission}) {
-    // TODO: implement addMission
-    throw UnimplementedError();
+  Future<DocumentReference> addMission({String teamId, Mission mission}) async {
+    switch (yieldValue) {
+      case Yield.results:
+        {
+          return Firestore.instance.document('');
+        }
+        break;
+
+      case Yield.error:
+        {
+          return null;
+        }
+        break;
+
+      case Yield.zeroResults:
+        {
+          return null;
+        }
+        break;
+
+      default:
+        {
+          ;
+        }
+        break;
+    }
   }
 
   @override
