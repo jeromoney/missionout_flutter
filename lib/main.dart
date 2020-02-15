@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:missionout/DataLayer/mission_address.dart';
-import 'package:missionout/Provider/database.dart';
-import 'package:missionout/Provider/firestore_database.dart';
-import 'package:missionout/Provider/user_firebase.dart';
 import 'package:missionout/UI/CreateScreen/create_screen.dart';
 import 'package:missionout/UI/DetailScreen/detail_screen.dart';
 import 'package:missionout/UI/main_screen.dart';
+import 'package:missionout/my_providers.dart';
 import 'package:provider/provider.dart';
-
-import 'Provider/user.dart';
 
 void main() => runApp(MissionOut());
 
@@ -17,26 +12,7 @@ class MissionOut extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<User>(
-          create: (_) => MyFirebaseUser(),
-        ),
-        ProxyProvider<User, Database>(
-          create: (_) => FirestoreDatabase(),
-          update: (_, user, database) {
-            database.teamID = user.teamID;
-            database.uid = user.uid;
-            return database;
-          },
-          updateShouldNotify: (Database a, Database b) {
-            // TODO - understand what this does
-            return true;
-          },
-        ),
-        Provider<MissionAddress>(
-          create: (_) => MissionAddress(),
-        )
-      ],
+      providers: MyProviders().providers,
       child: MaterialApp(
         title: 'Mission Out',
         theme: ThemeData(

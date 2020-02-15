@@ -10,11 +10,11 @@ abstract class Database {
   String teamID;
   String uid;
 
-  Stream<List<Mission>> fetchMissions() {}
+  Stream<List<Mission>> fetchMissions();
 
-  Stream<Mission> fetchSingleMission({@required String docID}) {}
+  Stream<Mission> fetchSingleMission({@required String docID});
 
-  Stream<List<Response>> fetchResponses({@required String docID}) {}
+  Stream<List<Response>> fetchResponses({@required String docID});
 
   Future<DocumentReference> addMission({@required Mission mission}) async {}
 
@@ -23,7 +23,7 @@ abstract class Database {
     @required String docID,
   }) async {}
 
-  void standDownMission({@required Mission mission}) {}
+  void standDownMission({@required Mission mission});
 
   Future<void> addPage({@required Page page}) async {}
 

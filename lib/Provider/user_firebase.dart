@@ -6,7 +6,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:missionout/Provider/user.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class MyFirebaseUser with ChangeNotifier implements User {
   FirebaseUser _firebaseUser;
@@ -30,7 +29,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
   String get email => _firebaseUser.email;
 
   @override
-  String get uid => _firebaseUser.uid;
+  String get uid => _firebaseUser?.uid;
 
   @override
   String get photoUrl => _firebaseUser.photoUrl;
@@ -113,11 +112,6 @@ class MyFirebaseUser with ChangeNotifier implements User {
   @override
   void dispose() {
     FirebaseAuth.instance.onAuthStateChanged.drain();
-  }
-
-  @override
-  void launchChat() {
-    launch(chatURI);
   }
 
   Future<void> setUserPermissions() async {

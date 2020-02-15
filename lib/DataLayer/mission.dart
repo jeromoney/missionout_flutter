@@ -9,6 +9,7 @@ class Mission {
   bool isStoodDown;
   DocumentReference
       reference; // A document reference is created once the mission is uploaded
+  String get address => reference.documentID;
 
   Mission(description, needForAction, locationDescription, geoPoint)
       : this.description = description,
@@ -30,9 +31,8 @@ class Mission {
   Mission.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data, reference: snapshot.reference);
 
-  String get address => reference.documentID;
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toDatabase() => {
         'description': description,
         'location': location,
         'needForAction': needForAction,

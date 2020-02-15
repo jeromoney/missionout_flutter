@@ -42,15 +42,17 @@ class FirestoreDatabase implements Database {
   }
 
   @override
-  Future<DocumentReference> addMission(
-      {@required String teamId, @required Mission mission}) async {
+  Future<DocumentReference> addMission({
+    @required String teamId,
+    @required Mission mission,
+  }) async {
     // if document reference exists in mission variable, than we are updating an existing mission rather than creating a new one.
     DocumentReference result;
     if (mission.reference == null) {
       // reference doesn't existm so create new mission
       result = await _db
           .collection('teams/$teamId/missions')
-          .add(mission.toJson())
+          .add(mission.toDatabase())
           .then((value) {
         return value;
       }).catchError((error) {
@@ -60,15 +62,17 @@ class FirestoreDatabase implements Database {
       return result;
     } else {
       // reference is not null so we just update mission.
-      await mission.reference.setData(mission.toJson(), merge: true);
+      await mission.reference.setData(mission.toDatabase(), merge: true);
       result = mission.reference;
     }
     return result;
   }
 
   @override
-  Future<void> addResponse(
-      {@required Response response, @required String docID}) async {
+  Future<void> addResponse({
+    @required Response response,
+    @required String docID,
+  }) async {
     DocumentReference document =
         _db.collection('teams/$teamID/missions/$docID/responses').document(uid);
     if (response != null) {
@@ -79,15 +83,19 @@ class FirestoreDatabase implements Database {
   }
 
   @override
-  void standDownMission({@required Mission mission}) {
+  void standDownMission({
+    @required Mission mission,
+  }) {
     _db
         .document('teams/$teamID/missions/${mission.reference.documentID}')
         .updateData({'stoodDown': mission.isStoodDown});
   }
 
   @override
-  Future<void> addPage(
-      {@required String missionDocID, @required Page page}) async {
+  Future<void> addPage({
+    @required String missionDocID,
+    @required Page page,
+  }) async {
     await _db
         .collection('teams/$teamID/missions/$missionDocID/pages')
         .add(page.toJson())
@@ -99,9 +107,10 @@ class FirestoreDatabase implements Database {
   }
 
   @override
-  Future<void> updatePhoneNumbers(
-      {@required String mobilePhoneNumber,
-      @required String voicePhoneNumber}) async {
+  Future<void> updatePhoneNumbers({
+    @required String mobilePhoneNumber,
+    @required String voicePhoneNumber,
+  }) async {
     await _db.document('users/$uid').updateData({
       'mobilePhoneNumber': mobilePhoneNumber,
       'voicePhoneNumber': voicePhoneNumber

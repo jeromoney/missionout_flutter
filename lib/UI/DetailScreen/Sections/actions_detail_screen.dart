@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:missionout/DataLayer/mission_address.dart';
 import 'package:missionout/DataLayer/response.dart';
 import 'package:missionout/Provider/database.dart';
+import 'package:missionout/Provider/team.dart';
 import 'package:missionout/Provider/user.dart';
 import 'package:missionout/UI/response_screen.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +15,7 @@ class ActionsDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context);
+    final team = Provider.of<Team>(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,10 +30,10 @@ class ActionsDetailScreen extends StatelessWidget {
           children: <Widget>[
             IconButton(
               icon: Icon(Icons.chat),
-              onPressed: user.chatURIisAvailable
+              onPressed: team.chatURIisAvailable
                   ? () {
                       try {
-                        user.launchChat();
+                        team.launchChat();
                       } catch (e) {
                         Scaffold.of(context).showSnackBar(SnackBar(
                           content: Text('Error: Is Slack installed?'),
