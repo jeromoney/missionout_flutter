@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/Provider/user.dart';
-import 'package:missionout/UI/editor_screen.dart';
+import 'package:missionout/UI/EditorScreen/editor_screen.dart';
 import 'package:missionout/UI/UserScreen/user_screen.dart';
 import 'package:provider/provider.dart';
 

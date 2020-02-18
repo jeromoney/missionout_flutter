@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:missionout/Provider/user.dart';
 import 'package:missionout/UI/UserScreen/user_screen.dart';
-import 'package:missionout/UI/editor_screen.dart';
+import 'package:missionout/UI/EditorScreen/editor_screen.dart';
 import 'package:missionout/UI/my_appbar.dart';
 import 'package:provider/provider.dart';
 
