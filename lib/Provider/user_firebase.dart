@@ -8,6 +8,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:missionout/Provider/user.dart';
 
 class MyFirebaseUser with ChangeNotifier implements User {
+  final Firestore _db = Firestore.instance;
   FirebaseUser _firebaseUser;
   @override
   String voicePhoneNumber;
@@ -93,7 +94,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
       'platform': Platform.operatingSystem,
       'createdAt': FieldValue.serverTimestamp()
     };
-    await Firestore.instance
+    await _db
         .collection('users/${user.uid}/tokens')
         .document(idToken.token)
         .setData(data)
@@ -115,11 +116,9 @@ class MyFirebaseUser with ChangeNotifier implements User {
   }
 
   Future<void> setUserPermissions() async {
-    final Firestore db = Firestore.instance;
-
     // user specific permissions
     var document =
-        await db.collection('users').document(_firebaseUser.uid).get();
+        await _db.collection('users').document(_firebaseUser.uid).get();
     var data = document.data;
     data.containsKey('isEditor')
         ? isEditor = data['isEditor']
@@ -129,7 +128,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
     voicePhoneNumber = data['voicePhoneNumber'] ?? '';
     region = data['region'] ?? '';
     // team settings
-    document = await db.collection('teams').document(teamID).get();
+    document = await _db.collection('teams').document(teamID).get();
     data = document.data;
     data.containsKey('chatURI') ? chatURI = data['chatURI'] : chatURI = null;
   }
@@ -140,5 +139,20 @@ class MyFirebaseUser with ChangeNotifier implements User {
     isEditor = false;
     chatURI = null;
     teamID = null;
+  }
+
+  @override
+  Future<void> updatePhoneNumbers({
+    @required String mobilePhoneNumber,
+    @required String voicePhoneNumber,
+  }) async {
+    await _db.document('users/$uid').updateData({
+      'mobilePhoneNumber': mobilePhoneNumber,
+      'voicePhoneNumber': voicePhoneNumber
+    }).then((value) {
+      return true;
+    }).catchError((error) {
+      throw error;
+    });
   }
 }

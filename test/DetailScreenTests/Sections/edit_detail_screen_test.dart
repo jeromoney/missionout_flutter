@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:missionout/DataLayer/mission.dart';
-import 'package:missionout/Provider/database.dart';
+import 'package:missionout/Provider/team.dart';
 import 'package:missionout/Provider/user.dart';
 import 'package:missionout/UI/CreateScreen/create_screen.dart';
 import 'package:missionout/UI/DetailScreen/Sections/edit_detail_screen.dart';
 import 'package:provider/provider.dart';
 
-import '../../Mock/database_fake.dart';
+import '../../Mock/team_fake.dart';
 import '../../Mock/user_fake.dart';
 
 void main() async {
@@ -15,7 +15,7 @@ void main() async {
     Widget widget = MultiProvider(
       providers: [
         ChangeNotifierProvider<User>(create: (_) => UserFake()),
-        Provider<Database>(create: (_) => DatabaseFake()),
+        Provider<Team>(create: (_) => TeamFake()),
       ],
       child: MaterialApp(
         home: Scaffold(
@@ -33,7 +33,7 @@ void main() async {
     Widget widget = MultiProvider(
       providers: [
         ChangeNotifierProvider<User>(create: (_) => UserFake()),
-        Provider<Database>(create: (_) => DatabaseFake()),
+        Provider<Team>(create: (_) => TeamFake()),
       ],
       child: MaterialApp(
         home: Scaffold(
@@ -52,7 +52,8 @@ void main() async {
         Mission('A lost puppy', 'Need snow mobilers', 'Squaw Creek', null);
     Widget widget = MultiProvider(
       providers: [
-        ChangeNotifierProvider<User>(create: (_) => UserFake()),        Provider<Database>(create: (_) => DatabaseFake()),
+        ChangeNotifierProvider<User>(create: (_) => UserFake()),
+        Provider<Team>(create: (_) => TeamFake()),
       ],
       child: MaterialApp(
         home: Scaffold(
@@ -72,7 +73,7 @@ void main() async {
     Widget widget = MultiProvider(
       providers: [
         ChangeNotifierProvider<User>(create: (_) => UserFake(isEditor: false)),
-        Provider<Database>(create: (_) => DatabaseFake()),
+        Provider<Team>(create: (_) => TeamFake()),
       ],
       child: MaterialApp(
         home: Scaffold(
@@ -94,7 +95,7 @@ void main() async {
     Widget widget = MultiProvider(
       providers: [
         ChangeNotifierProvider<User>(create: (_) => UserFake()),
-        Provider<Database>(create: (_) => DatabaseFake()),
+        Provider<Team>(create: (_) => TeamFake()),
       ],
       child: MaterialApp(
         home: Scaffold(
@@ -118,7 +119,7 @@ void main() async {
     Widget widget = MultiProvider(
       providers: [
         ChangeNotifierProvider<User>(create: (_) => UserFake()),
-        Provider<Database>(create: (_) => DatabaseFake()),
+        Provider<Team>(create: (_) => TeamFake()),
       ],
       child: MaterialApp(
         home: Scaffold(
@@ -140,7 +141,7 @@ void main() async {
     Widget widget = MultiProvider(
       providers: [
         ChangeNotifierProvider<User>(create: (_) => UserFake()),
-        Provider<Database>(create: (_) => DatabaseFake()),
+        Provider<Team>(create: (_) => TeamFake()),
       ],
       child: MaterialApp(
         home: Scaffold(

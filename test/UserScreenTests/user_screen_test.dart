@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:missionout/Provider/database.dart';
+import 'package:missionout/Provider/team.dart';
 import 'package:missionout/Provider/user.dart';
 import 'package:missionout/UI/UserScreen/user_screen.dart';
 import 'package:provider/provider.dart';
 
-import '../Mock/database_fake.dart';
+import '../Mock/team_fake.dart';
 import '../Mock/user_fake.dart';
 
 void main() {
@@ -18,7 +18,7 @@ void main() {
               create: (_) => UserFake(
                   mobilePhoneNumber: '+17199662421',
                   voicePhoneNumber: '+14154966279')),
-          Provider<Database>(create: (_) => DatabaseFake()),
+          Provider<Team>(create: (_) => TeamFake()),
         ],
         child: MaterialApp(
           home: Scaffold(
@@ -40,7 +40,7 @@ void main() {
               create: (_) => UserFake(
                   mobilePhoneNumber: '+17199662421',
                   voicePhoneNumber: '+3333')),
-          Provider<Database>(create: (_) => DatabaseFake()),
+          Provider<Team>(create: (_) => TeamFake()),
         ],
         child: MaterialApp(
           home: Scaffold(
@@ -77,7 +77,7 @@ void main() {
               create: (_) => UserFake(
                   mobilePhoneNumber: '+17199662421',
                   voicePhoneNumber: '+14154966279')),
-          Provider<Database>(create: (_) => DatabaseFake()),
+          Provider<Team>(create: (_) => TeamFake()),
         ],
         child: MaterialApp(
           home: Scaffold(
@@ -106,7 +106,7 @@ void main() {
                 create: (_) => UserFake(
                     mobilePhoneNumber: '+17199662421',
                     voicePhoneNumber: '+14154966279')),
-            Provider<Database>(create: (_) => DatabaseFake()),
+            Provider<Team>(create: (_) => TeamFake()),
           ],
           child: MaterialApp(
             home: Scaffold(

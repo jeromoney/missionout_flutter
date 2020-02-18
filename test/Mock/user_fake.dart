@@ -54,4 +54,10 @@ class UserFake with ChangeNotifier implements User {
   void onAuthStateChanged() {}
   @override
   String region;
+
+  @override
+  Future<Function> updatePhoneNumbers(
+      {@required String mobilePhoneNumber, @required String voicePhoneNumber}) {
+
+  }
 }

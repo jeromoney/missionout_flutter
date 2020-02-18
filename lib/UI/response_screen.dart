@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:missionout/DataLayer/mission_address.dart';
-import 'package:missionout/Provider/database.dart';
 import 'package:missionout/DataLayer/response.dart';
+import 'package:missionout/Provider/team.dart';
 import 'package:missionout/UI/my_appbar.dart';
 import 'package:provider/provider.dart';
 
@@ -20,10 +20,10 @@ class BuildResponseStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final missionAddress = Provider.of<MissionAddress>(context);
-    final database = Provider.of<Database>(context);
+    final team = Provider.of<Team>(context);
 
     return StreamBuilder<List<Response>>(
-      stream: database.fetchResponses(
+      stream: team.fetchResponses(
         docID: missionAddress.address,
       ),
       builder: (context, snapshot) {

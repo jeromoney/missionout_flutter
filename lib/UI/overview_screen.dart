@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:missionout/DataLayer/mission_address.dart';
-import 'package:missionout/Provider/database.dart';
 import 'package:missionout/DataLayer/mission.dart';
+import 'package:missionout/Provider/team.dart';
 import 'package:missionout/Provider/user.dart';
 import 'package:missionout/UI/CreateScreen/create_screen.dart';
 import 'package:missionout/UI/my_appbar.dart';
@@ -28,10 +28,9 @@ class OverviewScreen extends StatelessWidget {
 class BuildMissionStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context);
-    final database = Provider.of<Database>(context);
+    final team = Provider.of<Team>(context);
     return StreamBuilder<List<Mission>>(
-        stream: database.fetchMissions(),
+        stream: team.fetchMissions(),
         builder: (context, snapshot) {
           // waiting
           if (snapshot.connectionState == ConnectionState.waiting) {

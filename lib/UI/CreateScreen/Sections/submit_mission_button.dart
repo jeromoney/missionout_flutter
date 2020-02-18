@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/DataLayer/mission_address.dart';
-import 'package:missionout/Provider/database.dart';
+import 'package:missionout/Provider/team.dart';
 import 'package:provider/provider.dart';
 
 class SubmitMissionButton extends StatelessWidget {
@@ -66,9 +66,9 @@ class SubmitMissionButton extends StatelessWidget {
           ));
           final myMission = fetchMission();
 
-          final database = Provider.of<Database>(context, listen: false);
+          final team = Provider.of<Team>(context, listen: false);
 
-          database.addMission(mission: myMission).then((documentReference) {
+          team.addMission(mission: myMission).then((documentReference) {
             if (documentReference == null) {
               // there was an error adding mission to database
               Scaffold.of(context).showSnackBar(SnackBar(

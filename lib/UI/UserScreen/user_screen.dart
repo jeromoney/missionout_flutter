@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:missionout/Provider/database.dart';
 import 'package:missionout/Provider/user.dart';
 import 'package:missionout/UI/my_appbar.dart';
 import 'package:provider/provider.dart';
@@ -63,9 +62,8 @@ class SubmitButton extends StatelessWidget {
               content: Text('Processing'),
             ));
             final user = Provider.of<User>(context, listen: false);
-            final database = Provider.of<Database>(context, listen: false);
 
-            await database.updatePhoneNumbers(
+            await user.updatePhoneNumbers(
                 mobilePhoneNumber: mobilePhoneNumberController.text,
                 voicePhoneNumber: voicePhoneNumberController.text);
             // success

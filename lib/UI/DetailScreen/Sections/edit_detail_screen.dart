@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/DataLayer/page.dart';
-import 'package:missionout/Provider/database.dart';
+import 'package:missionout/Provider/team.dart';
 import 'package:missionout/Provider/user.dart';
 import 'package:missionout/UI/CreateScreen/create_screen.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +14,7 @@ class EditDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
-    final database = Provider.of<Database>(context);
+    final team = Provider.of<Team>(context);
     // waiting
     if (snapshot.connectionState == ConnectionState.waiting) {
       return LinearProgressIndicator();
@@ -43,7 +43,7 @@ class EditDetailScreen extends StatelessWidget {
                     onPressed: () {
                       final page = Page(
                           mission: mission);
-                      database.addPage(
+                      team.addPage(
                           page: page);
                     },
                   ),
@@ -59,7 +59,7 @@ class EditDetailScreen extends StatelessWidget {
                         mission.isStoodDown ? '(un)Standown' : 'Stand down'),
                     onPressed: () {
                       mission.isStoodDown = !mission.isStoodDown;
-                      database.standDownMission(
+                      team.standDownMission(
                         mission: mission,
                       );
                     },

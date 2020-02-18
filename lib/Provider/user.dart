@@ -22,4 +22,8 @@ abstract class User with ChangeNotifier {
   void signOut();
 
   void onAuthStateChanged();
+
+  Future<void> updatePhoneNumbers(
+      {@required String mobilePhoneNumber,
+        @required String voicePhoneNumber}) async {}
 }

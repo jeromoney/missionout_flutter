@@ -3,14 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/DataLayer/mission_address.dart';
-import 'package:missionout/Provider/database.dart';
 import 'package:missionout/Provider/team.dart';
 import 'package:missionout/Provider/user.dart';
 import 'package:missionout/UI/DetailScreen/Sections/actions_detail_screen.dart';
 import 'package:missionout/UI/response_screen.dart';
 import 'package:provider/provider.dart';
 
-import '../../Mock/database_fake.dart';
 import '../../Mock/team_fake.dart';
 import '../../Mock/user_fake.dart';
 
@@ -58,9 +56,6 @@ void main() async {
           'Squaw Creek', GeoPoint(2.3, 22.3));
       Widget widget = MultiProvider(
         providers: [
-          Provider<Database>(
-            create: (_) => DatabaseFake(),
-          ),
           ChangeNotifierProvider<User>(
               create: (_) => UserFake(chatURI: 'https://www.cnn.com/')),
           Provider<Team>(create: (_) => TeamFake()),
@@ -148,8 +143,8 @@ void main() async {
     testWidgets('ResponseOptions test', (WidgetTester tester) async {
       Widget widget = MultiProvider(
         providers: [
-          Provider<Database>(
-            create: (_) => DatabaseFake(),
+          Provider<Team>(
+            create: (_) => TeamFake(),
           ),
           ChangeNotifierProvider<User>(
               create: (_) => UserFake(chatURI: 'this will cause an error')),
