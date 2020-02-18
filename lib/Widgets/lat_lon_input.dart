@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:missionout/Provider/team.dart';
-import 'package:provider/provider.dart';
+
 
 class LatLonInput extends StatelessWidget {
   final TextEditingController latController;
@@ -14,15 +13,6 @@ class LatLonInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final team = Provider.of<Team>(context);
-    latController.text = team.location?.latitude.toString();
-    if (latController.text == 'null'){
-      latController.text = '';
-    }
-    lonController.text = team.location?.longitude.toString();
-    if (lonController.text == 'null'){
-      lonController.text = '';
-    }
     final keyboardType = TextInputType.number;
     final inputFormatters = <TextInputFormatter>[
       WhitelistingTextInputFormatter(RegExp('[0-9\.]'))
@@ -66,6 +56,7 @@ class LatLonInput extends StatelessWidget {
   }
 }
 
+@visibleForTesting
 String latValidator(String value, TextEditingController companionController) {
   if (value == '' && companionController.text == ''){
     // User left both fields blank
@@ -80,7 +71,7 @@ String latValidator(String value, TextEditingController companionController) {
   }
   return null;
 }
-
+@visibleForTesting
 String lonValidator(String value, TextEditingController companionController) {
   if (value == '' && companionController.text == ''){
     // User left both fields blank

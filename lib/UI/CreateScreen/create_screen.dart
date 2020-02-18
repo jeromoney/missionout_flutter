@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:missionout/DataLayer/mission.dart';
-import 'package:missionout/UI/CreateScreen/Sections/gps_text_form_field.dart';
 import 'package:missionout/UI/CreateScreen/Sections/submit_mission_button.dart';
 import 'package:missionout/UI/my_appbar.dart';
+import 'package:missionout/Widgets/lat_lon_input.dart';
 
 class CreateScreen extends StatelessWidget {
   final Mission mission;
@@ -46,16 +45,13 @@ class MissionFormState extends State<MissionForm> {
   Widget build(BuildContext context) {
     // set the value if editing an existing mission
     if (mission != null) {
-      descriptionController.value =
-          TextEditingValue(text: mission.description ?? '');
-      actionController.value =
-          TextEditingValue(text: mission.needForAction ?? '');
-      locationController.value =
-          TextEditingValue(text: mission.locationDescription ?? '');
+      descriptionController.text = mission.description ?? '';
+      actionController.text = mission.needForAction ?? '';
+      locationController.text = mission.locationDescription ?? '';
       final latValue = mission.location?.latitude ?? '';
-      final lonValue = mission.location?.latitude ?? '';
-      latitudeController.value = TextEditingValue(text: latValue.toString());
-      longitudeController.value = TextEditingValue(text: lonValue.toString());
+      final lonValue = mission.location?.longitude ?? '';
+      latitudeController.text =  latValue.toString();
+      longitudeController.text =  lonValue.toString();
     }
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -63,33 +59,37 @@ class MissionFormState extends State<MissionForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            TextFormField(
-              controller: descriptionController,
-              decoration: InputDecoration(labelText: 'Description'),
-              validator: (value) {
-                if (value.isEmpty) {
-                  return 'Description required';
-                }
-                return null;
-              },
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                controller: descriptionController,
+                decoration: InputDecoration(labelText: 'Description', border: OutlineInputBorder()),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Description required';
+                  }
+                  return null;
+                },
+              ),
             ),
-            TextFormField(
-              controller: actionController,
-              decoration: InputDecoration(labelText: 'Need for action'),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                controller: actionController,
+                decoration: InputDecoration(labelText: 'Need for action', border: OutlineInputBorder()),
+              ),
             ),
-            TextFormField(
-              controller: locationController,
-              decoration: InputDecoration(labelText: 'Location description'),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                controller: locationController,
+                decoration: InputDecoration(labelText: 'Location description', border: OutlineInputBorder()),
+              ),
             ),
-            GPSTextFormField(
-              controller: latitudeController,
-              gpsType: GPS.latitude,
-              companionController: longitudeController,
-            ),
-            GPSTextFormField(
-              controller: longitudeController,
-              gpsType: GPS.longitude,
-              companionController: latitudeController,
+            LatLonInput(
+              fieldDescription: 'GPS coordinates in Decimal Degrees',
+              lonController: longitudeController,
+              latController: latitudeController,
             ),
             Padding(
               padding: EdgeInsets.only(
@@ -120,8 +120,6 @@ class MissionFormState extends State<MissionForm> {
     super.dispose();
   }
 }
-
-
 
 class CreatePopupRoute extends PopupRoute {
   // A popup route is used so back navigation doesn't go back to this screen.

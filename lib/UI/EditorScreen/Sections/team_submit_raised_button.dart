@@ -22,7 +22,7 @@ class TeamSubmitRaisedButton extends StatefulWidget {
   State createState() => TeamSubmitRaisedButtonState(
       chatURIController: chatURIController,
       latController: latController,
-      lonController: latController,
+      lonController: lonController,
       formKey: formKey);
 }
 

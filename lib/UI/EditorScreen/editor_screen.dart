@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:missionout/Provider/team.dart';
-import 'package:missionout/UI/EditorScreen/Sections/lat_lon_input.dart';
+import 'package:missionout/Widgets/lat_lon_input.dart';
 import 'package:missionout/UI/my_appbar.dart';
 import 'package:provider/provider.dart';
 
