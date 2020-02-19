@@ -5,8 +5,8 @@ import 'package:missionout/Provider/user.dart';
 import 'package:missionout/UI/EditorScreen/editor_screen.dart';
 import 'package:provider/provider.dart';
 
-import 'Mock/team_fake.dart';
-import 'Mock/user_fake.dart';
+import '../Mock/team_fake.dart';
+import '../Mock/user_fake.dart';
 
 void main(){
   group('EditorScreen widget tests', (){

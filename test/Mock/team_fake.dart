@@ -46,7 +46,38 @@ class TeamFake implements Team{
 
   @override
   Future<Function> updateInfo(
-      {@required GeoPoint geoPoint, @required String chatUri}) {
+      {@required GeoPoint geoPoint, @required String chatUri}) async {
+    switch (yieldValue) {
+      case Yield.waiting:
+        {
+          await Future.delayed(Duration(seconds: 1));
+        }
+        break;
+
+      case Yield.results:
+        {
+          ;;
+        }
+        break;
+
+      case Yield.error:
+        {
+          throw DiagnosticLevel.error;
+        }
+        break;
+
+      case Yield.zeroResults:
+        {
+          ;
+        }
+        break;
+
+      default:
+        {
+          ;
+        }
+        break;
+    }
   }
 
   @override

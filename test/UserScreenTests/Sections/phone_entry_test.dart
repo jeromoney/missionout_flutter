@@ -89,10 +89,9 @@ void main() {
 
   group('getRegion unit testing', (){
     test('testing different values', () async{
-      assert(await getRegion('') == 'US');
-      assert(await getRegion(null) == 'US');
-      //assert(await getRegion('+12122535678') == 'US'); Unable to run this outside of an app
-
+      expect(await getRegion(''), 'US');
+      expect(await getRegion(null), 'US');
+      // expect(await getRegion('+12122535678'), 'US'); //TODO - fix. Unable to run this outside of an app
     });
   });
 }

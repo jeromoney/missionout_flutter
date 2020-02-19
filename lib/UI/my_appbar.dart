@@ -27,7 +27,8 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                 image: CachedNetworkImageProvider(user.photoUrl),
               ))),
       PopupMenuButton<Menu>(
-        key: Key('PopupMenuButton'), // Used for testing, since I can't find this with find.byType
+        key: Key('PopupMenuButton'),
+        // Used for testing, since I can't find this with find.byType
         onSelected: (Menu result) {
           switch (result) {
             case Menu.signOut:
@@ -66,7 +67,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
               break;
           }
         },
-        itemBuilder: (BuildContext context) => const <PopupMenuEntry<Menu>>[
+        itemBuilder: (BuildContext context) => <PopupMenuEntry<Menu>>[
           PopupMenuItem<Menu>(
             value: Menu.signOut,
             child: Text('Sign out'),
@@ -75,10 +76,11 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
             value: Menu.userOptions,
             child: Text('User Options'),
           ),
-          PopupMenuItem<Menu>(
-            value: Menu.editorOptions,
-            child: Text('Editor Options'),
-          ),
+          if (user.isEditor)
+            PopupMenuItem<Menu>(
+              value: Menu.editorOptions,
+              child: Text('Editor Options'),
+            ),
         ],
       )
     ]);
