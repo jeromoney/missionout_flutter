@@ -29,15 +29,20 @@ abstract class Team {
 
   Stream<List<Response>> fetchResponses({@required String docID});
 
-  Future<DocumentReference> addMission({@required Mission mission}) async {}
+  Future<DocumentReference> addMission({@required Mission mission});
 
   void standDownMission({@required Mission mission});
 
-  Future<void> addPage({@required Page page}) async {}
+  Future<void> addPage({
+    @required Page page,
+    @required String missionDocID,
+  });
+
+  // Interface with database. A page is uploaded to a server who will then act on the data
 
   Future<void> addResponse({
     @required Response response,
     @required String docID,
     @required String uid,
-  }) async {}
+  });
 }

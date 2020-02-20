@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:missionout/Provider/user.dart';
@@ -127,6 +128,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
     mobilePhoneNumber = data['mobilePhoneNumber'] ?? '';
     voicePhoneNumber = data['voicePhoneNumber'] ?? '';
     region = data['region'] ?? '';
+    subscribeToTeamPages();
     // team settings
     document = await _db.collection('teams').document(teamID).get();
     data = document.data;
@@ -153,6 +155,14 @@ class MyFirebaseUser with ChangeNotifier implements User {
       return true;
     }).catchError((error) {
       throw error;
+    });
+  }
+
+  Future<void> subscribeToTeamPages() async {
+    FirebaseMessaging().subscribeToTopic(teamID).then((value) {
+      debugPrint('Successfully subscribed to notifications');
+    }).catchError((e) {
+      debugPrint('Error subscribing to notifications');
     });
   }
 }

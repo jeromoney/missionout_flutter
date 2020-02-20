@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/UI/CreateScreen/create_screen.dart';
 import 'package:missionout/UI/DetailScreen/detail_screen.dart';
@@ -28,16 +29,5 @@ class MissionOut extends StatelessWidget {
       ),
     );
   }
-
-  Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) {
-    if (message.containsKey('data')) {
-      // handle message
-      final dynamic data = message['data'];
-    }
-
-    if (message.containsKey('notification')) {
-      // handle notification
-      final dynamic notification = message['notification'];
-    }
-  }
 }
+

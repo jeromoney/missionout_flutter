@@ -46,6 +46,9 @@ class FirestoreTeam implements Team {
 
   @override
   void updateTeamID(String teamID) async {
+    if (teamID == null) {
+      return;
+    }
     this.teamID = teamID;
     // user specific permissions
     var document = await _db.collection('teams').document(teamID).get();
@@ -56,17 +59,17 @@ class FirestoreTeam implements Team {
   }
 
   @override
-  Future<void> updateInfo({@required GeoPoint geoPoint, @required String chatUri}) async {
-    await _db.document('teams/$teamID').updateData({
-      'chatURI': chatUri,
-      'location': geoPoint
-    }).then((value) {
+  Future<void> updateInfo(
+      {@required GeoPoint geoPoint, @required String chatUri}) async {
+    await _db
+        .document('teams/$teamID')
+        .updateData({'chatURI': chatUri, 'location': geoPoint}).then((value) {
       return true;
     }).catchError((error) {
       throw error;
     });
-
   }
+
   @override
   Stream<List<Mission>> fetchMissions() {
     const QUERY_LIMIT = 10;
@@ -130,7 +133,7 @@ class FirestoreTeam implements Team {
     @required String uid,
   }) async {
     DocumentReference document =
-    _db.collection('teams/$teamID/missions/$docID/responses').document(uid);
+        _db.collection('teams/$teamID/missions/$docID/responses').document(uid);
     if (response != null) {
       await document.setData(response.toJson());
     } else {
