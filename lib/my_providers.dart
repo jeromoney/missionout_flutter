@@ -5,7 +5,7 @@ import 'package:provider/single_child_widget.dart';
 
 import 'DataLayer/mission_address.dart';
 import 'Provider/user.dart';
-import 'Provider/user_firebase.dart';
+import 'Provider/my_firebase_user.dart';
 
 class MyProviders {
   List<SingleChildStatelessWidget> get providers {

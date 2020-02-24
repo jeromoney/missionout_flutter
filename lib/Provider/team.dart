@@ -35,7 +35,6 @@ abstract class Team {
 
   Future<void> addPage({
     @required Page page,
-    @required String missionDocID,
   });
 
   // Interface with database. A page is uploaded to a server who will then act on the data

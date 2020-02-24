@@ -41,10 +41,9 @@ class EditDetailScreen extends StatelessWidget {
                   FlatButton(
                     child: const Text('Page Team'),
                     onPressed: () {
-                      final page = Page(
-                          mission: mission);
-                      team.addPage(
-                          page: page);
+                      final page =
+                          Page(creator: user.displayName, mission: mission);
+                      team.addPage(page: page);
                     },
                   ),
                   FlatButton(

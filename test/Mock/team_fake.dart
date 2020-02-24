@@ -4,12 +4,15 @@ import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/DataLayer/page.dart';
 import 'package:missionout/DataLayer/response.dart';
 import 'package:missionout/Provider/team.dart';
+
 enum Yield { error, zeroResults, results, waiting }
 
-class TeamFake implements Team{
+class TeamFake implements Team {
   Yield yieldValue;
 
-  TeamFake({this.yieldValue = Yield.results,this.chatURI = 'https://something.com'});
+  TeamFake(
+      {this.yieldValue = Yield.results,
+      this.chatURI = 'https://something.com'});
 
   @override
   String name;
@@ -20,28 +23,23 @@ class TeamFake implements Team{
   @override
   String chatURI;
 
-
   @override
   bool get chatURIisAvailable => true;
 
   @override
-  dynamic get documentAddress {
-
-  }
+  dynamic get documentAddress {}
 
   @override
-  dynamic toDatabase() {
-
-  }
+  dynamic toDatabase() {}
 
   @override
-  void updateTeamID(String teamID) {
-
-  }
+  void updateTeamID(String teamID) {}
 
   @override
   void launchChat() {
-    if (chatURI == 'this will cause an error') {throw DiagnosticLevel.error;}
+    if (chatURI == 'this will cause an error') {
+      throw DiagnosticLevel.error;
+    }
   }
 
   @override
@@ -55,9 +53,6 @@ class TeamFake implements Team{
         break;
 
       case Yield.results:
-        {
-          ;;
-        }
         break;
 
       case Yield.error:
@@ -67,15 +62,9 @@ class TeamFake implements Team{
         break;
 
       case Yield.zeroResults:
-        {
-          ;
-        }
         break;
 
       default:
-        {
-          ;
-        }
         break;
     }
   }
@@ -102,9 +91,7 @@ class TeamFake implements Team{
         break;
 
       default:
-        {
-          ;
-        }
+
         break;
     }
   }
@@ -143,9 +130,7 @@ class TeamFake implements Team{
         break;
 
       default:
-        {
-          ;
-        }
+
         break;
     }
   }
@@ -162,7 +147,7 @@ class TeamFake implements Team{
 
       case Yield.results:
         {
-          yield [Response(status: 'late',teamMember: 'john doe')];
+          yield [Response(status: 'late', teamMember: 'john doe')];
         }
         break;
 
@@ -179,9 +164,7 @@ class TeamFake implements Team{
         break;
 
       default:
-        {
-          ;
-        }
+
         break;
     }
   }

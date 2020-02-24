@@ -3,15 +3,27 @@ import 'package:flutter/foundation.dart';
 import 'package:missionout/DataLayer/mission.dart';
 
 class Page {
-  final Mission _mission;
+  String creator;
+  String description;
+  String needForAction;
+  String address;
+  Mission mission;
   Timestamp time;
 
-  Page({@required Mission mission})
-      : _mission = mission;
+  Page({@required this.creator, @required this.mission});
 
   Map<String, dynamic> toJson() => {
-        'description': _mission.description,
-        'action': _mission.needForAction,
+        'creator': creator,
+        'description': mission.description,
+        'needForAction': mission.needForAction,
+        'address': mission.reference.documentID,
         'time': FieldValue.serverTimestamp(),
       };
+
+  Page.fromMap(Map<String, dynamic> map)
+      : creator = map['creator'],
+        description = map['description'],
+        needForAction = map['needForAction'],
+        address = map['address'],
+        time = map['time'];
 }

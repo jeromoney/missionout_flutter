@@ -1,15 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/DataLayer/page.dart';
 import 'package:missionout/DataLayer/response.dart';
 import 'package:missionout/Provider/team.dart';
 import 'package:missionout/Provider/user.dart';
-import 'package:missionout/UI/CreateScreen/Sections/submit_mission_button.dart';
 import 'package:missionout/UI/EditorScreen/Sections/team_submit_raised_button.dart';
-import 'package:missionout/UI/EditorScreen/editor_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() => runApp(XXX());
@@ -83,9 +80,7 @@ class TeamFake implements Team {
 
   @override
   Future<Function> updateInfo(
-      {@required GeoPoint geoPoint, @required String chatUri}) {
-
-  }
+      {@required GeoPoint geoPoint, @required String chatUri})
 
   @override
   Future<DocumentReference> addMission({@required Mission mission}) {

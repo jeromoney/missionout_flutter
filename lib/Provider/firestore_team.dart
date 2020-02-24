@@ -152,11 +152,11 @@ class FirestoreTeam implements Team {
 
   @override
   Future<void> addPage({
-    @required String missionDocID,
     @required Page page,
   }) async {
+    String missionDocId = page.mission.address;
     await _db
-        .collection('teams/$teamID/missions/$missionDocID/pages')
+        .collection('teams/$teamID/missions/$missionDocId/pages')
         .add(page.toJson())
         .then((documentReference) {
       return;

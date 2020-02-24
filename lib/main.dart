@@ -1,4 +1,3 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/UI/CreateScreen/create_screen.dart';
 import 'package:missionout/UI/DetailScreen/detail_screen.dart';
