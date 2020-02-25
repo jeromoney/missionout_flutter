@@ -101,15 +101,14 @@ class FirestoreTeam implements Team {
 
   @override
   Future<DocumentReference> addMission({
-    @required String teamId,
     @required Mission mission,
   }) async {
     // if document reference exists in mission variable, than we are updating an existing mission rather than creating a new one.
     DocumentReference result;
     if (mission.reference == null) {
-      // reference doesn't existm so create new mission
+      // reference doesn't exist so create new mission
       result = await _db
-          .collection('teams/$teamId/missions')
+          .collection('teams/$teamID/missions')
           .add(mission.toDatabase())
           .then((value) {
         return value;
