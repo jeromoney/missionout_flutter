@@ -15,7 +15,7 @@ class LatLonInput extends StatelessWidget {
   Widget build(BuildContext context) {
     final keyboardType = TextInputType.number;
     final inputFormatters = <TextInputFormatter>[
-      WhitelistingTextInputFormatter(RegExp('[0-9\.]'))
+      WhitelistingTextInputFormatter(RegExp('[0-9\.\-]'))
     ];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
