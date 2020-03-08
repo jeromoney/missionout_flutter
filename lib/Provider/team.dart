@@ -14,8 +14,6 @@ abstract class Team {
   dynamic get documentAddress; // Where the document is in database
   Team.fromDatabase(dynamic importFormat);
 
-  dynamic toDatabase();
-
   void updateTeamID(String teamID);
 
   Future<void> updateInfo(

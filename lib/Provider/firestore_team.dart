@@ -37,9 +37,6 @@ class FirestoreTeam implements Team {
         chatURI = map['chatURI'];
 
   @override
-  dynamic toDatabase() {}
-
-  @override
   void launchChat() {
     launch(chatURI);
   }
