@@ -32,7 +32,7 @@ void main() {
     expect(() => testMission.address, throwsNoSuchMethodError);
 
     var exportMission = testMission.toDatabase();
-    expect(exportMission['time'], isA<FieldValue>() );
+    expect(exportMission['time'], isA<Timestamp>() );
     exportMission['time'] = myTime;
 
     expect(exportMission, testMap);

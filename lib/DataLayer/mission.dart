@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Mission {
@@ -38,6 +40,6 @@ class Mission {
         'needForAction': needForAction,
         'locationDescription': locationDescription,
         'isStoodDown': isStoodDown,
-        'time': FieldValue.serverTimestamp(),
+        'time': Timestamp.now(), //TODO - some bug in iOS doesn't allow FieldValue. Remove null when this is fixed,
       };
 }

@@ -28,6 +28,8 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 
 android {
+    ndkVersion "21.0.6113669" // Hard coding to eliminate this issue https://github.com/android/ndk/issues/1190
+
     compileSdkVersion 28
 
     sourceSets {

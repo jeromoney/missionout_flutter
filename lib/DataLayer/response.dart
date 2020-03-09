@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
@@ -24,6 +26,6 @@ class Response {
   Map<String, dynamic> toJson() => {
         'teamMember': teamMember,
         'status': status,
-        'time':  FieldValue.serverTimestamp(),
+        'time':  Timestamp.now(), //TODO - some bug in iOS doesn't allow FieldValue. Remove null when this is fixed,
       };
 }

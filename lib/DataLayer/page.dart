@@ -17,7 +17,7 @@ class Page {
         'description': mission.description,
         'needForAction': mission.needForAction,
         'address': mission.reference.documentID,
-        'time': Platform.isAndroid ? FieldValue.serverTimestamp(): null, //TODO - some bug in iOS doesn't allow FieldValue. Remove null when this is fixed
+        'time': Timestamp.now(), //TODO - some bug in iOS doesn't allow FieldValue. Remove null when this is fixed
       };
 
   Page.fromMap(Map<String, dynamic> map)
