@@ -93,7 +93,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
     final data = {
       'token': idToken.token,
       'platform': Platform.operatingSystem,
-      'createdAt': FieldValue.serverTimestamp()
+      'createdAt': Timestamp.now(), //TODO - bug in FieldValue.serverTimestamp(). Remove this when fixed
     };
     await _db
         .collection('users/${user.uid}/tokens')

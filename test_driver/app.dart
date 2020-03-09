@@ -5,5 +5,5 @@ import 'package:missionout/my_providers.dart';
 
 void main(){
   enableFlutterDriverExtension();
-  runApp(app.MissionOut(initialAuthServiceType: AuthServiceType.mock,));
+  runApp(app.MissionOut());
 }

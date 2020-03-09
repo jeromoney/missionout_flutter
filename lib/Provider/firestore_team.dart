@@ -21,13 +21,6 @@ class FirestoreTeam implements Team {
   @override
   FirestoreTeam.fromDatabase(dynamic importFormat);
 
-  @override
-  dynamic get documentAddress => _firestoreDocumentAddress != null;
-
-  @override
-  bool get chatURIisAvailable => chatURI != null;
-
-  DocumentReference _firestoreDocumentAddress;
 
   FirestoreTeam();
 
@@ -35,6 +28,13 @@ class FirestoreTeam implements Team {
       : name = map['name'],
         location = map['location'],
         chatURI = map['chatURI'];
+  @override
+  dynamic get documentAddress => _firestoreDocumentAddress != null;
+
+  @override
+  bool get chatURIisAvailable => chatURI != null;
+
+  DocumentReference _firestoreDocumentAddress;
 
   @override
   void launchChat() {
