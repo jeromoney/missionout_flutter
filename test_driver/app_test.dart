@@ -9,7 +9,14 @@ void main() {
       driver = await FlutterDriver.connect();
     });
 
-    test('smoke test', () async {});
+    test('smoke test', () async {
+      // Expects that app is signed out
+      final signInButtonFinder = find.byValueKey('Google Sign In Button');
+      await driver.tap(signInButtonFinder);
+      //await driver.tap(find.text('Justin Matis'));
+
+
+    });
 
 
     tearDownAll(() async {

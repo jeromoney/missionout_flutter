@@ -8,11 +8,14 @@ import 'package:provider/provider.dart';
 void main() => runApp(MissionOut());
 
 class MissionOut extends StatelessWidget {
-  // This widget is the root of your application.
+  const MissionOut({this.initialAuthServiceType = AuthServiceType.firebase});
+
+  final AuthServiceType initialAuthServiceType;
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: MyProviders().providers,
+      providers: MyProviders(initialAuthServiceType).providers,
       child: MaterialApp(
         title: 'Mission Out',
         theme: ThemeData(
@@ -29,4 +32,3 @@ class MissionOut extends StatelessWidget {
     );
   }
 }
-
