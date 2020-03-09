@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:missionout/DataLayer/mission.dart';
-
+import 'dart:io' show Platform;
 class Page {
   String creator;
   String description;
@@ -17,7 +17,7 @@ class Page {
         'description': mission.description,
         'needForAction': mission.needForAction,
         'address': mission.reference.documentID,
-        'time': FieldValue.serverTimestamp(),
+        'time': Platform.isAndroid ? FieldValue.serverTimestamp(): null, //TODO - some bug in iOS doesn't allow FieldValue. Remove null when this is fixed
       };
 
   Page.fromMap(Map<String, dynamic> map)

@@ -31,7 +31,7 @@ class InfoDetailScreen extends StatelessWidget {
           baselineType: TextBaseline.alphabetic,
           child: Text(
             mission.description,
-            style: Theme.of(context).textTheme.headline5,
+            style: Theme.of(context).textTheme.headline,
           ),
         ),
         Baseline(
@@ -40,7 +40,7 @@ class InfoDetailScreen extends StatelessWidget {
           child: Text(
             formatTime(mission.time) +
                 (mission.isStoodDown ? ' stood down' : ''),
-            style: Theme.of(context).textTheme.subtitle2,
+            style: Theme.of(context).textTheme.subtitle,
           ),
         ),
         Baseline(
@@ -48,7 +48,7 @@ class InfoDetailScreen extends StatelessWidget {
             baselineType: TextBaseline.alphabetic,
             child: Text(
               mission.locationDescription,
-              style: Theme.of(context).textTheme.headline6
+              style: Theme.of(context).textTheme.headline
               ,
             )),
         Baseline(
@@ -58,7 +58,7 @@ class InfoDetailScreen extends StatelessWidget {
             mission.needForAction,
             style: mission.isStoodDown
                 ? TextStyle(decoration: TextDecoration.lineThrough)
-                : Theme.of(context).textTheme.bodyText2,
+                : Theme.of(context).textTheme.body1,
           ),
         ),
       ],

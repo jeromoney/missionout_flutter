@@ -24,6 +24,6 @@ class Response {
   Map<String, dynamic> toJson() => {
         'teamMember': teamMember,
         'status': status,
-        'time': FieldValue.serverTimestamp(),
+        'time':  FieldValue.serverTimestamp(),
       };
 }
