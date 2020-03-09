@@ -26,7 +26,7 @@ class Mission {
         location = map['location'],
         needForAction = map['needForAction'],
         locationDescription = map['locationDescription'],
-        isStoodDown = map['stoodDown']??false;
+        isStoodDown = map['isStoodDown']??false;
 
   Mission.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data, reference: snapshot.reference);
@@ -37,7 +37,7 @@ class Mission {
         'location': location,
         'needForAction': needForAction,
         'locationDescription': locationDescription,
-        'stoodDown': isStoodDown,
+        'isStoodDown': isStoodDown,
         'time': FieldValue.serverTimestamp(),
       };
 }

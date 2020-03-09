@@ -57,7 +57,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
   }
 
   @override
-  void signIn() async {
+  Future<void> signIn() async {
     //check if user is signed in
     final googleSignIn = GoogleSignIn();
     final auth = FirebaseAuth.instance;
