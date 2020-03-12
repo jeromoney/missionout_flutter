@@ -48,7 +48,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val notificationId = 12344
         // Create an explicit intent for an Activity in your app
         // TODO - create deep link to detail page. This existing method is causing it to crash
-        val uri = "missionout://www.beaterboofs.com/${path}"
+        val uri = "poc://deeplink.flutter.dev/someparam"
 
         val notificationIntent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
         val pendingIntent = PendingIntent.getActivity(baseContext, 0, notificationIntent, 0)
@@ -79,6 +79,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 .setContentIntent(pendingIntent)
                 .setDeleteIntent(pendingIntent)
                 .setSound(defaultSoundUri)
+                .setSmallIcon(R.drawable.mo_notification_logo)
+
 
         // show notifcation
         with(NotificationManagerCompat.from(this)) {
