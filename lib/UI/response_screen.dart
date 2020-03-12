@@ -67,13 +67,11 @@ class BuildResponsesResult extends StatelessWidget {
         columns: [
           DataColumn(label: Text('Team Member')),
           DataColumn(label: Text('Status')),
-          DataColumn(label: Text('Driving Time')),
         ],
         rows: responses
             .map((response) => DataRow(cells: <DataCell>[
                   DataCell(Text(response.teamMember ?? '')),
                   DataCell(Text(response.status ?? '')),
-                  DataCell(Text(response.drivingTime ?? ''))
                 ]))
             .toList());
   }

@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:missionout/DataLayer/mission_address.dart';
 import 'package:missionout/Provider/team.dart';
 import 'package:missionout/Provider/user.dart';
-import 'package:missionout/UI/main_screen.dart';
 import 'package:missionout/UI/overview_screen.dart';
 import 'package:missionout/UI/signin_screen.dart';
 import 'package:missionout/main.dart';

@@ -1,10 +1,17 @@
+
 import 'package:flutter/foundation.dart';
 import 'package:missionout/Provider/user.dart';
 
 class UserFake with ChangeNotifier implements User {
-  bool signedIn = true;
+  bool signedIn;
 
-  UserFake({this.chatURI, this.isEditor = true, this.mobilePhoneNumber = '+3455', this.voicePhoneNumber = '+344'});
+  UserFake({
+    this.chatURI,
+    this.isEditor = true,
+    this.mobilePhoneNumber = '+3455',
+    this.voicePhoneNumber = '+344',
+    this.signedIn = true,
+  });
 
   @override
   String chatURI;
@@ -24,23 +31,28 @@ class UserFake with ChangeNotifier implements User {
   String get email => 'john@doe.com';
 
   @override
-  String get photoUrl => 'https://images2.minutemediacdn.com/image/upload/c_fit,f_auto,fl_lossy,q_auto,w_728/v1555919852/shape/mentalfloss/magic-eye.jpg';
+  String get photoUrl =>
+      'https://images2.minutemediacdn.com/image/upload/c_fit,f_auto,fl_lossy,q_auto,w_728/v1555919852/shape/mentalfloss/magic-eye.jpg';
 
   @override
   String get uid => '123456';
 
   @override
-  bool get isLoggedIn => true;
+  bool get isLoggedIn => signedIn;
 
   @override
   bool get chatURIisAvailable => true;
 
   @override
-  void signIn() {}
+  void signIn() {
+    signedIn = true;
+    notifyListeners();
+  }
 
   @override
   void signOut() {
     signedIn = false;
+    notifyListeners();
   }
 
   @override
@@ -51,13 +63,14 @@ class UserFake with ChangeNotifier implements User {
   }
 
   @override
-  void onAuthStateChanged() {}
+  void onAuthStateChanged() {
+    notifyListeners();
+  }
   @override
   String region;
 
   @override
   Future<Function> updatePhoneNumbers(
-      {@required String mobilePhoneNumber, @required String voicePhoneNumber}) {
-
-  }
+      {@required String mobilePhoneNumber,
+      @required String voicePhoneNumber}) {}
 }

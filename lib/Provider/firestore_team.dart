@@ -143,7 +143,7 @@ class FirestoreTeam implements Team {
   }) {
     _db
         .document('teams/$teamID/missions/${mission.reference.documentID}')
-        .updateData({'stoodDown': mission.isStoodDown});
+        .updateData({'isStoodDown': mission.isStoodDown});
   }
 
   @override
