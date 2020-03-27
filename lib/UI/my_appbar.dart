@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 enum Menu { signOut, userOptions, editorOptions }
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
-  String _title;
+   String _title;
 
   MyAppBar({@required String title}) {
     _title = title;

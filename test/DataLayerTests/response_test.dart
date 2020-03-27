@@ -9,7 +9,6 @@ void main() {
   test('Create response test', () {
     final teamMember = 'Joe Smith';
     final status = 'his response';
-    final drivingTime = '23 minutes';
     var response = Response(teamMember: teamMember, status: status);
     response.reference = DocumentReferenceMock();
 

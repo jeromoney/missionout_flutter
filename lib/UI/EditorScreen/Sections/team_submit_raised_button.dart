@@ -71,7 +71,7 @@ class TeamSubmitRaisedButtonState extends State<TeamSubmitRaisedButton> {
                   color: Colors.green,
                 );
               });
-            } catch (e, s) {
+            } catch (e) {
               Scaffold.of(context).showSnackBar(
                   SnackBar(content: Text('Error uploading information')));
               setState(() {

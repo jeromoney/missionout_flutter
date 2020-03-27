@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:missionout/DataLayer/mission.dart';
-import 'dart:io' show Platform;
 class Page {
   String creator;
   String description;

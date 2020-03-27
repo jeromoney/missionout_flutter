@@ -113,6 +113,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
 
   @override
   void dispose() {
+    super.dispose();
     FirebaseAuth.instance.onAuthStateChanged.drain();
   }
 

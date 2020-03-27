@@ -70,6 +70,7 @@ class TeamFake implements Team {
   }
 
   @override
+  // ignore: missing_return
   Future<DocumentReference> addMission({String teamId, Mission mission}) async {
     switch (yieldValue) {
       case Yield.results:

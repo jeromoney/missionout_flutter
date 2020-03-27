@@ -55,7 +55,6 @@ class UserFake with ChangeNotifier implements User {
     notifyListeners();
   }
 
-  @override
   void launchChat() {
     if (chatURI == 'this will cause an error') {
       throw DiagnosticLevel.error;
@@ -70,6 +69,7 @@ class UserFake with ChangeNotifier implements User {
   String region;
 
   @override
+  // ignore: missing_return
   Future<Function> updatePhoneNumbers(
       {@required String mobilePhoneNumber,
       @required String voicePhoneNumber}) {}

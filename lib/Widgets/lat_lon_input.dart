@@ -72,6 +72,8 @@ String latValidator(String value, TextEditingController companionController) {
   return null;
 }
 @visibleForTesting
+// if nothing is returned, then lon validates as true
+// ignore: missing_return
 String lonValidator(String value, TextEditingController companionController) {
   if (value == '' && companionController.text == ''){
     // User left both fields blank
