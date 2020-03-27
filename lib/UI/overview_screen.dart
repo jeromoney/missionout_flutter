@@ -77,8 +77,13 @@ class BuildMissionResults extends StatelessWidget {
           final mission = missions[index];
 
           return ListTile(
-            title: Text(mission.description ?? ''),
-            subtitle: Text((mission.needForAction ?? '') + ' ' + (formatTime(mission.time)  ?? '')) ,
+            title: Text(mission.description ?? '',
+                style: mission.isStoodDown ?? false
+                    ? TextStyle(decoration: TextDecoration.lineThrough)
+                    : Theme.of(context).textTheme.body1),
+            subtitle: Text((mission.needForAction ?? '') +
+                ' ' +
+                (formatTime(mission.time) ?? '')),
             onTap: () {
               Provider.of<MissionAddress>(context, listen: false).address =
                   mission.address;
