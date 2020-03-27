@@ -5,6 +5,7 @@ import 'package:missionout/Provider/team.dart';
 import 'package:missionout/Provider/user.dart';
 import 'package:missionout/UI/CreateScreen/create_screen.dart';
 import 'package:missionout/UI/my_appbar.dart';
+import 'package:missionout/utils.dart';
 import 'package:provider/provider.dart';
 
 class OverviewScreen extends StatelessWidget {
@@ -77,7 +78,7 @@ class BuildMissionResults extends StatelessWidget {
 
           return ListTile(
             title: Text(mission.description ?? ''),
-            subtitle: Text(mission.needForAction ?? ''),
+            subtitle: Text((mission.needForAction ?? '') + ' ' + (formatTime(mission.time)  ?? '')) ,
             onTap: () {
               Provider.of<MissionAddress>(context, listen: false).address =
                   mission.address;

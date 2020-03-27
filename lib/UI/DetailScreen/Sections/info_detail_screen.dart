@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:missionout/DataLayer/mission.dart';
 
+import '../../../utils.dart';
+
 class InfoDetailScreen extends StatelessWidget {
   final AsyncSnapshot snapshot;
   const InfoDetailScreen({Key key, this.snapshot}) : super(key: key);
@@ -66,11 +68,3 @@ class InfoDetailScreen extends StatelessWidget {
   }
 }
 
-@visibleForTesting
-String formatTime(Timestamp time) {
-  if (time == null) {
-    return '';
-  }
-  final dateTime = time.toDate();
-  return DateFormat('yyyy-MM-dd kk:mm').format(dateTime);
-}

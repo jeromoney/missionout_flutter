@@ -69,7 +69,7 @@ class FirestoreTeam implements Team {
 
   @override
   Stream<List<Mission>> fetchMissions() {
-    const QUERY_LIMIT = 10;
+    const QUERY_LIMIT = 5;
     final ref = _db
         .collection('teams/$teamID/missions')
         .limit(QUERY_LIMIT)
