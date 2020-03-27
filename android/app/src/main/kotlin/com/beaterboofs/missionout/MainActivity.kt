@@ -22,14 +22,14 @@ private lateinit var linksReceiver: BroadcastReceiver
 
 class MainActivity : FlutterActivity() {
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
-        GeneratedPluginRegistrant.registerWith(flutterEngine);
+        GeneratedPluginRegistrant.registerWith(flutterEngine)
     }
 
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         super.onCreate(savedInstanceState, persistentState)
-        GeneratedPluginRegistrant.registerWith(flutterEngine!!);
+        GeneratedPluginRegistrant.registerWith(flutterEngine!!)
 
-        val data = intent.data;
+        val data = intent.data
         val flutterView = io.flutter.view.FlutterView(context)
 
 
