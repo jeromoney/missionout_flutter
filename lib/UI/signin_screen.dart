@@ -9,9 +9,9 @@ class SigninScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           Container(
-            height: 400,
             child: Align(
                 alignment: Alignment.bottomCenter,
                 child: Image(
@@ -19,7 +19,6 @@ class SigninScreen extends StatelessWidget {
                     image: AssetImage('graphics/missionoutlogo.png'))),
           ),
           Container(
-            height: 200,
             child: Align(
               alignment: Alignment.bottomCenter,
               child: GoogleSignInButton(
