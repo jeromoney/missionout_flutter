@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 enum Menu { signOut, userOptions, editorOptions }
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
-   String _title;
+  String _title;
 
   MyAppBar({@required String title}) {
     _title = title;
@@ -69,10 +69,6 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
         },
         itemBuilder: (BuildContext context) => <PopupMenuEntry<Menu>>[
           PopupMenuItem<Menu>(
-            value: Menu.signOut,
-            child: Text('Sign out'),
-          ),
-          PopupMenuItem<Menu>(
             value: Menu.userOptions,
             child: Text('User Options'),
           ),
@@ -81,6 +77,10 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
               value: Menu.editorOptions,
               child: Text('Editor Options'),
             ),
+          PopupMenuItem<Menu>(
+            value: Menu.signOut,
+            child: Text('Sign out'),
+          ),
         ],
       )
     ]);

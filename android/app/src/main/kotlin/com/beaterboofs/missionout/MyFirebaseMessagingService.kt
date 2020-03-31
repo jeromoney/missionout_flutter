@@ -1,5 +1,4 @@
 package com.beaterboofs.missionout
-
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -9,7 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.media.AudioAttributes
-import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import androidx.core.app.NotificationCompat
@@ -39,14 +37,14 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         }
     }
 
-    override fun onMessageReceived(p0: RemoteMessage) {
-        super.onMessageReceived(p0)
+    override fun onMessageReceived(message: RemoteMessage) {
+        super.onMessageReceived(message)
         // Uh Oh -- FCM received so there must be a mission.
         // Display a notification, play sound and allow user to dismiss sound
         createNotificationChannel()
-        val header = p0.data["description"]
-        val body = p0.data["action"]
-        val path = p0.data["path"]
+        val header = message.data["description"]
+        val body = message.data["action"]
+        val path = message.data["path"]
         val notificationId = 12344
         // Create an explicit intent for an Activity in your app
         // TODO - create deep link to detail page. This existing method is causing it to crash
@@ -64,7 +62,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH).apply {
                 lightColor = Color.GRAY
                 enableLights(true)
-                description = "SOME DESCRIPTION"
+                
+                description = "Page Channel"
             }
             val audioAttributes = AudioAttributes.Builder()
                     .setContentType(AudioAttributes.CONTENT_TYPE_UNKNOWN)
