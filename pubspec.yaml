@@ -26,14 +26,14 @@ dependencies:
   firebase_dynamic_links: ^0.3.0
   google_sign_in: ^4.1.1
   url_launcher: ^5.4.1
-  cloud_firestore: ^0.13.2
+  cloud_firestore: ^0.13.4
   intl: ^0.16.0
   flutter_auth_buttons: ^0.6.0
   tuple: ^1.0.3
   flutter_local_notifications: ^0.9.1+2
   provider: ^4.0.1
-  firebase_core:  0.4.3+3 #Hard coding version due to bug with useragent.h
-  firebase_messaging: ^6.0.9
+  firebase_core:  ^0.4.4 #this was 0.4.3+3 which was harcoded due to bug with useragent.h in iOS
+  firebase_messaging: ^6.0.13
   phone_number: ^0.6.0+1
   tel_input: ^0.2.2
   intl_phone_number_input: ^0.3.0

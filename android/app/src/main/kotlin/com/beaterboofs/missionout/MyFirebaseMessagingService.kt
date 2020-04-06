@@ -25,7 +25,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = "MissionOut Pages"
-            val descriptionText = "Notifcations for "
+            val descriptionText = "Notifications for MissionOut App"
             val importance = NotificationManager.IMPORTANCE_DEFAULT
             val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
                 description = descriptionText
@@ -81,7 +81,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 .setContentIntent(pendingIntent)
                 .setDeleteIntent(pendingIntent)
                 .setSound(defaultSoundUri)
-                .setSmallIcon(R.drawable.mo_notification_logo)
+                .setSmallIcon(R.drawable.mo_launcher_icon_background)
 
 
         // show notifcation

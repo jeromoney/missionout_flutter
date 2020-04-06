@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,6 +6,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:missionout/Provider/user.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
 
 class MyFirebaseUser with ChangeNotifier implements User {
   final Firestore _db = Firestore.instance;
@@ -41,6 +42,9 @@ class MyFirebaseUser with ChangeNotifier implements User {
 
   @override
   bool get chatURIisAvailable => chatURI != null;
+
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
 
   MyFirebaseUser() {
     FirebaseAuth.instance.onAuthStateChanged.listen((firebaseUser) async {
@@ -89,18 +93,13 @@ class MyFirebaseUser with ChangeNotifier implements User {
   Future<void> addTokenToFirestore(FirebaseUser user) async {
     // Setting up the user will be the responsibility of the server.
     // This method adds the user token to firestore
-    final idToken = await user.getIdToken();
-    final data = {
-      'token': idToken.token,
-      'platform': Platform.operatingSystem,
-      'createdAt': Timestamp.now(), //TODO - bug in FieldValue.serverTimestamp(). Remove this when fixed
-    };
+    final fcmToken = await _firebaseMessaging.getToken();
     await _db
-        .collection('users/${user.uid}/tokens')
-        .document(idToken.token)
-        .setData(data)
+        .collection('users')
+        .document(user.uid)
+        .updateData({'tokens': FieldValue.arrayUnion([fcmToken])})
         .then((value) {
-      debugPrint('Added token to database');
+      debugPrint('Added token to user document');
     }).catchError((error) {
       debugPrint('there was an error');
     });

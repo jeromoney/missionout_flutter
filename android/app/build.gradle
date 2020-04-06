@@ -33,7 +33,7 @@ if (keystorePropertiesFile.exists()){
 
 android {
     defaultConfig{
-        applicationId "com.beaterboofs.missionout"
+        applicationId "com.beaterboofs.missionout.android"
         versionCode 1
         versionName "0.1.0"
     }
@@ -53,7 +53,7 @@ android {
 
 
     defaultConfig {
-        applicationId "com.beaterboofs.missionout"
+        applicationId "com.beaterboofs.missionout.android"
         minSdkVersion 16
         targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
