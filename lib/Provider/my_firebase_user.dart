@@ -6,8 +6,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:missionout/Provider/user.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-
 
 class MyFirebaseUser with ChangeNotifier implements User {
   final Firestore _db = Firestore.instance;
@@ -45,7 +43,6 @@ class MyFirebaseUser with ChangeNotifier implements User {
 
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
-
   MyFirebaseUser() {
     FirebaseAuth.instance.onAuthStateChanged.listen((firebaseUser) async {
       _firebaseUser = firebaseUser;
@@ -82,6 +79,16 @@ class MyFirebaseUser with ChangeNotifier implements User {
 
   @override
   void signOut() async {
+    // remove token from Firestore from first, before user signs out
+    var fcmToken = await _firebaseMessaging.getToken();
+    await _db.collection('users').document(_firebaseUser.uid).updateData({
+      'tokens': FieldValue.arrayRemove([fcmToken])
+    }).then((value) {
+      debugPrint('Removed token to user document');
+    }).catchError((error) {
+      debugPrint('Error removing token from user document');
+    });
+
     final auth = FirebaseAuth.instance;
     final googleSignIn = GoogleSignIn();
     await googleSignIn.signOut();
@@ -94,11 +101,9 @@ class MyFirebaseUser with ChangeNotifier implements User {
     // Setting up the user will be the responsibility of the server.
     // This method adds the user token to firestore
     final fcmToken = await _firebaseMessaging.getToken();
-    await _db
-        .collection('users')
-        .document(user.uid)
-        .updateData({'tokens': FieldValue.arrayUnion([fcmToken])})
-        .then((value) {
+    await _db.collection('users').document(user.uid).updateData({
+      'tokens': FieldValue.arrayUnion([fcmToken])
+    }).then((value) {
       debugPrint('Added token to user document');
     }).catchError((error) {
       debugPrint('there was an error');
