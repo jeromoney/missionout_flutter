@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/DataLayer/mission_address.dart';
 import 'package:missionout/Provider/team.dart';
+import 'package:missionout/UI/DetailScreen/detail_screen.dart';
 import 'package:provider/provider.dart';
 
 class SubmitMissionButton extends StatelessWidget {
@@ -81,7 +82,7 @@ class SubmitMissionButton extends StatelessWidget {
                 Provider.of<MissionAddress>(context, listen: false);
             missionAddress.address = documentReference
                 .documentID; // TODO - refactor this to make it more abstract
-            Navigator.of(context).pushReplacementNamed('/detail');
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DetailScreen()));
           });
         }
       },

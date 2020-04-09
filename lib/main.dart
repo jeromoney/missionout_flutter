@@ -28,8 +28,6 @@ class MissionOut extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (context) => MainScreen(),
-          '/detail': (context) => DetailScreen(),
-          '/create': (context) => CreateScreen(),
         },
       ),
     );

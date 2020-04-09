@@ -4,6 +4,7 @@ import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/Provider/team.dart';
 import 'package:missionout/Provider/user.dart';
 import 'package:missionout/UI/CreateScreen/create_screen.dart';
+import 'package:missionout/UI/DetailScreen/detail_screen.dart';
 import 'package:missionout/UI/my_appbar.dart';
 import 'package:missionout/utils.dart';
 import 'package:provider/provider.dart';
@@ -87,7 +88,7 @@ class BuildMissionResults extends StatelessWidget {
             onTap: () {
               Provider.of<MissionAddress>(context, listen: false).address =
                   mission.address;
-              Navigator.of(context).pushNamed('/detail');
+              Navigator.push(context, MaterialPageRoute(builder: (context) => DetailScreen()));
             },
           );
         },

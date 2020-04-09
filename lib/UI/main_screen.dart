@@ -12,6 +12,8 @@ class MainScreen extends StatelessWidget {
     if (user.isLoggedIn) {
       return OverviewScreen();
     } else {
+//      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+//          SigninScreen()), (route) => false);
       return SigninScreen();
     }
   }
