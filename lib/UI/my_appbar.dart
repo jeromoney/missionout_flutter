@@ -54,15 +54,19 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
 
             case Menu.userOptions:
               {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (BuildContext context) => UserScreen()));
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    '/user_options',
+                    (route) => !['/user_options', '/editor_options']
+                        .contains(route.settings.name));
               }
               break;
 
             case Menu.editorOptions:
               {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (BuildContext context) => EditorScreen()));
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    '/editor_options',
+                        (route) => !['/user_options', '/editor_options']
+                        .contains(route.settings.name));
               }
               break;
           }
@@ -88,4 +92,28 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
+}
+
+class OptionsPopupRoute extends PopupRoute {
+  // A popup route is used so back navigation doesn't go back to this screen.
+
+  // CreatePopupRoute([Mission mission]) : this._mission = mission;
+
+  @override
+  Color get barrierColor => Colors.red;
+
+  @override
+  bool get barrierDismissible => false;
+
+  @override
+  String get barrierLabel => "Close";
+
+  @override
+  Duration get transitionDuration => const Duration(milliseconds: 300);
+
+  @override
+  Widget buildPage(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation) {
+    return UserScreen();
+  }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:missionout/UI/CreateScreen/create_screen.dart';
-import 'package:missionout/UI/DetailScreen/detail_screen.dart';
+import 'package:missionout/UI/EditorScreen/editor_screen.dart';
+import 'package:missionout/UI/UserScreen/user_screen.dart';
 import 'package:missionout/UI/main_screen.dart';
 import 'package:missionout/my_providers.dart';
 import 'package:provider/provider.dart';
@@ -28,6 +28,8 @@ class MissionOut extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (context) => MainScreen(),
+          '/editor_options': (context) => EditorScreen(),
+          '/user_options': (context) => UserScreen()
         },
       ),
     );
