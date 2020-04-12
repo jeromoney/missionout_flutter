@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:missionout/UI/EditorScreen/Sections/uri_text_form_field.dart';
+import 'package:missionout/UI/EditorScreen/editor_screen.dart';
 
 void main() {
   testWidgets('UriTextFormField widget smoke test',

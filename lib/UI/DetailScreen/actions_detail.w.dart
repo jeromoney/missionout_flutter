@@ -1,16 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:missionout/DataLayer/mission_address.dart';
-import 'package:missionout/DataLayer/response.dart';
-import 'package:missionout/Provider/team.dart';
-import 'package:missionout/Provider/user.dart';
-import 'package:missionout/UI/response_screen.dart';
-import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
+part of 'detail_screen.dart';
 
-class ActionsDetailScreen extends StatelessWidget {
+class ActionsDetail extends StatelessWidget {
   final AsyncSnapshot snapshot;
 
-  const ActionsDetailScreen({Key key, this.snapshot}) : super(key: key);
+  const ActionsDetail({Key key, this.snapshot}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

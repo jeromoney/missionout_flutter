@@ -1,11 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:missionout/DataLayer/mission.dart';
+part of 'detail_screen.dart';
 
-import '../../../utils.dart';
-
-class InfoDetailScreen extends StatelessWidget {
+class InfoDetail extends StatelessWidget {
   final AsyncSnapshot snapshot;
-  const InfoDetailScreen({Key key, this.snapshot}) : super(key: key);
+  const InfoDetail({Key key, this.snapshot}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

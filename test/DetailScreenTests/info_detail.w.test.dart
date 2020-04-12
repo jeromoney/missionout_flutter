@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:missionout/DataLayer/mission.dart';
-import 'package:missionout/UI/DetailScreen/Sections/info_detail_screen.dart';
+import 'package:missionout/UI/DetailScreen/detail_screen.dart';
 import 'package:missionout/utils.dart';
 
 
@@ -20,7 +20,7 @@ void main() {
   testWidgets('Info screen handles error', (WidgetTester tester) async {
     Widget widget = Directionality(
         textDirection: TextDirection.ltr,
-        child: InfoDetailScreen(
+        child: InfoDetail(
           snapshot: AsyncSnapshot.withError(ConnectionState.done, Error()),
         ));
     await tester.pumpWidget(widget);
@@ -30,7 +30,7 @@ void main() {
   testWidgets('Info screen handles waiting', (WidgetTester tester) async {
     Widget widget = Directionality(
         textDirection: TextDirection.ltr,
-        child: InfoDetailScreen(
+        child: InfoDetail(
           snapshot: AsyncSnapshot.withError(ConnectionState.waiting, null),
         ));
     await tester.pumpWidget(widget);
@@ -46,7 +46,7 @@ void main() {
 
     Widget widget = Directionality(
         textDirection: TextDirection.ltr,
-        child: InfoDetailScreen(
+        child: InfoDetail(
           snapshot: snapshot,
         ));
     await tester.pumpWidget(widget);
@@ -66,7 +66,7 @@ void main() {
 
     Widget widget = Directionality(
         textDirection: TextDirection.ltr,
-        child: InfoDetailScreen(
+        child: InfoDetail(
           snapshot: snapshot,
         ));
     await tester.pumpWidget(widget);

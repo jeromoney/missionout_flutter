@@ -1,15 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:missionout/DataLayer/mission.dart';
-import 'package:missionout/DataLayer/page.dart';
-import 'package:missionout/Provider/team.dart';
-import 'package:missionout/Provider/user.dart';
-import 'package:missionout/UI/CreateScreen/create_screen.dart';
-import 'package:provider/provider.dart';
+part of 'detail_screen.dart';
 
-class EditDetailScreen extends StatelessWidget {
+class EditDetail extends StatelessWidget {
   final AsyncSnapshot snapshot;
 
-  const EditDetailScreen({Key key, @required this.snapshot}) : super(key: key);
+  const EditDetail({Key key, @required this.snapshot}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

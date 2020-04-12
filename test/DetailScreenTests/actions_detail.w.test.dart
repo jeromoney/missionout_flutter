@@ -5,12 +5,12 @@ import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/DataLayer/mission_address.dart';
 import 'package:missionout/Provider/team.dart';
 import 'package:missionout/Provider/user.dart';
-import 'package:missionout/UI/DetailScreen/Sections/actions_detail_screen.dart';
+import 'package:missionout/UI/DetailScreen/detail_screen.dart';
 import 'package:missionout/UI/response_screen.dart';
 import 'package:provider/provider.dart';
 
-import '../../Mock/team_fake.dart';
-import '../../Mock/user_fake.dart';
+import '../Mock/team_fake.dart';
+import '../Mock/user_fake.dart';
 
 void main() async {
   group('ActionDetailScreen tests', () {
@@ -22,7 +22,7 @@ void main() async {
         ],
         child: MaterialApp(
           home: Scaffold(
-            body: ActionsDetailScreen(
+            body: ActionsDetail(
               snapshot: AsyncSnapshot.withError(ConnectionState.done, Error()),
             ),
           ),
@@ -40,7 +40,7 @@ void main() async {
         ],
         child: MaterialApp(
           home: Scaffold(
-            body: ActionsDetailScreen(
+            body: ActionsDetail(
               snapshot: AsyncSnapshot.withData(ConnectionState.waiting, null),
             ),
           ),
@@ -65,7 +65,7 @@ void main() async {
         ],
         child: MaterialApp(
           home: Scaffold(
-            body: ActionsDetailScreen(
+            body: ActionsDetail(
               snapshot: AsyncSnapshot.withData(ConnectionState.done, mission),
             ),
           ),
@@ -101,7 +101,7 @@ void main() async {
         ],
         child: MaterialApp(
           home: Scaffold(
-            body: ActionsDetailScreen(
+            body: ActionsDetail(
               snapshot: AsyncSnapshot.withData(ConnectionState.done, mission),
             ),
           ),
@@ -123,7 +123,7 @@ void main() async {
         ],
         child: MaterialApp(
           home: Scaffold(
-            body: ActionsDetailScreen(
+            body: ActionsDetail(
               snapshot: AsyncSnapshot.withData(ConnectionState.done, mission),
             ),
           ),

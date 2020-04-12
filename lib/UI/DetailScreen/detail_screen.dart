@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/DataLayer/mission_address.dart';
+import 'package:missionout/DataLayer/page.dart';
+import 'package:missionout/DataLayer/response.dart';
 import 'package:missionout/Provider/team.dart';
-import 'package:missionout/UI/DetailScreen/Sections/actions_detail_screen.dart';
-import 'package:missionout/UI/DetailScreen/Sections/edit_detail_screen.dart';
-import 'package:missionout/UI/DetailScreen/Sections/info_detail_screen.dart';
+import 'package:missionout/Provider/user.dart';
+import 'package:missionout/UI/CreateScreen/create_screen.dart';
 import 'package:missionout/UI/my_appbar.dart';
+import 'package:missionout/UI/response_screen.dart';
+import 'package:missionout/utils.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+part 'actions_detail.w.dart';
+part 'edit_detail.w.dart';
+part 'info_detail.w.dart';
 
 class DetailScreen extends StatelessWidget {
   @override
@@ -21,15 +29,15 @@ class DetailScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                DetailScreenStreamWrapper(detailItem: InfoDetailScreen,),
+                DetailScreenStreamWrapper(detailItem: InfoDetail,),
                 Padding(
                   padding: const EdgeInsets.only(top: 24.0),
                   child: Divider(
                     thickness: 1,
                   ),
                 ),
-                DetailScreenStreamWrapper(detailItem: ActionsDetailScreen),
-                DetailScreenStreamWrapper(detailItem: EditDetailScreen),
+                DetailScreenStreamWrapper(detailItem: ActionsDetail),
+                DetailScreenStreamWrapper(detailItem: EditDetail),
               ],
             ),
           ),
@@ -56,17 +64,17 @@ class DetailScreenStreamWrapper extends StatelessWidget {
         ),
         builder: (context, snapshot) {
           switch (detailItem) {
-            case InfoDetailScreen:
+            case InfoDetail:
               {
-                return InfoDetailScreen(snapshot: snapshot,);
+                return InfoDetail(snapshot: snapshot,);
               }
-            case ActionsDetailScreen:
+            case ActionsDetail:
               {
-                return ActionsDetailScreen(snapshot: snapshot);
+                return ActionsDetail(snapshot: snapshot);
               }
-            case EditDetailScreen:
+            case EditDetail:
               {
-                return EditDetailScreen(snapshot: snapshot);
+                return EditDetail(snapshot: snapshot);
               }
 
             default:

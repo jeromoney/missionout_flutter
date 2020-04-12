@@ -1,8 +1,4 @@
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:missionout/Provider/team.dart';
-import 'package:provider/provider.dart';
+part of 'editor_screen.dart';
 
 class TeamSubmitRaisedButton extends StatefulWidget {
   final formKey;
