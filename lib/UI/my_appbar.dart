@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/Provider/user.dart';
-import 'package:missionout/UI/EditorScreen/editor_screen.dart';
 import 'package:missionout/UI/UserScreen/user_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -54,6 +53,8 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
 
             case Menu.userOptions:
               {
+                // Any screen that navigates from the app bar needs to be removed from the navigator stack
+                // The code removes user and editor from the stack until the first non-options page is encountered
                 Navigator.of(context).pushNamedAndRemoveUntil(
                     '/user_options',
                     (route) => !['/user_options', '/editor_options']
@@ -65,7 +66,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
               {
                 Navigator.of(context).pushNamedAndRemoveUntil(
                     '/editor_options',
-                        (route) => !['/user_options', '/editor_options']
+                    (route) => !['/user_options', '/editor_options']
                         .contains(route.settings.name));
               }
               break;
