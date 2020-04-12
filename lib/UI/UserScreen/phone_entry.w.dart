@@ -1,7 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-import 'package:missionout/Provider/user.dart';
-import 'package:provider/provider.dart';
+part of 'user_screen.dart';
 
 enum PhoneType { mobilePhoneNumber, voicePhoneNumber }
 

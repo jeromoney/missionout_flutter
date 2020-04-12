@@ -40,5 +40,5 @@ lib/generated_plugin_registrant.dart
 *google-services.json
 
 coverage/*
-/lib/Widgets/deletemeScreen.dart
+/lib/core/deletemeScreen.dart
 */deleteme.dart

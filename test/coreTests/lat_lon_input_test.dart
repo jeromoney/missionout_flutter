@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:missionout/Widgets/lat_lon_input.dart';
+import 'package:missionout/core/lat_lon_input.w.dart';
 
 void main() {
   group('LatLon unit tests', () {

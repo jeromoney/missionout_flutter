@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/Provider/team.dart';
-import 'package:missionout/Widgets/lat_lon_input.dart';
 import 'package:missionout/UI/my_appbar.dart';
+import 'package:missionout/core/lat_lon_input.w.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:missionout/Provider/user.dart';
 import 'package:missionout/UI/my_appbar.dart';
 import 'package:provider/provider.dart';
 
-import 'Sections/phone_entry.dart';
+part 'phone_entry.w.dart';
 
 class UserScreen extends StatelessWidget {
   final myAppBar = MyAppBar(title: 'User Options');
