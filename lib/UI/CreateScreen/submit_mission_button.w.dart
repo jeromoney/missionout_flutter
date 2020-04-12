@@ -1,10 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:missionout/DataLayer/mission.dart';
-import 'package:missionout/DataLayer/mission_address.dart';
-import 'package:missionout/Provider/team.dart';
-import 'package:missionout/UI/DetailScreen/detail_screen.dart';
-import 'package:provider/provider.dart';
+part of 'create_screen.dart';
 
 class SubmitMissionButton extends StatelessWidget {
   final Mission mission;

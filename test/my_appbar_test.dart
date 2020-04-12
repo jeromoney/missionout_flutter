@@ -64,6 +64,10 @@ void main() {
           ChangeNotifierProvider<User>(create: (_) => UserFake()),
         ],
         child: MaterialApp(
+            routes: {
+              '/editor_options': (context) => EditorScreen(),
+              '/user_options': (context) => UserScreen()
+            },
             home: Scaffold(
                 body: MyAppBar(
           title: 'something',
@@ -90,6 +94,10 @@ void main() {
           Provider<Team>(create: (_)=>TeamFake(),)
         ],
         child: MaterialApp(
+            routes: {
+              '/editor_options': (context) => EditorScreen(),
+              '/user_options': (context) => UserScreen()
+            },
             home: Scaffold(
                 body: MyAppBar(
           title: 'something',

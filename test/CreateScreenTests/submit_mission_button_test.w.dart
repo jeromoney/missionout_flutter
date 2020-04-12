@@ -5,13 +5,13 @@ import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/DataLayer/mission_address.dart';
 import 'package:missionout/Provider/team.dart';
 import 'package:missionout/Provider/user.dart';
-import 'package:missionout/UI/CreateScreen/Sections/submit_mission_button.dart';
+import 'package:missionout/UI/CreateScreen/create_screen.dart';
 import 'package:missionout/UI/DetailScreen/detail_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
-import '../../Mock/team_fake.dart';
-import '../../Mock/user_fake.dart';
+import '../Mock/team_fake.dart';
+import '../Mock/user_fake.dart';
 
 void main() {
   group('SubmitMissionButton widget tests', () {
