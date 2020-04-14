@@ -74,14 +74,14 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         }
 
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
+                .setSmallIcon(R.drawable.notification_logo)
                 .setContentTitle(header)
                 .setContentText(body)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setContentIntent(pendingIntent)
                 .setDeleteIntent(pendingIntent)
                 .setSound(defaultSoundUri)
-                .setSmallIcon(R.drawable.mo_launcher_icon_background)
+                .setSmallIcon(R.drawable.notification_logo)
 
 
         // show notifcation
