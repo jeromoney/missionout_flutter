@@ -62,16 +62,18 @@ class MyFirebaseUser with ChangeNotifier implements User {
     //check if user is signed in
     final googleSignIn = GoogleSignIn();
     final auth = FirebaseAuth.instance;
-    final googleUser = await googleSignIn.signIn();
+    final googleUser = await googleSignIn.signIn().catchError((e){
+      throw e;
+    });
     final googleAuth = await googleUser.authentication;
 
     final credential = GoogleAuthProvider.getCredential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-
-    final FirebaseUser user =
-        (await auth.signInWithCredential(credential)).user;
+    assert(credential != null);
+    final authResult = await auth.signInWithCredential(credential);
+    final FirebaseUser user = authResult.user;
     print("signed in " + user.displayName);
 
     addTokenToFirestore(user);
