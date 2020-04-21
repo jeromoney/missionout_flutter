@@ -11,6 +11,8 @@ import 'package:missionout/UI/response_screen.dart';
 import 'package:missionout/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'dart:io' show Platform;
+
 
 part 'actions_detail.w.dart';
 part 'edit_detail.w.dart';
