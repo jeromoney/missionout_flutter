@@ -1,9 +1,11 @@
 
 import 'package:flutter/material.dart';
-import 'package:missionout/DataLayer/mission_address.dart';
-import 'package:missionout/DataLayer/page.dart';
-import 'package:missionout/UI/DetailScreen/detail_screen.dart';
 import 'package:provider/provider.dart';
+
+
+import 'package:missionout/DataLayer/mission_address.dart';
+import 'package:missionout/DataLayer/page.dart' as missionpage;
+import 'package:missionout/UI/DetailScreen/detail_screen.dart';
 
 
 class MissionAlertDialog extends StatelessWidget {
@@ -14,7 +16,7 @@ class MissionAlertDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final page = Page.fromMap(
+    final page = missionpage.Page.fromMap(
         Map.castFrom<dynamic, dynamic, String, dynamic>(message['data']));
     return AlertDialog(
         title: Text(page.description),

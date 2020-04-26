@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
 import 'package:missionout/DataLayer/mission.dart';
-import 'package:missionout/DataLayer/page.dart';
+import 'package:missionout/DataLayer/page.dart' as missionpage;
 import 'package:missionout/DataLayer/response.dart';
 import 'package:missionout/Provider/team.dart';
 
@@ -98,7 +99,7 @@ class TeamFake implements Team {
   }
 
   @override
-  Future<void> addPage({String teamID, String missionDocID, Page page}) {
+  Future<void> addPage({String teamID, String missionDocID, missionpage.Page page}) {
     return null;
   }
 

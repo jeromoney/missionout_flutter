@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'dart:io' show Platform;
+
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/DataLayer/mission_address.dart';
-import 'package:missionout/DataLayer/page.dart';
+import 'package:missionout/DataLayer/page.dart' as missionpage;
 import 'package:missionout/DataLayer/response.dart';
 import 'package:missionout/Provider/team.dart';
 import 'package:missionout/Provider/user.dart';
@@ -9,9 +13,7 @@ import 'package:missionout/UI/CreateScreen/create_screen.dart';
 import 'package:missionout/UI/my_appbar.dart';
 import 'package:missionout/UI/response_screen.dart';
 import 'package:missionout/utils.dart';
-import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'dart:io' show Platform;
+
 
 
 part 'actions_detail.w.dart';

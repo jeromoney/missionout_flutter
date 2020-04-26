@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
 import 'package:missionout/DataLayer/mission.dart';
-import 'package:missionout/DataLayer/page.dart';
+import 'package:missionout/DataLayer/page.dart' as missionpage;
 import 'package:missionout/DataLayer/response.dart';
 
 abstract class Team {
@@ -32,7 +33,7 @@ abstract class Team {
   void standDownMission({@required Mission mission});
 
   Future<void> addPage({
-    @required Page page,
+    @required missionpage.Page page,
   });
 
   // Interface with database. A page is uploaded to a server who will then act on the data

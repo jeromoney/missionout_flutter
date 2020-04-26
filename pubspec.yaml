@@ -30,7 +30,6 @@ dependencies:
   intl: ^0.16.0
   flutter_auth_buttons: ^0.6.0
   tuple: ^1.0.3
-  flutter_local_notifications: ^0.9.1+2
   provider: ^4.0.1
   firebase_core:  ^0.4.4 #this was 0.4.3+3 which was harcoded due to bug with useragent.h in iOS
   firebase_messaging: ^6.0.13
@@ -38,7 +37,7 @@ dependencies:
   tel_input: ^0.2.2
   intl_phone_number_input: ^0.3.0
   cached_network_image: ^2.0.0
-  soundpool: 0.6.1
+
 
 
 dev_dependencies:

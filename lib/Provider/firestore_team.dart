@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
 import 'package:missionout/DataLayer/mission.dart';
-import 'package:missionout/DataLayer/page.dart';
+import 'package:missionout/DataLayer/page.dart'  as missionpage;
 import 'package:missionout/DataLayer/response.dart';
 import 'package:missionout/Provider/team.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -148,7 +149,7 @@ class FirestoreTeam implements Team {
 
   @override
   Future<void> addPage({
-    @required Page page,
+    @required missionpage.Page page,
   }) async {
     String missionDocId = page.mission.address;
     await _db

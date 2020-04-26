@@ -36,7 +36,7 @@ class EditDetail extends StatelessWidget {
                     child: const Text('Page Team'),
                     onPressed: () {
                       final page =
-                          Page(creator: user.displayName, mission: mission);
+                          missionpage.Page(creator: user.displayName, mission: mission);
                       team.addPage(page: page);
                     },
                   ),
