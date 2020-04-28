@@ -81,6 +81,7 @@ class _MyInternationalPhoneNumberInputState
 
   _MyInternationalPhoneNumberInputState(this.controller);
 
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context, listen: false);
@@ -107,8 +108,7 @@ class _MyInternationalPhoneNumberInputState
           snapshot: snapshot,
           labelText: labelText,
           controller: controller,
-          hintText: hintText,
-        );
+          hintText: hintText);
       },
     );
   }
@@ -131,8 +131,9 @@ class InternationalPhoneNumberInputFutureBuilder extends StatelessWidget {
   final String labelText;
   final String hintText;
   final TextEditingController controller;
+  int counter = 0;
 
-  const InternationalPhoneNumberInputFutureBuilder(
+  InternationalPhoneNumberInputFutureBuilder(
       {Key key,
       @required this.snapshot,
       @required this.labelText,
@@ -162,7 +163,8 @@ class InternationalPhoneNumberInputFutureBuilder extends StatelessWidget {
       isEnabled: true,
       formatInput: true,
       onInputChanged: (PhoneNumber phoneNumber) {
-        debugPrint('hello world');
+        // not sure why this is required
+        ;
       },
     );
   }

@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:provider/provider.dart';
+
 import 'package:missionout/Provider/user.dart';
 import 'package:missionout/UI/my_appbar.dart';
-import 'package:provider/provider.dart';
 
 part 'phone_entry.w.dart';
 
@@ -13,33 +16,34 @@ class UserScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final user = Provider.of<User>(context);
 
     return Scaffold(
         appBar: myAppBar,
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Form(
-              child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Text(user.displayName),
-              Text(user.email),
-              Provider<PhoneType>.value(
-                  child: PhoneEntry(
-                    controller: mobilePhoneController,
-                  ),
-                  value: PhoneType.mobilePhoneNumber),
-              Provider<PhoneType>.value(
-                  child: PhoneEntry(controller: voicePhoneController),
-                  value: PhoneType.voicePhoneNumber),
-              SubmitButton(
-                voicePhoneNumberController: voicePhoneController,
-                mobilePhoneNumberController: mobilePhoneController,
-              ),
-            ],
-          )),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Form(
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Text(user.displayName),
+                Text(user.email),
+                Provider<PhoneType>.value(
+                    child: PhoneEntry(
+                      controller: mobilePhoneController,
+                    ),
+                    value: PhoneType.mobilePhoneNumber),
+                Provider<PhoneType>.value(
+                    child: PhoneEntry(controller: voicePhoneController),
+                    value: PhoneType.voicePhoneNumber),
+                SubmitButton(
+                  voicePhoneNumberController: voicePhoneController,
+                  mobilePhoneNumberController: mobilePhoneController,
+                ),
+              ],
+            )),
+          ),
         ));
   }
 }

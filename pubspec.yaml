@@ -31,7 +31,7 @@ dependencies:
   flutter_auth_buttons: ^0.6.0
   tuple: ^1.0.3
   provider: ^4.0.1
-  firebase_core:  ^0.4.4 #this was 0.4.3+3 which was harcoded due to bug with useragent.h in iOS
+  firebase_core:  ^0.4.4 #this was 0.4.3+3 which was hardcoded due to bug with useragent.h in iOS
   firebase_messaging: ^6.0.13
   phone_number: ^0.6.0+1
   tel_input: ^0.2.2
