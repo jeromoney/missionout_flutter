@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:missionout/Provider/user.dart';
 import 'package:missionout/UI/overview_screen.dart';
 import 'package:missionout/UI/signin_screen.dart';
@@ -14,6 +15,8 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   bool isLoggedIn = false;
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  FlutterLocalNotificationsPlugin();
 
   @override
   void initState(){
@@ -44,7 +47,14 @@ class _MainScreenState extends State<MainScreen> {
 
     },
     onResume: (Map<String,dynamic> message) async {
-      debugPrint("Receieved resume message");
+      debugPrint(message.toString());
+        var iOSPlatformChannelSpecifics = IOSNotificationDetails(presentSound: true, sound: "school_fire_alarm.m4a");
+        var platformChannelSpecifics = NotificationDetails(
+            null, iOSPlatformChannelSpecifics);
+        await flutterLocalNotificationsPlugin.show(
+            0, message["description"], message["needForAction"], platformChannelSpecifics,
+            payload: 'item x');
+
     },);
 
   }
