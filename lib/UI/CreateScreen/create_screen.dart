@@ -60,58 +60,60 @@ class MissionFormState extends State<MissionForm> {
       latitudeController.text =  latValue.toString();
       longitudeController.text =  lonValue.toString();
     }
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: Form(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                controller: descriptionController,
-                decoration: InputDecoration(labelText: 'Description', border: OutlineInputBorder()),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Description required';
-                  }
-                  return null;
-                },
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Form(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  controller: descriptionController,
+                  decoration: InputDecoration(labelText: 'Description', border: OutlineInputBorder()),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Description required';
+                    }
+                    return null;
+                  },
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                controller: actionController,
-                decoration: InputDecoration(labelText: 'Need for action', border: OutlineInputBorder()),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  controller: actionController,
+                  decoration: InputDecoration(labelText: 'Need for action', border: OutlineInputBorder()),
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                controller: locationController,
-                decoration: InputDecoration(labelText: 'Location description', border: OutlineInputBorder()),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  controller: locationController,
+                  decoration: InputDecoration(labelText: 'Location description', border: OutlineInputBorder()),
+                ),
               ),
-            ),
-            LatLonInput(
-              fieldDescription: 'GPS coordinates in Decimal Degrees',
-              lonController: longitudeController,
-              latController: latitudeController,
-            ),
-            Padding(
-              padding: EdgeInsets.only(
-                top: 16.0,
+              LatLonInput(
+                fieldDescription: 'GPS coordinates in Decimal Degrees',
+                lonController: longitudeController,
+                latController: latitudeController,
               ),
-              child: SubmitMissionButton(
-                mission: mission,
-                locationController: locationController,
-                latitudeController: latitudeController,
-                longitudeController: longitudeController,
-                actionController: actionController,
-                descriptionController: descriptionController,
-              ),
-            )
-          ],
+              Padding(
+                padding: EdgeInsets.only(
+                  top: 16.0,
+                ),
+                child: SubmitMissionButton(
+                  mission: mission,
+                  locationController: locationController,
+                  latitudeController: latitudeController,
+                  longitudeController: longitudeController,
+                  actionController: actionController,
+                  descriptionController: descriptionController,
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
