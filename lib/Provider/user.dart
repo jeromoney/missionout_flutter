@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
 abstract class User with ChangeNotifier {
@@ -14,6 +15,7 @@ abstract class User with ChangeNotifier {
   String get email;
 
   String get photoUrl;
+  ImageProvider get photoImage;
 
   String get uid;
 

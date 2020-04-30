@@ -38,7 +38,11 @@ lib/generated_plugin_registrant.dart
 
 #Firebase config
 *google-services.json
+*GoogleService-Info.plist
 
 coverage/*
 /lib/core/deletemeScreen.dart
 */deleteme.dart
+
+*Podfile.lock
+pubspec.lock

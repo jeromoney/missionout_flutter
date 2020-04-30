@@ -3,9 +3,12 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:missionout/Provider/user.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+
 
 class MyFirebaseUser with ChangeNotifier implements User {
   final Firestore _db = Firestore.instance;
@@ -34,6 +37,9 @@ class MyFirebaseUser with ChangeNotifier implements User {
 
   @override
   String get photoUrl => _firebaseUser.photoUrl;
+
+  @override
+  ImageProvider get photoImage => CachedNetworkImageProvider(photoUrl);
 
   @override
   bool get isLoggedIn => _firebaseUser != null;

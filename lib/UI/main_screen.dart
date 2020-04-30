@@ -42,7 +42,7 @@ class _MainScreenState extends State<MainScreen> {
     onMessage: (Map<String,dynamic> message) async {
       debugPrint("Receieved message");
       // TODO - play an alert sound here
-      AlertDialog alert = AlertDialog(title: Text(message.toString()),);
+      AlertDialog alert = AlertDialog(title: Text(message["description"]),content: Text(message["needForAction"]),);
       showDialog(context: context, child: alert);
 
     },
