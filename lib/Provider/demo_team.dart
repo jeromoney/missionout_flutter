@@ -5,18 +5,7 @@ import 'package:missionout/DataLayer/page.dart';
 import 'package:missionout/DataLayer/response.dart';
 import 'package:missionout/Provider/team.dart';
 
-List<Mission> MISSIONS = [
-  Mission("Missing hiker", "need ground search team", "Passwater Gulch",
-      GeoPoint(27.966389, 86.889999)),
-  Mission("Injured skier", "snowmobilies report to bay", "Passwater Gulch",
-      null),
-  Mission("Overdue backpacker", "report to bay for search assignment", "Passwater Gulch",
-      null),
-  Mission("Empty boat found on river", "swiftwater team listen for assignemnts", "Passwater Gulch",
-      null),
-  Mission("Injured horserider ", "assist EMS with evacuation", "Passwater Gulch",
-      null),
-];
+
 List<Response> RESPONSES = [
   Response(teamMember: "Elton", status: "Responding"),
   Response(teamMember: "Ameera Lott", status: "Responding"),
@@ -26,6 +15,24 @@ List<Response> RESPONSES = [
 ];
 
 class DemoTeam implements Team {
+  List<Mission> missions = [
+    Mission("Missing hiker", "need ground search team", "Passwater Gulch",
+        GeoPoint(27.966389, 86.889999)),
+    Mission("Injured skier", "snowmobilies report to bay", "Passwater Gulch",
+        null),
+    Mission("Overdue backpacker", "report to bay for search assignment", "Passwater Gulch",
+        null),
+    Mission("Empty boat found on river", "swiftwater team listen for assignemnts", "Passwater Gulch",
+        null),
+    Mission("Injured horserider ", "assist EMS with evacuation", "Passwater Gulch",
+        null),
+  ];
+  DemoTeam(){
+    for (var i = 0; i < missions.length; i++){
+      missions[i].reference = DemoReference(i);
+    }
+  }
+
   @override
   String chatURI;
 
@@ -65,7 +72,7 @@ class DemoTeam implements Team {
 
   @override
   Stream<List<Mission>> fetchMissions() async* {
-    yield MISSIONS;
+    yield missions;
   }
 
   @override
@@ -75,7 +82,7 @@ class DemoTeam implements Team {
 
   @override
   Stream<Mission> fetchSingleMission({String docID}) async* {
-    yield MISSIONS[0];
+    yield missions[int.tryParse(docID) ?? 0];
   }
 
   @override
@@ -99,3 +106,16 @@ class DemoTeam implements Team {
     // TODO: implement updateTeamID
   }
 }
+
+
+class DemoReference{
+
+  String get address => documentID;
+  String documentID;
+
+  DemoReference(int i){
+    documentID = i.toString();
+  }
+}
+
+

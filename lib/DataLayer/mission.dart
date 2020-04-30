@@ -7,7 +7,7 @@ class Mission {
   String needForAction;
   String locationDescription;
   bool isStoodDown;
-  DocumentReference
+  var
       reference; // A document reference is created once the mission is uploaded
   String get address => reference?.documentID;
 
