@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:missionout/DataLayer/app_mode.dart';
 import 'package:missionout/Provider/user.dart';
 import 'package:missionout/UI/UserScreen/user_screen.dart';
 import 'package:provider/provider.dart';
@@ -40,6 +41,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                           child: Text('Sign out'),
                           onPressed: () {
                             user.signOut();
+                            Provider.of<AppMode>(context, listen: false).appMode = AppModes.normal; // ensure that app is switched from Demo to normal
                             Navigator.pop(context);
                             Navigator.of(context).pushReplacementNamed('/');
                           }),

@@ -30,16 +30,10 @@ class MyProviders {
       ),
       ProxyProvider<User, Team>(
         lazy: false,
-        create: (user) {
-          if (user is DemoUser) {
-            return DemoTeam();
-          } else {
-            return FirestoreTeam();
-          }
-        },
+        create: (user) => FirestoreTeam(),
         update: (_, user, team) {
           if (user is DemoUser) {
-            return team;
+            return DemoTeam();
           }
 
           team.updateTeamID(user.teamID);
