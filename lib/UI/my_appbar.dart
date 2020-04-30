@@ -23,7 +23,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
               shape: BoxShape.circle,
               image: DecorationImage(
                 fit: BoxFit.cover,
-                image: CachedNetworkImageProvider(user.photoUrl),
+                image: user.photoImage,
               ))),
       PopupMenuButton<Menu>(
         key: Key('PopupMenuButton'),
