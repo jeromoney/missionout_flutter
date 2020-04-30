@@ -37,7 +37,7 @@ class DemoTeam implements Team {
   String chatURI;
 
   @override
-  GeoPoint location;
+  GeoPoint get location => GeoPoint(-49.350592,70.261962);
 
   @override
   String name;
@@ -104,6 +104,11 @@ class DemoTeam implements Team {
   @override
   void updateTeamID(String teamID) {
     // TODO: implement updateTeamID
+  }
+
+  @override
+  void set location(GeoPoint _location) {
+    // TODO: implement location
   }
 }
 
