@@ -1,5 +1,7 @@
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/src/painting/image_provider.dart';
 import 'package:missionout/Provider/user.dart';
 
 class UserFake with ChangeNotifier implements User {
@@ -73,4 +75,7 @@ class UserFake with ChangeNotifier implements User {
   Future<Function> updatePhoneNumbers(
       {@required String mobilePhoneNumber,
       @required String voicePhoneNumber}) {}
+
+  @override
+  ImageProvider get photoImage => AssetImage("graphics/demoUser.png");
 }

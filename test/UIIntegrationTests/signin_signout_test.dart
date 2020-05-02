@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:missionout/DataLayer/app_mode.dart';
 import 'package:missionout/DataLayer/mission_address.dart';
 import 'package:missionout/Provider/team.dart';
 import 'package:missionout/Provider/user.dart';
@@ -14,6 +15,9 @@ import '../Mock/user_fake.dart';
 void main() {
   testWidgets('Sign in user and then sign out', (WidgetTester tester) async {
     final providers = [
+      ChangeNotifierProvider<AppMode>(
+        create: (_) => AppMode(),
+      ),
           ChangeNotifierProvider<User>(
               create: (_) => UserFake(signedIn: false)),
           Provider<Team>(create: (_) => TeamFake()),

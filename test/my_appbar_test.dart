@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:missionout/DataLayer/app_mode.dart';
 import 'package:missionout/Provider/team.dart';
 import 'package:missionout/Provider/user.dart';
 import 'package:missionout/UI/UserScreen/user_screen.dart';
@@ -15,6 +16,9 @@ void main() {
     testWidgets('MyAppbar widget smoke test', (WidgetTester tester) async {
       Widget widget = MultiProvider(
         providers: [
+          ChangeNotifierProvider<AppMode>(
+            create: (_) => AppMode(),
+          ),
           ChangeNotifierProvider<User>(create: (_) => UserFake()),
         ],
         child: MaterialApp(
@@ -31,6 +35,9 @@ void main() {
         (WidgetTester tester) async {
       Widget widget = MultiProvider(
         providers: [
+          ChangeNotifierProvider<AppMode>(
+            create: (_) => AppMode(),
+          ),
           ChangeNotifierProvider<User>(create: (_) => UserFake()),
         ],
         child: MaterialApp(

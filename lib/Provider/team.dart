@@ -28,7 +28,7 @@ abstract class Team {
 
   Stream<List<Response>> fetchResponses({@required String docID});
 
-  Future<DocumentReference> addMission({@required Mission mission});
+  Future<dynamic> addMission({@required Mission mission});
 
   void standDownMission({@required Mission mission});
 

@@ -9,7 +9,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:missionout/Provider/user.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-
 class MyFirebaseUser with ChangeNotifier implements User {
   final Firestore _db = Firestore.instance;
   FirebaseUser _firebaseUser;
@@ -36,13 +35,21 @@ class MyFirebaseUser with ChangeNotifier implements User {
   String get uid => _firebaseUser?.uid;
 
   @override
-  String get photoUrl => _firebaseUser.photoUrl;
+  ImageProvider get photoImage =>
+      CachedNetworkImageProvider(_firebaseUser.photoUrl);
+
+  bool _signInWaiting = false;
 
   @override
-  ImageProvider get photoImage => CachedNetworkImageProvider(photoUrl);
-
-  @override
-  bool get isLoggedIn => _firebaseUser != null;
+  SignInStatus get signInStatus {
+    if (_signInWaiting) {
+      return SignInStatus.waiting;
+    } else if (_firebaseUser != null) {
+      return SignInStatus.signedIn;
+    } else {
+      return SignInStatus.signedOut;
+    }
+  }
 
   @override
   bool get chatURIisAvailable => chatURI != null;
@@ -59,16 +66,20 @@ class MyFirebaseUser with ChangeNotifier implements User {
         // Got a new user, so check firestore for user settings
         await setUserPermissions();
       }
-      onAuthStateChanged();
+      //onAuthStateChanged();
     });
   }
 
   @override
   Future<void> signIn() async {
     //check if user is signed in
+    _signInWaiting = true;
+    notifyListeners();
     final googleSignIn = GoogleSignIn();
     final auth = FirebaseAuth.instance;
-    final googleUser = await googleSignIn.signIn().catchError((e){
+    final googleUser = await googleSignIn.signIn().catchError((e) {
+      _signInWaiting = false;
+      //notifyListeners();
       throw e;
     });
     final googleAuth = await googleUser.authentication;
@@ -81,8 +92,9 @@ class MyFirebaseUser with ChangeNotifier implements User {
     final authResult = await auth.signInWithCredential(credential);
     final FirebaseUser user = authResult.user;
     print("signed in " + user.displayName);
-
+    _signInWaiting = false;
     addTokenToFirestore(user);
+    notifyListeners();
   }
 
   @override
@@ -102,7 +114,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
     await googleSignIn.signOut();
     await auth.signOut();
     _firebaseUser = null;
-    onAuthStateChanged();
+    notifyListeners();
   }
 
   Future<void> addTokenToFirestore(FirebaseUser user) async {
@@ -125,8 +137,8 @@ class MyFirebaseUser with ChangeNotifier implements User {
 
   @override
   void dispose() {
-    super.dispose();
     FirebaseAuth.instance.onAuthStateChanged.drain();
+    super.dispose();
   }
 
   Future<void> setUserPermissions() async {

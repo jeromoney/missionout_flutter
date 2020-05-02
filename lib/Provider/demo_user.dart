@@ -44,9 +44,9 @@ class DemoUser with ChangeNotifier implements User{
   // TODO: implement hasListeners
   bool get hasListeners => null;
 
-  bool _isSignedIn = true;
+  SignInStatus _signInStatus = SignInStatus.signedIn;
   @override
-  bool get isLoggedIn => _isSignedIn;
+  SignInStatus get signInStatus => SignInStatus.signedIn;
 
   @override
   void notifyListeners() {
@@ -59,8 +59,6 @@ class DemoUser with ChangeNotifier implements User{
   }
 
   @override
-  String get photoUrl => null;
-  @override
   ImageProvider get photoImage => AssetImage("graphics/demoUser.png");
 
 
@@ -71,13 +69,13 @@ class DemoUser with ChangeNotifier implements User{
 
   @override
   void signIn() {
-    _isSignedIn = true;
+    _signInStatus = SignInStatus.signedIn;
     onAuthStateChanged();
   }
 
   @override
   void signOut() {
-    _isSignedIn = false;
+    _signInStatus = SignInStatus.signedOut;
     onAuthStateChanged();
   }
 

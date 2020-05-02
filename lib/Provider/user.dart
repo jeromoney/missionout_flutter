@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
+enum SignInStatus {signedOut, waiting, signedIn}
+
 abstract class User with ChangeNotifier {
   bool isEditor;
   String teamID;
@@ -13,13 +15,11 @@ abstract class User with ChangeNotifier {
   String get displayName;
 
   String get email;
-
-  String get photoUrl;
   ImageProvider get photoImage;
 
   String get uid;
 
-  bool get isLoggedIn;
+  SignInStatus get signInStatus;
 
   void signIn();
 

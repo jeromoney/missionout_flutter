@@ -46,9 +46,10 @@ class DemoTeam implements Team {
   String teamID;
 
   @override
-  Future<DocumentReference> addMission({Mission mission}) {
-    // TODO: implement addMission
-    return null;
+  Future<dynamic> addMission({Mission mission}) async {
+    mission.time = Timestamp.now();
+    missions.insert(0,mission);
+    return DemoReference(0);
   }
 
   @override
@@ -122,5 +123,4 @@ class DemoReference{
     documentID = i.toString();
   }
 }
-
 

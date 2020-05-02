@@ -27,7 +27,7 @@ void main() {
     testMap['isStoodDown'] = true;
     testMission = Mission.fromMap(testMap);
     expect(testMission.isStoodDown, true);
-    expect(() => testMission.address, throwsNoSuchMethodError);
+    expect(testMission.address, null);
 
     var exportMission = testMission.toDatabase();
     expect(exportMission['time'], isA<Timestamp>() );

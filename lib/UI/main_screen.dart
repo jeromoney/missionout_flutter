@@ -62,11 +62,20 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
-    isLoggedIn = user.isLoggedIn;
-    if (isLoggedIn) {
-      return OverviewScreen();
-    } else {
-      return SigninScreen();
+    switch(user.signInStatus) {
+      case SignInStatus.signedIn:
+        {
+          return OverviewScreen();
+        }
+        break;
+      case SignInStatus.signedOut: {
+        return SigninScreen();
+      }
+      break;
+      case SignInStatus.waiting: {
+        return Scaffold(body: Center(child: CircularProgressIndicator()));
+      }
+      break;
     }
   }
 }
