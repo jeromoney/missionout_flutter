@@ -38,6 +38,8 @@ class MyFirebaseUser with ChangeNotifier implements User {
   ImageProvider get photoImage =>
       CachedNetworkImageProvider(_firebaseUser.photoUrl);
 
+  // Whenever you set _signInWaiting to true, make sure to close it out as false
+  // when done with operation.
   bool _signInWaiting = false;
 
   @override
@@ -64,9 +66,16 @@ class MyFirebaseUser with ChangeNotifier implements User {
         clearUserPermissions();
       } else {
         // Got a new user, so check firestore for user settings
-        await setUserPermissions();
+        _signInWaiting = true;
+        notifyListeners();
+        await setUserPermissions().catchError((e){
+          // the onAuthState is being called multiple times which is causes race
+          // conditions. The user is being torn down but called a second time
+          debugPrint("Firebase user called during signout process");
+        });
+        _signInWaiting = false;
       }
-      //onAuthStateChanged();
+      notifyListeners();
     });
   }
 
@@ -79,7 +88,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
     final auth = FirebaseAuth.instance;
     final googleUser = await googleSignIn.signIn().catchError((e) {
       _signInWaiting = false;
-      //notifyListeners();
+      notifyListeners();
       throw e;
     });
     final googleAuth = await googleUser.authentication;
@@ -101,7 +110,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
   void signOut() async {
     // remove token from Firestore from first, before user signs out
     var fcmToken = await _firebaseMessaging.getToken();
-    await _db.collection('users').document(_firebaseUser.uid).updateData({
+    _db.collection('users').document(_firebaseUser.uid).updateData({
       'tokens': FieldValue.arrayRemove([fcmToken])
     }).then((value) {
       debugPrint('Removed token to user document');
@@ -109,12 +118,8 @@ class MyFirebaseUser with ChangeNotifier implements User {
       debugPrint('Error removing token from user document');
     });
 
-    final auth = FirebaseAuth.instance;
-    final googleSignIn = GoogleSignIn();
-    await googleSignIn.signOut();
-    await auth.signOut();
-    _firebaseUser = null;
-    notifyListeners();
+    await GoogleSignIn().signOut();
+    await FirebaseAuth.instance.signOut();
   }
 
   Future<void> addTokenToFirestore(FirebaseUser user) async {

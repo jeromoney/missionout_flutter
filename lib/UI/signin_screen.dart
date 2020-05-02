@@ -15,9 +15,7 @@ class SigninScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final appMode = Provider.of<AppMode>(context, listen: false);
-          appMode.appMode = await AppModes.demo;
-          //final user = Provider.of<User>(context, listen: false);
-          //user.signIn();
+          appMode.appMode = AppModes.demo;
         }, child: Text("DEMO"),),
       key: _scaffoldKey,
       backgroundColor: Colors.white,
