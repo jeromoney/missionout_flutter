@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:missionout/Provider/user.dart';
 
 class DemoUser with ChangeNotifier implements User{
-  @override
-  String chatURI;
 
   @override
   bool isEditor = true;
@@ -26,14 +24,11 @@ class DemoUser with ChangeNotifier implements User{
   }
 
   @override
-  // TODO: implement chatURIisAvailable
-  bool get chatURIisAvailable => null;
-
-  @override
   String get displayName => "Elton";
 
   @override
   void dispose() {
+    super.dispose();
     // TODO: implement dispose
   }
 

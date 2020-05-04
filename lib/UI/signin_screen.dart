@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:missionout/DataLayer/app_mode.dart';
-import 'package:missionout/Provider/demo_user.dart';
 import 'package:missionout/Provider/user.dart';
 import 'package:provider/provider.dart';
 

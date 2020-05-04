@@ -9,8 +9,6 @@ abstract class User with ChangeNotifier {
   String voicePhoneNumber;
   String mobilePhoneNumber;
   String region;
-  String chatURI;
-  bool get chatURIisAvailable;
 
   String get displayName;
 

@@ -1,4 +1,5 @@
 
+import 'package:flutter/cupertino.dart';
 import 'package:missionout/DataLayer/app_mode.dart';
 import 'package:missionout/Provider/demo_user.dart';
 import 'package:missionout/Provider/firestore_team.dart';
@@ -19,8 +20,9 @@ class MyProviders {
       ),
       ChangeNotifierProxyProvider<AppMode, User>(
         lazy: false,
-        create: (_) => MyFirebaseUser(),
+        create: (_) => null,
         update: (_, appMode, user) {
+          debugPrint("Updating User class");
           if (appMode.appMode == AppModes.demo) {
             return DemoUser();
           } else {
@@ -35,7 +37,6 @@ class MyProviders {
           if (user is DemoUser) {
             return DemoTeam();
           }
-
           team.updateTeamID(user.teamID);
           return team;
         },

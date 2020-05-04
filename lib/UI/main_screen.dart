@@ -21,10 +21,10 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState(){
     super.initState();
-    if (!Platform.isIOS){
-      // Notifications for Android are handled in MainActivity.kt
-      return;
-    }
+//    if (!Platform.isIOS){
+//      // Notifications for Android are handled in MainActivity.kt
+//      return;
+//    }
     
     final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
     _firebaseMessaging.requestNotificationPermissions(
@@ -33,7 +33,7 @@ class _MainScreenState extends State<MainScreen> {
     );
     _firebaseMessaging.getToken().then((String token){
       assert(token!=null);
-      debugPrint(token);
+      //debugPrint(token);
     });
     _firebaseMessaging.configure(
     onLaunch: (Map<String,dynamic> message) async {

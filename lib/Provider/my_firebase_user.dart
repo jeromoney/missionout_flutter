@@ -20,8 +20,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
   String region;
   @override
   bool isEditor = false;
-  @override
-  String chatURI;
+
   @override
   String teamID;
 
@@ -38,57 +37,48 @@ class MyFirebaseUser with ChangeNotifier implements User {
   ImageProvider get photoImage =>
       CachedNetworkImageProvider(_firebaseUser.photoUrl);
 
-  // Whenever you set _signInWaiting to true, make sure to close it out as false
-  // when done with operation.
-  bool _signInWaiting = false;
-
   @override
   SignInStatus get signInStatus {
-    if (_signInWaiting) {
-      return SignInStatus.waiting;
-    } else if (_firebaseUser != null) {
-      return SignInStatus.signedIn;
-    } else {
+    if (_firebaseUser == null){
       return SignInStatus.signedOut;
     }
+    else if (_firebaseUser != null){
+      return SignInStatus.signedIn;
+    }
+    else {
+      // need to determine SignInStatus.waiting status as well.
+      throw ErrorDescription("Caught unexpected signin state");
+    }
   }
-
-  @override
-  bool get chatURIisAvailable => chatURI != null;
 
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   MyFirebaseUser() {
     FirebaseAuth.instance.onAuthStateChanged.listen((firebaseUser) async {
+      debugPrint("onAuthStateChanged listener fired");
       _firebaseUser = firebaseUser;
       if (_firebaseUser == null) {
         // clear out stored fields. TODO- A little clunky, should just get a new instance
         clearUserPermissions();
       } else {
         // Got a new user, so check firestore for user settings
-        _signInWaiting = true;
-        notifyListeners();
         await setUserPermissions().catchError((e){
           // the onAuthState is being called multiple times which is causes race
           // conditions. The user is being torn down but called a second time
           debugPrint("Firebase user called during signout process");
         });
-        _signInWaiting = false;
+        notifyListeners();
       }
-      notifyListeners();
     });
   }
 
   @override
   Future<void> signIn() async {
     //check if user is signed in
-    _signInWaiting = true;
     notifyListeners();
     final googleSignIn = GoogleSignIn();
     final auth = FirebaseAuth.instance;
     final googleUser = await googleSignIn.signIn().catchError((e) {
-      _signInWaiting = false;
-      notifyListeners();
       throw e;
     });
     final googleAuth = await googleUser.authentication;
@@ -101,7 +91,6 @@ class MyFirebaseUser with ChangeNotifier implements User {
     final authResult = await auth.signInWithCredential(credential);
     final FirebaseUser user = authResult.user;
     print("signed in " + user.displayName);
-    _signInWaiting = false;
     addTokenToFirestore(user);
     notifyListeners();
   }
@@ -162,14 +151,12 @@ class MyFirebaseUser with ChangeNotifier implements User {
     // team settings
     document = await _db.collection('teams').document(teamID).get();
     data = document.data;
-    data.containsKey('chatURI') ? chatURI = data['chatURI'] : chatURI = null;
   }
 
   clearUserPermissions() {
     voicePhoneNumber = null;
     mobilePhoneNumber = null;
     isEditor = false;
-    chatURI = null;
     teamID = null;
   }
 
