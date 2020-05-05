@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/DataLayer/app_mode.dart';
 import 'package:missionout/Provider/demo_user.dart';
@@ -10,52 +11,36 @@ import 'Provider/demo_team.dart';
 import 'Provider/user.dart';
 import 'Provider/my_firebase_user.dart';
 
-class MyProviders {
+class FirebaseProviders {
+  FirebaseUser _user;
+
   List<SingleChildStatelessWidget> get providers {
     return [
-      ChangeNotifierProvider<AppMode>(
-        create: (_) => AppMode(),
-      ),
-      ChangeNotifierProxyProvider<AppMode, User>(
-        lazy: true,
-        create: (context) {
-          return null;
-
-        },
-        update: (_, appMode, user) {
-          debugPrint("Updating User class");
-          switch (appMode.appMode) {
-            case AppModes.demo:
-              return DemoUser();
-              break;
-            case AppModes.firebase:
-              if (appMode.user == null) {
-                return MyFirebaseUser();
-              } else {
-                return MyFirebaseUser.fromUser(appMode.user);
-              }
-              break;
-            case AppModes.signedOut:
-              return null;
-              break;
-            default:
-              return null;
-
-              break;
+      ChangeNotifierProvider<User>(
+        create: (_) {
+          if (_user == null) {
+            return MyFirebaseUser();
+          } else {
+            return MyFirebaseUser.fromUser(_user);
           }
         },
       ),
       ProxyProvider<User, Team>(
         lazy: true,
-        update: (_, user, team) {
-          if (user is DemoUser) {
-            return DemoTeam();
-          }
-          if (user is MyFirebaseUser) {
-            return FirestoreTeam(user.teamID);
-          }
-          return null;
-        },
+        update: (_, user, team) => FirestoreTeam(user.teamID),
+      ),
+    ];
+  }
+}
+
+class DemoProviders {
+  List<SingleChildStatelessWidget> get providers {
+    return [
+      ChangeNotifierProvider<User>(
+        create: (_) => DemoUser(),
+      ),
+      Provider<Team>(
+        create: (_) => DemoTeam(),
       ),
     ];
   }

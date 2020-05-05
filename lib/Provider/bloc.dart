@@ -21,11 +21,11 @@ class DeepLinkBloc extends Bloc {
   Sink<String> get stateSink => _stateController.sink;
 
 
-  //Adding the listener into contructor
+  //Adding the listener into constructor
   DeepLinkBloc() {
     //Checking application start by deep link
     startUri().then(_onRedirected);
-    //Checking broadcast stream, if deep link was clicked in opened appication
+    //Checking broadcast stream, if deep link was clicked in opened application
     stream.receiveBroadcastStream().listen((d) => _onRedirected(d));
   }
 

@@ -17,12 +17,12 @@ class AppMode with ChangeNotifier{
   }
 
    _create() async {
-    user = await FirebaseAuth.instance.currentUser();
-    if (user != null) {
-      // If user is signed in
-      // tell User provider to build a MyFirebaseUser object.
-       appMode = AppModes.firebase;
-     }
+//    user = await FirebaseAuth.instance.currentUser();
+//    if (user != null) {
+//      // If user is signed in
+//      // tell User provider to build a MyFirebaseUser object.
+//       appMode = AppModes.firebase;
+//     }
   }
 
   set appMode(AppModes appMode) {
