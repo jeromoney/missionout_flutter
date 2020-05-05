@@ -72,9 +72,9 @@ class SubmitMissionButton extends StatelessWidget {
               return;
             }
             myMission.reference = documentReference;
-            final missionAddress =
-                Provider.of<MissionAddress>(context, listen: false);
-            missionAddress.address = documentReference
+            final user =
+                Provider.of<User>(context, listen: false);
+            user.currentMission = documentReference
                 .documentID; // TODO - refactor this to make it more abstract
             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DetailScreen()));
           });

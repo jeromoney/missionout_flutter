@@ -4,7 +4,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'dart:io' show Platform;
 
 import 'package:missionout/DataLayer/mission.dart';
-import 'package:missionout/DataLayer/mission_address.dart';
 import 'package:missionout/DataLayer/page.dart' as missionpage;
 import 'package:missionout/DataLayer/response.dart';
 import 'package:missionout/Provider/team.dart';
@@ -59,12 +58,12 @@ class DetailScreenStreamWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final team = Provider.of<Team>(context);
-    final missionAddress = Provider.of<MissionAddress>(context);
+    final user = Provider.of<User>(context);
 
 
     return StreamBuilder<Mission>(
         stream: team.fetchSingleMission(
-          docID: missionAddress.address,
+          docID: user.currentMission,
         ),
         builder: (context, snapshot) {
           switch (detailItem) {

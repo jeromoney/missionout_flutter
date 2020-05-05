@@ -39,37 +39,40 @@ class MyFirebaseUser with ChangeNotifier implements User {
 
   @override
   SignInStatus get signInStatus {
-    if (_firebaseUser == null){
-      return SignInStatus.signedOut;
-    }
-    else if (_firebaseUser != null){
+    if (_firebaseUser == null) {
+      return SignInStatus.waiting;
+    }  else {
       return SignInStatus.signedIn;
-    }
-    else {
-      // need to determine SignInStatus.waiting status as well.
-      throw ErrorDescription("Caught unexpected signin state");
     }
   }
 
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   MyFirebaseUser() {
-    FirebaseAuth.instance.onAuthStateChanged.listen((firebaseUser) async {
-      debugPrint("onAuthStateChanged listener fired");
-      _firebaseUser = firebaseUser;
-      if (_firebaseUser == null) {
-        // clear out stored fields. TODO- A little clunky, should just get a new instance
-        clearUserPermissions();
-      } else {
-        // Got a new user, so check firestore for user settings
-        await setUserPermissions().catchError((e){
-          // the onAuthState is being called multiple times which is causes race
-          // conditions. The user is being torn down but called a second time
-          debugPrint("Firebase user called during signout process");
-        });
-        notifyListeners();
-      }
-    });
+    debugPrint("Creating user from brand new account");
+    signIn();
+  }
+
+  MyFirebaseUser.fromUser(FirebaseUser user) {
+    debugPrint("Creating user from already signed in account");
+    _firebaseUser = user;
+    setUserPermissions();
+//    FirebaseAuth.instance.onAuthStateChanged.listen((firebaseUser) async {
+//      debugPrint("onAuthStateChanged listener fired");
+//      _firebaseUser = firebaseUser;
+//      if (_firebaseUser == null) {
+//        // clear out stored fields. TODO- A little clunky, should just get a new instance
+//        clearUserPermissions();
+//      } else {
+//        // Got a new user, so check firestore for user settings
+//        await setUserPermissions().catchError((e){
+//          // the onAuthState is being called multiple times which is causes race
+//          // conditions. The user is being torn down but called a second time
+//          debugPrint("Firebase user called during signout process");
+//        });
+//        notifyListeners();
+//      }
+//    });
   }
 
   @override
@@ -92,6 +95,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
     final FirebaseUser user = authResult.user;
     print("signed in " + user.displayName);
     addTokenToFirestore(user);
+    _firebaseUser = user;
     notifyListeners();
   }
 
@@ -125,11 +129,6 @@ class MyFirebaseUser with ChangeNotifier implements User {
   }
 
   @override
-  void onAuthStateChanged() {
-    notifyListeners();
-  }
-
-  @override
   void dispose() {
     FirebaseAuth.instance.onAuthStateChanged.drain();
     super.dispose();
@@ -151,6 +150,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
     // team settings
     document = await _db.collection('teams').document(teamID).get();
     data = document.data;
+    notifyListeners();
   }
 
   clearUserPermissions() {
@@ -182,4 +182,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
       debugPrint('Error subscribing to notifications');
     });
   }
+
+  @override
+  String currentMission;
 }

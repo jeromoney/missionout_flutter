@@ -61,21 +61,18 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context);
-    switch(user.signInStatus) {
-      case SignInStatus.signedIn:
-        {
-          return OverviewScreen();
-        }
-        break;
-      case SignInStatus.signedOut: {
-        return SigninScreen();
-      }
-      break;
-      case SignInStatus.waiting: {
-        return Scaffold(body: Center(child: CircularProgressIndicator()));
-      }
-      break;
+    final user = Provider.of<User>(context, listen: true);
+    if (user == null){
+      return SigninScreen();
+    }
+    else if (user.signInStatus == SignInStatus.waiting){
+      return Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+    else if (user.signInStatus == SignInStatus.signedIn){
+      return OverviewScreen();
+    }
+    else {
+      throw ErrorDescription("Entered unexpected signin state");
     }
   }
 }

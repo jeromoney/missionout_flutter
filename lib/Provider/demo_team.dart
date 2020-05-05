@@ -22,7 +22,7 @@ class DemoTeam implements Team {
         null),
     Mission("Overdue backpacker", "report to bay for search assignment", "Passwater Gulch",
         null),
-    Mission("Empty boat found on river", "swiftwater team listen for assignemnts", "Passwater Gulch",
+    Mission("Empty boat found on river", "swiftwater team listen for assignments", "Passwater Gulch",
         null),
     Mission("Injured horserider ", "assist EMS with evacuation", "Passwater Gulch",
         null),
@@ -111,6 +111,7 @@ class DemoTeam implements Team {
   void set location(GeoPoint _location) {
     // TODO: implement location
   }
+
 }
 
 

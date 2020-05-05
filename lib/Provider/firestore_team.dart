@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:missionout/DataLayer/mission.dart';
-import 'package:missionout/DataLayer/page.dart'  as missionpage;
+import 'package:missionout/DataLayer/page.dart' as missionpage;
 import 'package:missionout/DataLayer/response.dart';
 import 'package:missionout/Provider/team.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -19,16 +19,10 @@ class FirestoreTeam implements Team {
   @override
   String chatURI;
 
-  @override
-  FirestoreTeam.fromDatabase(dynamic importFormat);
+  FirestoreTeam(String teamID) {
+    updateTeamID(teamID);
+  }
 
-
-  FirestoreTeam();
-
-  FirestoreTeam.fromMap(Map<String, dynamic> map)
-      : name = map['name'],
-        location = map['location'],
-        chatURI = map['chatURI'];
   @override
   dynamic get documentAddress => _firestoreDocumentAddress != null;
 
@@ -92,9 +86,10 @@ class FirestoreTeam implements Team {
     final ref = _db
         .collection('teams/$teamID/missions/$docID/responses')
         .orderBy('status', descending: true);
-    return ref.snapshots().map((snapShots) => snapShots.documents
-        .map((data) => Response.fromSnapshot(data))
-        .toList());
+    return ref.snapshots().map((snapShots) =>
+        snapShots.documents
+            .map((data) => Response.fromSnapshot(data))
+            .toList());
   }
 
   @override
@@ -130,7 +125,7 @@ class FirestoreTeam implements Team {
     @required String uid,
   }) async {
     DocumentReference document =
-        _db.collection('teams/$teamID/missions/$docID/responses').document(uid);
+    _db.collection('teams/$teamID/missions/$docID/responses').document(uid);
     if (response != null) {
       await document.setData(response.toJson());
     } else {

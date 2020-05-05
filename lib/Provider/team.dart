@@ -13,7 +13,6 @@ abstract class Team {
   bool get chatURIisAvailable;
 
   dynamic get documentAddress; // Where the document is in database
-  Team.fromDatabase(dynamic importFormat);
 
   void updateTeamID(String teamID);
 

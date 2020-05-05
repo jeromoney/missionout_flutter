@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:missionout/DataLayer/mission_address.dart';
 import 'package:missionout/Provider/team.dart';
 import 'package:missionout/Provider/user.dart';
 import 'package:missionout/UI/response_screen.dart';
@@ -16,9 +15,6 @@ void main() {
         providers: [
           ChangeNotifierProvider<User>(create: (_) => UserFake()),
           Provider<Team>(create: (_) => TeamFake()),
-          Provider<MissionAddress>(
-            create: (_) => MissionAddress(),
-          )
         ],
         child: MaterialApp(
           home: Scaffold(
@@ -37,9 +33,6 @@ void main() {
         providers: [
           ChangeNotifierProvider<User>(create: (_) => UserFake()),
           Provider<Team>(create: (_) => TeamFake(yieldValue: Yield.results)),
-          Provider<MissionAddress>(
-            create: (_) => MissionAddress(),
-          )
         ],
         child: MaterialApp(
           home: Scaffold(
@@ -57,9 +50,6 @@ void main() {
         providers: [
           ChangeNotifierProvider<User>(create: (_) => UserFake()),
           Provider<Team>(create: (_) => TeamFake(yieldValue: Yield.error)),
-          Provider<MissionAddress>(
-            create: (_) => MissionAddress(),
-          )
         ],
         child: MaterialApp(
           home: Scaffold(
@@ -77,9 +67,6 @@ void main() {
         providers: [
           ChangeNotifierProvider<User>(create: (_) => UserFake()),
           Provider<Team>(create: (_) => TeamFake(yieldValue: Yield.zeroResults)),
-          Provider<MissionAddress>(
-            create: (_) => MissionAddress(),
-          )
         ],
         child: MaterialApp(
           home: Scaffold(

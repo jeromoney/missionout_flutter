@@ -9,6 +9,7 @@ abstract class User with ChangeNotifier {
   String voicePhoneNumber;
   String mobilePhoneNumber;
   String region;
+  String currentMission;
 
   String get displayName;
 
@@ -22,8 +23,6 @@ abstract class User with ChangeNotifier {
   void signIn();
 
   void signOut();
-
-  void onAuthStateChanged();
 
   Future<void> updatePhoneNumbers(
       {@required String mobilePhoneNumber,

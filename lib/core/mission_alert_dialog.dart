@@ -1,9 +1,9 @@
 
 import 'package:flutter/material.dart';
+import 'package:missionout/Provider/user.dart';
 import 'package:provider/provider.dart';
 
 
-import 'package:missionout/DataLayer/mission_address.dart';
 import 'package:missionout/DataLayer/page.dart' as missionpage;
 import 'package:missionout/UI/DetailScreen/detail_screen.dart';
 
@@ -27,8 +27,8 @@ class MissionAlertDialog extends StatelessWidget {
               onPressed: () {
                 Navigator.pop(context);
                 Provider
-                    .of<MissionAddress>(context, listen: false)
-                    .address =
+                    .of<User>(context, listen: false)
+                    .currentMission =
                 Map.castFrom<dynamic, dynamic, String, dynamic>(
                     message['data'])['address'];
                 Navigator.of(context).push(MaterialPageRoute(builder: (context) => DetailScreen()));

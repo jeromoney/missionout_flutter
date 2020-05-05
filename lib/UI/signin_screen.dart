@@ -34,15 +34,16 @@ class SigninScreen extends StatelessWidget {
               child: GoogleSignInButton(
                 key: Key('Google Sign In Button'),
                 onPressed: () async {
-                  final user = Provider.of<User>(context, listen: false);
-                  try {
-                    await user.signIn();
-                  }
-                  on PlatformException catch (e) {
-                    final snackBar = SnackBar(content: Text(
-                        'Error with Google SignIn. Try adding an account to Gmail'));
-                    _scaffoldKey.currentState.showSnackBar(snackBar);
-                  }
+                  final appMode = Provider.of<AppMode>(context, listen: false);
+                  appMode.appMode = AppModes.firebase;
+//                  try {
+//                    await user.signIn();
+//                  }
+//                  on PlatformException catch (e) {
+//                    final snackBar = SnackBar(content: Text(
+//                        'Error with Google SignIn. Try adding an account to Gmail'));
+//                    _scaffoldKey.currentState.showSnackBar(snackBar);
+//                  }snackBar
                 },
                 darkMode: true,
               ),

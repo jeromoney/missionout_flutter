@@ -128,12 +128,10 @@ class _ResponseOptionsState extends State<ResponseOptions> {
             setState(() {
               final user = Provider.of<User>(context, listen: false);
               final team = Provider.of<Team>(context, listen: false);
-              final missionAddress =
-                  Provider.of<MissionAddress>(context, listen: false);
 
               team.addResponse(
                 response: response,
-                docID: missionAddress.address,
+                docID: user.currentMission,
                 uid: user.uid,
               );
               _value = selected ? index : null;

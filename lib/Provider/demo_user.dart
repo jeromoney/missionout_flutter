@@ -3,6 +3,10 @@ import 'package:missionout/Provider/user.dart';
 
 class DemoUser with ChangeNotifier implements User{
 
+  DemoUser(){
+    notifyListeners();
+  }
+
   @override
   bool isEditor = true;
 
@@ -20,7 +24,7 @@ class DemoUser with ChangeNotifier implements User{
 
   @override
   void addListener(listener) {
-    // TODO: implement addListener
+    super.addListener(listener);
   }
 
   @override
@@ -29,15 +33,13 @@ class DemoUser with ChangeNotifier implements User{
   @override
   void dispose() {
     super.dispose();
-    // TODO: implement dispose
   }
 
   @override
   String get email => "elton@email.com";
 
   @override
-  // TODO: implement hasListeners
-  bool get hasListeners => null;
+  bool get hasListeners => super.hasListeners;
 
   SignInStatus _signInStatus = SignInStatus.signedIn;
   @override
@@ -46,11 +48,6 @@ class DemoUser with ChangeNotifier implements User{
   @override
   void notifyListeners() {
     // TODO: implement notifyListeners
-  }
-
-  @override
-  void onAuthStateChanged() {
-    notifyListeners();
   }
 
   @override
@@ -65,13 +62,13 @@ class DemoUser with ChangeNotifier implements User{
   @override
   void signIn() {
     _signInStatus = SignInStatus.signedIn;
-    onAuthStateChanged();
+    notifyListeners();
   }
 
   @override
   void signOut() {
     _signInStatus = SignInStatus.signedOut;
-    onAuthStateChanged();
+    notifyListeners();
   }
 
   @override
@@ -83,6 +80,9 @@ class DemoUser with ChangeNotifier implements User{
     // TODO: implement updatePhoneNumbers
     return null;
   }
+
+  @override
+  String currentMission;
 
 
 }

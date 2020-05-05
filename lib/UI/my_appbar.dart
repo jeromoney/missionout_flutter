@@ -40,8 +40,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                       FlatButton(
                           child: Text('Sign out'),
                           onPressed: () {
-                            user.signOut();
-                            Provider.of<AppMode>(context, listen: false).appMode = AppModes.normal; // ensure that app is switched from Demo to normal
+                            Provider.of<AppMode>(context, listen: false).appMode = AppModes.signedOut; // ensure that app is switched from Demo to normal
                             Navigator.pop(context);
                             Navigator.of(context).pushReplacementNamed('/');
                           }),

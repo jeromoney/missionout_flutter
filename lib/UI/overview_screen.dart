@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:missionout/utils.dart';
 import 'package:provider/provider.dart';
 
-import 'package:missionout/DataLayer/mission_address.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/Provider/team.dart';
 import 'package:missionout/Provider/user.dart';
@@ -87,7 +86,7 @@ class BuildMissionResults extends StatelessWidget {
                 ' ' +
                 (formatTime(mission.time) ?? '')),
             onTap: () {
-              Provider.of<MissionAddress>(context, listen: false).address =
+              Provider.of<User>(context, listen: false).currentMission =
                   mission.address;
               Navigator.push(context, MaterialPageRoute(builder: (context) => DetailScreen()));
             },

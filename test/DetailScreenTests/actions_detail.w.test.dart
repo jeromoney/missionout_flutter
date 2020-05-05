@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:missionout/DataLayer/mission.dart';
-import 'package:missionout/DataLayer/mission_address.dart';
 import 'package:missionout/Provider/team.dart';
 import 'package:missionout/Provider/user.dart';
 import 'package:missionout/UI/DetailScreen/detail_screen.dart';
@@ -59,9 +58,6 @@ void main() async {
           ChangeNotifierProvider<User>(
               create: (_) => UserFake(chatURI: 'https://www.cnn.com/')),
           Provider<Team>(create: (_) => TeamFake()),
-          Provider<MissionAddress>(
-            create: (_) => MissionAddress(),
-          )
         ],
         child: MaterialApp(
           home: Scaffold(
@@ -148,9 +144,6 @@ void main() async {
           ),
           ChangeNotifierProvider<User>(
               create: (_) => UserFake(chatURI: 'this will cause an error')),
-          Provider<MissionAddress>(
-            create: (_) => MissionAddress(),
-          ),
         ],
         child: MaterialApp(
           home: Scaffold(

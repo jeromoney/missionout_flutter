@@ -78,4 +78,11 @@ class UserFake with ChangeNotifier implements User {
 
   @override
   ImageProvider get photoImage => AssetImage("graphics/demoUser.png");
+
+  @override
+  String currentMission;
+
+  @override
+  // TODO: implement signInStatus
+  SignInStatus get signInStatus => null;
 }
