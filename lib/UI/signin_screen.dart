@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:missionout/DataLayer/app_mode.dart';
 import 'package:missionout/Provider/user.dart';
@@ -36,14 +35,6 @@ class SigninScreen extends StatelessWidget {
                 onPressed: () async {
                   final appMode = Provider.of<AppMode>(context, listen: false);
                   appMode.appMode = AppModes.firebase;
-//                  try {
-//                    await user.signIn();
-//                  }
-//                  on PlatformException catch (e) {
-//                    final snackBar = SnackBar(content: Text(
-//                        'Error with Google SignIn. Try adding an account to Gmail'));
-//                    _scaffoldKey.currentState.showSnackBar(snackBar);
-//                  }snackBar
                 },
                 darkMode: true,
               ),

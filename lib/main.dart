@@ -33,12 +33,12 @@ class _MainScreenState extends State<MainScreen> {
 
       case AppModes.demo:
         final providers = DemoProviders().providers;
-        return MissionOutApp(providers: providers,);
+        return AuthScreener(providers: providers,);
 
       case AppModes.firebase:
         final FirebaseUser user = appMode.user;
         final firebaseProviders = FirebaseProviders(user);
-        return MissionOutApp(providers: firebaseProviders.providers,);
+        return AuthScreener(providers: firebaseProviders.providers,);
 
       default:
         throw ErrorDescription("Entered unexpected signin state");

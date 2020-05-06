@@ -53,4 +53,5 @@ class AppMode with ChangeNotifier{
     notifyListeners();
   }
   AppModes get appMode => _appMode;
+
 }

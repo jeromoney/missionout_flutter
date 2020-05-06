@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
-enum SignInStatus {signedOut, waiting, signedIn}
+enum SignInStatus {signedOut, waiting, signedIn, error}
 
 abstract class User with ChangeNotifier {
   bool isEditor;
@@ -20,7 +20,7 @@ abstract class User with ChangeNotifier {
 
   SignInStatus get signInStatus;
 
-  void signIn();
+  Future<bool> signIn();
 
   void signOut();
 

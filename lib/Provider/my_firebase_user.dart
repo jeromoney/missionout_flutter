@@ -37,14 +37,9 @@ class MyFirebaseUser with ChangeNotifier implements User {
   ImageProvider get photoImage =>
       CachedNetworkImageProvider(_firebaseUser.photoUrl);
 
+  SignInStatus _signInStatus = SignInStatus.waiting;
   @override
-  SignInStatus get signInStatus {
-    if (_firebaseUser == null) {
-      return SignInStatus.waiting;
-    }  else {
-      return SignInStatus.signedIn;
-    }
-  }
+  SignInStatus get signInStatus => _signInStatus;
 
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
@@ -57,19 +52,29 @@ class MyFirebaseUser with ChangeNotifier implements User {
     debugPrint("Creating user from already signed in account");
     _firebaseUser = user;
     setUserPermissions();
+    _signInStatus = SignInStatus.signedIn;
     notifyListeners();
 
   }
 
   @override
-  Future<void> signIn() async {
-    //check if user is signed in
+  Future<bool> signIn() async {
     final googleSignIn = GoogleSignIn();
     final auth = FirebaseAuth.instance;
-    final googleUser = await googleSignIn.signIn().catchError((e) {
-      throw e;
+    final googleUser = await googleSignIn.signIn();
+    if (googleUser == null){
+      // user clicked out of sign in screen
+      _signInStatus = SignInStatus.error;
+      notifyListeners();
+      return false;
+    }
+
+    final googleAuth = await googleUser.authentication.catchError((e){
+      debugPrint("Error with Google Auth process: $e");
+      _signInStatus = SignInStatus.error;
+      notifyListeners();
+      return false;
     });
-    final googleAuth = await googleUser.authentication;
 
     final credential = GoogleAuthProvider.getCredential(
       accessToken: googleAuth.accessToken,
@@ -82,7 +87,9 @@ class MyFirebaseUser with ChangeNotifier implements User {
     addTokenToFirestore(user);
     _firebaseUser = user;
     await setUserPermissions();
+    _signInStatus = SignInStatus.signedIn;
     notifyListeners();
+    return true;
   }
 
   @override

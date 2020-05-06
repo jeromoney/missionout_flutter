@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/DataLayer/app_mode.dart';
 import 'package:missionout/Provider/user.dart';

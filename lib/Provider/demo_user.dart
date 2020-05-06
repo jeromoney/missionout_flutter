@@ -60,9 +60,10 @@ class DemoUser with ChangeNotifier implements User{
   }
 
   @override
-  void signIn() {
+  Future<bool> signIn() async {
     _signInStatus = SignInStatus.signedIn;
     notifyListeners();
+    return true;
   }
 
   @override
