@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:missionout/UI/signin_screen.dart';
@@ -35,8 +36,9 @@ class _MainScreenState extends State<MainScreen> {
         return MissionOutApp(providers: providers,);
 
       case AppModes.firebase:
-        final providers = FirebaseProviders().providers;
-        return MissionOutApp(providers: providers,);
+        final FirebaseUser user = appMode.user;
+        final firebaseProviders = FirebaseProviders(user);
+        return MissionOutApp(providers: firebaseProviders.providers,);
 
       default:
         throw ErrorDescription("Entered unexpected signin state");

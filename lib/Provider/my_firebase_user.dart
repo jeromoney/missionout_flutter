@@ -57,28 +57,13 @@ class MyFirebaseUser with ChangeNotifier implements User {
     debugPrint("Creating user from already signed in account");
     _firebaseUser = user;
     setUserPermissions();
-//    FirebaseAuth.instance.onAuthStateChanged.listen((firebaseUser) async {
-//      debugPrint("onAuthStateChanged listener fired");
-//      _firebaseUser = firebaseUser;
-//      if (_firebaseUser == null) {
-//        // clear out stored fields. TODO- A little clunky, should just get a new instance
-//        clearUserPermissions();
-//      } else {
-//        // Got a new user, so check firestore for user settings
-//        await setUserPermissions().catchError((e){
-//          // the onAuthState is being called multiple times which is causes race
-//          // conditions. The user is being torn down but called a second time
-//          debugPrint("Firebase user called during signout process");
-//        });
-//        notifyListeners();
-//      }
-//    });
+    notifyListeners();
+
   }
 
   @override
   Future<void> signIn() async {
     //check if user is signed in
-    notifyListeners();
     final googleSignIn = GoogleSignIn();
     final auth = FirebaseAuth.instance;
     final googleUser = await googleSignIn.signIn().catchError((e) {
@@ -96,6 +81,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
     print("signed in " + user.displayName);
     addTokenToFirestore(user);
     _firebaseUser = user;
+    await setUserPermissions();
     notifyListeners();
   }
 

@@ -14,6 +14,8 @@ import 'Provider/my_firebase_user.dart';
 class FirebaseProviders {
   FirebaseUser _user;
 
+  FirebaseProviders(this._user);
+
   List<SingleChildStatelessWidget> get providers {
     return [
       ChangeNotifierProvider<User>(
