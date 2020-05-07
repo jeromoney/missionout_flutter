@@ -5,11 +5,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-enum AppModes{demo, firebase, signedOut}
+enum AppModes { demo, firebase, signedOut }
 
-class AppMode with ChangeNotifier{
+class AppMode with ChangeNotifier {
   AppModes _appMode = AppModes.signedOut;
+
   FirebaseUser _user;
+
   FirebaseUser get user {
     // delete user after access. This prevents it from being accessed twice,
     // since it is only used at startup
@@ -18,19 +20,43 @@ class AppMode with ChangeNotifier{
     return tmpUser;
   }
 
+  String _appMessage; // One time read string to pass messages to sign in screen
+
+  String get appMessage {
+    // Mission Impossible -- delete value after reading it
+    final tmp = _appMessage;
+    _appMessage = null;
+    return tmp;
+  }
+
+  void setAppMode(AppModes appMode, {String appMessage}) {
+    if (appMode == _appMode) {
+      // nothing changed. do nothing.
+      debugPrint("App tried to change modes with the same mode");
+      return;
+    }
+    if (appMessage != null) {
+      _appMessage = appMessage;
+    }
+    _appMode = appMode;
+    notifyListeners();
+  }
+
+  AppModes get appMode => _appMode;
+
   AppMode() {
     // On initialization, check if user is already signed in.
     _create();
   }
 
-   _create() async {
-     _user = await FirebaseAuth.instance.currentUser();
+  _create() async {
+    _user = await FirebaseAuth.instance.currentUser();
     if (_user != null) {
       // If user is signed in
       // tell User provider to build a MyFirebaseUser object.
-       appMode = AppModes.firebase;
-     }
-     //    FirebaseAuth.instance.onAuthStateChanged.listen((firebaseUser) async {
+      setAppMode(AppModes.firebase);
+    }
+    //    FirebaseAuth.instance.onAuthStateChanged.listen((firebaseUser) async {
 //      debugPrint("onAuthStateChanged listener fired");
 //      _firebaseUser = firebaseUser;
 //      if (_firebaseUser == null) {
@@ -47,11 +73,4 @@ class AppMode with ChangeNotifier{
 //      }
 //    });
   }
-
-  set appMode(AppModes appMode) {
-    _appMode = appMode;
-    notifyListeners();
-  }
-  AppModes get appMode => _appMode;
-
 }

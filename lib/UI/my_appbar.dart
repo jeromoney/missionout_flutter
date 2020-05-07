@@ -43,7 +43,8 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                             final user = Provider.of<User>(context, listen: false); // ensure that app is switched from Demo to normal
                             user.signOut();
                             // Switch app mode to signed out to return to sign in screen
-                            Provider.of<AppMode>(context, listen: false).appMode = AppModes.signedOut; // ensure that app is switched from Demo to normal
+                            final appMode = Provider.of<AppMode>(context, listen: false);
+                            appMode.setAppMode(AppModes.signedOut, appMessage: "Sucessfully signed out");
                             Navigator.pop(context);
                             Navigator.of(context).pushReplacementNamed('/');
                           }),

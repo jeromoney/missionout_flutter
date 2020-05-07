@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:missionout/Provider/user.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -38,23 +39,35 @@ class MyFirebaseUser with ChangeNotifier implements User {
       CachedNetworkImageProvider(_firebaseUser.photoUrl);
 
   SignInStatus _signInStatus = SignInStatus.waiting;
+
   @override
   SignInStatus get signInStatus => _signInStatus;
 
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   MyFirebaseUser() {
+    FirebaseAuth.instance.onAuthStateChanged.listen((user) {
+      if (_firebaseUser != null && user == null) {
+        _signInStatus = SignInStatus.signedOut;
+        notifyListeners();
+      }
+    });
     debugPrint("Creating user from brand new account");
     signIn();
   }
 
   MyFirebaseUser.fromUser(FirebaseUser user) {
+    FirebaseAuth.instance.onAuthStateChanged.listen((user) {
+      if (_firebaseUser != null && user == null) {
+        _signInStatus = SignInStatus.signedOut;
+        notifyListeners();
+      }
+    });
     debugPrint("Creating user from already signed in account");
     _firebaseUser = user;
     setUserPermissions();
     _signInStatus = SignInStatus.signedIn;
     notifyListeners();
-
   }
 
   @override
@@ -62,14 +75,14 @@ class MyFirebaseUser with ChangeNotifier implements User {
     final googleSignIn = GoogleSignIn();
     final auth = FirebaseAuth.instance;
     final googleUser = await googleSignIn.signIn();
-    if (googleUser == null){
+    if (googleUser == null) {
       // user clicked out of sign in screen
       _signInStatus = SignInStatus.error;
       notifyListeners();
       return false;
     }
 
-    final googleAuth = await googleUser.authentication.catchError((e){
+    final googleAuth = await googleUser.authentication.catchError((e) {
       debugPrint("Error with Google Auth process: $e");
       _signInStatus = SignInStatus.error;
       notifyListeners();
@@ -81,7 +94,17 @@ class MyFirebaseUser with ChangeNotifier implements User {
       idToken: googleAuth.idToken,
     );
     assert(credential != null);
-    final authResult = await auth.signInWithCredential(credential);
+
+    AuthResult authResult;
+    try {
+      authResult = await auth.signInWithCredential(credential);
+    } on PlatformException catch (e) {
+      debugPrint("Error signing user: $e");
+      _signInStatus = SignInStatus.error;
+      notifyListeners();
+      return false;
+    }
+
     final FirebaseUser user = authResult.user;
     print("signed in " + user.displayName);
     addTokenToFirestore(user);
