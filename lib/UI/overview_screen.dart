@@ -31,6 +31,10 @@ class BuildMissionStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final team = Provider.of<Team>(context);
+    if (team == null) {
+      return LinearProgressIndicator();
+    }
+
     return StreamBuilder<List<Mission>>(
         stream: team.fetchMissions(),
         builder: (context, snapshot) {
@@ -88,7 +92,8 @@ class BuildMissionResults extends StatelessWidget {
             onTap: () {
               Provider.of<User>(context, listen: false).currentMission =
                   mission.address;
-              Navigator.push(context, MaterialPageRoute(builder: (context) => DetailScreen()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => DetailScreen()));
             },
           );
         },

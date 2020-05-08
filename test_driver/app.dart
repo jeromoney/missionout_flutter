@@ -4,5 +4,5 @@ import 'package:missionout/main.dart' as app;
 
 void main(){
   enableFlutterDriverExtension();
-  runApp(app.MissionOut());
+  runApp(app.Main());
 }

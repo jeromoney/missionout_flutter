@@ -30,10 +30,10 @@ class MissionOutAppState extends State<MissionOutApp> {
     });
     _firebaseMessaging.configure(
       onLaunch: (Map<String, dynamic> message) async {
-        debugPrint("Receieved launch message");
+        debugPrint("Received onLaunch message");
       },
       onMessage: (Map<String, dynamic> message) async {
-        debugPrint("Receieved message");
+        debugPrint("Received onMessage message");
         // TODO - play an alert sound here
         AlertDialog alert = AlertDialog(
           title: Text(message["description"]),
@@ -42,6 +42,7 @@ class MissionOutAppState extends State<MissionOutApp> {
         showDialog(context: context, child: alert);
       },
       onResume: (Map<String, dynamic> message) async {
+        debugPrint("Received onResume message");
         debugPrint(message.toString());
         var iOSPlatformChannelSpecifics = IOSNotificationDetails(
             presentSound: true, sound: "school_fire_alarm.m4a");

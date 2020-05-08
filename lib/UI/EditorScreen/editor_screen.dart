@@ -14,7 +14,7 @@ class EditorScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MyAppBar(title: 'Team Options'),
-      body: EditorOptionsForm(),
+      body: SingleChildScrollView(child: EditorOptionsForm()),
     );
   }
 }

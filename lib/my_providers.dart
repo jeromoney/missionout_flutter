@@ -29,7 +29,14 @@ class FirebaseProviders {
       ),
       ProxyProvider<User, Team>(
         lazy: true,
-        update: (_, user, team) => FirestoreTeam(user.teamID),
+        update: (_, user, team) {
+          // Don't return the the team until you have a teamID
+          if (user.teamID == null) {
+            return null;
+          } else {
+            return FirestoreTeam(user.teamID);
+          }
+        },
       ),
     ];
   }

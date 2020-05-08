@@ -46,9 +46,10 @@ class UserFake with ChangeNotifier implements User {
   bool get chatURIisAvailable => true;
 
   @override
-  void signIn() {
+  Future<bool> signIn() async {
     signedIn = true;
     notifyListeners();
+    return true;
   }
 
   @override
@@ -83,6 +84,12 @@ class UserFake with ChangeNotifier implements User {
   String currentMission;
 
   @override
-  // TODO: implement signInStatus
-  SignInStatus get signInStatus => null;
+  SignInStatus get signInStatus {
+    if (signedIn){
+      return SignInStatus.signedIn;
+    }
+    else {
+      return SignInStatus.signedOut;
+    }
+  }
 }

@@ -11,6 +11,7 @@ class _MessageHandlerState extends State<MessageHandler> {
 
   @override
   void initState() {
+    super.initState();
     _fcm.configure(
       // App is running in foreground
       onMessage: (Map<String, dynamic> message) async {

@@ -46,23 +46,11 @@ class MyFirebaseUser with ChangeNotifier implements User {
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   MyFirebaseUser() {
-    FirebaseAuth.instance.onAuthStateChanged.listen((user) {
-      if (_firebaseUser != null && user == null) {
-        _signInStatus = SignInStatus.signedOut;
-        notifyListeners();
-      }
-    });
     debugPrint("Creating user from brand new account");
     signIn();
   }
 
   MyFirebaseUser.fromUser(FirebaseUser user) {
-    FirebaseAuth.instance.onAuthStateChanged.listen((user) {
-      if (_firebaseUser != null && user == null) {
-        _signInStatus = SignInStatus.signedOut;
-        notifyListeners();
-      }
-    });
     debugPrint("Creating user from already signed in account");
     _firebaseUser = user;
     setUserPermissions();

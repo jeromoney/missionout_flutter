@@ -25,23 +25,25 @@ class DetailScreen extends StatelessWidget {
     // Remove route if accessed from create screen
     return Scaffold(
         appBar: MyAppBar(title: 'Mission Detail',),
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 16.0, right: 24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                DetailScreenStreamWrapper(detailItem: InfoDetail,),
-                Padding(
-                  padding: const EdgeInsets.only(top: 24.0),
-                  child: Divider(
-                    thickness: 1,
+        body: SingleChildScrollView(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16.0, right: 24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  DetailScreenStreamWrapper(detailItem: InfoDetail,),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 24.0),
+                    child: Divider(
+                      thickness: 1,
+                    ),
                   ),
-                ),
-                DetailScreenStreamWrapper(detailItem: ActionsDetail),
-                DetailScreenStreamWrapper(detailItem: EditDetail),
-              ],
+                  DetailScreenStreamWrapper(detailItem: ActionsDetail),
+                  DetailScreenStreamWrapper(detailItem: EditDetail),
+                ],
+              ),
             ),
           ),
         ));
