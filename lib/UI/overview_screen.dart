@@ -14,7 +14,7 @@ class OverviewScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
     return Scaffold(
-        appBar: MyAppBar(title: 'Missions Overview'),
+        appBar: MyAppBar(title: 'Overview'),
         body: BuildMissionStream(),
         floatingActionButton: user.isEditor // only show FAB to editors
             ? FloatingActionButton(
@@ -32,6 +32,7 @@ class BuildMissionStream extends StatelessWidget {
   Widget build(BuildContext context) {
     final team = Provider.of<Team>(context);
     if (team == null) {
+      // A brief period while waiting for the user to access the current team ID
       return LinearProgressIndicator();
     }
 

@@ -3,7 +3,9 @@
 // be build down the widget tree.
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+
 
 enum AppModes { demo, firebase, signedOut }
 
@@ -56,21 +58,26 @@ class AppMode with ChangeNotifier {
       // tell User provider to build a MyFirebaseUser object.
       setAppMode(AppModes.firebase);
     }
-    //    FirebaseAuth.instance.onAuthStateChanged.listen((firebaseUser) async {
-//      debugPrint("onAuthStateChanged listener fired");
-//      _firebaseUser = firebaseUser;
-//      if (_firebaseUser == null) {
-//        // clear out stored fields. TODO- A little clunky, should just get a new instance
-//        clearUserPermissions();
-//      } else {
-//        // Got a new user, so check firestore for user settings
-//        await setUserPermissions().catchError((e){
-//          // the onAuthState is being called multiple times which is causes race
-//          // conditions. The user is being torn down but called a second time
-//          debugPrint("Firebase user called during signout process");
-//        });
-//        notifyListeners();
-//      }
-//    });
+
+    FirebaseMessaging().onTokenRefresh.listen((token) {
+      debugPrint("onTokenRefresh listener fired: $token");
+    });
+    FirebaseAuth.instance.onAuthStateChanged.listen((firebaseUser) async {
+      debugPrint("onAuthStateChanged listener fired: $firebaseUser");
+      if (appMode == AppModes.firebase && firebaseUser == null){
+        // The app thinks it is in Firebase mode, but there is no current user.
+        // Probably a sign out out issue.
+        debugPrint("Firebase user is null, so signing out");
+        _user = null;
+        setAppMode(AppModes.signedOut);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    FirebaseMessaging().onTokenRefresh.drain();
+    FirebaseAuth.instance.onAuthStateChanged.drain();
+    super.dispose();
   }
 }

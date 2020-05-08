@@ -34,7 +34,6 @@ class MissionOutAppState extends State<MissionOutApp> {
       },
       onMessage: (Map<String, dynamic> message) async {
         debugPrint("Received onMessage message");
-        // TODO - play an alert sound here
         AlertDialog alert = AlertDialog(
           title: Text(message["description"]),
           content: Text(message["needForAction"]),

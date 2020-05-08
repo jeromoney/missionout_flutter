@@ -24,7 +24,7 @@ class DetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // Remove route if accessed from create screen
     return Scaffold(
-        appBar: MyAppBar(title: 'Mission Detail',),
+        appBar: MyAppBar(title: 'Detail',),
         body: SingleChildScrollView(
           child: Center(
             child: Padding(
