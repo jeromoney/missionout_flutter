@@ -29,7 +29,7 @@ class _MainScreenState extends State<MainScreen> {
     final appMode = Provider.of<AppMode>(context);
     switch (appMode.appMode) {
       case AppModes.signedOut:
-        return MaterialApp(home: SigninScreen());
+        return MaterialApp(home: SigninScreen(),darkTheme: ThemeData.dark(),);
 
       case AppModes.demo:
         final providers = DemoProviders().providers;

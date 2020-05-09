@@ -21,7 +21,7 @@ class SigninScreenState extends State<SigninScreen> {
           child: Text("DEMO"),
         ),
         key: _scaffoldKey,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[

@@ -30,7 +30,8 @@ class AuthScreener extends StatelessWidget {
                 debugPrint("Auth Screener caught error");
                 return ResetWidget();
               case SignInStatus.signedIn:
-                return MissionOutApp();
+                // Nested Material App to show Alert Dialog when notifications is received.
+                return MaterialApp(home: MissionOutApp());
               default:
                 throw StateError(
                     "Unexpected Sign In State: ${user.signInStatus}");
@@ -58,7 +59,8 @@ class ResetWidgetState extends State<ResetWidget> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final appMode = Provider.of<AppMode>(context, listen: false);
-      appMode.setAppMode(AppModes.signedOut, appMessage: "Error in sign in process");
+      appMode.setAppMode(AppModes.signedOut,
+          appMessage: "Error in sign in process");
     });
     super.initState();
   }

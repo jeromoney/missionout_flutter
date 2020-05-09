@@ -45,8 +45,6 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                             // Switch app mode to signed out to return to sign in screen
                             final appMode = Provider.of<AppMode>(context, listen: false);
                             appMode.setAppMode(AppModes.signedOut, appMessage: "Sucessfully signed out");
-                            Navigator.pop(context);
-                            Navigator.of(context).pushReplacementNamed('/');
                           }),
                     ]);
                 showDialog(

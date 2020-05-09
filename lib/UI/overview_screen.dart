@@ -14,6 +14,7 @@ class OverviewScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
     return Scaffold(
+      key: Key("Overview Screen"),
         appBar: MyAppBar(title: 'Overview'),
         body: BuildMissionStream(),
         floatingActionButton: user.isEditor // only show FAB to editors
@@ -24,6 +25,9 @@ class OverviewScreen extends StatelessWidget {
                 })
             : null);
   }
+}
+
+class P {
 }
 
 @visibleForTesting
