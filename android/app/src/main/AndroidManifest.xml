@@ -11,10 +11,11 @@
          additional functionality it is fine to subclass or reimplement
          FlutterApplication and put your custom class here. -->
     <application
-
         android:name=".Application"
         android:label="missionout"
         android:icon="@mipmap/mo_launcher_icon">
+        <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@drawable/notification_logo" />
+
         <activity
             android:name="com.beaterboofs.missionout.MainActivity"
             android:launchMode="singleTop"

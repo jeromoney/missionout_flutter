@@ -7,6 +7,8 @@ public final class FirebaseCloudMessagingPluginRegistrant{
       return;
     }
     FirebaseMessagingPlugin.registerWith(registry.registrarFor("io.flutter.plugins.firebasemessaging.FirebaseMessagingPlugin"));
+    FlutterLocalNotificationsPlugin.registerWith(registry.registrarFor("com.dexterous.flutterlocalnotifications.FlutterLocalNotificationsPlugin"));
+
   }
 
   private static boolean alreadyRegisteredWith(PluginRegistry registry) {

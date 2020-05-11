@@ -21,7 +21,7 @@ class SigninScreenState extends State<SigninScreen> {
           child: Text("DEMO"),
         ),
         key: _scaffoldKey,
-        backgroundColor: Colors.grey,
+        backgroundColor: Colors.white,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
@@ -42,7 +42,7 @@ class SigninScreenState extends State<SigninScreen> {
                         Provider.of<AppMode>(context, listen: false);
                     appMode.setAppMode(AppModes.firebase);
                   },
-                  darkMode: true,
+                  darkMode: MediaQuery.of(context).platformBrightness == Brightness.dark,
                 ),
               ),
             ),

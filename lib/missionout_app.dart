@@ -33,6 +33,7 @@ class MissionOutAppState extends State<MissionOutApp> {
       debugPrint(token);
     });
     _firebaseMessaging.configure(
+      onBackgroundMessage: myBackgroundMessageHandler,
       onLaunch: (Map<String, dynamic> message) async {
         debugPrint("Received onLaunch message");
       },
@@ -41,7 +42,8 @@ class MissionOutAppState extends State<MissionOutApp> {
         // find scaffold in tree
         try {
           // Android is receiving a data message, different than iOS for some reason.
-          if (Platform.isAndroid) message = message["data"].cast<String,dynamic>();
+          if (Platform.isAndroid)
+            message = message["data"].cast<String, dynamic>();
           final alertDialog = AlertDialog(
             title: Text("Update: ${message["description"] ?? ""}"),
             content: Text(message["needForAction"] ?? ""),
@@ -112,6 +114,4 @@ Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) async {
         0, 'plain title', 'plain body', platformChannelSpecifics,
         payload: 'item x');
   }
-
-  // Or do other work.
 }
