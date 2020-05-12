@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/DataLayer/page.dart' as missionpage;
 import 'package:missionout/DataLayer/response.dart';
-import 'package:missionout/Provider/team.dart';
+import 'package:missionout/Provider/Team/team.dart';
 
 enum Yield { error, zeroResults, results, waiting }
 

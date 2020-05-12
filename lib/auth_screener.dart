@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:missionout/missionout_app.dart';
 import 'package:provider/provider.dart';
 
-import 'package:missionout/Provider/user.dart';
+import 'package:missionout/Provider/User/user.dart';
 
 import 'DataLayer/app_mode.dart';
 

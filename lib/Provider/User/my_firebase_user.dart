@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:missionout/Provider/user.dart';
+import 'package:missionout/Provider/User/user.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class MyFirebaseUser with ChangeNotifier implements User {

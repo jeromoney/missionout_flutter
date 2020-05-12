@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:missionout/DataLayer/mission.dart';
-import 'package:missionout/Provider/team.dart';
-import 'package:missionout/Provider/user.dart';
+import 'package:missionout/Provider/Team/team.dart';
+import 'package:missionout/Provider/User/user.dart';
 import 'package:missionout/UI/CreateScreen/create_screen.dart';
 import 'package:missionout/UI/DetailScreen/detail_screen.dart';
 import 'package:missionout/UI/overview_screen.dart';

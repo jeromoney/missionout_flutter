@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:missionout/Provider/user.dart';
+import 'package:missionout/Provider/User/user.dart';
 import 'package:provider/provider.dart';
 
 

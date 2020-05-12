@@ -156,7 +156,6 @@ class InternationalPhoneNumberInputFutureBuilder extends StatelessWidget {
       // This means that if the user deletes their number, they are opting to not receive pages.
       ignoreBlank: true,
       inputDecoration: InputDecoration(labelText: labelText),
-      initialCountry2LetterCode: region,
       hintText: hintText,
       textFieldController: controller,
       autoValidate: true,

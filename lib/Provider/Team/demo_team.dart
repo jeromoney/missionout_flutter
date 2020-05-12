@@ -3,7 +3,7 @@ import 'package:cloud_firestore_platform_interface/src/geo_point.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/DataLayer/page.dart';
 import 'package:missionout/DataLayer/response.dart';
-import 'package:missionout/Provider/team.dart';
+import 'package:missionout/Provider/Team/team.dart';
 
 
 List<Response> RESPONSES = [

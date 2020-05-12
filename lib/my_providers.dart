@@ -1,15 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/DataLayer/app_mode.dart';
-import 'package:missionout/Provider/demo_user.dart';
-import 'package:missionout/Provider/firestore_team.dart';
-import 'package:missionout/Provider/team.dart';
+import 'package:missionout/Provider/User/demo_user.dart';
+import 'package:missionout/Provider/Team/firestore_team.dart';
+import 'package:missionout/Provider/Team/team.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
-import 'Provider/demo_team.dart';
-import 'Provider/user.dart';
-import 'Provider/my_firebase_user.dart';
+import 'Provider/Team/demo_team.dart';
+import 'Provider/User/user.dart';
+import 'Provider/User/my_firebase_user.dart';
 
 class FirebaseProviders {
   FirebaseUser _user;

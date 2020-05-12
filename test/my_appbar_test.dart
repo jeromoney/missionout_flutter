@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:missionout/DataLayer/app_mode.dart';
-import 'package:missionout/Provider/team.dart';
-import 'package:missionout/Provider/user.dart';
+import 'package:missionout/Provider/Team/team.dart';
+import 'package:missionout/Provider/User/user.dart';
 import 'package:missionout/UI/UserScreen/user_screen.dart';
 import 'package:missionout/UI/EditorScreen/editor_screen.dart';
 import 'package:missionout/UI/my_appbar.dart';

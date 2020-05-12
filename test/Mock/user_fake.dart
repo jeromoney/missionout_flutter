@@ -2,7 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/src/painting/image_provider.dart';
-import 'package:missionout/Provider/user.dart';
+import 'package:missionout/Provider/User/user.dart';
 
 class UserFake with ChangeNotifier implements User {
   bool signedIn;
