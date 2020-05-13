@@ -2,12 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:missionout/DataLayer/mission.dart';
+import 'package:missionout/Provider/AuthService/auth_service.dart';
 import 'package:missionout/Provider/Team/team.dart';
 import 'package:missionout/Provider/User/user.dart';
 import 'package:missionout/UI/DetailScreen/detail_screen.dart';
 import 'package:missionout/UI/response_screen.dart';
 import 'package:provider/provider.dart';
 
+import '../Mock/auth_service_fake.dart';
+import '../Mock/providers_fake.dart';
 import '../Mock/team_fake.dart';
 import '../Mock/user_fake.dart';
 
@@ -15,10 +18,7 @@ void main() async {
   group('ActionDetailScreen tests', () {
     testWidgets('action segment handles error', (WidgetTester tester) async {
       Widget widget = MultiProvider(
-        providers: [
-          ChangeNotifierProvider<User>(create: (_) => UserFake()),
-          Provider<Team>(create: (_) => TeamFake()),
-        ],
+        providers: PROVIDERS_FAKE,
         child: MaterialApp(
           home: Scaffold(
             body: ActionsDetail(
@@ -33,10 +33,7 @@ void main() async {
 
     testWidgets('action segment handles waiting', (WidgetTester tester) async {
       Widget widget = MultiProvider(
-        providers: [
-          ChangeNotifierProvider<User>(create: (_) => UserFake()),
-          Provider<Team>(create: (_) => TeamFake()),
-        ],
+        providers: PROVIDERS_FAKE,
         child: MaterialApp(
           home: Scaffold(
             body: ActionsDetail(
@@ -55,6 +52,8 @@ void main() async {
           'Squaw Creek', GeoPoint(2.3, 22.3));
       Widget widget = MultiProvider(
         providers: [
+          ChangeNotifierProvider<AuthService>(create: (_) => AuthServiceFake(),),
+
           ChangeNotifierProvider<User>(
               create: (_) => UserFake(chatURI: 'https://www.cnn.com/')),
           Provider<Team>(create: (_) => TeamFake()),
@@ -91,10 +90,7 @@ void main() async {
       final mission =
           Mission('A lost puppy', 'Need snow mobilers', 'Squaw Creek', null);
       Widget widget = MultiProvider(
-        providers: [
-          ChangeNotifierProvider<User>(create: (_) => UserFake()),
-          Provider<Team>(create: (_) => TeamFake()),
-        ],
+        providers: PROVIDERS_FAKE,
         child: MaterialApp(
           home: Scaffold(
             body: ActionsDetail(
@@ -113,6 +109,7 @@ void main() async {
           'Squaw Creek', GeoPoint(2.3, 22.3));
       Widget widget = MultiProvider(
         providers: [
+          ChangeNotifierProvider<AuthService>(create: (_) => AuthServiceFake(),),
           ChangeNotifierProvider<User>(create: (_) => UserFake()),
           Provider<Team>(
               create: (_) => TeamFake(chatURI: 'this will cause an error')),
@@ -139,6 +136,7 @@ void main() async {
     testWidgets('ResponseOptions test', (WidgetTester tester) async {
       Widget widget = MultiProvider(
         providers: [
+          ChangeNotifierProvider<AuthService>(create: (_) => AuthServiceFake(),),
           Provider<Team>(
             create: (_) => TeamFake(),
           ),

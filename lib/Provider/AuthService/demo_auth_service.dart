@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:missionout/Provider/AuthService/auth_service.dart';
-import 'package:missionout/Provider/User/demo_user.dart';
 
 class DemoAuthService extends AuthService {
   @override
@@ -20,10 +18,8 @@ class DemoAuthService extends AuthService {
   }
 
   @override
-  @protected
-  Future addTokenToFirestore(FirebaseUser user) {
-    // TODO: implement addTokenToFirestore
-    throw UnimplementedError();
+  Future<bool> signOut(){
+    return Future.value(true);
   }
 
   @override

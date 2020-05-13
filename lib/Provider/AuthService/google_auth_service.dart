@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:missionout/Provider/AuthService/auth_service.dart';
-import 'package:missionout/Provider/User/my_firebase_user.dart';
 
 class GoogleAuthService extends AuthService {
   // user has already signed in
@@ -18,6 +17,8 @@ class GoogleAuthService extends AuthService {
   GoogleAuthService();
 
   FirebaseUser _firebaseUser;
+
+  FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   FirebaseUser get firebaseUser => _firebaseUser;
@@ -36,6 +37,7 @@ class GoogleAuthService extends AuthService {
   final _firebaseMessaging = FirebaseMessaging();
   final _db = Firestore.instance;
 
+  @override
   Future<FirebaseUser> signIn() async {
     final googleSignIn = GoogleSignIn();
     final googleUser = await googleSignIn.signIn();
@@ -65,22 +67,24 @@ class GoogleAuthService extends AuthService {
 
     _firebaseUser = authResult.user;
     print("signed in " + displayName);
-    addTokenToFirestore(_firebaseUser);
     return _firebaseUser;
   }
 
   @override
-  @protected
-  Future addTokenToFirestore(FirebaseUser user) async {
-    // Setting up the user will be the responsibility of the server.
-    // This method adds the user token to firestore
-    final fcmToken = await _firebaseMessaging.getToken();
-    await _db.collection('users').document(user.uid).updateData({
-      'tokens': FieldValue.arrayUnion([fcmToken])
+  Future<bool> signOut() async{
+    // remove token from Firestore from first, before user signs out
+    var fcmToken = await _firebaseMessaging.getToken();
+    _db.collection('users').document(_firebaseUser.uid).updateData({
+      'tokens': FieldValue.arrayRemove([fcmToken])
     }).then((value) {
-      debugPrint('Added token to user document');
+      debugPrint('Removed token to user document');
     }).catchError((error) {
-      debugPrint('there was an error');
+      debugPrint('Error removing token from user document');
     });
+
+    await GoogleSignIn().signOut();
+    await _auth.signOut();
+    return true;
   }
+
 }

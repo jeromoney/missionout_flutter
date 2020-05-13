@@ -62,6 +62,12 @@ class AppMode with ChangeNotifier {
             appMode = AppModes.google;
             break;
           }
+        case "firebase":
+          {
+            authService = GoogleAuthService.fromUser(user);
+            appMode = AppModes.google;
+            break;
+          }
         default:
           {
             throw StateError("Unexpected authorization method: $authProvider");

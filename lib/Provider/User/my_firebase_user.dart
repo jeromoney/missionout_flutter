@@ -27,85 +27,15 @@ class MyFirebaseUser with ChangeNotifier implements User {
   @override
   String get uid => _firebaseUser?.uid;
 
-  SignInStatus _signInStatus = SignInStatus.waiting;
-
-  @override
-  SignInStatus get signInStatus => _signInStatus;
 
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-
-  MyFirebaseUser() {
-    debugPrint("Creating user from brand new account");
-    signIn();
-  }
 
   MyFirebaseUser.fromUser(FirebaseUser user) {
     debugPrint("Creating user from already signed in account");
     _firebaseUser = user;
     setUserPermissions();
-    _signInStatus = SignInStatus.signedIn;
+    addTokenToFirestore(_firebaseUser);
     notifyListeners();
-  }
-
-  @override
-  Future<bool> signIn() async {
-    final googleSignIn = GoogleSignIn();
-    final auth = FirebaseAuth.instance;
-    final googleUser = await googleSignIn.signIn();
-    if (googleUser == null) {
-      // user clicked out of sign in screen
-      _signInStatus = SignInStatus.error;
-      notifyListeners();
-      return false;
-    }
-
-    final googleAuth = await googleUser.authentication.catchError((e) {
-      debugPrint("Error with Google Auth process: $e");
-      _signInStatus = SignInStatus.error;
-      notifyListeners();
-      return false;
-    });
-
-    final credential = GoogleAuthProvider.getCredential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-    assert(credential != null);
-
-    AuthResult authResult;
-    try {
-      authResult = await auth.signInWithCredential(credential);
-    } on PlatformException catch (e) {
-      debugPrint("Error signing user: $e");
-      _signInStatus = SignInStatus.error;
-      notifyListeners();
-      return false;
-    }
-
-    final FirebaseUser user = authResult.user;
-    print("signed in " + user.displayName);
-    addTokenToFirestore(user);
-    _firebaseUser = user;
-    await setUserPermissions();
-    _signInStatus = SignInStatus.signedIn;
-    notifyListeners();
-    return true;
-  }
-
-  @override
-  void signOut() async {
-    // remove token from Firestore from first, before user signs out
-    var fcmToken = await _firebaseMessaging.getToken();
-    _db.collection('users').document(_firebaseUser.uid).updateData({
-      'tokens': FieldValue.arrayRemove([fcmToken])
-    }).then((value) {
-      debugPrint('Removed token to user document');
-    }).catchError((error) {
-      debugPrint('Error removing token from user document');
-    });
-
-    await GoogleSignIn().signOut();
-    await FirebaseAuth.instance.signOut();
   }
 
   Future<void> addTokenToFirestore(FirebaseUser user) async {
@@ -119,12 +49,6 @@ class MyFirebaseUser with ChangeNotifier implements User {
     }).catchError((error) {
       debugPrint('there was an error');
     });
-  }
-
-  @override
-  void dispose() {
-    FirebaseAuth.instance.onAuthStateChanged.drain();
-    super.dispose();
   }
 
   Future<void> setUserPermissions() async {
@@ -178,4 +102,5 @@ class MyFirebaseUser with ChangeNotifier implements User {
 
   @override
   String currentMission;
+
 }

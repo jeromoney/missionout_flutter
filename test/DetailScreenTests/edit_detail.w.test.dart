@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:missionout/DataLayer/mission.dart';
+import 'package:missionout/Provider/AuthService/auth_service.dart';
 import 'package:missionout/Provider/Team/team.dart';
 import 'package:missionout/Provider/User/user.dart';
 import 'package:missionout/UI/CreateScreen/create_screen.dart';
 import 'package:missionout/UI/DetailScreen/detail_screen.dart';
 import 'package:provider/provider.dart';
 
+import '../Mock/auth_service_fake.dart';
+import '../Mock/providers_fake.dart';
 import '../Mock/team_fake.dart';
 import '../Mock/user_fake.dart';
 
 void main() async {
   testWidgets('Edit Detail Screen handles error', (WidgetTester tester) async {
     Widget widget = MultiProvider(
-      providers: [
-        ChangeNotifierProvider<User>(create: (_) => UserFake()),
-        Provider<Team>(create: (_) => TeamFake()),
-      ],
+      providers: PROVIDERS_FAKE,
       child: MaterialApp(
         home: Scaffold(
           body: EditDetail(
@@ -31,10 +31,7 @@ void main() async {
   testWidgets('Edit Detail Screen handles waiting',
       (WidgetTester tester) async {
     Widget widget = MultiProvider(
-      providers: [
-        ChangeNotifierProvider<User>(create: (_) => UserFake()),
-        Provider<Team>(create: (_) => TeamFake()),
-      ],
+      providers: PROVIDERS_FAKE,
       child: MaterialApp(
         home: Scaffold(
           body: EditDetail(
@@ -72,6 +69,9 @@ void main() async {
         Mission('A lost puppy', 'Need snow mobilers', 'Squaw Creek', null);
     Widget widget = MultiProvider(
       providers: [
+        ChangeNotifierProvider<AuthService>(
+          create: (_) => AuthServiceFake(),
+        ),
         ChangeNotifierProvider<User>(create: (_) => UserFake(isEditor: false)),
         Provider<Team>(create: (_) => TeamFake()),
       ],
@@ -93,10 +93,7 @@ void main() async {
     final mission =
         Mission('A lost puppy', 'Need snow mobilers', 'Squaw Creek', null);
     Widget widget = MultiProvider(
-      providers: [
-        ChangeNotifierProvider<User>(create: (_) => UserFake()),
-        Provider<Team>(create: (_) => TeamFake()),
-      ],
+      providers: PROVIDERS_FAKE,
       child: MaterialApp(
         home: Scaffold(
           body: EditDetail(
@@ -139,10 +136,7 @@ void main() async {
     final mission =
         Mission('A lost puppy', 'Need snow mobilers', 'Squaw Creek', null);
     Widget widget = MultiProvider(
-      providers: [
-        ChangeNotifierProvider<User>(create: (_) => UserFake()),
-        Provider<Team>(create: (_) => TeamFake()),
-      ],
+      providers: PROVIDERS_FAKE,
       child: MaterialApp(
         home: Scaffold(
           body: EditDetail(

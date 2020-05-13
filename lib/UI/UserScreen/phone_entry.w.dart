@@ -14,7 +14,6 @@ class PhoneEntry extends StatefulWidget {
 class _PhoneEntryState extends State<PhoneEntry> {
   /// If user selects checkbox, phone text entry appears.
   final TextEditingController controller;
-  PhoneType _phoneType;
   bool _phoneEntryVisible;
 
   _PhoneEntryState(this.controller);
@@ -24,8 +23,8 @@ class _PhoneEntryState extends State<PhoneEntry> {
     super.initState();
     String phoneStr;
     final user = Provider.of<User>(context, listen: false);
-    _phoneType = Provider.of<PhoneType>(context, listen: false);
-    if (_phoneType == PhoneType.mobilePhoneNumber) {
+    final phoneType = Provider.of<PhoneType>(context, listen: false);
+    if (phoneType == PhoneType.mobilePhoneNumber) {
       phoneStr = user.mobilePhoneNumber;
     } else {
       phoneStr = user.voicePhoneNumber;
@@ -154,6 +153,8 @@ class InternationalPhoneNumberInputFutureBuilder extends StatelessWidget {
 
     return InternationalPhoneNumberInput(
       // This means that if the user deletes their number, they are opting to not receive pages.
+      selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+      countries: ["US"],
       ignoreBlank: true,
       inputDecoration: InputDecoration(labelText: labelText),
       hintText: hintText,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:missionout/DataLayer/mission.dart';
+import 'package:missionout/Provider/AuthService/auth_service.dart';
 import 'package:missionout/Provider/Team/team.dart';
 import 'package:missionout/Provider/User/user.dart';
 import 'package:missionout/UI/CreateScreen/create_screen.dart';
@@ -8,6 +9,8 @@ import 'package:missionout/UI/DetailScreen/detail_screen.dart';
 import 'package:missionout/UI/overview_screen.dart';
 import 'package:provider/provider.dart';
 
+import '../Mock/auth_service_fake.dart';
+import '../Mock/providers_fake.dart';
 import '../Mock/team_fake.dart';
 import '../Mock/user_fake.dart';
 import '../Mock/mission_mock.dart';
@@ -18,10 +21,7 @@ void main() async {
             (WidgetTester tester) async {
           // The widget tree should never pass down zero results.
           Widget widget = MultiProvider(
-            providers: [
-              ChangeNotifierProvider<User>(create: (_) => UserFake()),
-              Provider<Team>(create: (_) => TeamFake()),
-            ],
+            providers: PROVIDERS_FAKE,
             child: MaterialApp(home: Scaffold(body: OverviewScreen())),
           );
           await tester.pumpWidget(widget);
@@ -34,6 +34,7 @@ void main() async {
           // The widget tree should never pass down zero results.
           Widget widget = MultiProvider(
             providers: [
+              ChangeNotifierProvider<AuthService>(create: (_) => AuthServiceFake()),
               ChangeNotifierProvider<User>(create: (_) => UserFake(isEditor: true)),
               Provider<Team>(create: (_) => TeamFake()),
             ],
@@ -54,6 +55,7 @@ void main() async {
           // The widget tree should never pass down zero results.
           Widget widget = MultiProvider(
             providers: [
+              ChangeNotifierProvider<AuthService>(create: (_) => AuthServiceFake()),
               ChangeNotifierProvider<User>(create: (_) => UserFake(isEditor: false)),
               Provider<Team>(create: (_) => TeamFake()),
             ],
@@ -70,10 +72,7 @@ void main() async {
             (WidgetTester tester) async {
           // The widget tree should never pass down zero results.
           Widget widget = MultiProvider(
-            providers: [
-              ChangeNotifierProvider<User>(create: (_) => UserFake()),
-              Provider<Team>(create: (_) => TeamFake()),
-            ],
+            providers: PROVIDERS_FAKE,
             child: MaterialApp(home: Scaffold(body: BuildMissionStream())),
           );
           await tester.pumpWidget(widget);
@@ -102,6 +101,7 @@ void main() async {
           // The widget tree should never pass down zero results.
           Widget widget = MultiProvider(
             providers: [
+              ChangeNotifierProvider<AuthService>(create: (_) => AuthServiceFake()),
               ChangeNotifierProvider<User>(create: (_) => UserFake()),
               Provider<Team>(
                 create: (_) => TeamFake(yieldValue: Yield.zeroResults),
@@ -154,10 +154,7 @@ void main() async {
       final mission = Mission('Hello', 'Mango', 'Need papaya', null);
       List<Mission> missions = [mission, mission, mission, mission, mission];
       Widget widget = MultiProvider(
-        providers: [
-          ChangeNotifierProvider<User>(create: (_) => UserFake()),
-          Provider<Team>(create: (_) => TeamFake()),
-        ],
+        providers: PROVIDERS_FAKE,
         child: MaterialApp(
             home: Scaffold(
                 body: BuildMissionResults(
@@ -178,11 +175,7 @@ void main() async {
       final mission = MissionMock();
       List<Mission> missions = [mission, mission, mission, mission, mission];
       Widget widget = MultiProvider(
-        providers: [
-          ChangeNotifierProvider<User>(create: (_) => UserFake()),
-          Provider<Team>(create: (_) => TeamFake()),
-          Provider<Team>(create: (_) => TeamFake()),
-        ],
+        providers: PROVIDERS_FAKE,
         child: MaterialApp(
           home: Scaffold(
               body: BuildMissionResults(

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:missionout/Provider/User/user.dart';
 
-class DemoUser with ChangeNotifier implements User{
-
-  DemoUser(){
+class DemoUser with ChangeNotifier implements User {
+  DemoUser() {
     notifyListeners();
   }
 
@@ -27,7 +26,6 @@ class DemoUser with ChangeNotifier implements User{
     super.addListener(listener);
   }
 
-
   @override
   void dispose() {
     super.dispose();
@@ -36,16 +34,10 @@ class DemoUser with ChangeNotifier implements User{
   @override
   bool get hasListeners => super.hasListeners;
 
-  SignInStatus _signInStatus = SignInStatus.signedIn;
-  @override
-  SignInStatus get signInStatus => SignInStatus.signedIn;
-
   @override
   void notifyListeners() {
     // TODO: implement notifyListeners
   }
-
-
 
   @override
   void removeListener(listener) {
@@ -53,30 +45,16 @@ class DemoUser with ChangeNotifier implements User{
   }
 
   @override
-  Future<bool> signIn() async {
-    _signInStatus = SignInStatus.signedIn;
-    notifyListeners();
-    return true;
-  }
-
-  @override
-  void signOut() {
-    _signInStatus = SignInStatus.signedOut;
-    notifyListeners();
-  }
-
-  @override
   // TODO: implement uid
   String get uid => null;
 
   @override
-  Future<void> updatePhoneNumbers({String mobilePhoneNumber, String voicePhoneNumber}) {
+  Future<void> updatePhoneNumbers(
+      {String mobilePhoneNumber, String voicePhoneNumber}) {
     // TODO: implement updatePhoneNumbers
     return null;
   }
 
   @override
   String currentMission;
-
-
 }

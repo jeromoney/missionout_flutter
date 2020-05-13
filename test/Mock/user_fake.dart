@@ -83,13 +83,4 @@ class UserFake with ChangeNotifier implements User {
   @override
   String currentMission;
 
-  @override
-  SignInStatus get signInStatus {
-    if (signedIn){
-      return SignInStatus.signedIn;
-    }
-    else {
-      return SignInStatus.signedOut;
-    }
-  }
 }

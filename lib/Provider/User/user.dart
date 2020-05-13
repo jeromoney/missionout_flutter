@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
-enum SignInStatus {signedOut, waiting, signedIn, error}
-
 abstract class User with ChangeNotifier {
   bool isEditor;
   String teamID;
@@ -12,12 +10,6 @@ abstract class User with ChangeNotifier {
   String currentMission;
 
   String get uid;
-
-  SignInStatus get signInStatus;
-
-  Future<bool> signIn();
-
-  void signOut();
 
   Future<void> updatePhoneNumbers(
       {@required String mobilePhoneNumber,

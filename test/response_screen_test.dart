@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:missionout/Provider/AuthService/auth_service.dart';
 import 'package:missionout/Provider/Team/team.dart';
 import 'package:missionout/Provider/User/user.dart';
 import 'package:missionout/UI/response_screen.dart';
 import 'package:provider/provider.dart';
 
+import 'Mock/auth_service_fake.dart';
+import 'Mock/providers_fake.dart';
 import 'Mock/team_fake.dart';
 import 'Mock/user_fake.dart';
 
@@ -12,10 +15,7 @@ void main() {
   group('ResponseScreen tests', () {
     testWidgets('ResponseScreen smoketest', (WidgetTester tester) async {
       Widget widget = MultiProvider(
-        providers: [
-          ChangeNotifierProvider<User>(create: (_) => UserFake()),
-          Provider<Team>(create: (_) => TeamFake()),
-        ],
+        providers: PROVIDERS_FAKE,
         child: MaterialApp(
           home: Scaffold(
             body: ResponseScreen(),
@@ -31,6 +31,7 @@ void main() {
     testWidgets('BuildResponseStream return one value', (WidgetTester tester) async {
       Widget widget = MultiProvider(
         providers: [
+          ChangeNotifierProvider<AuthService>(create: (_) => AuthServiceFake()),
           ChangeNotifierProvider<User>(create: (_) => UserFake()),
           Provider<Team>(create: (_) => TeamFake(yieldValue: Yield.results)),
         ],
@@ -48,6 +49,7 @@ void main() {
     testWidgets('BuildResponseStream returns error', (WidgetTester tester) async {
       Widget widget = MultiProvider(
         providers: [
+          ChangeNotifierProvider<AuthService>(create: (_) => AuthServiceFake()),
           ChangeNotifierProvider<User>(create: (_) => UserFake()),
           Provider<Team>(create: (_) => TeamFake(yieldValue: Yield.error)),
         ],
@@ -65,6 +67,7 @@ void main() {
     testWidgets('BuildResponseStream returns zero results', (WidgetTester tester) async {
       Widget widget = MultiProvider(
         providers: [
+          ChangeNotifierProvider<AuthService>(create: (_) => AuthServiceFake()),
           ChangeNotifierProvider<User>(create: (_) => UserFake()),
           Provider<Team>(create: (_) => TeamFake(yieldValue: Yield.zeroResults)),
         ],

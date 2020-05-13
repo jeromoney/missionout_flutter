@@ -1,26 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:missionout/DataLayer/app_mode.dart';
-import 'package:missionout/Provider/Team/team.dart';
-import 'package:missionout/Provider/User/user.dart';
 import 'package:missionout/UI/UserScreen/user_screen.dart';
 import 'package:missionout/UI/EditorScreen/editor_screen.dart';
 import 'package:missionout/UI/my_appbar.dart';
 import 'package:provider/provider.dart';
 
-import 'Mock/team_fake.dart';
-import 'Mock/user_fake.dart';
+import 'Mock/providers_fake.dart';
 
 void main() {
   group('MyAppbar widget tests', () {
     testWidgets('MyAppbar widget smoke test', (WidgetTester tester) async {
       Widget widget = MultiProvider(
-        providers: [
-          ChangeNotifierProvider<AppMode>(
-            create: (_) => AppMode(),
-          ),
-          ChangeNotifierProvider<User>(create: (_) => UserFake()),
-        ],
+        providers: PROVIDERS_FAKE,
         child: MaterialApp(
             home: Scaffold(
                 body: MyAppBar(
@@ -34,12 +25,7 @@ void main() {
     testWidgets('MyAppbar widget tap on sign out button',
         (WidgetTester tester) async {
       Widget widget = MultiProvider(
-        providers: [
-          ChangeNotifierProvider<AppMode>(
-            create: (_) => AppMode(),
-          ),
-          ChangeNotifierProvider<User>(create: (_) => UserFake()),
-        ],
+        providers: PROVIDERS_FAKE,
         child: MaterialApp(
             home: Scaffold(
                 body: MyAppBar(
@@ -61,15 +47,13 @@ void main() {
       expect(finder, findsOneWidget);
       await tester.tap(finder);
       await tester.pumpAndSettle();
-      expect(find.byType(AlertDialog), findsNothing);
+      expect(find.text("You will no longer receive pages"), findsNothing);
     });
 
     testWidgets('MyAppbar widget tap on user options button',
         (WidgetTester tester) async {
       Widget widget = MultiProvider(
-        providers: [
-          ChangeNotifierProvider<User>(create: (_) => UserFake()),
-        ],
+        providers: PROVIDERS_FAKE,
         child: MaterialApp(
             routes: {
               '/editor_options': (context) => EditorScreen(),
@@ -96,10 +80,7 @@ void main() {
     testWidgets('MyAppbar widget tap on editor options button',
         (WidgetTester tester) async {
       Widget widget = MultiProvider(
-        providers: [
-          ChangeNotifierProvider<User>(create: (_) => UserFake()),
-          Provider<Team>(create: (_)=>TeamFake(),)
-        ],
+        providers: PROVIDERS_FAKE,
         child: MaterialApp(
             routes: {
               '/editor_options': (context) => EditorScreen(),

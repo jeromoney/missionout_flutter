@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/painting/image_provider.dart';
 import 'package:missionout/Provider/AuthService/auth_service.dart';
-import 'package:missionout/Provider/User/user.dart';
 
 class AppleAuthService extends AuthService {
   AppleAuthService();
@@ -12,8 +11,10 @@ class AppleAuthService extends AuthService {
   AppleAuthService.fromUser(FirebaseUser user) {
     _firebaseUser = user;
   }
+
   @override
-  String get displayName => _appleIdCredential?.fullName?.familyName ?? "anonymous";
+  String get displayName =>
+      _appleIdCredential?.fullName?.familyName ?? "anonymous";
 
   @override
   String get email => _appleIdCredential?.email ?? "anonymous";
@@ -22,12 +23,14 @@ class AppleAuthService extends AuthService {
   ImageProvider get photoImage => AssetImage("graphics/apple.png");
 
   FirebaseUser _firebaseUser;
+
   @override
   FirebaseUser get firebaseUser => _firebaseUser;
 
   AppleIdCredential _appleIdCredential;
   final _firebaseAuth = FirebaseAuth.instance;
 
+  @override
   Future<FirebaseUser> signIn({List<Scope> scopes = const []}) async {
     // 1. perform the sign-in request
     final result = await AppleSignIn.performRequests(
@@ -68,16 +71,9 @@ class AppleAuthService extends AuthService {
   }
 
   @override
-  Future addTokenToFirestore(FirebaseUser user) {
-    // TODO: implement addTokenToFirestore
-    throw UnimplementedError();
+  Future<bool> signOut() async {
+    await _firebaseAuth.signOut();
+    return true;
   }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-
 
 }

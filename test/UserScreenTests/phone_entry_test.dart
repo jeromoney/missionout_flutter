@@ -11,25 +11,18 @@ void main() {
   testWidgets('Phone Entry Widge smoke test', (WidgetTester tester) async {
     final _controller = TextEditingController();
 
-    await tester.pumpWidget(MultiProvider(
-      providers: [
+    await tester.pumpWidget(
+      MultiProvider(providers: [
         ChangeNotifierProvider<User>(
           create: (_) => UserFake(
               mobilePhoneNumber: '+17199662421',
               voicePhoneNumber: '+14154966279'),
         ),
         Provider<PhoneType>(
-          create: (BuildContext context) => PhoneType.voicePhoneNumber,
-        ),
-      ],
-      child: MaterialApp(
-        home: Scaffold(
-          body: PhoneEntry(
-            controller: _controller,
-          ),
-        ),
-      ),
-    ));
+          create: (_) => PhoneType.voicePhoneNumber,
+        )
+      ], child: MaterialApp(home: PhoneEntry(controller: _controller))),
+    );
     expect(find.text('+17199662421'), findsNothing);
     expect(find.text('+14154966279'), findsOneWidget);
     await tester.pumpAndSettle();
@@ -87,8 +80,8 @@ void main() {
     });
   });
 
-  group('getRegion unit testing', (){
-    test('testing different values', () async{
+  group('getRegion unit testing', () {
+    test('testing different values', () async {
       expect(await getRegion(''), 'US');
       expect(await getRegion(null), 'US');
       // expect(await getRegion('+12122535678'), 'US'); //TODO - fix. Unable to run this outside of an app

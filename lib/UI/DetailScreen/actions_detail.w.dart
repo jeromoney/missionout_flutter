@@ -64,7 +64,7 @@ class ActionsDetail extends StatelessWidget {
                         if (Platform.isAndroid){
                           url = 'geo:0,0?q=$lat,$lon';
                         }
-                        else if (Platform.isIOS){
+                        else if (Platform.isIOS || Platform.isMacOS){
                           url = 'http://maps.apple.com/?q=$lat,$lon';
                         }
                         else {
