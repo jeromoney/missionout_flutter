@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:missionout/Provider/AuthService/auth_service.dart';
 import 'package:provider/provider.dart';
 
 import 'package:missionout/Provider/User/user.dart';
@@ -15,8 +16,7 @@ class UserScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context);
-
+    final authService = Provider.of<AuthService>(context);
     return Scaffold(
         appBar: myAppBar,
         body: SingleChildScrollView(
@@ -26,8 +26,8 @@ class UserScreen extends StatelessWidget {
                 child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Text(user.displayName),
-                Text(user.email),
+                Text(authService.displayName),
+                Text(authService.email),
                 Provider<PhoneType>.value(
                     child: PhoneEntry(
                       controller: mobilePhoneController,

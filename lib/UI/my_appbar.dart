@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:missionout/DataLayer/app_mode.dart';
+import 'package:missionout/Provider/AuthService/auth_service.dart';
 import 'package:missionout/Provider/User/user.dart';
 import 'package:missionout/UI/UserScreen/user_screen.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +16,9 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
     final user = Provider.of<User>(context);
+
     return AppBar(title: Text(_title), actions: <Widget>[
       Container(
           width: AppBar().preferredSize.height,
@@ -23,7 +26,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
               shape: BoxShape.circle,
               image: DecorationImage(
                 fit: BoxFit.cover,
-                image: user.photoImage,
+                image: authService.photoImage,
               ))),
       PopupMenuButton<Menu>(
         key: Key('PopupMenuButton'),

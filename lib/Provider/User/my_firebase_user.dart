@@ -8,7 +8,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:missionout/Provider/User/user.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class MyFirebaseUser with ChangeNotifier implements User {
   final Firestore _db = Firestore.instance;
@@ -26,17 +25,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
   String teamID;
 
   @override
-  String get displayName => _firebaseUser.displayName;
-
-  @override
-  String get email => _firebaseUser.email;
-
-  @override
   String get uid => _firebaseUser?.uid;
-
-  @override
-  ImageProvider get photoImage =>
-      CachedNetworkImageProvider(_firebaseUser.photoUrl);
 
   SignInStatus _signInStatus = SignInStatus.waiting;
 

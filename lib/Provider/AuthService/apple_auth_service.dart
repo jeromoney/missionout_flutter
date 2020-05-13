@@ -1,9 +1,31 @@
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/src/painting/image_provider.dart';
 import 'package:missionout/Provider/AuthService/auth_service.dart';
+import 'package:missionout/Provider/User/user.dart';
 
-class AppleAuthService extends AuthService{
+class AppleAuthService extends AuthService {
+  AppleAuthService();
+
+  AppleAuthService.fromUser(FirebaseUser user) {
+    _firebaseUser = user;
+  }
+  @override
+  String get displayName => _appleIdCredential?.fullName?.familyName ?? "anonymous";
+
+  @override
+  String get email => _appleIdCredential?.email ?? "anonymous";
+
+  @override
+  ImageProvider get photoImage => AssetImage("graphics/apple.png");
+
+  FirebaseUser _firebaseUser;
+  @override
+  FirebaseUser get firebaseUser => _firebaseUser;
+
+  AppleIdCredential _appleIdCredential;
   final _firebaseAuth = FirebaseAuth.instance;
 
   Future<FirebaseUser> signIn({List<Scope> scopes = const []}) async {
@@ -13,22 +35,22 @@ class AppleAuthService extends AuthService{
     // 2. check the result
     switch (result.status) {
       case AuthorizationStatus.authorized:
-        final appleIdCredential = result.credential;
+        _appleIdCredential = result.credential;
         final oAuthProvider = OAuthProvider(providerId: 'apple.com');
         final credential = oAuthProvider.getCredential(
-          idToken: String.fromCharCodes(appleIdCredential.identityToken),
+          idToken: String.fromCharCodes(_appleIdCredential.identityToken),
           accessToken:
-          String.fromCharCodes(appleIdCredential.authorizationCode),
+              String.fromCharCodes(_appleIdCredential.authorizationCode),
         );
         final authResult = await _firebaseAuth.signInWithCredential(credential);
-        final firebaseUser = authResult.user;
+        _firebaseUser = authResult.user;
         if (scopes.contains(Scope.fullName)) {
           final updateUser = UserUpdateInfo();
           updateUser.displayName =
-          '${appleIdCredential.fullName.givenName} ${appleIdCredential.fullName.familyName}';
-          await firebaseUser.updateProfile(updateUser);
+              '${_appleIdCredential.fullName.givenName} ${_appleIdCredential.fullName.familyName}';
+          await _firebaseUser.updateProfile(updateUser);
         }
-        return firebaseUser;
+        return _firebaseUser;
       case AuthorizationStatus.error:
         print(result.error.toString());
         throw PlatformException(
@@ -50,4 +72,12 @@ class AppleAuthService extends AuthService{
     // TODO: implement addTokenToFirestore
     throw UnimplementedError();
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+
+
 }

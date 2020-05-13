@@ -7,6 +7,7 @@ class EditDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
     final user = Provider.of<User>(context);
     final team = Provider.of<Team>(context);
     // waiting
@@ -36,7 +37,7 @@ class EditDetail extends StatelessWidget {
                     child: const Text('Page Team'),
                     onPressed: () {
                       final page =
-                          missionpage.Page(creator: user.displayName, mission: mission);
+                          missionpage.Page(creator: authService.displayName, mission: mission);
                       team.addPage(page: page);
                     },
                   ),

@@ -13,6 +13,7 @@ class OverviewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
+    if (user == null) return LinearProgressIndicator();
     return Scaffold(
       key: Key("Overview Screen"),
         appBar: MyAppBar(title: 'Overview'),

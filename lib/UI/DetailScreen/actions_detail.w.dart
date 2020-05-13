@@ -116,13 +116,13 @@ class _ResponseOptionsState extends State<ResponseOptions> {
           label: Text(responseChips[index]),
           selected: _value == index,
           onSelected: (bool selected) {
-            final user = Provider.of<User>(context, listen: false);
+            final authService = Provider.of<AuthService>(context, listen: false);
 
             Response response;
             if (selected) {
               // If selected is equal to false, that means the user deselected the chip so we should pass a null value.
               response = Response(
-                  teamMember: user.displayName, status: responseChips[index]);
+                  teamMember: authService.displayName, status: responseChips[index]);
             }
 
             setState(() {

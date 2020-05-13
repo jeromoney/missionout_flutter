@@ -27,16 +27,11 @@ class DemoUser with ChangeNotifier implements User{
     super.addListener(listener);
   }
 
-  @override
-  String get displayName => "Elton";
 
   @override
   void dispose() {
     super.dispose();
   }
-
-  @override
-  String get email => "elton@email.com";
 
   @override
   bool get hasListeners => super.hasListeners;
@@ -50,8 +45,6 @@ class DemoUser with ChangeNotifier implements User{
     // TODO: implement notifyListeners
   }
 
-  @override
-  ImageProvider get photoImage => AssetImage("graphics/demoUser.png");
 
 
   @override

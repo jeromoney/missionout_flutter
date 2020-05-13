@@ -11,11 +11,6 @@ abstract class User with ChangeNotifier {
   String region;
   String currentMission;
 
-  String get displayName;
-
-  String get email;
-  ImageProvider get photoImage;
-
   String get uid;
 
   SignInStatus get signInStatus;
