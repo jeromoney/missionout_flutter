@@ -5,23 +5,14 @@ import 'package:missionout/Provider/User/user.dart';
 import 'package:missionout/UI/UserScreen/user_screen.dart';
 import 'package:provider/provider.dart';
 
+import '../Mock/providers_fake.dart';
 import '../Mock/user_fake.dart';
 
 void main() {
   testWidgets('Phone Entry Widge smoke test', (WidgetTester tester) async {
-    final _controller = TextEditingController();
-
     await tester.pumpWidget(
-      MultiProvider(providers: [
-        ChangeNotifierProvider<User>(
-          create: (_) => UserFake(
-              mobilePhoneNumber: '+17199662421',
-              voicePhoneNumber: '+14154966279'),
-        ),
-        Provider<PhoneType>(
-          create: (_) => PhoneType.voicePhoneNumber,
-        )
-      ], child: MaterialApp(home: PhoneEntry(controller: _controller))),
+      MultiProvider(
+          providers: PROVIDERS_FAKE, child: MaterialApp(home: PhoneEntry())),
     );
     expect(find.text('+17199662421'), findsNothing);
     expect(find.text('+14154966279'), findsOneWidget);
@@ -41,16 +32,13 @@ void main() {
     testWidgets(
         'InternationalPhoneNumberInputFutureBuilder widget with error snapshot',
         (WidgetTester tester) async {
-      Widget widget = MaterialApp(
-          home: Scaffold(
-        body: InternationalPhoneNumberInputFutureBuilder(
-          controller: null,
-          labelText: null,
-          snapshot: AsyncSnapshot.withError(
-              ConnectionState.done, DiagnosticLevel.error),
-          hintText: null,
-        ),
-      ));
+      Widget widget = MultiProvider(
+        providers: PROVIDERS_FAKE,
+        child: MaterialApp(
+            home: Scaffold(
+          body: MyInternationalPhoneNumberInput(),
+        )),
+      );
       await tester.pumpWidget(widget);
       await tester.pumpAndSettle();
       // In error, the widget should just use the default region of US
@@ -60,15 +48,13 @@ void main() {
     testWidgets(
         'InternationalPhoneNumberInputFutureBuilder widget with sucessful snapshot',
         (WidgetTester tester) async {
-      Widget widget = MaterialApp(
-          home: Scaffold(
-        body: InternationalPhoneNumberInputFutureBuilder(
-          controller: null,
-          labelText: null,
-          snapshot: AsyncSnapshot.withData(ConnectionState.done, 'US'),
-          hintText: null,
-        ),
-      ));
+      Widget widget = MultiProvider(
+        providers: PROVIDERS_FAKE,
+        child: MaterialApp(
+            home: Scaffold(
+          body: MyInternationalPhoneNumberInput(),
+        )),
+      );
       await tester.pumpWidget(widget);
       await tester.pumpAndSettle();
       // In error, the widget should just use the default region of US
@@ -77,14 +63,6 @@ void main() {
       await tester.enterText(finder, 'a');
       await tester.pumpAndSettle();
       // TODO - app should do something with the phone number
-    });
-  });
-
-  group('getRegion unit testing', () {
-    test('testing different values', () async {
-      expect(await getRegion(''), 'US');
-      expect(await getRegion(null), 'US');
-      // expect(await getRegion('+12122535678'), 'US'); //TODO - fix. Unable to run this outside of an app
     });
   });
 }

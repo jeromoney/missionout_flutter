@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/src/painting/image_provider.dart';
@@ -23,9 +22,11 @@ class UserFake with ChangeNotifier implements User {
   @override
   String teamID;
   @override
-  PhoneNumber voicePhoneNumber;
+  PhoneNumber voicePhoneNumber =
+      PhoneNumber(isoCode: "US", phoneNumber: "+14154966279");
   @override
-  PhoneNumber mobilePhoneNumber;
+  PhoneNumber mobilePhoneNumber =
+      PhoneNumber(isoCode: "US", phoneNumber: "+17199662421");
 
   @override
   String get displayName => 'John Doe';
@@ -69,12 +70,13 @@ class UserFake with ChangeNotifier implements User {
   void onAuthStateChanged() {
     notifyListeners();
   }
+
   @override
   String region;
 
   @override
   // ignore: missing_return
-   updatePhoneNumbers(
+  updatePhoneNumbers(
       {@required PhoneNumber mobilePhoneNumberVal,
       @required PhoneNumber voicePhoneNumberVal}) {}
 
@@ -83,5 +85,4 @@ class UserFake with ChangeNotifier implements User {
 
   @override
   String currentMission;
-
 }

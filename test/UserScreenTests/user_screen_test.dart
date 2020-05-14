@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:missionout/Provider/AuthService/auth_service.dart';
 import 'package:missionout/Provider/Team/team.dart';
 import 'package:missionout/Provider/User/user.dart';
@@ -7,6 +8,7 @@ import 'package:missionout/UI/UserScreen/user_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../Mock/auth_service_fake.dart';
+import '../Mock/providers_fake.dart';
 import '../Mock/team_fake.dart';
 import '../Mock/user_fake.dart';
 
@@ -20,10 +22,8 @@ void main() {
             create: (_) => AuthServiceFake(),
           ),
           ChangeNotifierProvider<User>(
-              create: (_) => UserFake(
-                  mobilePhoneNumber: '+17199662421',
-                  voicePhoneNumber: '+14154966279')),
-          Provider<Team>(create: (_) => TeamFake()),
+            create: (_) => UserFake(),
+          )
         ],
         child: MaterialApp(
           home: Scaffold(
@@ -40,13 +40,16 @@ void main() {
     testWidgets('Erroneous Number Test', (WidgetTester tester) async {
       // setup
       Widget widget = MultiProvider(
-        providers: [ChangeNotifierProvider<AuthService>(
-          create: (_) => AuthServiceFake(),
-        ),
+        providers: [
+          ChangeNotifierProvider<AuthService>(
+            create: (_) => AuthServiceFake(),
+          ),
           ChangeNotifierProvider<User>(
               create: (_) => UserFake(
-                  mobilePhoneNumber: '+17199662421',
-                  voicePhoneNumber: '+3333')),
+                  mobilePhoneNumber:
+                      PhoneNumber(isoCode: 'US', phoneNumber: '+17199662421'),
+                  voicePhoneNumber:
+                      PhoneNumber(isoCode: 'US', phoneNumber: '+333'))),
           Provider<Team>(create: (_) => TeamFake()),
         ],
         child: MaterialApp(
@@ -76,25 +79,12 @@ void main() {
   group('SubmitButton widget tests', () {
     testWidgets('SubmitButton widget tests with validated form',
         (WidgetTester tester) async {
-      final someController = TextEditingController();
-      final anotherController = TextEditingController();
       Widget widget = MultiProvider(
-        providers: [ChangeNotifierProvider<AuthService>(
-          create: (_) => AuthServiceFake(),
-        ),
-          ChangeNotifierProvider<User>(
-              create: (_) => UserFake(
-                  mobilePhoneNumber: '+17199662421',
-                  voicePhoneNumber: '+14154966279')),
-          Provider<Team>(create: (_) => TeamFake()),
-        ],
+        providers: PROVIDERS_FAKE,
         child: MaterialApp(
           home: Scaffold(
             body: Form(
-              child: SubmitButton(
-                mobilePhoneNumberController: someController,
-                voicePhoneNumberController: anotherController,
-              ),
+              child: SubmitButton(),
             ),
           ),
         ),
@@ -107,16 +97,13 @@ void main() {
 
     testWidgets('SubmitButton widget tests with invalidated form',
         (WidgetTester tester) async {
-      final someController = TextEditingController();
-      final anotherController = TextEditingController();
       Widget widget = MultiProvider(
-          providers: [ChangeNotifierProvider<AuthService>(
-            create: (_) => AuthServiceFake(),
-          ),
+          providers: [
+            ChangeNotifierProvider<AuthService>(
+              create: (_) => AuthServiceFake(),
+            ),
             ChangeNotifierProvider<User>(
-                create: (_) => UserFake(
-                    mobilePhoneNumber: '+17199662421',
-                    voicePhoneNumber: '+14154966279')),
+                create: (_) => UserFake()),
             Provider<Team>(create: (_) => TeamFake()),
           ],
           child: MaterialApp(
@@ -128,8 +115,6 @@ void main() {
                       validator: (_) => 'some error message',
                     ),
                     SubmitButton(
-                      mobilePhoneNumberController: someController,
-                      voicePhoneNumberController: anotherController,
                     )
                   ],
                 ),
