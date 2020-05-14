@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/src/painting/image_provider.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:missionout/Provider/User/user.dart';
 
 class UserFake with ChangeNotifier implements User {
@@ -10,8 +11,8 @@ class UserFake with ChangeNotifier implements User {
   UserFake({
     this.chatURI,
     this.isEditor = true,
-    this.mobilePhoneNumber = '+3455',
-    this.voicePhoneNumber = '+344',
+    this.mobilePhoneNumber,
+    this.voicePhoneNumber,
     this.signedIn = true,
   });
 
@@ -22,9 +23,9 @@ class UserFake with ChangeNotifier implements User {
   @override
   String teamID;
   @override
-  String voicePhoneNumber;
+  PhoneNumber voicePhoneNumber;
   @override
-  String mobilePhoneNumber;
+  PhoneNumber mobilePhoneNumber;
 
   @override
   String get displayName => 'John Doe';
@@ -73,9 +74,9 @@ class UserFake with ChangeNotifier implements User {
 
   @override
   // ignore: missing_return
-  Future<Function> updatePhoneNumbers(
-      {@required String mobilePhoneNumberVal,
-      @required String voicePhoneNumberVal}) {}
+   updatePhoneNumbers(
+      {@required PhoneNumber mobilePhoneNumberVal,
+      @required PhoneNumber voicePhoneNumberVal}) {}
 
   @override
   ImageProvider get photoImage => AssetImage("graphics/demoUser.png");
