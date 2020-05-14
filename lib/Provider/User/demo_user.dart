@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:missionout/Provider/User/user.dart';
 
 class DemoUser with ChangeNotifier implements User {
@@ -10,7 +11,7 @@ class DemoUser with ChangeNotifier implements User {
   bool isEditor = true;
 
   @override
-  String mobilePhoneNumber = "+1-212-555-1234";
+  PhoneNumber mobilePhoneNumber = PhoneNumber(phoneNumber: "+12125551234",isoCode: "US");
 
   @override
   String region = "US";
@@ -19,7 +20,7 @@ class DemoUser with ChangeNotifier implements User {
   String teamID;
 
   @override
-  String voicePhoneNumber = "1-212-555-4321";
+  PhoneNumber voicePhoneNumber = PhoneNumber(phoneNumber: "+12125554321",isoCode: "US");
 
   @override
   void addListener(listener) {
@@ -50,9 +51,9 @@ class DemoUser with ChangeNotifier implements User {
 
   @override
   Future updatePhoneNumbers(
-      {String mobilePhoneNumberStr, String voicePhoneNumberStr}) {
-    mobilePhoneNumber = mobilePhoneNumberStr;
-    voicePhoneNumber = voicePhoneNumberStr;
+      {PhoneNumber mobilePhoneNumberVal, PhoneNumber voicePhoneNumberVal}) {
+    mobilePhoneNumber = mobilePhoneNumberVal;
+    voicePhoneNumber = voicePhoneNumberVal;
   }
 
   @override

@@ -5,15 +5,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:missionout/Provider/User/user.dart';
 
 class MyFirebaseUser with ChangeNotifier implements User {
   final Firestore _db = Firestore.instance;
   FirebaseUser _firebaseUser;
   @override
-  String voicePhoneNumber;
+  PhoneNumber voicePhoneNumber;
   @override
-  String mobilePhoneNumber;
+  PhoneNumber mobilePhoneNumber;
   @override
   String region;
   @override
@@ -57,8 +58,20 @@ class MyFirebaseUser with ChangeNotifier implements User {
         ? isEditor = data['isEditor']
         : isEditor = false;
     teamID = data['teamID'];
-    mobilePhoneNumber = data['mobilePhoneNumber'] ?? '';
-    voicePhoneNumber = data['voicePhoneNumber'] ?? '';
+    try {
+      mobilePhoneNumber = PhoneNumber(
+          isoCode: data['mobilePhoneNumber']['isoCode'],
+          phoneNumber: data['mobilePhoneNumber']['phoneNumber']);
+    } on TypeError  catch (e) {
+      debugPrint("Phone number in old format, ignoring");
+    }
+    try {
+      voicePhoneNumber = PhoneNumber(
+          isoCode: data['voicePhoneNumber']['isoCode'],
+          phoneNumber: data['voicePhoneNumber']['phoneNumber']);
+    } on TypeError  catch (e) {
+      debugPrint("Phone number in old format, ignoring");
+    }
     region = data['region'] ?? '';
     subscribeToTeamPages();
     // team settings
@@ -69,12 +82,18 @@ class MyFirebaseUser with ChangeNotifier implements User {
 
   @override
   updatePhoneNumbers({
-    @required String mobilePhoneNumberStr,
-    @required String voicePhoneNumberStr,
+    @required PhoneNumber mobilePhoneNumberVal,
+    @required PhoneNumber voicePhoneNumberVal,
   }) async {
     await _db.document('users/$uid').updateData({
-      'mobilePhoneNumber': mobilePhoneNumberStr,
-      'voicePhoneNumber': voicePhoneNumberStr
+      'mobilePhoneNumber': {
+        'isoCode': mobilePhoneNumberVal.isoCode,
+        'phoneNumber': mobilePhoneNumberVal.phoneNumber
+      },
+      'voicePhoneNumber': {
+        'isoCode': voicePhoneNumberVal.isoCode,
+        'phoneNumber': voicePhoneNumberVal.phoneNumber
+      },
     }).then((value) {
       return true;
     }).catchError((error) {

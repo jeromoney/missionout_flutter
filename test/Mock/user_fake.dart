@@ -74,8 +74,8 @@ class UserFake with ChangeNotifier implements User {
   @override
   // ignore: missing_return
   Future<Function> updatePhoneNumbers(
-      {@required String mobilePhoneNumberStr,
-      @required String voicePhoneNumberStr}) {}
+      {@required String mobilePhoneNumberVal,
+      @required String voicePhoneNumberVal}) {}
 
   @override
   ImageProvider get photoImage => AssetImage("graphics/demoUser.png");
