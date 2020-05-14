@@ -20,6 +20,7 @@ class FirestoreTeam implements Team {
   String chatURI;
 
   FirestoreTeam(String teamID) {
+    assert(teamID != null);
     updateTeamID(teamID);
   }
 
@@ -38,9 +39,6 @@ class FirestoreTeam implements Team {
 
   @override
   void updateTeamID(String teamID) async {
-    if (teamID == null) {
-      return;
-    }
     this.teamID = teamID;
     // user specific permissions
     var document = await _db.collection('teams').document(teamID).get();
@@ -119,7 +117,7 @@ class FirestoreTeam implements Team {
   }
 
   @override
-  Future<void> addResponse({
+  addResponse({
     @required Response response,
     @required String docID,
     @required String uid,

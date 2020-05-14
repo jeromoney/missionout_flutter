@@ -22,25 +22,23 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  firebase_auth: ^0.15.3+1 #Hard coding due to bug with useragent.h creation
+  firebase_auth: ^0.16.0
   firebase_dynamic_links: ^0.5.0
-  google_sign_in: ^4.4.4
-  url_launcher: ^5.4.5
-  cloud_firestore: ^0.13.4
+  google_sign_in: ^4.4.6
+  url_launcher: ^5.4.7
+  cloud_firestore: ^0.13.5
   intl: ^0.16.0
   flutter_auth_buttons: ^0.8.0
   tuple: ^1.0.3
   provider: ^4.1.1
-  firebase_core:  ^0.4.4 # this was 0.4.3+3 which was hardcoded due to bug with useragent.h in iOS
-  firebase_messaging: ^6.0.13
+  firebase_core:  ^0.4.4
+  firebase_messaging: ^6.0.15
   phone_number: ^0.6.2+1
   tel_input: ^0.2.2
-  intl_phone_number_input: ^0.4.0
+  intl_phone_number_input: ^0.4.1
   cached_network_image: ^2.2.0
   flutter_local_notifications: ^1.4.3 # Used for iOS only
-  rxdart: ^0.24.0 # used for iOS sample code - I just want this for debug purposes
   apple_sign_in: ^0.1.0 #used for ios only
-  flutter_secure_storage: ^3.3.3 # for debug purposes only
 
 
 

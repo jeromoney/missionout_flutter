@@ -11,7 +11,7 @@ abstract class User with ChangeNotifier {
 
   String get uid;
 
-  Future<void> updatePhoneNumbers(
-      {@required String mobilePhoneNumber,
-        @required String voicePhoneNumber}) async {}
+  updatePhoneNumbers(
+      {@required String mobilePhoneNumberStr,
+        @required String voicePhoneNumberStr}) async {}
 }

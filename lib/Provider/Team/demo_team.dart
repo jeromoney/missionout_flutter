@@ -6,13 +6,6 @@ import 'package:missionout/DataLayer/response.dart';
 import 'package:missionout/Provider/Team/team.dart';
 
 
-List<Response> RESPONSES = [
-  Response(teamMember: "Elton", status: "Responding"),
-  Response(teamMember: "Ameera Lott", status: "Responding"),
-  Response(teamMember: "Jazmine Burrows", status: "Delayed"),
-  Response(teamMember: "Susie Diaz", status: "Standby"),
-  Response(teamMember: "Eilish Watts", status: "Responding"),
-];
 
 class DemoTeam implements Team {
   List<Mission> missions = [
@@ -27,6 +20,15 @@ class DemoTeam implements Team {
     Mission("Injured horserider ", "assist EMS with evacuation", "Passwater Gulch",
         null),
   ];
+
+  List<Response> responses = [
+    Response(teamMember: "Elton", status: "Responding"),
+    Response(teamMember: "Ameera Lott", status: "Responding"),
+    Response(teamMember: "Jazmine Burrows", status: "Delayed"),
+    Response(teamMember: "Susie Diaz", status: "Standby"),
+    Response(teamMember: "Eilish Watts", status: "Responding"),
+  ];
+
   DemoTeam(){
     for (var i = 0; i < missions.length; i++){
       missions[i].reference = DemoReference(i);
@@ -59,9 +61,8 @@ class DemoTeam implements Team {
   }
 
   @override
-  Future<void> addResponse({Response response, String docID, String uid}) {
-    // TODO: implement addResponse
-    return null;
+  addResponse({Response response, String docID, String uid}) {
+    responses[0].status = response.status;
   }
 
   @override
@@ -78,7 +79,7 @@ class DemoTeam implements Team {
 
   @override
   Stream<List<Response>> fetchResponses({String docID}) async* {
-    yield RESPONSES;
+    yield responses;
   }
 
   @override
@@ -100,11 +101,6 @@ class DemoTeam implements Team {
   Future<void> updateInfo({GeoPoint geoPoint, String chatUri}) {
     // TODO: implement updateInfo
     return null;
-  }
-
-  @override
-  void updateTeamID(String teamID) {
-    // TODO: implement updateTeamID
   }
 
   @override

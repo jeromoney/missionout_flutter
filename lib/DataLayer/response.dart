@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 
 class Response {
   final String teamMember;
-  final String status;
+  String status;
   String drivingTime;
   DocumentReference reference;
 

@@ -49,10 +49,10 @@ class DemoUser with ChangeNotifier implements User {
   String get uid => null;
 
   @override
-  Future<void> updatePhoneNumbers(
-      {String mobilePhoneNumber, String voicePhoneNumber}) {
-    // TODO: implement updatePhoneNumbers
-    return null;
+  Future updatePhoneNumbers(
+      {String mobilePhoneNumberStr, String voicePhoneNumberStr}) {
+    mobilePhoneNumber = mobilePhoneNumberStr;
+    voicePhoneNumber = voicePhoneNumberStr;
   }
 
   @override

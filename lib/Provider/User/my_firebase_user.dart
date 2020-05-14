@@ -5,8 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:missionout/Provider/User/user.dart';
 
 class MyFirebaseUser with ChangeNotifier implements User {
@@ -26,7 +24,6 @@ class MyFirebaseUser with ChangeNotifier implements User {
 
   @override
   String get uid => _firebaseUser?.uid;
-
 
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
@@ -70,21 +67,14 @@ class MyFirebaseUser with ChangeNotifier implements User {
     notifyListeners();
   }
 
-  clearUserPermissions() {
-    voicePhoneNumber = null;
-    mobilePhoneNumber = null;
-    isEditor = false;
-    teamID = null;
-  }
-
   @override
-  Future<void> updatePhoneNumbers({
-    @required String mobilePhoneNumber,
-    @required String voicePhoneNumber,
+  updatePhoneNumbers({
+    @required String mobilePhoneNumberStr,
+    @required String voicePhoneNumberStr,
   }) async {
     await _db.document('users/$uid').updateData({
-      'mobilePhoneNumber': mobilePhoneNumber,
-      'voicePhoneNumber': voicePhoneNumber
+      'mobilePhoneNumber': mobilePhoneNumberStr,
+      'voicePhoneNumber': voicePhoneNumberStr
     }).then((value) {
       return true;
     }).catchError((error) {
@@ -102,5 +92,4 @@ class MyFirebaseUser with ChangeNotifier implements User {
 
   @override
   String currentMission;
-
 }

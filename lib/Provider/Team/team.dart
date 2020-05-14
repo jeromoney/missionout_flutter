@@ -14,8 +14,6 @@ abstract class Team {
 
   dynamic get documentAddress; // Where the document is in database
 
-  void updateTeamID(String teamID);
-
   Future<void> updateInfo(
       {@required GeoPoint geoPoint, @required String chatUri});
 
@@ -37,7 +35,7 @@ abstract class Team {
 
   // Interface with database. A page is uploaded to a server who will then act on the data
 
-  Future<void> addResponse({
+  addResponse({
     @required Response response,
     @required String docID,
     @required String uid,
