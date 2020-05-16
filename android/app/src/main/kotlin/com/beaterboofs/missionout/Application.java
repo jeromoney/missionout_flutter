@@ -29,7 +29,7 @@ public class Application extends FlutterApplication implements PluginRegistrantC
             Uri alarmUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/" + R.raw.school_fire_alarm);
             channel.setSound(alarmUri, audioAttributes);
             // vibration
-            long[] pattern = {0, 100, 1000, 300, 200, 100, 500, 200, 100};
+            long[] pattern = {1000, 1000, 1000, 1000,1000, 1000,1000, 1000,1000, 1000,1000, 1000,1000, 1000,1000, 1000,};
             channel.setVibrationPattern(pattern);
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this

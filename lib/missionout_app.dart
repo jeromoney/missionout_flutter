@@ -1,9 +1,8 @@
-import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:missionout/DataLayer/fcm_message.dart';
 import 'UI/EditorScreen/editor_screen.dart';
 import 'UI/UserScreen/user_screen.dart';
 import 'UI/overview_screen.dart';
@@ -18,49 +17,9 @@ class MissionOutAppState extends State<MissionOutApp> {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-  static const platform = const MethodChannel('missionoutAndroid'); // use the name you have in the kotlin file as well in order to communicate with the underlaying android
-
-
   @override
   void initState() {
     super.initState();
-
-
-// to create a notificationchannelgroup
-    platform.invokeMethod('createChannelGroup', {
-      "groupId": "1234", // id of the group
-      "groupName": "my group name" // name of the group
-    });
-
-// to delete a notificationchannelgroup
-    platform.invokeMethod('deleteChannelGroup', {
-      "groupId": "1234", // id of the group
-    });
-
-// to create a notificationchannel
-    platform.invokeMethod('createChannel', {
-      "id": "abcd", // id of the channel
-      "name": "my channel name", // name of the channel
-      "description": "a nice description", // optional description of the channel, could be empty as in ""
-      "sound": "plucky", // name of the sound
-      "groupId": "1234" // id of the notificationchannelgroup created earlier
-    });
-
-// to delete a notificationchannel
-// to delete a notificationchannelgroup
-    platform.invokeMethod('deleteChannel', {
-      "id": "1234", // id of the group
-    });
-
-
-
-
-
-
-
-
-
-
 
     final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
     _firebaseMessaging.requestNotificationPermissions(
@@ -81,23 +40,17 @@ class MissionOutAppState extends State<MissionOutApp> {
       },
       onMessage: (Map<String, dynamic> message) async {
         debugPrint("Received onMessage message");
-        // find scaffold in tree
-        try {
-          // Android is receiving a data message, different than iOS for some reason.
-          if (Platform.isAndroid)
-            message = message["data"].cast<String, dynamic>();
-          final alertDialog = AlertDialog(
-            title: Text("Update: ${message["description"] ?? ""}"),
-            content: Text(message["needForAction"] ?? ""),
-          );
-          showDialog(context: context, child: alertDialog);
-        } catch (e) {
-          debugPrint(e.toString());
-        }
+        final notification = FCMMessage(message);
+        final alertDialog = AlertDialog(
+          title: Text("Update: ${notification.title}"),
+          content: Text(notification.body),
+        );
+        showDialog(context: context, child: alertDialog);
       },
       onResume: (Map<String, dynamic> message) async {
         debugPrint("Received onResume message");
         debugPrint(message.toString());
+        // Android notifications are handled in java code
         var iOSPlatformChannelSpecifics = IOSNotificationDetails(
             presentSound: true, sound: "school_fire_alarm.m4a");
         var platformChannelSpecifics =
