@@ -17,16 +17,5 @@ void main(){
     var page = Page(creator:creator,mission:mission);
     expect(page.creator, creator);
     expect(page.mission,mission);
-
-    final map = page.toJson();
-    map['time'] = Timestamp.fromMicrosecondsSinceEpoch(0);
-    page = Page.fromMap(map);
-    expect(page.creator,creator);
-    expect(page.description,description);
-    expect(page.needForAction,needForAction);
-    expect(page.address, 'some id string');
-    expect(page.time, Timestamp.fromMicrosecondsSinceEpoch(0));
-
-
   });
 }

@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart'
     as flutter_buttons;
 import 'package:missionout/DataLayer/app_mode.dart';
-import 'package:missionout/Provider/AuthService/apple_auth_service.dart';
-import 'package:missionout/Provider/AuthService/demo_auth_service.dart';
-import 'package:missionout/Provider/AuthService/google_auth_service.dart';
 import 'package:provider/provider.dart';
 
 class SigninScreen extends StatefulWidget {

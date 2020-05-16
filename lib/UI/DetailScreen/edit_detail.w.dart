@@ -36,9 +36,24 @@ class EditDetail extends StatelessWidget {
                   FlatButton(
                     child: const Text('Page Team'),
                     onPressed: () {
-                      final page =
-                          missionpage.Page(creator: authService.displayName, mission: mission);
-                      team.addPage(page: page);
+                      final alert = AlertDialog(
+                          title: Text('Page mission?'),
+                          content: Text('The entire team will be alerted.'),
+                          actions: <Widget>[
+                            FlatButton(
+                                child: Text('Page'),
+                                onPressed: () {
+                                  final page = missionpage.Page(
+                                      creator: authService.displayName,
+                                      mission: mission,
+                                      onlyEditors: false);
+                                  team.addPage(page: page);
+                                  Navigator.of(context, rootNavigator: true).pop('dialog');                                }),
+                          ]);
+                      showDialog(
+                        context: context,
+                        builder: (context) => alert,
+                      );
                     },
                   ),
                   FlatButton(

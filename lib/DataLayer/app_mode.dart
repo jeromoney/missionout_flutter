@@ -134,6 +134,7 @@ class AppMode with ChangeNotifier {
     var user = await _authService.signIn();
     if (user == null) {
       setAppMode(AppModes.signedOut, appMessage: "Error in sign in process");
+      return false;
     }
 
     if (appMode == AppModes.demo) {

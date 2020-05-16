@@ -48,7 +48,7 @@ class DemoTeam implements Team {
   String teamID;
 
   @override
-  Future<dynamic> addMission({Mission mission}) async {
+  Future<dynamic> addMission({Mission mission, bool onlyEditors = false}) async {
     mission.time = Timestamp.now();
     missions.insert(0,mission);
     return DemoReference(0);

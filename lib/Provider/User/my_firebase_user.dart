@@ -65,11 +65,17 @@ class MyFirebaseUser with ChangeNotifier implements User {
     } on TypeError  catch (e) {
       debugPrint("Phone number in old format, ignoring");
     }
+    on NoSuchMethodError catch (e){
+      debugPrint("Phone number in old format, ignoring");
+    }
     try {
       voicePhoneNumber = PhoneNumber(
           isoCode: data['voicePhoneNumber']['isoCode'],
           phoneNumber: data['voicePhoneNumber']['phoneNumber']);
     } on TypeError  catch (e) {
+      debugPrint("Phone number in old format, ignoring");
+    }
+    on NoSuchMethodError catch (e){
       debugPrint("Phone number in old format, ignoring");
     }
     region = data['region'] ?? '';

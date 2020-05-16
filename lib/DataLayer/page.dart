@@ -8,8 +8,9 @@ class Page {
   String address;
   Mission mission;
   Timestamp time;
+  bool onlyEditors;
 
-  Page({@required this.creator, @required this.mission});
+  Page({@required this.creator, @required this.mission, this.onlyEditors = false});
 
   Map<String, dynamic> toJson() => {
         'creator': creator,
@@ -17,12 +18,6 @@ class Page {
         'needForAction': mission.needForAction,
         'address': mission.reference.documentID,
         'time': Timestamp.now(), //TODO - some bug in iOS doesn't allow FieldValue. Remove null when this is fixed
+        'onlyEditors': onlyEditors,
       };
-
-  Page.fromMap(Map<String, dynamic> map)
-      : creator = map['creator'],
-        description = map['description'],
-        needForAction = map['needForAction'],
-        address = map['address'],
-        time = map['time'];
 }

@@ -54,7 +54,7 @@ class SubmitMissionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return RaisedButton(
       child: Text('Submit'),
-      onPressed: () {
+      onPressed: () async {
         if (Form.of(context).validate()) {
           Scaffold.of(context).showSnackBar(SnackBar(
             content: Text('Processing'),
@@ -63,7 +63,7 @@ class SubmitMissionButton extends StatelessWidget {
 
           final team = Provider.of<Team>(context, listen: false);
 
-          team.addMission(mission: myMission).then((documentReference) {
+          await team.addMission(mission: myMission).then((documentReference) {
             if (documentReference == null) {
               // there was an error adding mission to database
               Scaffold.of(context).showSnackBar(SnackBar(
@@ -72,6 +72,13 @@ class SubmitMissionButton extends StatelessWidget {
               return;
             }
             myMission.reference = documentReference;
+
+            // send page to editors only
+            final authService = Provider.of<AuthService>(context, listen: false);
+            final page =
+            missionpage.Page(creator: authService.displayName, mission: myMission, onlyEditors: true);
+            team.addPage(page: page);
+
             final user =
                 Provider.of<User>(context, listen: false);
             user.currentMission = documentReference

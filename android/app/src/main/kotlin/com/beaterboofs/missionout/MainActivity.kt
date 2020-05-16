@@ -3,7 +3,6 @@ package com.beaterboofs.missionout
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
 import androidx.annotation.NonNull
@@ -13,13 +12,6 @@ import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.EventChannel.EventSink
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant
-
-import android.net.Uri
-import android.media.AudioAttributes
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.NotificationChannelGroup
-import androidx.annotation.RequiresApi
 
 
 private const val CHANNEL = "poc.deeplink.flutter.dev/channel"
@@ -35,7 +27,7 @@ class MainActivity : FlutterActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         super.onCreate(savedInstanceState, persistentState)
-        
+
 
 
         GeneratedPluginRegistrant.registerWith(flutterEngine!!)
@@ -72,12 +64,6 @@ class MainActivity : FlutterActivity() {
             if (::linksReceiver.isInitialized) {
                 linksReceiver.onReceive(this.applicationContext, intent)
             }
-        }
-
-
-        MethodChannel(flutterView, "missionoutAndroid").setMethodCallHandler { // nl.sobit is the communication channel between flutter and kotlin and can be anything you want as long as it is unique
-            call, result ->
-
         }
     }
 

@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import 'package:missionout/Provider/Team/team.dart';
 import 'package:missionout/UI/my_appbar.dart';
 import 'package:missionout/core/lat_lon_input.w.dart';
-import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 part 'team_submit_raised_button.w.dart';
 part 'uri_text_form_field.w.dart';
