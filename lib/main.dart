@@ -1,46 +1,37 @@
 import 'package:flutter/material.dart';
-
-import 'package:missionout/UI/signin_screen.dart';
-import 'package:missionout/missionout_app.dart';
+import 'package:missionout/UI/EditorScreen/editor_screen.dart';
+import 'package:missionout/UI/UserScreen/user_screen.dart';
+import 'package:missionout/UI/main_screen.dart';
+import 'package:missionout/my_providers.dart';
 import 'package:provider/provider.dart';
 
-import 'DataLayer/app_mode.dart';
+void main() => runApp(MissionOut());
 
-void main() => runApp(Main());
+class MissionOut extends StatelessWidget {
+  var providers;
 
-class Main extends StatelessWidget {
+  MissionOut({Key key, this.providers}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => AppMode(),
-      child: MainScreen(),
-    );
-  }
-}
-
-class MainScreen extends StatefulWidget {
-  @override
-  createState() => _MainScreenState();
-}
-
-class _MainScreenState extends State<MainScreen> {
-  @override
-  Widget build(BuildContext context) {
-    final appMode = Provider.of<AppMode>(context);
-    final appModeState = appMode.appMode;
-    if (appModeState == AppModes.signedOut) {
-      return MaterialApp(
-        home: SigninScreen(),
-        darkTheme: ThemeData.dark(),
-      );
-    } else {
-      // this state can only be entered once the user is signed in
-      final providers = appMode.providers;
-      assert(providers != null);
-      return MultiProvider(
-        providers: providers,
-        child: MaterialApp(home: MissionOutApp()),
-      );
+    if (providers == null){
+      providers = MyProviders().providers;
     }
+    return MultiProvider(
+      providers: providers,
+      child: MaterialApp(
+        title: 'Mission Out',
+        theme: ThemeData(
+          primarySwatch: Colors.blueGrey,
+        ),
+        darkTheme: ThemeData.dark(),
+        initialRoute: '/',
+        routes: {
+          '/': (context) => MainApp(),
+          '/editor_options': (context) => EditorScreen(),
+          '/user_options': (context) => UserScreen()
+        },
+      ),
+    );
   }
 }

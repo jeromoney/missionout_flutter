@@ -68,7 +68,7 @@ class ActionsDetail extends StatelessWidget {
                           url = 'http://maps.apple.com/?q=$lat,$lon';
                         }
                         else {
-                          throw Exception("Non supported platform");
+                          throw Exception("Non-supported platform");
                         }
                         launch(url);
                       },
