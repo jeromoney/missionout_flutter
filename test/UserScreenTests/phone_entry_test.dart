@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-import 'package:missionout/Provider/User/user.dart';
 import 'package:missionout/UI/UserScreen/user_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../Mock/providers_fake.dart';
-import '../Mock/user_fake.dart';
 
 void main() {
   testWidgets('Phone Entry Widge smoke test', (WidgetTester tester) async {

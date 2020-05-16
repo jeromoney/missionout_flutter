@@ -39,7 +39,7 @@ class _MainScreenState extends State<MainScreen> {
       assert(providers != null);
       return MultiProvider(
         providers: providers,
-        child: MissionOutApp(),
+        child: MaterialApp(home: MissionOutApp()),
       );
     }
   }
