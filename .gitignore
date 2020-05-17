@@ -45,4 +45,4 @@ coverage/*
 */deleteme.dart
 
 *Podfile.lock
-pubspec.lock
+*pubspec.lock
