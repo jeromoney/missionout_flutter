@@ -1,12 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/single_child_widget.dart';
+
 import 'package:missionout/Provider/AuthService/apple_auth_service.dart';
 import 'package:missionout/Provider/AuthService/auth_service.dart';
 import 'package:missionout/Provider/AuthService/demo_auth_service.dart';
 import 'package:missionout/Provider/AuthService/google_auth_service.dart';
 import 'package:missionout/my_providers.dart';
-import 'package:provider/single_child_widget.dart';
 
 enum AppModes { demo, google, signedOut, apple }
 
@@ -132,7 +133,7 @@ class AppMode with ChangeNotifier {
 
     // Getting a user means success
     var user = await _authService.signIn();
-    if (user == null) {
+    if (user == null && appMode != AppModes.demo) {
       setAppMode(AppModes.signedOut, appMessage: "Error in sign in process");
       return false;
     }
