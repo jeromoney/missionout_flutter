@@ -38,7 +38,7 @@ class SigninScreenState extends State<SigninScreen> {
                       key: Key('Welcome Logo'),
                       image: AssetImage('graphics/missionoutlogo.png'),
                     )
-                  : ColorFiltered(
+                  : ColorFiltered( // Inverts black logo to white
                       colorFilter: ColorFilter.matrix([
                         //R  G   B    A  Const
                         -1, 0, 0, 0, 255, //
