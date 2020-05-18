@@ -27,4 +27,12 @@ class Response {
         'status': status,
         'time':  Timestamp.now(), //TODO - some bug in iOS doesn't allow FieldValue. Remove null when this is fixed,
       };
+
+  @override
+  bool operator ==(other) {
+    return other.teamMember == teamMember;
+  }
+
+  @override
+  int get hashCode => ((teamMember ?? "") + (status ?? "")).hashCode;
 }

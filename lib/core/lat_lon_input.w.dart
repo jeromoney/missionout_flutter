@@ -13,7 +13,7 @@ class LatLonInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final keyboardType = TextInputType.number;
+    final keyboardType = TextInputType.numberWithOptions(signed: true, decimal: true);
     final inputFormatters = <TextInputFormatter>[
       WhitelistingTextInputFormatter(RegExp('[0-9\.\-]'))
     ];

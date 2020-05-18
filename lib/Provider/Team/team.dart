@@ -15,7 +15,7 @@ abstract class Team {
   dynamic get documentAddress; // Where the document is in database
 
   Future<void> updateInfo(
-      {@required GeoPoint geoPoint, @required String chatUri});
+      {GeoPoint geoPoint, @required String chatUri});
 
   void launchChat();
 

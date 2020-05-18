@@ -30,8 +30,11 @@ class _MainScreenState extends State<MainScreen> {
     final appModeState = appMode.appMode;
     if (appModeState == AppModes.signedOut) {
       return MaterialApp(
-        home: SigninScreen(),
+        home: SafeArea(child: SigninScreen()),
         darkTheme: ThemeData.dark(),
+        theme: ThemeData(
+          primarySwatch: Colors.blueGrey,
+        ),
       );
     } else {
       // this state can only be entered once the user is signed in
@@ -39,7 +42,7 @@ class _MainScreenState extends State<MainScreen> {
       assert(providers != null);
       return MultiProvider(
         providers: providers,
-        child: MaterialApp(home: MissionOutApp()),
+        child: MaterialApp(home: SafeArea(child: MissionOutApp())),
       );
     }
   }

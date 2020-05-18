@@ -5,33 +5,30 @@ import 'package:missionout/DataLayer/page.dart';
 import 'package:missionout/DataLayer/response.dart';
 import 'package:missionout/Provider/Team/team.dart';
 
-
-
 class DemoTeam implements Team {
-  List<Mission> missions = [
+  List<Mission> _missions = [
     Mission("Missing hiker", "need ground search team", "Passwater Gulch",
         GeoPoint(27.966389, 86.889999)),
-    Mission("Injured skier", "snowmobilies report to bay", "Passwater Gulch",
-        null),
-    Mission("Overdue backpacker", "report to bay for search assignment", "Passwater Gulch",
-        null),
-    Mission("Empty boat found on river", "swiftwater team listen for assignments", "Passwater Gulch",
-        null),
-    Mission("Injured horserider ", "assist EMS with evacuation", "Passwater Gulch",
-        null),
+    Mission(
+        "Injured skier", "snowmobilies report to bay", "Passwater Gulch", null),
+    Mission("Overdue backpacker", "report to bay for search assignment",
+        "Passwater Gulch", null),
+    Mission("Empty boat found on river",
+        "swiftwater team listen for assignments", "Passwater Gulch", null),
+    Mission("Injured horserider ", "assist EMS with evacuation",
+        "Passwater Gulch", null),
   ];
 
-  List<Response> responses = [
-    Response(teamMember: "Elton", status: "Responding"),
+  List<Response> _responses = [
     Response(teamMember: "Ameera Lott", status: "Responding"),
     Response(teamMember: "Jazmine Burrows", status: "Delayed"),
     Response(teamMember: "Susie Diaz", status: "Standby"),
     Response(teamMember: "Eilish Watts", status: "Responding"),
   ];
 
-  DemoTeam(){
-    for (var i = 0; i < missions.length; i++){
-      missions[i].reference = DemoReference(i);
+  DemoTeam() {
+    for (var i = 0; i < _missions.length; i++) {
+      _missions[i].reference = DemoReference(i);
     }
   }
 
@@ -39,7 +36,7 @@ class DemoTeam implements Team {
   String chatURI;
 
   @override
-  GeoPoint get location => GeoPoint(-49.350592,70.261962);
+  GeoPoint get location => GeoPoint(-49.350592, 70.261962);
 
   @override
   String name;
@@ -48,9 +45,10 @@ class DemoTeam implements Team {
   String teamID;
 
   @override
-  Future<dynamic> addMission({Mission mission, bool onlyEditors = false}) async {
+  Future<dynamic> addMission(
+      {Mission mission, bool onlyEditors = false}) async {
     mission.time = Timestamp.now();
-    missions.insert(0,mission);
+    _missions.insert(0, mission);
     return DemoReference(0);
   }
 
@@ -62,7 +60,16 @@ class DemoTeam implements Team {
 
   @override
   addResponse({Response response, String docID, String uid}) {
-    responses[0].status = response.status;
+    if (response == null) { // User deselected response, so remove it
+      int i = _responses.indexOf(Response(teamMember: "Elton", status: null));
+      _responses.removeAt(i);
+      return;
+    }
+    int i = _responses.indexOf(response);
+    if (i == -1) // response not in list
+      _responses.add(response);
+    else // found response, so replacing with new one
+      _responses[i] = response;
   }
 
   @override
@@ -74,17 +81,17 @@ class DemoTeam implements Team {
 
   @override
   Stream<List<Mission>> fetchMissions() async* {
-    yield missions;
+    yield _missions;
   }
 
   @override
   Stream<List<Response>> fetchResponses({String docID}) async* {
-    yield responses;
+    yield _responses;
   }
 
   @override
   Stream<Mission> fetchSingleMission({String docID}) async* {
-    yield missions[int.tryParse(docID) ?? 0];
+    yield _missions[int.tryParse(docID) ?? 0];
   }
 
   @override
@@ -107,17 +114,13 @@ class DemoTeam implements Team {
   void set location(GeoPoint _location) {
     // TODO: implement location
   }
-
 }
 
-
-class DemoReference{
-
+class DemoReference {
   String get address => documentID;
   String documentID;
 
-  DemoReference(int i){
+  DemoReference(int i) {
     documentID = i.toString();
   }
 }
-

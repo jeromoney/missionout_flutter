@@ -50,10 +50,11 @@ class FirestoreTeam implements Team {
 
   @override
   Future<void> updateInfo(
-      {@required GeoPoint geoPoint, @required String chatUri}) async {
+      {GeoPoint geoPoint, @required String chatUri}) async {
+    if (geoPoint != null)
     await _db
         .document('teams/$teamID')
-        .updateData({'chatURI': chatUri, 'location': geoPoint}).then((value) {
+        .updateData({'chatURI': chatUri, if (geoPoint != null) 'location': geoPoint}).then((value) {
       return true;
     }).catchError((error) {
       throw error;

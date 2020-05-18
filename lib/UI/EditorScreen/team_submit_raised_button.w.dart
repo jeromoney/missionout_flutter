@@ -8,10 +8,10 @@ class TeamSubmitRaisedButton extends StatefulWidget {
 
   const TeamSubmitRaisedButton(
       {Key key,
-        @required this.formKey,
-        @required this.chatURIController,
-        @required this.latController,
-        @required this.lonController})
+      @required this.formKey,
+      @required this.chatURIController,
+      @required this.latController,
+      @required this.lonController})
       : super(key: key);
 
   @override
@@ -31,9 +31,9 @@ class TeamSubmitRaisedButtonState extends State<TeamSubmitRaisedButton> {
 
   TeamSubmitRaisedButtonState(
       {@required this.formKey,
-        @required this.chatURIController,
-        @required this.latController,
-        @required this.lonController});
+      @required this.chatURIController,
+      @required this.latController,
+      @required this.lonController});
 
   @override
   Widget build(BuildContext context) {
@@ -46,21 +46,25 @@ class TeamSubmitRaisedButtonState extends State<TeamSubmitRaisedButton> {
             Scaffold.of(context)
                 .showSnackBar(SnackBar(content: Text('Processing Data')));
             GeoPoint geoPoint;
-            if (latController.text == '') {
-              geoPoint = null;
-            } else {
-              double lat = double.parse(latController.text);
-              double lon = double.parse(lonController.text);
-              geoPoint = GeoPoint(lat, lon);
+            if (HEADQUARTERS_FEATURE_FLAG) {
+              if (latController.text == '') {
+                geoPoint = null;
+              } else {
+                double lat = double.parse(latController.text);
+                double lon = double.parse(lonController.text);
+                geoPoint = GeoPoint(lat, lon);
+              }
             }
             try {
               final team = Provider.of<Team>(context, listen: false);
-              await team.updateInfo(
-                  geoPoint: geoPoint, chatUri: chatURIController.text);
-              Scaffold.of(context).hideCurrentSnackBar();
+              if (HEADQUARTERS_FEATURE_FLAG)
+                await team.updateInfo(
+                    geoPoint: geoPoint, chatUri: chatURIController.text);
+              else await team.updateInfo(chatUri: chatURIController.text);
+                Scaffold.of(context).hideCurrentSnackBar();
 
               team.chatURI = chatURIController.text;
-              team.location = geoPoint;
+              if (HEADQUARTERS_FEATURE_FLAG) team.location = geoPoint;
               setState(() {
                 resultIcon = Icon(
                   Icons.check,
