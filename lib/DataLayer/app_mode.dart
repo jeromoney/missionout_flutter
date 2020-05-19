@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/single_child_widget.dart';
 
 import 'package:missionout/Provider/AuthService/apple_auth_service.dart';
@@ -132,7 +133,12 @@ class AppMode with ChangeNotifier {
     }
 
     // Getting a user means success
-    var user = await _authService.signIn();
+    FirebaseUser user;
+    try {
+      user = await _authService.signIn();
+    } on PlatformException catch (e) {
+      debugPrint("Could not complete sign in process: $e");
+    }
     if (user == null && appMode != AppModes.demo) {
       setAppMode(AppModes.signedOut, appMessage: "Error in sign in process");
       return false;

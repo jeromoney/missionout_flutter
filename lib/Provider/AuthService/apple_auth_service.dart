@@ -31,7 +31,7 @@ class AppleAuthService extends AuthService {
   final _firebaseAuth = FirebaseAuth.instance;
 
   @override
-  Future<FirebaseUser> signIn({List<Scope> scopes = const []}) async {
+  Future<FirebaseUser> signIn({List<Scope> scopes = const [Scope.fullName,Scope.email]}) async {
     // 1. perform the sign-in request
     final result = await AppleSignIn.performRequests(
         [AppleIdRequest(requestedScopes: scopes)]);

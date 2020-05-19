@@ -29,7 +29,6 @@ class _FCMMessageHandlerState extends State<FCMMessageHandler> {
   @override
   void initState() {
     super.initState();
-
     _firebaseMessaging.requestNotificationPermissions(
         const IosNotificationSettings(
             sound: true, badge: true, alert: true, provisional: false));

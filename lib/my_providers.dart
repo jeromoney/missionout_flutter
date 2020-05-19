@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:missionout/Provider/AuthService/apple_auth_service.dart';
 import 'package:missionout/Provider/AuthService/demo_auth_service.dart';
@@ -17,7 +16,8 @@ import 'Provider/User/my_firebase_user.dart';
 class FirebaseProviders {
   // Combines both Apple and Google providers
   AuthService _authService;
-  FirebaseProviders.fromAuthService(AuthService authService){
+
+  FirebaseProviders.fromAuthService(AuthService authService) {
     _authService = authService;
   }
 
@@ -37,16 +37,15 @@ class FirebaseProviders {
           }
         },
       ),
-      ProxyProvider<User, Team>(
-        lazy: true,
+      ChangeNotifierProxyProvider<User, Team>(
+        create: (_) => null,
         update: (_, user, team) {
           // Don't return the the team until you have a teamID
           final teamID = user.teamID;
-          if (teamID == null) {
+          if (teamID == null)
             return null;
-          } else {
+          else
             return FirestoreTeam(teamID);
-          }
         },
       ),
     ];
@@ -62,7 +61,7 @@ class DemoProviders {
       ChangeNotifierProvider<User>(
         create: (_) => DemoUser(),
       ),
-      Provider<Team>(
+      ChangeNotifierProvider<Team>(
         create: (_) => DemoTeam(),
       ),
     ];

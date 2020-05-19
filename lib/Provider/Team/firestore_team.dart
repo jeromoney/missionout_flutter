@@ -7,7 +7,7 @@ import 'package:missionout/DataLayer/response.dart';
 import 'package:missionout/Provider/Team/team.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class FirestoreTeam implements Team {
+class FirestoreTeam with ChangeNotifier implements Team  {
   final Firestore _db = Firestore.instance;
 
   @override
@@ -18,6 +18,10 @@ class FirestoreTeam implements Team {
   GeoPoint location;
   @override
   String chatURI;
+
+  bool _initialized = false;
+  @override
+  bool get isInitialized => _initialized;
 
   FirestoreTeam(String teamID) {
     assert(teamID != null);
@@ -37,7 +41,6 @@ class FirestoreTeam implements Team {
     launch(chatURI);
   }
 
-  @override
   void updateTeamID(String teamID) async {
     this.teamID = teamID;
     // user specific permissions
@@ -46,6 +49,8 @@ class FirestoreTeam implements Team {
     name = data['name'] ?? '';
     location = data['location'];
     chatURI = data['chatURI'];
+    _initialized = true;
+    notifyListeners();
   }
 
   @override

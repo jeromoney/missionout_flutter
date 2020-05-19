@@ -5,7 +5,7 @@ import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/DataLayer/page.dart' as missionpage;
 import 'package:missionout/DataLayer/response.dart';
 
-abstract class Team {
+abstract class Team with ChangeNotifier {
   String name;
   String teamID;
   GeoPoint location;
@@ -28,6 +28,8 @@ abstract class Team {
   Future<dynamic> addMission({@required Mission mission});
 
   void standDownMission({@required Mission mission});
+
+  bool get isInitialized;
 
   Future<void> addPage({
     @required missionpage.Page page,

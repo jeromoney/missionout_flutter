@@ -33,7 +33,6 @@ class MyFirebaseUser with ChangeNotifier implements User {
     _firebaseUser = user;
     setUserPermissions();
     addTokenToFirestore(_firebaseUser);
-    notifyListeners();
   }
 
   Future<void> addTokenToFirestore(FirebaseUser user) async {

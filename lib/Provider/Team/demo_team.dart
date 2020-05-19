@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_firestore_platform_interface/src/geo_point.dart';
+import 'package:flutter/material.dart';
 import 'package:missionout/DataLayer/mission.dart';
-import 'package:missionout/DataLayer/page.dart';
+import 'package:missionout/DataLayer/page.dart' as my;
 import 'package:missionout/DataLayer/response.dart';
 import 'package:missionout/Provider/Team/team.dart';
 
-class DemoTeam implements Team {
+class DemoTeam with ChangeNotifier implements Team {
   List<Mission> _missions = [
     Mission("Missing hiker", "need ground search team", "Passwater Gulch",
         GeoPoint(27.966389, 86.889999)),
@@ -24,6 +24,18 @@ class DemoTeam implements Team {
     Response(teamMember: "Jazmine Burrows", status: "Delayed"),
     Response(teamMember: "Susie Diaz", status: "Standby"),
     Response(teamMember: "Eilish Watts", status: "Responding"),
+    Response(teamMember: "Deanna Mora", status: "Responding"),
+    Response(teamMember: "Addie Vega", status: "Delayed"),
+    Response(teamMember: "Franco Bolton", status: "Standby"),
+    Response(teamMember: "Grayson Burch", status: "Responding"),
+    Response(teamMember: "Levi Hinton", status: "Responding"),
+    Response(teamMember: "Karishma Appleton", status: "Delayed"),
+    Response(teamMember: "Myles Pollard", status: "Standby"),
+    Response(teamMember: "Ariah Snow", status: "Responding"),
+    Response(teamMember: "Lola-Rose Rudd", status: "Responding"),
+    Response(teamMember: "Kiyan Jones", status: "Delayed"),
+    Response(teamMember: "Leanna Travers", status: "Standby"),
+    Response(teamMember: "Vivaan Morton", status: "Responding"),
   ];
 
   DemoTeam() {
@@ -42,7 +54,7 @@ class DemoTeam implements Team {
   String name;
 
   @override
-  String teamID;
+  String teamID = "demo_user.com";
 
   @override
   Future<dynamic> addMission(
@@ -51,9 +63,11 @@ class DemoTeam implements Team {
     _missions.insert(0, mission);
     return DemoReference(0);
   }
+  @override
+  bool get isInitialized => true;
 
   @override
-  Future<void> addPage({Page page}) {
+  Future<void> addPage({my.Page page}) {
     // TODO: implement addPage
     return null;
   }

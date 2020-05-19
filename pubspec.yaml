@@ -39,11 +39,12 @@ dependencies:
   cached_network_image: ^2.2.0
   flutter_local_notifications: ^1.4.3 # Used for iOS only
   apple_sign_in: ^0.1.0 #used for ios only
+  flutter_secure_storage: any # for debug purposes
+  before_after: any # for debug purposes
 
 
 
 debug_depencies:
-  rxdart: ^0.24.0 # used for iOS sample code
 
 
 

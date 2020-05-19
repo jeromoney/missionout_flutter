@@ -63,16 +63,18 @@ class BuildResponsesResult extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DataTable(
-        columns: [
-          DataColumn(label: Text('Team Member')),
-          DataColumn(label: Text('Status')),
-        ],
-        rows: responses
-            .map((response) => DataRow(cells: <DataCell>[
-                  DataCell(Text(response.teamMember ?? '')),
-                  DataCell(Text(response.status ?? '')),
-                ]))
-            .toList());
+    return SingleChildScrollView(
+      child: DataTable(
+          columns: [
+            DataColumn(label: Text('Team Member')),
+            DataColumn(label: Text('Status')),
+          ],
+          rows: responses
+              .map((response) => DataRow(cells: <DataCell>[
+                    DataCell(Text(response.teamMember ?? '')),
+                    DataCell(Text(response.status ?? '')),
+                  ]))
+              .toList()),
+    );
   }
 }

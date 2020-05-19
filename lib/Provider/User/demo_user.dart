@@ -17,7 +17,7 @@ class DemoUser with ChangeNotifier implements User {
   String region = "US";
 
   @override
-  String teamID;
+  String teamID = "demo_team.com";
 
   @override
   PhoneNumber voicePhoneNumber = PhoneNumber(phoneNumber: "+12125554321",isoCode: "US");
