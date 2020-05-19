@@ -33,18 +33,18 @@ class _MissionOutAppState extends State<MissionOutApp> {
     // make sure they are only shown it once
     if (!_dialogFlag) {
       _dialogFlag = true;
-      if (team.runtimeType == DemoTeam){
+      if (!["chaffeecountysarnorth.org"].contains(team.teamID)) { // TODO - make this not hard coded
+        String message;
+        if (team.runtimeType == DemoTeam) {
+          message =
+              "This demo account demonstrates the basic features of the app. You will not receive any pages.";
+        } else {
+          message =
+              "Could not locate a team with domain ${team.teamID}. Sign out and sign back in with your team email or contact your adminstrator for help";
+        }
         WidgetsBinding.instance.addPostFrameCallback((_) {
           AlertDialog dialog = AlertDialog(
-            content: Text("This demo account demonstrates the basic features of the app. You will not receive any pages."),
-          );
-          showDialog(context: context, child: dialog);
-        });
-      }
-      else if(!["chaffeecountysarnorth.org"].contains(team.teamID)) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          AlertDialog dialog = AlertDialog(
-            content: Text("Could not locate a team with domain ${team.teamID}. Sign out and sign back in with your team email or contact your adminstrator for help"),
+            content: Text(message),
           );
           showDialog(context: context, child: dialog);
         });
