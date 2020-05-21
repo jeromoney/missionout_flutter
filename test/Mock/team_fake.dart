@@ -8,12 +8,15 @@ import 'package:missionout/Provider/Team/team.dart';
 
 enum Yield { error, zeroResults, results, waiting }
 
-class TeamFake implements Team {
+class TeamFake with ChangeNotifier implements Team {
   Yield yieldValue;
 
   TeamFake(
       {this.yieldValue = Yield.results,
       this.chatURI = 'https://something.com'});
+
+  @override
+  bool get isInitialized => true;
 
   @override
   String name;

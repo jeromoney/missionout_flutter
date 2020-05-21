@@ -36,7 +36,7 @@ void main() async {
             providers: [
               ChangeNotifierProvider<AuthService>(create: (_) => AuthServiceFake()),
               ChangeNotifierProvider<User>(create: (_) => UserFake(isEditor: true)),
-              Provider<Team>(create: (_) => TeamFake()),
+              ChangeNotifierProvider<Team>(create: (_) => TeamFake()),
             ],
             child: MaterialApp(home: Scaffold(body: OverviewScreen())),
           );
@@ -57,7 +57,7 @@ void main() async {
             providers: [
               ChangeNotifierProvider<AuthService>(create: (_) => AuthServiceFake()),
               ChangeNotifierProvider<User>(create: (_) => UserFake(isEditor: false)),
-              Provider<Team>(create: (_) => TeamFake()),
+              ChangeNotifierProvider<Team>(create: (_) => TeamFake()),
             ],
             child: MaterialApp(home: Scaffold(body: OverviewScreen())),
           );
@@ -86,7 +86,7 @@ void main() async {
           Widget widget = MultiProvider(
             providers: [
               ChangeNotifierProvider<User>(create: (_) => UserFake()),
-              Provider<Team>(
+              ChangeNotifierProvider<Team>(
                   create: (_) => TeamFake(yieldValue: Yield.error)),
             ],
             child: MaterialApp(home: Scaffold(body: BuildMissionStream())),
@@ -103,7 +103,7 @@ void main() async {
             providers: [
               ChangeNotifierProvider<AuthService>(create: (_) => AuthServiceFake()),
               ChangeNotifierProvider<User>(create: (_) => UserFake()),
-              Provider<Team>(
+              ChangeNotifierProvider<Team>(
                 create: (_) => TeamFake(yieldValue: Yield.zeroResults),
               ),
             ],

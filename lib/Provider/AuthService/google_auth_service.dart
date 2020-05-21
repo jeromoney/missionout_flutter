@@ -30,8 +30,8 @@ class GoogleAuthService extends AuthService {
   String get email => _firebaseUser.email;
 
   @override
-  ImageProvider get photoImage =>
-      CachedNetworkImageProvider(_firebaseUser.photoUrl);
+  ImageProvider get photoImage => _firebaseUser.photoUrl != null ?
+      CachedNetworkImageProvider(_firebaseUser.photoUrl) : AssetImage("graphics/demoUser.png");
 
   final _firebaseAuth = FirebaseAuth.instance;
   final _firebaseMessaging = FirebaseMessaging();

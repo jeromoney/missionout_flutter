@@ -33,7 +33,7 @@ void main() {
         providers: [
           ChangeNotifierProvider<AuthService>(create: (_) => AuthServiceFake()),
           ChangeNotifierProvider<User>(create: (_) => UserFake()),
-          Provider<Team>(create: (_) => TeamFake(yieldValue: Yield.results)),
+          ChangeNotifierProvider<Team>(create: (_) => TeamFake(yieldValue: Yield.results)),
         ],
         child: MaterialApp(
           home: Scaffold(
@@ -51,7 +51,7 @@ void main() {
         providers: [
           ChangeNotifierProvider<AuthService>(create: (_) => AuthServiceFake()),
           ChangeNotifierProvider<User>(create: (_) => UserFake()),
-          Provider<Team>(create: (_) => TeamFake(yieldValue: Yield.error)),
+          ChangeNotifierProvider<Team>(create: (_) => TeamFake(yieldValue: Yield.error)),
         ],
         child: MaterialApp(
           home: Scaffold(
@@ -69,7 +69,7 @@ void main() {
         providers: [
           ChangeNotifierProvider<AuthService>(create: (_) => AuthServiceFake()),
           ChangeNotifierProvider<User>(create: (_) => UserFake()),
-          Provider<Team>(create: (_) => TeamFake(yieldValue: Yield.zeroResults)),
+          ChangeNotifierProvider<Team>(create: (_) => TeamFake(yieldValue: Yield.zeroResults)),
         ],
         child: MaterialApp(
           home: Scaffold(

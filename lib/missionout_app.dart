@@ -13,7 +13,6 @@ class MissionOutApp extends StatefulWidget {
 }
 
 class _MissionOutAppState extends State<MissionOutApp> {
-  bool _dialogFlag = false;
 
   @override
   Widget build(BuildContext context) {
@@ -28,28 +27,6 @@ class _MissionOutAppState extends State<MissionOutApp> {
           child: CircularProgressIndicator(),
         ),
       );
-
-    // Alert users that can't be identified that they are in sandbox mode
-    // make sure they are only shown it once
-    if (!_dialogFlag) {
-      _dialogFlag = true;
-      if (!["chaffeecountysarnorth.org"].contains(team.teamID)) { // TODO - make this not hard coded
-        String message;
-        if (team.runtimeType == DemoTeam) {
-          message =
-              "This demo account demonstrates the basic features of the app. You will not receive any pages.";
-        } else {
-          message =
-              "Could not locate a team with domain ${team.teamID}. Sign out and sign back in with your team email or contact your adminstrator for help";
-        }
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          AlertDialog dialog = AlertDialog(
-            content: Text(message),
-          );
-          showDialog(context: context, child: dialog);
-        });
-      }
-    }
 
     return FCMMessageHandler(
       child: MaterialApp(

@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:missionout/Provider/AuthService/email_auth_service.dart';
 import 'package:provider/single_child_widget.dart';
 
 import 'package:missionout/Provider/AuthService/apple_auth_service.dart';
@@ -10,7 +11,7 @@ import 'package:missionout/Provider/AuthService/demo_auth_service.dart';
 import 'package:missionout/Provider/AuthService/google_auth_service.dart';
 import 'package:missionout/my_providers.dart';
 
-enum AppModes { demo, google, signedOut, apple }
+enum AppModes { demo, google, signedOut, apple, email }
 
 class AppMode with ChangeNotifier {
   AppModes _appMode = AppModes.signedOut;
@@ -70,6 +71,12 @@ class AppMode with ChangeNotifier {
             appMode = AppModes.google;
             break;
           }
+        case "email":
+          {
+            authService = EmailAuthService.fromUser(user);
+            appMode = AppModes.email;
+            break;
+          }
         default:
           {
             throw StateError("Unexpected authorization method: $authProvider");
@@ -116,7 +123,7 @@ class AppMode with ChangeNotifier {
     super.dispose();
   }
 
-  Future<bool> signIn(AppModes appMode) async {
+  Future<bool> signIn(AppModes appMode, {String email}) async {
     // get AuthService of the requested type
     switch (appMode) {
       case AppModes.demo:
@@ -129,6 +136,9 @@ class AppMode with ChangeNotifier {
         return true;
       case AppModes.apple:
         _authService = AppleAuthService();
+        break;
+      case AppModes.email:
+        _authService = EmailAuthService(email:email);
         break;
     }
 
@@ -146,7 +156,7 @@ class AppMode with ChangeNotifier {
 
     if (appMode == AppModes.demo) {
       _providers = DemoProviders().providers;
-    } else if (appMode == AppModes.apple || appMode == AppModes.google) {
+    } else if (appMode == AppModes.apple || appMode == AppModes.google || appMode == AppModes.email) {
       _providers = FirebaseProviders.fromAuthService(_authService).providers;
     } else {
       throw StateError("Unexpected App Mode: $appMode");

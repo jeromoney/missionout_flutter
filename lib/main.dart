@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:missionout/UI/signin_screen.dart';
+import 'package:missionout/signin_app.dart';
 import 'package:missionout/missionout_app.dart';
 import 'package:provider/provider.dart';
 
@@ -29,13 +29,7 @@ class _MainScreenState extends State<MainScreen> {
     final appMode = Provider.of<AppMode>(context);
     final appModeState = appMode.appMode;
     if (appModeState == AppModes.signedOut) {
-      return MaterialApp(
-        home: SafeArea(child: SigninScreen()),
-        darkTheme: ThemeData.dark(),
-        theme: ThemeData(
-          primarySwatch: Colors.blueGrey,
-        ),
-      );
+      return MaterialApp(home: SafeArea(child: SigninApp()));
     } else {
       // this state can only be entered once the user is signed in
       final providers = appMode.providers;

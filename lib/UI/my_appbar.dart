@@ -3,6 +3,7 @@ import 'package:missionout/DataLayer/app_mode.dart';
 import 'package:missionout/Provider/AuthService/auth_service.dart';
 import 'package:missionout/Provider/User/user.dart';
 import 'package:missionout/UI/UserScreen/user_screen.dart';
+import 'package:missionout/common_widgets/platform_alert_dialog.dart';
 import 'package:provider/provider.dart';
 
 enum Menu { signOut, userOptions, editorOptions }
@@ -31,29 +32,26 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
       PopupMenuButton<Menu>(
         key: Key('PopupMenuButton'),
         // Used for testing, since I can't find this with find.byType
-        onSelected: (Menu result) {
+        onSelected: (Menu result) async {
           switch (result) {
             case Menu.signOut:
               {
-                final alert = AlertDialog(
-                    title: Text('Sign out?'),
-                    content: Text('You will no longer receive pages.'),
-                    actions: <Widget>[
-                      FlatButton(
-                          child: Text('Sign out'),
-                          onPressed: () {
-                            // tell User to sign out
-                            final authService = Provider.of<AuthService>(context, listen: false);
-                            authService.signOut();
-                            // Switch app mode to signed out to return to sign in screen
-                            final appMode = Provider.of<AppMode>(context, listen: false);
-                            appMode.setAppMode(AppModes.signedOut, appMessage: "Sucessfully signed out");
-                          }),
-                    ]);
-                showDialog(
-                  context: context,
-                  builder: (context) => alert,
-                );
+                final bool didRequestSignOut = await PlatformAlertDialog(
+                  title: 'Sign out?',
+                  content: 'You will no longer receive pages.',
+                  defaultActionText: 'Ok',
+                  cancelActionText: 'Cancel',
+                ).show(context);
+                if (didRequestSignOut) {
+                  // tell User to sign out
+                  final authService =
+                      Provider.of<AuthService>(context, listen: false);
+                  authService.signOut();
+                  // Switch app mode to signed out to return to sign in screen
+                  final appMode = Provider.of<AppMode>(context, listen: false);
+                  appMode.setAppMode(AppModes.signedOut,
+                      appMessage: "Successfully signed out");
+                }
               }
               break;
 

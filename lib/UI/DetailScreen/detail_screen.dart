@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:missionout/Provider/AuthService/auth_service.dart';
+import 'package:missionout/common_widgets/platform_alert_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:io' show Platform;

@@ -39,9 +39,9 @@ android {
     }
 
 
-    ndkVersion "21.0.6113669" // Hard coding to eliminate this issue https://github.com/android/ndk/issues/1190
+     ndkVersion "21.1.6352462" // Hard coding to eliminate this issue https://github.com/android/ndk/issues/1190
 
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -55,7 +55,7 @@ android {
     defaultConfig {
         applicationId "com.beaterboofs.missionout.android"
         minSdkVersion 18
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -83,13 +83,13 @@ flutter {
 }
 
 dependencies {
-    implementation 'com.google.firebase:firebase-auth:19.3.1'
-
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.google.firebase:firebase-analytics:17.4.1'
     implementation 'com.google.firebase:firebase-auth:19.3.1'
     implementation 'com.google.firebase:firebase-firestore:21.4.3'
     implementation 'com.google.firebase:firebase-messaging:20.1.7'
+
+    implementation 'com.google.android.gms:play-services-auth:18.0.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

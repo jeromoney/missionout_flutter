@@ -19,7 +19,7 @@ List<SingleChildStatelessWidget> PROVIDERS_FAKE = [
     create: (_) => AuthServiceFake(),
   ),
   ChangeNotifierProvider<User>(create: (_) => UserFake()),
-  Provider<Team>(create: (_) => TeamFake()),
+  ChangeNotifierProvider<Team>(create: (_) => TeamFake()),
   Provider<PhoneNumberHolder>(create: (_) => PhoneNumberHolder(null, null)),
   Provider<PhoneType>(create: (_) => PhoneType.voicePhoneNumber),
 ];

@@ -35,25 +35,22 @@ class EditDetail extends StatelessWidget {
                 children: <Widget>[
                   FlatButton(
                     child: const Text('Page Team'),
-                    onPressed: () {
-                      final alert = AlertDialog(
-                          title: Text('Page mission?'),
-                          content: Text('The entire team will be alerted.'),
-                          actions: <Widget>[
-                            FlatButton(
-                                child: Text('Page'),
-                                onPressed: () {
-                                  final page = missionpage.Page(
-                                      creator: authService.displayName,
-                                      mission: mission,
-                                      onlyEditors: false);
-                                  team.addPage(page: page);
-                                  Navigator.of(context, rootNavigator: true).pop('dialog');                                }),
-                          ]);
-                      showDialog(
-                        context: context,
-                        builder: (context) => alert,
-                      );
+                    onPressed: () async {
+                      final bool requestPage = await PlatformAlertDialog(
+                        title: 'Page mission?',
+                        content: 'The entire team will be alerted.',
+                        defaultActionText: 'Page',
+                        cancelActionText: 'Cancel',
+                      ).show(context);
+                      if (requestPage) {
+                        final page = missionpage.Page(
+                            creator: authService.displayName,
+                            mission: mission,
+                            onlyEditors: false);
+                        team.addPage(page: page);
+                        Navigator.pop(context);
+                      }
+                      ;
                     },
                   ),
                   FlatButton(
