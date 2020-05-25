@@ -1,0 +1,156 @@
+import 'package:apple_sign_in/scope.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+
+import 'package:missionout/services/auth_service/auth_service.dart';
+import 'package:missionout/services/team/firestore_team.dart';
+import 'package:missionout/services/team/team.dart';
+import 'package:missionout/services/user/my_firebase_user.dart';
+import 'package:missionout/services/user/user.dart';
+
+class FirebaseAuthService extends AuthService {
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final Firestore _db = Firestore.instance;
+  String teamID;
+
+  /// Combines data from Firebase with Firestore to return User
+  Future<User> _userFromFirebase(FirebaseUser firebaseUser) async {
+    if (firebaseUser == null) return null;
+    var document = await _db
+        .collection('users')
+        .document(firebaseUser.uid)
+        .get()
+        .catchError((error) {
+      debugPrint("Error retrieving user info from firestore: $error");
+      return null;
+    });
+
+    var data = document.data;
+    var requiredKeys = ["teamID"];
+    var isMissingRequiredKey =
+        requiredKeys.any((requiredKey) => !data.containsKey(requiredKey));
+    if (isMissingRequiredKey) {
+      debugPrint("Missing required key");
+      return null;
+    }
+    teamID = data['teamID'];
+
+    var optionalKeys = ["isEditor", "mobilePhoneNumber", "voicePhoneNumber"];
+    var isMissingOptionalKey =
+        optionalKeys.any((requiredKey) => !data.containsKey(optionalKeys));
+    if (isMissingOptionalKey)
+      debugPrint("Missing optional key; substituting null values.");
+
+    bool isEditor;
+    data.containsKey('isEditor')
+        ? isEditor = data['isEditor']
+        : isEditor = false;
+
+    PhoneNumber mobilePhoneNumber;
+    PhoneNumber voicePhoneNumber;
+    try {
+      mobilePhoneNumber = PhoneNumber(
+          isoCode: data['mobilePhoneNumber']['isoCode'],
+          phoneNumber: data['mobilePhoneNumber']['phoneNumber']);
+    } on TypeError catch (e) {
+      debugPrint("Phone number in old format, ignoring");
+    } on NoSuchMethodError catch (e) {
+      debugPrint("Phone number in old format, ignoring");
+    }
+    try {
+      voicePhoneNumber = PhoneNumber(
+          isoCode: data['']['isoCode'],
+          phoneNumber: data['voicePhoneNumber']['phoneNumber']);
+    } on TypeError catch (e) {
+      debugPrint("Phone number in old format, ignoring");
+    } on NoSuchMethodError catch (e) {
+      debugPrint("Phone number in old format, ignoring");
+    }
+
+    return MyFirebaseUser(
+      uid: firebaseUser.uid,
+      email: firebaseUser.email,
+      photoUrl: firebaseUser.photoUrl,
+      displayName: firebaseUser.displayName,
+      teamID: teamID,
+      isEditor: isEditor,
+      voicePhoneNumber: voicePhoneNumber,
+      mobilePhoneNumber: mobilePhoneNumber,
+    );
+  }
+
+  @override
+  Future<Team> createTeam() async {
+    if (teamID == null)
+      throw StateError("teamID needs to be retrieved before returning team");
+    var document = await _db.collection('teams').document(teamID).get();
+    var data = document.data;
+
+    var optionalKeys = ["name", "location", "chatURI"];
+    var isMissingOptionalKey =
+        optionalKeys.any((requiredKey) => !data.containsKey(optionalKeys));
+    if (isMissingOptionalKey)
+      debugPrint("Missing optional key for Team; substituting null values.");
+
+    String name = data['name'];
+    GeoPoint location = data['location'];
+    String chatURI = data['chatURI'];
+    return FirestoreTeam(
+        teamID: teamID, name: name, location: location, chatURI: chatURI);
+  }
+
+  @override
+  Future<User> currentUser() async {
+    final firebaseUser = await _firebaseAuth.currentUser();
+    return _userFromFirebase(firebaseUser);
+  }
+
+  @override
+  void dispose() {}
+
+  @override
+  Stream<User> get onAuthStateChanged =>
+      _firebaseAuth.onAuthStateChanged.asyncMap(_userFromFirebase);
+
+  @override
+  Future<User> sendSignInWithEmailLink(
+      {String email,
+      String url,
+      bool handleCodeInApp,
+      String iOSBundleID,
+      String androidPackageName,
+      bool androidInstallIfNotAvailable,
+      String androidMinimumVersion}) {
+    // TODO: implement sendSignInWithEmailLink
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<User> signInWithApple({List<Scope> scopes}) {
+    // TODO: implement signInWithApple
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<User> signInWithEmailAndLink({
+    String email,
+    String link,
+  }) {
+    // TODO: implement signInWithEmailAndLink
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<User> signInWithGoogle() {
+    // TODO: implement signInWithGoogle
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> signOut() {
+    // TODO: implement signOut
+    throw UnimplementedError();
+  }
+}

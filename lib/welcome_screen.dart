@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import 'DataLayer/app_mode.dart';
 import 'login_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -22,8 +20,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     super.initState();
 
     // Check if AppMode has any messages to display at the sign in screen
-    final appMode = Provider.of<AppMode>(context, listen: false);
-    final message = appMode.appMessage;
+    final message = "some welcome message";
     if (message == null) {
       return;
     }

@@ -2,12 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart'
     as flutter_auth_buttons;
-import 'package:missionout/Constants.dart';
+import 'package:missionout/constants/constants.dart';
 import 'package:package_info/package_info.dart';
-import 'package:provider/provider.dart';
 import 'package:apple_sign_in/apple_sign_in.dart' as apple;
 
-import 'DataLayer/app_mode.dart';
 
 class LoginScreen extends StatefulWidget {
   static const routeName = "/login_screen";
@@ -53,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
         flutter_auth_buttons.GoogleSignInButton(
           key: Key('Google Sign In Button'),
           onPressed: () {
-            _signIn(AppModes.google);
+            throw UnimplementedError("need to sign into google");
           },
           darkMode: _darkMode,
         ),
@@ -64,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ? flutter_auth_buttons.AppleButtonStyle.black
                   : flutter_auth_buttons.AppleButtonStyle.white,
               onPressed: () {
-                _signIn(AppModes.apple);
+                throw UnimplementedError("need to sign into apple");
               },
             ),
           ),
@@ -79,18 +77,6 @@ class _LoginScreenState extends State<LoginScreen> {
     appleSignInAvailable();
   }
 
-  _signIn(AppModes appMode) async {
-    final appModeProvider = Provider.of<AppMode>(context, listen: false);
-    bool success = await appModeProvider.signIn(appMode, email: "dsfdfd");
-
-    // Sign in process did not complete
-    if (!success) {
-      final snackbar = SnackBar(
-        content: Text("Error in sign in process"),
-      );
-      _scaffoldKey.currentState.showSnackBar(snackbar);
-    }
-  }
 
   Future<void> appleSignInAvailable() async {
     bool appleSignInAvailable = await apple.AppleSignIn.isAvailable();

@@ -6,7 +6,7 @@ import 'package:missionout/Provider/AuthService/auth_service.dart';
 import 'package:missionout/Provider/Team/team.dart';
 import 'package:missionout/Provider/User/user.dart';
 import 'package:missionout/UI/DetailScreen/detail_screen.dart';
-import 'package:missionout/UI/response_screen.dart';
+import 'package:missionout/scratch/app/response_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../Mock/auth_service_fake.dart';

@@ -182,7 +182,7 @@ void main() {
         longitudeController: lonController,
         actionController: someController,
       );
-      Mission mission = widget.fetchMission();
+      Mission mission = widget._fetchMission();
       assert(mission.location == GeoPoint(12.0,14.0));
     });
 
@@ -206,7 +206,7 @@ void main() {
         longitudeController: lonController,
         actionController: actionController,
       );
-      Mission mission = widget.fetchMission();
+      Mission mission = widget._fetchMission();
       assert (mission.description =='new description');
     });
   });

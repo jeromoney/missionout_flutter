@@ -1,43 +1,69 @@
 import 'package:flutter/material.dart';
-
-import 'package:missionout/signin_app.dart';
-import 'package:missionout/missionout_app.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:missionout/services/user/user.dart';
 import 'package:provider/provider.dart';
 
-import 'DataLayer/app_mode.dart';
+import 'package:missionout/services/auth_service/auth_service_adapter.dart';
+import 'package:missionout/services/apple_sign_in_available.dart';
+import 'package:missionout/services/auth_service/auth_service.dart';
+import 'package:missionout/app/auth_widget.dart';
+import 'package:missionout/app/auth_widget_builder.dart';
+import 'package:missionout/services/email_secure_store.dart';
+import 'package:missionout/services/firebase_email_link_handler.dart';
 
-void main() => runApp(Main());
-
-class Main extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => AppMode(),
-      child: MainScreen(),
-    );
-  }
+Future<void> main() async {
+  // Fix for: Unhandled Exception: ServicesBinding.defaultBinaryMessenger was accessed before the binding was initialized.
+  WidgetsFlutterBinding.ensureInitialized();
+  // Apple sign in is only available on iOS devices, so let's check that right away.
+  final appleSignInAvailable = await AppleSignInAvailable.check();
+  runApp(MyApp(appleSignInAvailable: appleSignInAvailable));
 }
 
-class MainScreen extends StatefulWidget {
-  @override
-  createState() => _MainScreenState();
-}
+class MyApp extends StatelessWidget {
+  final AuthServiceType initialAuthServiceType;
+  final AppleSignInAvailable appleSignInAvailable;
 
-class _MainScreenState extends State<MainScreen> {
+  const MyApp(
+      {this.initialAuthServiceType = AuthServiceType.firebase,
+      this.appleSignInAvailable});
+
   @override
-  Widget build(BuildContext context) {
-    final appMode = Provider.of<AppMode>(context);
-    final appModeState = appMode.appMode;
-    if (appModeState == AppModes.signedOut) {
-      return MaterialApp(home: SafeArea(child: SigninApp()));
-    } else {
-      // this state can only be entered once the user is signed in
-      final providers = appMode.providers;
-      assert(providers != null);
-      return MultiProvider(
-        providers: providers,
-        child: MaterialApp(home: SafeArea(child: MissionOutApp())),
+  Widget build(BuildContext context) => MultiProvider(
+        providers: [
+          Provider<AppleSignInAvailable>(
+            create: (_) => appleSignInAvailable,
+          ),
+          Provider<AuthService>(
+            create: (_) => AuthServiceAdapter(
+                initialAuthServiceType: initialAuthServiceType),
+            dispose: (_, AuthService authService) => authService.dispose(),
+          ),
+          Provider<EmailSecureStore>(
+            create: (_) =>
+                EmailSecureStore(flutterSecureStorage: FlutterSecureStorage()),
+          ),
+          ProxyProvider2<AuthService, EmailSecureStore,
+              FirebaseEmailLinkHandler>(
+            update: (_, AuthService authService, EmailSecureStore storage, __) => FirebaseEmailLinkHandler.createAndConfigure(
+              auth: authService,
+              userCredentialsStorage: storage,
+            ),
+            dispose: (_, linkHandler) => linkHandler.dispose(),
+          ),
+        ],
+        child: AuthWidgetBuilder(
+          builder: (BuildContext context, AsyncSnapshot<User> userSnapshot){
+            return MaterialApp(
+              home: SafeArea(
+                child: MaterialApp(
+                  title: 'Mission Out',
+                  theme: ThemeData(primarySwatch: Colors.blueGrey),
+                  darkTheme: ThemeData.dark(),
+                  home: AuthWidget(userSnapshot: userSnapshot,),
+                ),
+              ),
+            );
+          }
+        ),
       );
-    }
-  }
 }
