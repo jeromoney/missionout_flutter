@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:missionout/app/overview_screen.dart';
 import 'package:missionout/services/user/user.dart';
-import 'package:missionout/app/signin_app.dart';
+import 'package:missionout/app/sign_in/signin_app.dart';
 
 /// If the app is setting up the providers, a progress indicator should be displayed.
 /// If the user is null, it directs to sign in page.

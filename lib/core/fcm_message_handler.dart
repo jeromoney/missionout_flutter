@@ -1,7 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:missionout/DataLayer/fcm_message.dart';
+import 'package:missionout/data_objects/fcm_message.dart';
 
 class FCMMessageHandler extends StatefulWidget {
   final Widget child;

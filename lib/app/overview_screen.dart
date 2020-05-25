@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:missionout/DataLayer/mission_address_arguments.dart';
+import 'package:missionout/data_objects/mission_address_arguments.dart';
 import 'package:missionout/utils.dart';
 import 'package:provider/provider.dart';
 
-import 'package:missionout/DataLayer/mission.dart';
+import 'package:missionout/data_objects/mission.dart';
 import 'package:missionout/services/team/team.dart';
 import 'package:missionout/services/user/user.dart';
 import 'package:missionout/app/create_screen/create_screen.dart';

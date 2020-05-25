@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:missionout/DataLayer/mission_address_arguments.dart';
+import 'package:missionout/data_objects/mission_address_arguments.dart';
 import 'package:missionout/services/auth_service/auth_service.dart';
 import 'package:missionout/common_widgets/platform_alert_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:io' show Platform;
 
-import 'package:missionout/DataLayer/mission.dart';
-import 'package:missionout/DataLayer/page.dart' as missionpage;
-import 'package:missionout/DataLayer/response.dart';
+import 'package:missionout/data_objects/mission.dart';
+import 'package:missionout/data_objects/page.dart' as missionpage;
+import 'package:missionout/data_objects/response.dart';
 import 'package:missionout/services/Team/team.dart';
 import 'package:missionout/services/User/user.dart';
 import 'package:missionout/app/create_screen/create_screen.dart';

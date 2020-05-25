@@ -2,6 +2,8 @@ import 'package:apple_sign_in/scope.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 import 'package:missionout/services/auth_service/auth_service.dart';
@@ -143,9 +145,24 @@ class FirebaseAuthService extends AuthService {
   }
 
   @override
-  Future<User> signInWithGoogle() {
-    // TODO: implement signInWithGoogle
-    throw UnimplementedError();
+  Future<User> signInWithGoogle() async{
+    final googleSignIn = GoogleSignIn();
+    final googleUser = await googleSignIn.signIn();
+
+    if (googleUser == null) 
+      throw PlatformException(code: 'ERROR_ABORTED_BY_USER', message: 'Sign in aborted by user');
+    
+    final googleAuth = await googleUser.authentication;
+    
+    if (googleAuth.accessToken == null || googleAuth.idToken == null)
+      throw PlatformException(code: 'ERROR_MISSING_GOOGLE_AUTH_TOKEN',
+          message: 'Missing Google Auth Token');
+    final credential = GoogleAuthProvider.getCredential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+    final AuthResult authResult = await _firebaseAuth.signInWithCredential(credential);
+    return _userFromFirebase(authResult.user);
   }
 
   @override

@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import 'package:missionout/DataLayer/mission.dart';
-import 'package:missionout/DataLayer/page.dart' as missionpage;
-import 'package:missionout/DataLayer/response.dart';
+import 'package:missionout/data_objects/mission.dart';
+import 'package:missionout/data_objects/page.dart' as missionpage;
+import 'package:missionout/data_objects/response.dart';
 
 abstract class Team {
   final String teamID;

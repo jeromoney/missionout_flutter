@@ -2,9 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart'
     as flutter_auth_buttons;
+import 'package:missionout/app/sign_in/sign_in_manager.dart';
 import 'package:missionout/constants/constants.dart';
+import 'package:missionout/services/auth_service/auth_service.dart';
 import 'package:package_info/package_info.dart';
 import 'package:apple_sign_in/apple_sign_in.dart' as apple;
+import 'package:provider/provider.dart';
 
 
 class LoginScreen extends StatefulWidget {
@@ -51,7 +54,8 @@ class _LoginScreenState extends State<LoginScreen> {
         flutter_auth_buttons.GoogleSignInButton(
           key: Key('Google Sign In Button'),
           onPressed: () {
-            throw UnimplementedError("need to sign into google");
+            final signInManager = Provider.of<SignInManager>(context, listen: false);
+            signInManager.signInWithGoogle();
           },
           darkMode: _darkMode,
         ),

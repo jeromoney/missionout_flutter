@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:missionout/DataLayer/mission_address_arguments.dart';
-import 'package:missionout/DataLayer/response.dart';
+import 'package:missionout/data_objects/mission_address_arguments.dart';
+import 'package:missionout/data_objects/response.dart';
 import 'package:missionout/services/team/team.dart';
 import 'package:missionout/services/user/user.dart';
 import 'package:missionout/app/my_appbar.dart';

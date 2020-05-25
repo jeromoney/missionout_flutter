@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-import 'package:missionout/DataLayer/phone_number_holder.dart';
+import 'package:missionout/data_objects/phone_number_holder.dart';
 import 'package:missionout/services/auth_service/auth_service.dart';
 import 'package:missionout/services/user/user.dart';
 import 'package:provider/provider.dart';

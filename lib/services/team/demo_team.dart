@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:missionout/DataLayer/mission.dart';
-import 'package:missionout/DataLayer/page.dart' as my;
-import 'package:missionout/DataLayer/response.dart';
+import 'package:missionout/data_objects/mission.dart';
+import 'package:missionout/data_objects/page.dart' as my;
+import 'package:missionout/data_objects/response.dart';
 import 'package:missionout/Provider/Team/team.dart';
 
 class DemoTeam with ChangeNotifier implements Team {

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:missionout/DataLayer/mission.dart';
+import 'package:missionout/data_objects/mission.dart';
 class Page {
   String creator;
   String description;
