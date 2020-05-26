@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:missionout/constants/strings.dart';
 import 'package:missionout/data_objects/mission_address_arguments.dart';
 import 'package:missionout/services/auth_service/auth_service.dart';
 import 'package:missionout/common_widgets/platform_alert_dialog.dart';
@@ -9,8 +10,8 @@ import 'dart:io' show Platform;
 import 'package:missionout/data_objects/mission.dart';
 import 'package:missionout/data_objects/page.dart' as missionpage;
 import 'package:missionout/data_objects/response.dart';
-import 'package:missionout/services/Team/team.dart';
-import 'package:missionout/services/User/user.dart';
+import 'package:missionout/services/team/team.dart';
+import 'package:missionout/services/user/user.dart';
 import 'package:missionout/app/create_screen/create_screen.dart';
 import 'package:missionout/app/my_appbar.dart';
 import 'package:missionout/app/response_screen.dart';
@@ -66,7 +67,7 @@ class _DetailScreenStreamWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     final team = Provider.of<Team>(context);
     final MissionAddressArguments arguments = ModalRoute.of(context).settings.arguments;
-
+    assert(arguments != null);
 
     return StreamBuilder<Mission>(
         stream: team.fetchSingleMission(

@@ -1,5 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:missionout/app/editor_screen/editor_screen.dart';
+import 'package:missionout/app/overview_screen.dart';
+import 'package:missionout/app/sign_in/login_screen.dart';
+import 'package:missionout/app/user_screen/user_screen.dart';
+import 'package:missionout/core/fcm_message_handler.dart';
 import 'package:missionout/services/user/user.dart';
 import 'package:provider/provider.dart';
 
@@ -11,6 +17,9 @@ import 'package:missionout/app/auth_widget_builder.dart';
 import 'package:missionout/services/email_secure_store.dart';
 import 'package:missionout/services/firebase_email_link_handler.dart';
 
+import 'app/detail_screen/detail_screen.dart';
+import 'app/response_screen.dart';
+
 Future<void> main() async {
   // Fix for: Unhandled Exception: ServicesBinding.defaultBinaryMessenger was accessed before the binding was initialized.
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,6 +29,8 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
+  static final navKey = GlobalKey<
+      NavigatorState>(); // Passes context to widgets above MaterialApp
   final AuthServiceType initialAuthServiceType;
   final AppleSignInAvailable appleSignInAvailable;
 
@@ -29,41 +40,37 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MultiProvider(
-        providers: [
-          Provider<AppleSignInAvailable>(
-            create: (_) => appleSignInAvailable,
-          ),
-          Provider<AuthService>(
-            create: (_) => AuthServiceAdapter(
-                initialAuthServiceType: initialAuthServiceType),
-            dispose: (_, AuthService authService) => authService.dispose(),
-          ),
-          Provider<EmailSecureStore>(
-            create: (_) =>
-                EmailSecureStore(flutterSecureStorage: FlutterSecureStorage()),
-          ),
-          ProxyProvider2<AuthService, EmailSecureStore,
-              FirebaseEmailLinkHandler>(
-            update: (_, AuthService authService, EmailSecureStore storage, __) => FirebaseEmailLinkHandler.createAndConfigure(
-              auth: authService,
-              userCredentialsStorage: storage,
+          providers: [
+            Provider<AppleSignInAvailable>(
+              create: (_) => appleSignInAvailable,
             ),
-            dispose: (_, linkHandler) => linkHandler.dispose(),
-          ),
-        ],
-        child: AuthWidgetBuilder(
-          builder: (BuildContext context, AsyncSnapshot<User> userSnapshot){
-            return MaterialApp(
-              home: SafeArea(
-                child: MaterialApp(
-                  title: 'Mission Out',
-                  theme: ThemeData(primarySwatch: Colors.blueGrey),
-                  darkTheme: ThemeData.dark(),
-                  home: AuthWidget(userSnapshot: userSnapshot,),
-                ),
+            Provider<AuthService>(
+              create: (_) => AuthServiceAdapter(
+                  initialAuthServiceType: initialAuthServiceType),
+              dispose: (_, AuthService authService) => authService.dispose(),
+            ),
+            Provider<EmailSecureStore>(
+              create: (_) => EmailSecureStore(
+                  flutterSecureStorage: FlutterSecureStorage()),
+            ),
+            ProxyProvider2<AuthService, EmailSecureStore,
+                FirebaseEmailLinkHandler>(
+              update:
+                  (_, AuthService authService, EmailSecureStore storage, __) =>
+                      FirebaseEmailLinkHandler.createAndConfigure(
+                auth: authService,
+                userCredentialsStorage: storage,
               ),
-            );
-          }
-        ),
-      );
+              dispose: (_, linkHandler) => linkHandler.dispose(),
+            ),
+          ],
+          child: FCMMessageHandler(
+            child: AuthWidgetBuilder(
+              builder:
+                  (BuildContext context, AsyncSnapshot<User> userSnapshot) =>
+                      AuthWidget(
+                userSnapshot: userSnapshot,
+              ),
+            ),
+          ));
 }

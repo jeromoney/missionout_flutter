@@ -59,5 +59,11 @@ class MockAuthService extends AuthService{
     throw UnimplementedError();
   }
 
+  @override
+  Future<bool> isSignInWithEmailLink(String link) {
+    // TODO: implement isSignInWithEmailLink
+    throw UnimplementedError();
+  }
+
 
 }

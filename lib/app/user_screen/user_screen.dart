@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:missionout/constants/strings.dart';
 import 'package:missionout/data_objects/phone_number_holder.dart';
 import 'package:missionout/services/auth_service/auth_service.dart';
 import 'package:missionout/services/user/user.dart';
@@ -40,7 +41,7 @@ class UserScreen extends StatelessWidget {
                     create: (_) => PhoneNumberType.voice,
                     child: PhoneEntry(),
                   ),
-                  SubmitButton(),
+                  _SubmitButton(),
                 ],
               )),
             ),
@@ -49,34 +50,77 @@ class UserScreen extends StatelessWidget {
   }
 }
 
-class SubmitButton extends StatelessWidget {
+class _SubmitButton extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return RaisedButton(
-        child: Text('Submit'),
-        onPressed: () async {
-          if (Form.of(context).validate()) {
-            Scaffold.of(context).showSnackBar(SnackBar(
-              content: Text('Processing'),
-            ));
-            final user = Provider.of<User>(context, listen: false);
-            final phoneNumberHolder =
-                Provider.of<PhoneNumberHolder>(context, listen: false);
-            await user.updatePhoneNumber(
-                phoneNumber: phoneNumberHolder.mobilePhoneNumber,
-                type: PhoneNumberType.mobile);
-            await user.updatePhoneNumber(
-                phoneNumber: phoneNumberHolder.voicePhoneNumber,
-                type: PhoneNumberType.voice);
+  State<_SubmitButton> createState() => _SubmitButtonState();
+}
 
-            //update User
-            user.mobilePhoneNumber = phoneNumberHolder.mobilePhoneNumber;
-            user.voicePhoneNumber = phoneNumberHolder.voicePhoneNumber;
-          } else {
-            Scaffold.of(context).showSnackBar(SnackBar(
-              content: Text('Please correct errors in phone numbers'),
-            ));
-          }
+enum _ButtonState { idle, processing, error, success }
+
+class _SubmitButtonState extends State<_SubmitButton> {
+  _ButtonState _buttonState = _ButtonState.idle;
+
+  @override
+  // ignore: missing_return
+  Widget build(BuildContext context) {
+    switch (_buttonState) {
+      case _ButtonState.idle:
+        return RaisedButton(
+          child: Text(Strings.submit),
+          onPressed: _submitPhoneNumber,
+        );
+      case _ButtonState.processing:
+        return RaisedButton(
+          child: SizedBox(child: CircularProgressIndicator(strokeWidth: 3.0,), height: 20.0,width: 20.0,),
+          onPressed: () {},
+        );
+      case _ButtonState.error:
+        return RaisedButton(
+          child: Text("❌"),
+          onPressed: _submitPhoneNumber,
+        );
+      case _ButtonState.success:
+        return RaisedButton(
+          child: Text(Strings.sucessEmoji),
+          onPressed: _submitPhoneNumber,
+        );
+    }
+  }
+
+  _submitPhoneNumber() async {
+    if (Form.of(context).validate()) {
+      setState(() {
+        _buttonState = _ButtonState.processing;
+      });
+      final user = Provider.of<User>(context, listen: false);
+      final phoneNumberHolder =
+          Provider.of<PhoneNumberHolder>(context, listen: false);
+      try {
+        // Ensure that both async functions are called before the await
+        user.updatePhoneNumber(
+            phoneNumber: phoneNumberHolder.mobilePhoneNumber,
+            type: PhoneNumberType.mobile);
+        await user.updatePhoneNumber(
+            phoneNumber: phoneNumberHolder.voicePhoneNumber,
+            type: PhoneNumberType.voice);
+      } on Exception catch (e) {
+        final snackbar = SnackBar(
+          content: Text("Error occurred while submitting phone number."),
+        );
+        Scaffold.of(context).showSnackBar(snackbar);
+
+        setState(() {
+          _buttonState = _ButtonState.idle;
         });
+        return;
+      }
+      setState(() {
+        _buttonState = _ButtonState.success;
+      });
+    } else {
+      Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text(Strings.phoneNumberError),
+      ));
+    }
   }
 }

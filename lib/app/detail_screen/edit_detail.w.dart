@@ -7,7 +7,6 @@ class EditDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authService = Provider.of<AuthService>(context);
     final user = Provider.of<User>(context);
     final team = Provider.of<Team>(context);
     // waiting
@@ -16,7 +15,7 @@ class EditDetail extends StatelessWidget {
     }
     // error
     if (snapshot.data == null) {
-      return Text("There was an error.");
+      return Text(Strings.errorMessage);
     }
     // success
     final Mission mission = snapshot.data;
@@ -24,7 +23,6 @@ class EditDetail extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        // TODO - think there is a way to do this with one call, syntactic sugar
         user.isEditor
             ? Divider(
                 thickness: 1,
@@ -34,13 +32,13 @@ class EditDetail extends StatelessWidget {
             ? ButtonBar(
                 children: <Widget>[
                   FlatButton(
-                    child: const Text('Page Team'),
+                    child: const Text(Strings.pageTeam),
                     onPressed: () async {
                       final bool requestPage = await PlatformAlertDialog(
-                        title: 'Page mission?',
-                        content: 'The entire team will be alerted.',
-                        defaultActionText: 'Page',
-                        cancelActionText: 'Cancel',
+                        title: Strings.pageTeamQuestion,
+                        content: Strings.pageTeamConsequence,
+                        defaultActionText: Strings.pageTeam,
+                        cancelActionText: Strings.cancel,
                       ).show(context);
                       if (requestPage) {
                         final page = missionpage.Page(

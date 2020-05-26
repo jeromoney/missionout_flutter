@@ -21,4 +21,8 @@ class SignInManager {
   Future<void> signInWithGoogle() async {
     return await _signIn(authService.signInWithGoogle);
   }
+
+  Future<void> signInWithApple() async {
+    return await _signIn(authService.signInWithApple);
+  }
 }

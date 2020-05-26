@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 import 'package:missionout/services/user/user.dart';
@@ -30,7 +31,6 @@ class MyFirebaseUser implements User {
 
   // Implementation specific variables
   final Firestore _db = Firestore.instance;
-  FirebaseUser _firebaseUser;
 
   @override
   MyFirebaseUser(
@@ -42,13 +42,16 @@ class MyFirebaseUser implements User {
       @required this.isEditor,
       this.voicePhoneNumber,
       this.mobilePhoneNumber}) {
-    addTokenToFirestore(_firebaseUser);
+    addTokenToFirestore();
   }
 
   @override
-  updatePhoneNumber(
+  Future updatePhoneNumber(
       {@required PhoneNumber phoneNumber,
       @required PhoneNumberType type}) async {
+    type == PhoneNumberType.mobile
+        ? mobilePhoneNumber = phoneNumber
+        : voicePhoneNumber = phoneNumber;
     await _db.document('users/$uid').updateData({
       (type == PhoneNumberType.mobile
           ? 'mobilePhoneNumber'
@@ -56,18 +59,16 @@ class MyFirebaseUser implements User {
         'isoCode': phoneNumber.isoCode,
         'phoneNumber': phoneNumber.phoneNumber
       },
-    }).catchError((error) {
-      throw error;
     });
   }
 
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
-  Future<void> addTokenToFirestore(FirebaseUser user) async {
+  Future<void> addTokenToFirestore() async {
     // Setting up the user will be the responsibility of the server.
     // This method adds the user token to firestore
     final fcmToken = await _firebaseMessaging.getToken();
-    await _db.collection('users').document(user.uid).updateData({
+    await _db.collection('users').document(this.uid).updateData({
       'tokens': FieldValue.arrayUnion([fcmToken])
     }).then((value) {
       debugPrint('Added token to user document');
@@ -76,4 +77,3 @@ class MyFirebaseUser implements User {
     });
   }
 }
-

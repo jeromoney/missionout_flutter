@@ -1,7 +1,11 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:missionout/common_widgets/platform_alert_dialog.dart';
+import 'package:missionout/constants/strings.dart';
 import 'package:missionout/data_objects/fcm_message.dart';
+import 'package:missionout/main.dart';
 
 class FCMMessageHandler extends StatefulWidget {
   final Widget child;
@@ -23,7 +27,7 @@ class _FCMMessageHandlerState extends State<FCMMessageHandler> {
   });
 
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  FlutterLocalNotificationsPlugin();
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   @override
@@ -44,11 +48,11 @@ class _FCMMessageHandlerState extends State<FCMMessageHandler> {
       onMessage: (Map<String, dynamic> message) async {
         debugPrint("Received onMessage message");
         final notification = FCMMessage(message);
-        final alertDialog = AlertDialog(
-          title: Text("Update: ${notification.title}"),
-          content: Text(notification.body),
-        );
-        showDialog(context: context, child: alertDialog);
+        PlatformAlertDialog(
+          title: "Update: ${notification.title}",
+          content: notification.body,
+          defaultActionText: Strings.ok,).show(
+            MyApp.navKey.currentState.overlay.context);
       },
       onResume: (Map<String, dynamic> message) async {
         debugPrint("Received onResume message");
@@ -57,7 +61,7 @@ class _FCMMessageHandlerState extends State<FCMMessageHandler> {
         var iOSPlatformChannelSpecifics = IOSNotificationDetails(
             presentSound: true, sound: "school_fire_alarm.m4a");
         var platformChannelSpecifics =
-            NotificationDetails(null, iOSPlatformChannelSpecifics);
+        NotificationDetails(null, iOSPlatformChannelSpecifics);
         await _flutterLocalNotificationsPlugin.show(0, message["description"],
             message["needForAction"], platformChannelSpecifics);
       },

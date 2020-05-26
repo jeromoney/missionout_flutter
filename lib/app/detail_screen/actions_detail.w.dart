@@ -77,8 +77,8 @@ class ActionsDetail extends StatelessWidget {
             IconButton(
               icon: Icon(Icons.people),
               onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (BuildContext context) => ResponseScreen()));
+                final MissionAddressArguments arguments = ModalRoute.of(context).settings.arguments;
+                Navigator.of(context).pushNamed(ResponseScreen.routeName, arguments: arguments);
               },
             ),
           ],

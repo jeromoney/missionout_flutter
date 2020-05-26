@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:missionout/Provider/AuthService/auth_service.dart';
+import 'package:missionout/services/auth_service/auth_service.dart';
 
 class DemoAuthService extends AuthService {
   @override

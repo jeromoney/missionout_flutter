@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:missionout/app/mission_out_app.dart';
 import 'package:missionout/app/overview_screen.dart';
 import 'package:missionout/services/user/user.dart';
 import 'package:missionout/app/sign_in/signin_app.dart';
@@ -14,11 +16,13 @@ class AuthWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (userSnapshot.connectionState == ConnectionState.active) {
-      return userSnapshot.hasData ? OverviewScreen() : SigninApp();
+      return userSnapshot.hasData ? MissionOutApp() : SigninApp();
     }
-    return Scaffold(
-      body: Center(
-        child: CircularProgressIndicator(),
+    return MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
       ),
     );
   }

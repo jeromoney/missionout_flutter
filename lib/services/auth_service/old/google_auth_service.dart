@@ -5,7 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:missionout/Provider/AuthService/auth_service.dart';
+import 'package:missionout/services/auth_service/auth_service.dart';
 
 class GoogleAuthService extends AuthService {
   // user has already signed in

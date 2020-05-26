@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:missionout/data_objects/mission.dart';
 import 'package:missionout/data_objects/page.dart' as my;
 import 'package:missionout/data_objects/response.dart';
-import 'package:missionout/Provider/Team/team.dart';
+import 'package:missionout/services/team/team.dart';
 
 class DemoTeam with ChangeNotifier implements Team {
   List<Mission> _missions = [

@@ -7,6 +7,7 @@ import 'package:missionout/app/my_appbar.dart';
 import 'package:provider/provider.dart';
 
 class ResponseScreen extends StatelessWidget {
+  static const String routeName = "/responseScreen";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,7 +17,6 @@ class ResponseScreen extends StatelessWidget {
   }
 }
 
-@visibleForTesting
 class BuildResponseStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

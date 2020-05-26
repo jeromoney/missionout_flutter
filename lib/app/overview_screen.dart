@@ -11,12 +11,14 @@ import 'package:missionout/app/detail_screen/detail_screen.dart';
 import 'package:missionout/app/my_appbar.dart';
 
 class OverviewScreen extends StatelessWidget {
+  static const routeName = "/overviewScreen";
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
     if (user == null) return LinearProgressIndicator();
     return Scaffold(
-      key: Key("Overview Screen"),
+        key: Key("Overview Screen"),
         appBar: MyAppBar(title: 'Overview'),
         body: BuildMissionStream(),
         floatingActionButton: user.isEditor // only show FAB to editors
@@ -29,18 +31,11 @@ class OverviewScreen extends StatelessWidget {
   }
 }
 
-class P {
-}
-
-@visibleForTesting
 class BuildMissionStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final team = Provider.of<Team>(context);
-    if (team == null) {
-      // A brief period while waiting for the user to access the current team ID
-      return LinearProgressIndicator();
-    }
+    if (team == null) return LinearProgressIndicator();
 
     return StreamBuilder<List<Mission>>(
         stream: team.fetchMissions(),
@@ -75,7 +70,6 @@ class BuildMissionStream extends StatelessWidget {
   }
 }
 
-@visibleForTesting
 class BuildMissionResults extends StatelessWidget {
   final List<Mission> missions;
 
@@ -97,9 +91,9 @@ class BuildMissionResults extends StatelessWidget {
                 ' ' +
                 (formatTime(mission.time) ?? '')),
             onTap: () {
-              final MissionAddressArguments arguments = MissionAddressArguments(mission.address);
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => DetailScreen()));
+              final MissionAddressArguments arguments =
+                  MissionAddressArguments(mission.address);
+              Navigator.pushNamed(context, DetailScreen.routeName, arguments: arguments);
             },
           );
         },

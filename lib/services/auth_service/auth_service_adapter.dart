@@ -71,7 +71,7 @@ class AuthServiceAdapter extends AuthService {
   Stream<User> get onAuthStateChanged => _onAuthStateChangedController.stream;
 
   @override
-  Future<User> sendSignInWithEmailLink({
+  Future sendSignInWithEmailLink({
     @required String email,
     @required String url,
     @required bool handleCodeInApp,
@@ -105,4 +105,8 @@ class AuthServiceAdapter extends AuthService {
 
   @override
   Future<void> signOut() => authService.signOut();
+
+  @override
+  Future<bool> isSignInWithEmailLink(String link) =>
+      authService.isSignInWithEmailLink(link);
 }
