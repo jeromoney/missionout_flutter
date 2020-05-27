@@ -1,10 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:missionout/app/editor_screen/editor_screen.dart';
-import 'package:missionout/app/overview_screen.dart';
-import 'package:missionout/app/sign_in/login_screen.dart';
-import 'package:missionout/app/user_screen/user_screen.dart';
+import 'package:logging/logging.dart';
 import 'package:missionout/core/fcm_message_handler.dart';
 import 'package:missionout/services/user/user.dart';
 import 'package:provider/provider.dart';
@@ -17,14 +14,17 @@ import 'package:missionout/app/auth_widget_builder.dart';
 import 'package:missionout/services/email_secure_store.dart';
 import 'package:missionout/services/firebase_email_link_handler.dart';
 
-import 'app/detail_screen/detail_screen.dart';
-import 'app/response_screen.dart';
 
 Future<void> main() async {
   // Fix for: Unhandled Exception: ServicesBinding.defaultBinaryMessenger was accessed before the binding was initialized.
   WidgetsFlutterBinding.ensureInitialized();
   // Apple sign in is only available on iOS devices, so let's check that right away.
   final appleSignInAvailable = await AppleSignInAvailable.check();
+
+  Logger.root.level = Level.ALL; // defaults to Level.INFO
+  Logger.root.onRecord.listen((record) {
+    print('${record.level.name}: ${record.time}: ${record.message}');
+  });
   runApp(MyApp(appleSignInAvailable: appleSignInAvailable));
 }
 

@@ -1,4 +1,4 @@
-class Strings{
+class Strings {
   // Generic strings
   static const String ok = 'OK';
   static const String cancel = 'Cancel';
@@ -47,6 +47,7 @@ class Strings{
   static const String submitEmailAddressLink =
       'Submit your email address to receive an activation link.';
   static const String checkYourEmail = 'Check your email';
+
   static String activationLinkSent(String email) =>
       'We have sent an activation link to $email';
   static const String errorSendingEmail = 'Error sending email';
@@ -77,8 +78,12 @@ class Strings{
   static const String pageTeamConsequence = 'The entire team will be alerted.';
 
   // User Screen
-static const String phoneNumberError = 'Please correct errors in phone numbers';
-static const String submit = 'Submit';
-static const String sucessEmoji = '✔️';
-
+  static const String userScreenTitle = 'User Options';
+  static const String phoneNumberError =
+      'Please correct errors in phone numbers';
+  static const String submit = 'Submit';
+  static const String sucessEmoji = '✔️';
+  static const String anonymousName = 'anonymous';
+  static const String anonymousEmail = 'unknown email';
+  static const String errorPhoneSubmission = 'Error occurred while submitting phone number.';
 }

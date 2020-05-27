@@ -2,12 +2,14 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:logging/logging.dart';
 import 'package:missionout/common_widgets/platform_alert_dialog.dart';
 import 'package:missionout/constants/strings.dart';
 import 'package:missionout/data_objects/fcm_message.dart';
 import 'package:missionout/main.dart';
 
 class FCMMessageHandler extends StatefulWidget {
+  final _log = Logger('FCMMessageHandler');
   final Widget child;
 
   FCMMessageHandler({
@@ -38,15 +40,15 @@ class _FCMMessageHandlerState extends State<FCMMessageHandler> {
             sound: true, badge: true, alert: true, provisional: false));
     _firebaseMessaging.onIosSettingsRegistered
         .listen((IosNotificationSettings settings) {
-      print("Settings registered: $settings");
+      widget._log.info("Settings registered: $settings");
     });
     _firebaseMessaging.getToken().then((String token) {
       assert(token != null);
-      debugPrint(token);
+      widget._log.info('Accessed FCM token', token);
     });
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
-        debugPrint("Received onMessage message");
+        widget._log.info("Received onMessage message");
         final notification = FCMMessage(message);
         PlatformAlertDialog(
           title: "Update: ${notification.title}",
@@ -55,8 +57,8 @@ class _FCMMessageHandlerState extends State<FCMMessageHandler> {
             MyApp.navKey.currentState.overlay.context);
       },
       onResume: (Map<String, dynamic> message) async {
-        debugPrint("Received onResume message");
-        debugPrint(message.toString());
+        widget._log.info("Received onResume message");
+        widget._log.info(message);
         // Android notifications are handled in java code
         var iOSPlatformChannelSpecifics = IOSNotificationDetails(
             presentSound: true, sound: "school_fire_alarm.m4a");

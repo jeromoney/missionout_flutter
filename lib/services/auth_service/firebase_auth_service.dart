@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:logging/logging.dart';
 
 import 'package:missionout/services/auth_service/auth_service.dart';
 import 'package:missionout/services/team/firestore_team.dart';
@@ -15,9 +16,9 @@ import 'package:missionout/services/user/my_firebase_user.dart';
 import 'package:missionout/services/user/user.dart';
 
 class FirebaseAuthService extends AuthService {
+  final _log = Logger('FirebaseAuthService');
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final Firestore _db = Firestore.instance;
-
   final _firebaseMessaging = FirebaseMessaging();
   FirebaseUser _firebaseUser;
 
@@ -33,7 +34,7 @@ class FirebaseAuthService extends AuthService {
         .document(firebaseUser.uid)
         .get()
         .catchError((error) {
-      debugPrint("Error retrieving user info from firestore: $error");
+      _log.warning("Error retrieving user info from firestore", error);
       return null;
     });
 
@@ -42,7 +43,7 @@ class FirebaseAuthService extends AuthService {
     var isMissingRequiredKey =
         requiredKeys.any((requiredKey) => !data.containsKey(requiredKey));
     if (isMissingRequiredKey) {
-      debugPrint("Missing required key");
+      _log.severe("Missing required key for Team document in Firestore");
       return null;
     }
     teamID = data['teamID'];
@@ -51,7 +52,7 @@ class FirebaseAuthService extends AuthService {
     var isMissingOptionalKey =
         optionalKeys.any((requiredKey) => !data.containsKey(optionalKeys));
     if (isMissingOptionalKey)
-      debugPrint("Missing optional key; substituting null values.");
+      _log.warning("Missing optional key; substituting null values.");
 
     bool isEditor;
     data.containsKey('isEditor')
@@ -64,19 +65,19 @@ class FirebaseAuthService extends AuthService {
       mobilePhoneNumber = PhoneNumber(
           isoCode: data['mobilePhoneNumber']['isoCode'],
           phoneNumber: data['mobilePhoneNumber']['phoneNumber']);
-    } on TypeError catch (e) {
-      debugPrint("Phone number in old format, ignoring");
-    } on NoSuchMethodError catch (e) {
-      debugPrint("Phone number in old format, ignoring");
+    } on TypeError catch (error) {
+      _log.warning("Phone number in old format, ignoring", error);
+    } on NoSuchMethodError catch (error) {
+      _log.warning("Phone number in old format, ignoring", error);
     }
     try {
       voicePhoneNumber = PhoneNumber(
           isoCode: data['voicePhoneNumber']['isoCode'],
           phoneNumber: data['voicePhoneNumber']['phoneNumber']);
-    } on TypeError catch (e) {
-      debugPrint("Phone number in old format, ignoring");
-    } on NoSuchMethodError catch (e) {
-      debugPrint("Phone number in old format, ignoring");
+    } on TypeError catch (error) {
+      _log.warning("Phone number in old format, ignoring", error);
+    } on NoSuchMethodError catch (error) {
+      _log.warning("Phone number in old format, ignoring", error);
     }
 
     return MyFirebaseUser(
@@ -102,7 +103,7 @@ class FirebaseAuthService extends AuthService {
     var isMissingOptionalKey =
         optionalKeys.any((requiredKey) => !data.containsKey(optionalKeys));
     if (isMissingOptionalKey)
-      debugPrint("Missing optional key for Team; substituting null values.");
+      _log.warning("Missing optional key for Team; substituting null values.");
 
     String name = data['name'];
     GeoPoint location = data['location'];
@@ -180,10 +181,12 @@ class FirebaseAuthService extends AuthService {
     }
     return null;
   }
+
   @override
   Future<bool> isSignInWithEmailLink(String link) async {
     return await _firebaseAuth.isSignInWithEmailLink(link);
   }
+
   @override
   Future<User> signInWithEmailAndLink({
     String email,
@@ -227,9 +230,9 @@ class FirebaseAuthService extends AuthService {
     _db.collection('users').document(_firebaseUser.uid).updateData({
       'tokens': FieldValue.arrayRemove([fcmToken])
     }).then((value) {
-      debugPrint('Removed token to user document');
+      _log.info('Removed token to user document');
     }).catchError((error) {
-      debugPrint('Error removing token from user document');
+      _log.warning('Error removing token from user document', error);
     });
 
     await GoogleSignIn().signOut();

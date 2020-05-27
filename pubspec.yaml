@@ -42,6 +42,7 @@ dependencies:
   email_validator: ^1.0.0
   package_info: ^0.4.0
   flutter_secure_storage: ^3.3.1+1
+  logging: ">=0.11.4 <2.0.0"
   # for scratch package
   random_string: ^2.0.0
   rxdart: ^0.23.1

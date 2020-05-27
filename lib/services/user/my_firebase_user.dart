@@ -1,11 +1,10 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:logging/logging.dart';
 
 import 'package:missionout/services/user/user.dart';
 
@@ -31,7 +30,7 @@ class MyFirebaseUser implements User {
 
   // Implementation specific variables
   final Firestore _db = Firestore.instance;
-
+  final _log = Logger('MyFirebaseUser');
   @override
   MyFirebaseUser(
       {@required this.uid,
@@ -71,9 +70,9 @@ class MyFirebaseUser implements User {
     await _db.collection('users').document(this.uid).updateData({
       'tokens': FieldValue.arrayUnion([fcmToken])
     }).then((value) {
-      debugPrint('Added token to user document');
+      _log.info('Added token to user document');
     }).catchError((error) {
-      debugPrint('there was an error');
+      _log.warning('Error adding token to user document', error);
     });
   }
 }

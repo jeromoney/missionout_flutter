@@ -11,7 +11,6 @@ import 'package:missionout/app/my_appbar.dart';
 part 'phone_entry.w.dart';
 
 class UserScreen extends StatelessWidget {
-  final myAppBar = MyAppBar(title: 'User Options');
   static const routeName = "/userScreen";
 
   @override
@@ -23,7 +22,7 @@ class UserScreen extends StatelessWidget {
     return Provider<PhoneNumberHolder>(
       create: (_) => phoneNumberHolder,
       child: Scaffold(
-          appBar: myAppBar,
+          appBar: MyAppBar(title: Strings.userScreenTitle),
           body: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -31,8 +30,8 @@ class UserScreen extends StatelessWidget {
                   child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Text(user.displayName ?? "anonymous"),
-                  Text(user.email ?? "unknown email"),
+                  Text(user.displayName ?? Strings.anonymousName),
+                  Text(user.email ?? Strings.anonymousEmail),
                   Provider<PhoneNumberType>(
                     create: (_) => PhoneNumberType.mobile,
                     child: PhoneEntry(),
@@ -71,12 +70,12 @@ class _SubmitButtonState extends State<_SubmitButton> {
         );
       case _ButtonState.processing:
         return RaisedButton(
-          child: SizedBox(child: CircularProgressIndicator(strokeWidth: 3.0,), height: 20.0,width: 20.0,),
+          child: const SizedBox(child: CircularProgressIndicator(strokeWidth: 3.0,), height: 20.0,width: 20.0,),
           onPressed: () {},
         );
       case _ButtonState.error:
         return RaisedButton(
-          child: Text("❌"),
+          child: Text(Strings.submit),
           onPressed: _submitPhoneNumber,
         );
       case _ButtonState.success:
@@ -105,7 +104,7 @@ class _SubmitButtonState extends State<_SubmitButton> {
             type: PhoneNumberType.voice);
       } on Exception catch (e) {
         final snackbar = SnackBar(
-          content: Text("Error occurred while submitting phone number."),
+          content: Text(Strings.errorPhoneSubmission),
         );
         Scaffold.of(context).showSnackBar(snackbar);
 

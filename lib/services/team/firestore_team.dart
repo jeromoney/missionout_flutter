@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
 
 import 'package:missionout/data_objects/mission.dart';
 import 'package:missionout/data_objects/page.dart' as missionpage;
@@ -8,6 +9,7 @@ import 'package:missionout/services/team/team.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class FirestoreTeam implements Team {
+  final _log = Logger('FirestoreTeam');
   final Firestore _db = Firestore.instance;
   @override
   final String teamID;
@@ -95,7 +97,7 @@ class FirestoreTeam implements Team {
           .then((value) {
         return value;
       }).catchError((error) {
-        print(error);
+        _log.warning('Error adding mission to firestor', error);
         return null; // returning null indicates problem with firebase. user probably should just retry
       });
       return result;
@@ -142,7 +144,7 @@ class FirestoreTeam implements Team {
         .then((documentReference) {
       return;
     }).catchError((error) {
-      print('error');
+      _log.warning('error in adding page to firestore.', error);
     });
   }
 }
