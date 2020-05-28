@@ -79,10 +79,7 @@ class _SubmitButtonState extends State<_SubmitButton> {
           onPressed: _submitPhoneNumber,
         );
       case _ButtonState.success:
-        return RaisedButton(
-          child: Text(Strings.sucessEmoji),
-          onPressed: _submitPhoneNumber,
-        );
+        return Text(Strings.sucessEmoji);
     }
   }
 

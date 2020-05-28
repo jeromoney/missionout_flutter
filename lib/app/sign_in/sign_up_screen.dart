@@ -10,14 +10,14 @@ import 'package:missionout/services/firebase_email_link_handler.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 
-class LoginScreen extends StatefulWidget {
+class SignUpScreen extends StatefulWidget {
   static const routeName = "/loginScreen";
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   bool _darkMode = false;
   bool _appleSignInAvailable = false;

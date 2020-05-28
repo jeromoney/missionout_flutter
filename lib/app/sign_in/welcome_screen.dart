@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
+import 'package:missionout/app/sign_in/log_in_screen.dart';
 
-
-import 'login_screen.dart';
+import 'sign_up_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   final _log = Logger('WelcomeScreen');
+
   @override
   State<WelcomeScreen> createState() => _WelcomeScreenState();
 }
@@ -75,6 +76,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               alignment: Alignment.bottomCenter,
               child: Column(
                 children: [
+                  FlatButton(
+                    child: Text('Log in'),
+                    onPressed: () => Navigator.pushNamed(context, LogInScreen.routeName),
+                  ),
                   Form(
                     key: _formKey,
                     child: TextFormField(
@@ -103,10 +108,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           _isDomainValid = domainList.contains(domain);
                         });
                         if (!_isDomainValid) return;
-                        Navigator.pushNamed(context, LoginScreen.routeName,
+                        Navigator.pushNamed(context, SignUpScreen.routeName,
                             arguments: domain);
                       }).catchError((error) {
-                        widget._log.warning('Unable to access list of approved domains', error);
+                        widget._log.warning(
+                            'Unable to access list of approved domains', error);
                         final snackbar = SnackBar(
                           content: Text(
                               "Error accessing database. Is the internet working?"),
