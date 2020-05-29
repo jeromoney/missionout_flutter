@@ -26,6 +26,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     final String domain = ModalRoute.of(context).settings.arguments;
     _darkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
+    final signInManager =
+    Provider.of<SignInManager>(context, listen: false);
     return Scaffold(
         body: Column(
       children: <Widget>[
@@ -52,8 +54,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
         flutter_auth_buttons.GoogleSignInButton(
           key: Key('Google Sign In Button'),
           onPressed: () {
-            final signInManager =
-                Provider.of<SignInManager>(context, listen: false);
             signInManager.signInWithGoogle();
           },
           darkMode: _darkMode,
@@ -65,8 +65,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ? flutter_auth_buttons.AppleButtonStyle.black
                   : flutter_auth_buttons.AppleButtonStyle.white,
               onPressed: () {
-                final signInManager =
-                    Provider.of<SignInManager>(context, listen: false);
                 signInManager.signInWithApple();
               },
             ),

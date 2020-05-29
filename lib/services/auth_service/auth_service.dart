@@ -7,7 +7,10 @@ abstract class AuthService {
   Future<User> currentUser();
 
   Future<User> signInWithEmailAndLink({String email, String link});
-
+  Future<User> signInWithEmailAndPassword(String email, String password);
+  Future<User> createUserWithEmailAndPassword(String email, String password);
+  Future<void> sendPasswordResetEmail(String email);
+  Future<bool> isSignInWithEmailLink(String link);
   Future<void> sendSignInWithEmailLink({
     @required String email,
     @required String url,
@@ -18,8 +21,8 @@ abstract class AuthService {
     @required String androidMinimumVersion,
   });
 
+
   Future<User> signInWithGoogle();
-  Future<bool> isSignInWithEmailLink(String link);
   Future<User> signInWithApple({List<Scope> scopes});
 
   Future<void> signOut();

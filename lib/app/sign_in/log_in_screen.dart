@@ -1,13 +1,26 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
+import 'package:logging/logging.dart';
+import 'package:missionout/app/sign_in/log_in_screen_model.dart';
+import 'package:missionout/app/sign_in/sign_in_manager.dart';
+import 'package:missionout/common_widgets/platform_alert_dialog.dart';
+import 'package:missionout/common_widgets/platform_exception_alert_dialog.dart';
+import 'package:missionout/constants/constants.dart';
+import 'package:missionout/constants/strings.dart';
 import 'package:missionout/services/apple_sign_in_available.dart';
+import 'package:missionout/services/auth_service/auth_service.dart';
+import 'package:missionout/services/firebase_email_link_handler.dart';
+import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 
 const COLUMN_WIDTH = 308.0;
 
 class LogInScreen extends StatefulWidget {
   static const routeName = '/logInScreen';
+  final _log = Logger('LogInScreen');
+  FirebaseEmailLinkHandler _linkHandler;
 
   @override
   _LogInScreenState createState() => _LogInScreenState();
@@ -15,6 +28,9 @@ class LogInScreen extends StatefulWidget {
 
 class _LogInScreenState extends State<LogInScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  EmailPasswordSignInModel _model;
 
   @override
   Widget build(BuildContext context) {
@@ -22,12 +38,20 @@ class _LogInScreenState extends State<LogInScreen> {
         MediaQuery.of(context).platformBrightness == Brightness.dark;
     final appleSignInAvailable =
         Provider.of<AppleSignInAvailable>(context, listen: false);
+    final signInManager = Provider.of<SignInManager>(context, listen: false);
+    final authService = Provider.of<AuthService>(context, listen: false);
+    widget._linkHandler =
+        Provider.of<FirebaseEmailLinkHandler>(context, listen: false);
+    _model = EmailPasswordSignInModel(auth: authService);
+
     return Scaffold(
       body: Center(
         child: LayoutBuilder(
           builder: (context, viewportConstraints) => SingleChildScrollView(
             child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: COLUMN_WIDTH, minHeight: viewportConstraints.maxHeight),
+              constraints: BoxConstraints(
+                  maxWidth: COLUMN_WIDTH,
+                  minHeight: viewportConstraints.maxHeight),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -35,6 +59,7 @@ class _LogInScreenState extends State<LogInScreen> {
                   GoogleSignInButton(
                     text: 'Log in with Google',
                     darkMode: darkMode,
+                    onPressed: signInManager.signInWithGoogle,
                   ),
                   if (appleSignInAvailable.isAvailable) ...[
                     AppleSignInButton(
@@ -42,6 +67,7 @@ class _LogInScreenState extends State<LogInScreen> {
                       style: darkMode
                           ? AppleButtonStyle.black
                           : AppleButtonStyle.white,
+                      onPressed: signInManager.signInWithApple,
                     )
                   ],
                   Divider(),
@@ -52,6 +78,7 @@ class _LogInScreenState extends State<LogInScreen> {
                         Padding(
                           padding: EdgeInsets.all(8.0),
                           child: TextFormField(
+                            controller: _emailController,
                             validator: (email) {
                               if (!EmailValidator.validate(email))
                                 return 'Enter a valid email';
@@ -65,8 +92,10 @@ class _LogInScreenState extends State<LogInScreen> {
                         Padding(
                           padding: EdgeInsets.all(8.0),
                           child: TextFormField(
-                            validator: (password){
-                              if (password.length < 6) return 'Password too short (less than 6 characters)';
+                            controller: _passwordController,
+                            validator: (password) {
+                              if (password.length < 6)
+                                return 'Password too short (less than 6 characters)';
                             },
                             decoration: InputDecoration(
                                 labelText: 'Password',
@@ -79,8 +108,17 @@ class _LogInScreenState extends State<LogInScreen> {
                               padding: const EdgeInsets.all(8.0),
                               child: RaisedButton(
                                 child: Text('Submit'),
-                                onPressed: () {
-                                  _formKey.currentState.validate();
+                                onPressed: () async {
+                                  if (!_formKey.currentState.validate()) return;
+                                  await authService
+                                      .signInWithEmailAndPassword(
+                                          _emailController.text,
+                                          _passwordController.text)
+                                      .catchError((error) {
+                                    widget._log.warning(
+                                        'Unable to login with email/password',
+                                        error);
+                                  });
                                 },
                               ),
                             )),
@@ -94,7 +132,9 @@ class _LogInScreenState extends State<LogInScreen> {
                                 textAlign: TextAlign.right,
                                 style: Theme.of(context).textTheme.subtitle2,
                               ),
-                              onTap: () {},
+                              onTap: () {
+                                _sendEmailLink();
+                              },
                             ),
                           ),
                         ),
@@ -108,5 +148,31 @@ class _LogInScreenState extends State<LogInScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _sendEmailLink() async {
+    try {
+      final PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      // Send link
+      await widget._linkHandler.sendSignInWithEmailLink(
+        email: _emailController.text,
+        url: Constants.firebaseProjectURl,
+        handleCodeInApp: true,
+        packageName: packageInfo.packageName,
+        androidInstallIfNotAvailable: true,
+        androidMinimumVersion: '18',
+      );
+      // Tell user we sent an email
+      PlatformAlertDialog(
+        title: Strings.checkYourEmail,
+        content: Strings.activationLinkSent(_emailController.text),
+        defaultActionText: Strings.ok,
+      ).show(context);
+    } on PlatformException catch (e) {
+      PlatformExceptionAlertDialog(
+        title: Strings.errorSendingEmail,
+        exception: e,
+      ).show(context);
+    }
   }
 }

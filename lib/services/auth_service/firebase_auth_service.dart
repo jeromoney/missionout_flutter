@@ -126,14 +126,50 @@ class FirebaseAuthService extends AuthService {
       _firebaseAuth.onAuthStateChanged.asyncMap(_userFromFirebase);
 
   @override
-  Future<void> sendSignInWithEmailLink(
-      {String email,
-      String url,
-      bool handleCodeInApp,
-      String iOSBundleID,
-      String androidPackageName,
-      bool androidInstallIfNotAvailable,
-      String androidMinimumVersion}) async {
+  Future<User> signInWithEmailAndPassword(String email, String password) async {
+    final AuthResult authResult = await _firebaseAuth
+        .signInWithCredential(EmailAuthProvider.getCredential(
+      email: email,
+      password: password,
+    ));
+    return _userFromFirebase(authResult.user);
+  }
+
+  @override
+  Future<User> createUserWithEmailAndPassword(
+      String email, String password) async {
+    final AuthResult authResult = await _firebaseAuth
+        .createUserWithEmailAndPassword(email: email, password: password);
+    return _userFromFirebase(authResult.user);
+  }
+
+  @override
+  Future<void> sendPasswordResetEmail(String email) async {
+    await _firebaseAuth.sendPasswordResetEmail(email: email);
+  }
+
+  @override
+  Future<User> signInWithEmailAndLink({String email, String link}) async {
+    final AuthResult authResult =
+        await _firebaseAuth.signInWithEmailAndLink(email: email, link: link);
+    return _userFromFirebase(authResult.user);
+  }
+
+  @override
+  Future<bool> isSignInWithEmailLink(String link) async {
+    return await _firebaseAuth.isSignInWithEmailLink(link);
+  }
+
+  @override
+  Future<void> sendSignInWithEmailLink({
+    @required String email,
+    @required String url,
+    @required bool handleCodeInApp,
+    @required String iOSBundleID,
+    @required String androidPackageName,
+    @required bool androidInstallIfNotAvailable,
+    @required String androidMinimumVersion,
+  }) async {
     return await _firebaseAuth.sendSignInWithEmailLink(
       email: email,
       url: url,
@@ -180,21 +216,6 @@ class FirebaseAuthService extends AuthService {
         );
     }
     return null;
-  }
-
-  @override
-  Future<bool> isSignInWithEmailLink(String link) async {
-    return await _firebaseAuth.isSignInWithEmailLink(link);
-  }
-
-  @override
-  Future<User> signInWithEmailAndLink({
-    String email,
-    String link,
-  }) async {
-    final AuthResult authResult =
-        await _firebaseAuth.signInWithEmailAndLink(email: email, link: link);
-    return _userFromFirebase(authResult.user);
   }
 
   @override

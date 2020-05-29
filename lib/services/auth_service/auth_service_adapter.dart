@@ -71,7 +71,27 @@ class AuthServiceAdapter extends AuthService {
   Stream<User> get onAuthStateChanged => _onAuthStateChangedController.stream;
 
   @override
-  Future sendSignInWithEmailLink({
+  Future<User> createUserWithEmailAndPassword(String email, String password) =>
+      authService.createUserWithEmailAndPassword(email, password);
+
+  @override
+  Future<User> signInWithEmailAndPassword(String email, String password) =>
+      authService.signInWithEmailAndPassword(email, password);
+
+  @override
+  Future<void> sendPasswordResetEmail(String email) =>
+      authService.sendPasswordResetEmail(email);
+
+  @override
+  Future<User> signInWithEmailAndLink({String email, String link}) =>
+      authService.signInWithEmailAndLink(email: email, link: link);
+
+  @override
+  Future<bool> isSignInWithEmailLink(String link) =>
+      authService.isSignInWithEmailLink(link);
+
+  @override
+  Future<void> sendSignInWithEmailLink({
     @required String email,
     @required String url,
     @required bool handleCodeInApp,
@@ -81,24 +101,19 @@ class AuthServiceAdapter extends AuthService {
     @required String androidMinimumVersion,
   }) =>
       authService.sendSignInWithEmailLink(
-          email: email,
-          url: url,
-          handleCodeInApp: handleCodeInApp,
-          iOSBundleID: iOSBundleID,
-          androidPackageName: androidPackageName,
-          androidInstallIfNotAvailable: androidInstallIfNotAvailable,
-          androidMinimumVersion: androidMinimumVersion);
+        email: email,
+        url: url,
+        handleCodeInApp: handleCodeInApp,
+        iOSBundleID: iOSBundleID,
+        androidPackageName: androidPackageName,
+        androidInstallIfNotAvailable: androidInstallIfNotAvailable,
+        androidMinimumVersion: androidMinimumVersion,
+      );
 
   @override
   Future<User> signInWithApple({List<Scope> scopes}) =>
       authService.signInWithApple(scopes: scopes);
 
-  @override
-  Future<User> signInWithEmailAndLink({
-    String email,
-    String link,
-  }) =>
-      authService.signInWithEmailAndLink(email: email, link: link);
 
   @override
   Future<User> signInWithGoogle() => authService.signInWithGoogle();
@@ -106,7 +121,4 @@ class AuthServiceAdapter extends AuthService {
   @override
   Future<void> signOut() => authService.signOut();
 
-  @override
-  Future<bool> isSignInWithEmailLink(String link) =>
-      authService.isSignInWithEmailLink(link);
 }

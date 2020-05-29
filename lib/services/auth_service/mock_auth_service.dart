@@ -65,5 +65,23 @@ class MockAuthService extends AuthService{
     throw UnimplementedError();
   }
 
+  @override
+  Future<User> createUserWithEmailAndPassword(String email, String password) {
+    // TODO: implement createUserWithEmailAndPassword
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> sendPasswordResetEmail(String email) {
+    // TODO: implement sendPasswordResetEmail
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<User> signInWithEmailAndPassword(String email, String password) {
+    // TODO: implement signInWithEmailAndPassword
+    throw UnimplementedError();
+  }
+
 
 }
