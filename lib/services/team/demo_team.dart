@@ -128,6 +128,18 @@ class DemoTeam with ChangeNotifier implements Team {
   void set location(GeoPoint _location) {
     // TODO: implement location
   }
+
+  @override
+  Future updateChatURI(String chatURIVal) {
+    // TODO: implement updateChatURI
+    throw UnimplementedError();
+  }
+
+  @override
+  Future updateLocation(GeoPoint locationVal) {
+    // TODO: implement updateLocation
+    throw UnimplementedError();
+  }
 }
 
 class DemoReference {

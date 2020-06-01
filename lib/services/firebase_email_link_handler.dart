@@ -82,13 +82,17 @@ class FirebaseEmailLinkHandler with WidgetsBindingObserver {
         .then((link) => linkHandler._processDynamicLink(link?.link));
     // Listen to subsequent links
     FirebaseDynamicLinks.instance.onLink(
-      onSuccess: (linkData) => linkHandler.handleLink(linkData?.link),
+      onSuccess: (linkData) {
+        return linkHandler.handleLink(linkData?.link);
+      },
       // convert to PlatformException as OnLinkErrorCallback has private constructor and can't be tested
-      onError: (error) => linkHandler.handleLinkError(PlatformException(
-        code: error.code,
-        message: error.message,
-        details: error.details,
-      )),
+      onError: (error) {
+        return linkHandler.handleLinkError(PlatformException(
+          code: error.code,
+          message: error.message,
+          details: error.details,
+        ));
+      },
     );
     return linkHandler;
   }

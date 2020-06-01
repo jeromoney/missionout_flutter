@@ -15,7 +15,6 @@ import 'package:missionout/services/firebase_email_link_handler.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 
-const COLUMN_WIDTH = 308.0;
 
 class LogInScreen extends StatefulWidget {
   static const routeName = '/logInScreen';
@@ -50,7 +49,7 @@ class _LogInScreenState extends State<LogInScreen> {
           builder: (context, viewportConstraints) => SingleChildScrollView(
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                  maxWidth: COLUMN_WIDTH,
+                  maxWidth: Constants.column_width,
                   minHeight: viewportConstraints.maxHeight),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -103,7 +102,7 @@ class _LogInScreenState extends State<LogInScreen> {
                           ),
                         ),
                         SizedBox(
-                            width: COLUMN_WIDTH,
+                            width: Constants.column_width,
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: RaisedButton(
@@ -123,7 +122,7 @@ class _LogInScreenState extends State<LogInScreen> {
                               ),
                             )),
                         SizedBox(
-                          width: COLUMN_WIDTH,
+                          width: Constants.column_width,
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: GestureDetector(
@@ -176,3 +175,5 @@ class _LogInScreenState extends State<LogInScreen> {
     }
   }
 }
+
+

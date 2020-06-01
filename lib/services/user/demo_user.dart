@@ -34,4 +34,22 @@ class DemoUser implements User {
 
   @override
   String currentMission;
+
+  @override
+  // TODO: implement displayName
+  String get displayName => throw UnimplementedError();
+
+  @override
+  // TODO: implement email
+  String get email => throw UnimplementedError();
+
+  @override
+  // TODO: implement photoUrl
+  String get photoUrl => throw UnimplementedError();
+
+  @override
+  updatePhoneNumber({PhoneNumber phoneNumber, PhoneNumberType type}) {
+    // TODO: implement updatePhoneNumber
+    throw UnimplementedError();
+  }
 }

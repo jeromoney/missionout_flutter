@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:missionout/app/sign_in/log_in_screen.dart';
+import 'package:missionout/app/sign_in/team_domain_screen.dart';
 import 'package:missionout/data_objects/is_loading_notifier.dart';
 import 'package:missionout/app/sign_in/sign_in_manager.dart';
 import 'package:missionout/app/sign_in/welcome_screen.dart';
@@ -38,9 +39,11 @@ class SigninApp extends StatelessWidget {
               '/': (context) => WelcomeScreen(),
               SignUpScreen.routeName: (context) => SignUpScreen(),
               LogInScreen.routeName: (context) => LogInScreen(),
+              TeamDomainScreen.routeName: (context) => TeamDomainScreen(),
             },
             theme: ThemeData(
-                textTheme: TextTheme(subtitle2: TextStyle(color: Colors.blue, fontSize: 16.0))),
+                textTheme: TextTheme(
+                    subtitle2: TextStyle(color: Colors.blue, fontSize: 16.0))),
           );
         },
       ),
