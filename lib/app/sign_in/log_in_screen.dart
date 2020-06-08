@@ -11,7 +11,7 @@ import 'package:missionout/constants/constants.dart';
 import 'package:missionout/constants/strings.dart';
 import 'package:missionout/services/apple_sign_in_available.dart';
 import 'package:missionout/services/auth_service/auth_service.dart';
-import 'package:missionout/services/firebase_email_link_handler.dart';
+import 'package:missionout/services/firebase_link_handler.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 
@@ -19,7 +19,7 @@ import 'package:provider/provider.dart';
 class LogInScreen extends StatefulWidget {
   static const routeName = '/logInScreen';
   final _log = Logger('LogInScreen');
-  FirebaseEmailLinkHandler _linkHandler;
+  FirebaseLinkHandler _linkHandler;
 
   @override
   _LogInScreenState createState() => _LogInScreenState();
@@ -40,7 +40,7 @@ class _LogInScreenState extends State<LogInScreen> {
     final signInManager = Provider.of<SignInManager>(context, listen: false);
     final authService = Provider.of<AuthService>(context, listen: false);
     widget._linkHandler =
-        Provider.of<FirebaseEmailLinkHandler>(context, listen: false);
+        Provider.of<FirebaseLinkHandler>(context, listen: false);
     _model = EmailPasswordSignInModel(auth: authService);
 
     return Scaffold(

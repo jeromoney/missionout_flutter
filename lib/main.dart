@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logging/logging.dart';
 import 'package:missionout/core/fcm_message_handler.dart';
+import 'package:missionout/services/firebase_link_handler.dart';
 import 'package:missionout/services/user/user.dart';
 import 'package:provider/provider.dart';
 
@@ -12,8 +13,6 @@ import 'package:missionout/services/auth_service/auth_service.dart';
 import 'package:missionout/app/auth_widget.dart';
 import 'package:missionout/app/auth_widget_builder.dart';
 import 'package:missionout/services/email_secure_store.dart';
-import 'package:missionout/services/firebase_email_link_handler.dart';
-
 
 Future<void> main() async {
   // Fix for: Unhandled Exception: ServicesBinding.defaultBinaryMessenger was accessed before the binding was initialized.
@@ -29,48 +28,48 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp(
+      {this.initialAuthServiceType = AuthServiceType.firebase,
+      this.appleSignInAvailable});
+
   static final navKey = GlobalKey<
       NavigatorState>(); // Passes context to widgets above MaterialApp
   final AuthServiceType initialAuthServiceType;
   final AppleSignInAvailable appleSignInAvailable;
 
-  const MyApp(
-      {this.initialAuthServiceType = AuthServiceType.firebase,
-      this.appleSignInAvailable});
-
   @override
   Widget build(BuildContext context) => MultiProvider(
           providers: [
-            Provider<AppleSignInAvailable>(
-              create: (_) => appleSignInAvailable,
+            Provider<AppleSignInAvailable>.value(value: appleSignInAvailable),
+            Provider<FCMMessageHandler>(
+              lazy: false,
+              create: (_) => FCMMessageHandler(),
             ),
             Provider<AuthService>(
+              lazy: false,
               create: (_) => AuthServiceAdapter(
                   initialAuthServiceType: initialAuthServiceType),
               dispose: (_, AuthService authService) => authService.dispose(),
             ),
             Provider<EmailSecureStore>(
+              lazy: false,
               create: (_) => EmailSecureStore(
                   flutterSecureStorage: FlutterSecureStorage()),
             ),
-            ProxyProvider2<AuthService, EmailSecureStore,
-                FirebaseEmailLinkHandler>(
+            ProxyProvider2<AuthService, EmailSecureStore, FirebaseLinkHandler>(
+              lazy: false,
               update:
                   (_, AuthService authService, EmailSecureStore storage, __) =>
-                      FirebaseEmailLinkHandler.createAndConfigure(
+                      FirebaseLinkHandler(
                 auth: authService,
-                userCredentialsStorage: storage,
+                emailStore: storage,
               ),
-              dispose: (_, linkHandler) => linkHandler.dispose(),
             ),
           ],
-          child: FCMMessageHandler(
-            child: AuthWidgetBuilder(
-              builder:
-                  (BuildContext context, AsyncSnapshot<User> userSnapshot) =>
-                      AuthWidget(
-                userSnapshot: userSnapshot,
-              ),
+          child: AuthWidgetBuilder(
+            builder: (BuildContext context, AsyncSnapshot<User> userSnapshot) =>
+                AuthWidget(
+              userSnapshot: userSnapshot,
             ),
           ));
 }

@@ -7,7 +7,7 @@ import 'package:missionout/common_widgets/platform_alert_dialog.dart';
 import 'package:missionout/constants/constants.dart';
 import 'package:missionout/common_widgets/platform_exception_alert_dialog.dart';
 import 'package:missionout/constants/strings.dart';
-import 'package:missionout/services/firebase_email_link_handler.dart';
+import 'package:missionout/services/firebase_link_handler.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 
@@ -89,8 +89,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   border: UnderlineInputBorder()),
                             ),
                           ),
-                          Text(
-                            "@$_domain",
+                          Flexible(
+                            child: Text(
+                              "@$_domain",
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ],
                       ),
@@ -125,7 +128,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Future _sendEmailLink() async {
     if (!widget._formKey.currentState.validate()) return;
     final linkHandler =
-        Provider.of<FirebaseEmailLinkHandler>(context, listen: false);
+        Provider.of<FirebaseLinkHandler>(context, listen: false);
     final email = "${widget._emailController.text}@$_domain";
     try {
       final PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -139,7 +142,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       PlatformAlertDialog(
         title: "Check your email",
-        content: "sent to email to $email",
+        content: "sent email to $email",
         defaultActionText: "Ok",
       ).show(context);
     } on PlatformException catch (error) {

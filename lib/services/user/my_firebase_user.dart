@@ -70,7 +70,7 @@ class MyFirebaseUser implements User {
     await _db.collection('users').document(this.uid).updateData({
       'tokens': FieldValue.arrayUnion([fcmToken])
     }).then((value) {
-      _log.info('Added token to user document');
+      _log.info('Added token to user document: $fcmToken', fcmToken);
     }).catchError((error) {
       _log.warning('Error adding token to user document', error);
     });
