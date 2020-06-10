@@ -41,7 +41,7 @@ class FirebaseAuthService extends AuthService {
     var data = document.data;
     var requiredKeys = ["teamID"];
     var isMissingRequiredKey =
-        requiredKeys.any((requiredKey) => !data.containsKey(requiredKey));
+    requiredKeys.any((requiredKey) => !data.containsKey(requiredKey));
     if (isMissingRequiredKey) {
       _log.severe("Missing required key for Team document in Firestore");
       return null;
@@ -50,7 +50,7 @@ class FirebaseAuthService extends AuthService {
 
     var optionalKeys = ["isEditor", "mobilePhoneNumber", "voicePhoneNumber"];
     var isMissingOptionalKey =
-        optionalKeys.any((requiredKey) => !data.containsKey(optionalKeys));
+    optionalKeys.any((requiredKey) => !data.containsKey(optionalKeys));
     if (isMissingOptionalKey)
       _log.warning("Missing optional key; substituting null values.");
 
@@ -94,14 +94,16 @@ class FirebaseAuthService extends AuthService {
 
   @override
   Future<Team> createTeam() async {
-    if (teamID == null)
-      throw StateError("teamID needs to be retrieved before returning team");
+    if (teamID == null) {
+      _log.warning("Team is null. User was not authenticated");
+      return null;
+    }
     var document = await _db.collection('teams').document(teamID).get();
     var data = document.data;
 
     var optionalKeys = ["name", "location", "chatURI"];
     var isMissingOptionalKey =
-        optionalKeys.any((requiredKey) => !data.containsKey(optionalKeys));
+    optionalKeys.any((requiredKey) => !data.containsKey(optionalKeys));
     if (isMissingOptionalKey)
       _log.warning("Missing optional key for Team; substituting null values.");
 
@@ -136,8 +138,8 @@ class FirebaseAuthService extends AuthService {
   }
 
   @override
-  Future<User> createUserWithEmailAndPassword(
-      String email, String password) async {
+  Future<User> createUserWithEmailAndPassword(String email,
+      String password) async {
     final AuthResult authResult = await _firebaseAuth
         .createUserWithEmailAndPassword(email: email, password: password);
     return _userFromFirebase(authResult.user);
@@ -151,7 +153,7 @@ class FirebaseAuthService extends AuthService {
   @override
   Future<User> signInWithEmailAndLink({String email, String link}) async {
     final AuthResult authResult =
-        await _firebaseAuth.signInWithEmailAndLink(email: email, link: link);
+    await _firebaseAuth.signInWithEmailAndLink(email: email, link: link);
     return _userFromFirebase(authResult.user);
   }
 
@@ -192,7 +194,7 @@ class FirebaseAuthService extends AuthService {
         final credential = oAuthProvider.getCredential(
           idToken: String.fromCharCodes(appleIdCredential.identityToken),
           accessToken:
-              String.fromCharCodes(appleIdCredential.authorizationCode),
+          String.fromCharCodes(appleIdCredential.authorizationCode),
         );
 
         final authResult = await _firebaseAuth.signInWithCredential(credential);
@@ -200,7 +202,8 @@ class FirebaseAuthService extends AuthService {
         if (scopes.contains(Scope.fullName)) {
           final updateUser = UserUpdateInfo();
           updateUser.displayName =
-              '${appleIdCredential.fullName.givenName} ${appleIdCredential.fullName.familyName}';
+          '${appleIdCredential.fullName.givenName} ${appleIdCredential.fullName
+              .familyName}';
           await firebaseUser.updateProfile(updateUser);
         }
         return _userFromFirebase(firebaseUser);
@@ -238,7 +241,7 @@ class FirebaseAuthService extends AuthService {
       idToken: googleAuth.idToken,
     );
     final AuthResult authResult =
-        await _firebaseAuth.signInWithCredential(credential);
+    await _firebaseAuth.signInWithCredential(credential);
     return _userFromFirebase(authResult.user);
   }
 

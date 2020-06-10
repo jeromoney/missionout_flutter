@@ -8,7 +8,11 @@ import 'package:missionout/app/sign_in/sign_up_screen.dart';
 import 'package:missionout/app/sign_in/team_domain_screen.dart';
 import 'package:missionout/app/sign_in/welcome_screen.dart';
 import 'package:missionout/app/user_screen/user_screen.dart';
+import 'package:missionout/common_widgets/platform_alert_dialog.dart';
+import 'package:missionout/constants/strings.dart';
 import 'package:missionout/core/global_navigator_key.dart';
+import 'package:missionout/services/auth_service/auth_service.dart';
+import 'package:missionout/services/team/team.dart';
 import 'package:provider/provider.dart';
 
 enum AppStatus { signedOut, signedIn, waiting }
@@ -33,7 +37,11 @@ class _MissionOutAppState extends State<MissionOutApp> {
         _initialScreen = WelcomeScreen();
         break;
       case AppStatus.signedIn:
-        _initialScreen = OverviewScreen();
+        final team = Provider.of<Team>(context, listen: false);
+        if (team == null)
+          _initialScreen = SignOutScreen();
+        else
+          _initialScreen = OverviewScreen();
         break;
       case AppStatus.waiting:
         _initialScreen = WaitingScreen();
@@ -69,6 +77,37 @@ class _MissionOutAppState extends State<MissionOutApp> {
 
 class WaitingScreen extends StatelessWidget {
   static const String routeName = "WaitingScreen";
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        body: LinearProgressIndicator(),
+      );
+}
+
+class SignOutScreen extends StatefulWidget {
+  static const String routeName = "SignOutScreen";
+
+  @override
+  _SignOutScreenState createState() => _SignOutScreenState();
+}
+
+class _SignOutScreenState extends State<SignOutScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final navKey =
+          Provider.of<GlobalNavigatorKey>(context, listen: false).navKey;
+      await PlatformAlertDialog(
+        title: "Email address not identified",
+        content: "Sign up with a different email address or contact your administrator for help",
+        defaultActionText: Strings.ok,
+      ).show(navKey.currentState.overlay.context);
+      final authService =
+      Provider.of<AuthService>(context, listen: false);
+      authService.signOut();
+    });
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
