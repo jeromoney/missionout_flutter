@@ -21,7 +21,8 @@ class FirebaseLinkHandler {
   void _initDynamicLinks() async {
     final PendingDynamicLinkData data =
         await FirebaseDynamicLinks.instance.getInitialLink();
-
+    final Uri deepLink = data?.link;
+    if (deepLink != null) _signInWithEmail(deepLink.toString());
     FirebaseDynamicLinks.instance.onLink(
         onSuccess: (PendingDynamicLinkData dynamicLink) async {
       final Uri link = dynamicLink?.link;
@@ -53,7 +54,7 @@ class FirebaseLinkHandler {
         _logger.warning("Link is not sign in with email link");
       }
     } on PlatformException catch (e) {
-      _logger.warning("Platform exception: ", e);
+      _logger.warning("Platform exception: ${e.message}", e);
     } finally {
       isLoading.value = false;
     }

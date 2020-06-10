@@ -1,15 +1,19 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:logging/logging.dart';
 import 'package:missionout/common_widgets/platform_alert_dialog.dart';
 import 'package:missionout/constants/strings.dart';
 import 'package:missionout/data_objects/fcm_message.dart';
-import 'package:missionout/main.dart';
+import 'package:provider/provider.dart';
+
+import 'global_navigator_key.dart';
 
 class FCMMessageHandler {
   final _log = Logger('FCMMessageHandler');
+  final BuildContext context;
 
-  FCMMessageHandler() {
+  FCMMessageHandler({@required this.context}) {
     _initState();
   }
 
@@ -31,13 +35,14 @@ class FCMMessageHandler {
     });
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
+        final navKey = Provider.of<GlobalNavigatorKey>(context, listen: false).navKey;
         _log.info("Received onMessage message");
         final notification = FCMMessage(message);
         PlatformAlertDialog(
           title: "Update: ${notification.title}",
           content: notification.body,
           defaultActionText: Strings.ok,
-        ).show(MyApp.navKey.currentState.overlay.context);
+        ).show(navKey.currentState.overlay.context);
       },
       onResume: (Map<String, dynamic> message) async {
         _log.info("Received onResume message");

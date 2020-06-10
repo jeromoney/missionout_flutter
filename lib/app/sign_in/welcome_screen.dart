@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:logging/logging.dart';
 import 'package:missionout/app/sign_in/log_in_screen.dart';
-import 'package:missionout/app/sign_in/sign_up_screen.dart';
 import 'package:missionout/app/sign_in/team_domain_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
+  static String routeName = "WelcomeScreen";
+
   @override
   State<WelcomeScreen> createState() => _WelcomeScreenState();
 }
@@ -15,7 +15,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   Widget build(BuildContext context) {
     _darkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
-
     return Scaffold(
       backgroundColor: !_darkMode ? Colors.white : Colors.grey[800],
       body: Column(
