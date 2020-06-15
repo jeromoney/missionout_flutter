@@ -1,4 +1,5 @@
 name: missionout
+
 description: A concise dispatch app aimed at Search and Rescue
 
 # The following defines the version and build number for your application.
@@ -19,6 +20,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -73,7 +75,6 @@ flutter:
     - graphics/missionoutlogo.png
     - sounds/teleportSound.mp4
     - sounds/teleportSound.m4a
-    - graphics/demoUser.png
     - graphics/apple.png
 
 

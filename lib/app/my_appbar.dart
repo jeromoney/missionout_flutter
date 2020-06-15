@@ -19,18 +19,21 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
-
+    final photoURLAvailable = user.photoUrl != null;
     return AppBar(title: Text(_title), actions: <Widget>[
-      Container(
-          width: AppBar().preferredSize.height,
-          decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                image: user.photoUrl != null
-                    ? CachedNetworkImageProvider(user.photoUrl)
-                    : AssetImage("graphics/demoUser.png"),
-              ))),
+      photoURLAvailable
+          ? Container(
+              width: AppBar().preferredSize.height,
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: CachedNetworkImageProvider(user.photoUrl),
+                  )))
+          : Icon(
+              Icons.account_circle,
+              size: AppBar().preferredSize.height,
+            ),
       PopupMenuButton<Menu>(
         key: Key('PopupMenuButton'),
         // Used for testing, since I can't find this with find.byType
