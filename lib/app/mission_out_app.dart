@@ -13,6 +13,7 @@ import 'package:missionout/constants/strings.dart';
 import 'package:missionout/core/global_navigator_key.dart';
 import 'package:missionout/services/auth_service/auth_service.dart';
 import 'package:missionout/services/team/team.dart';
+import 'package:missionout/services/user/user.dart';
 import 'package:provider/provider.dart';
 
 enum AppStatus { signedOut, signedIn, waiting }
@@ -36,13 +37,15 @@ class _MissionOutAppState extends State<MissionOutApp> {
       case AppStatus.signedOut:
         _initialScreen = WelcomeScreen();
         break;
+
       case AppStatus.signedIn:
-        final team = Provider.of<Team>(context, listen: false);
-        if (team == null)
+        final user = Provider.of<User>(context, listen: false);
+        if (user == null)
           _initialScreen = SignOutScreen();
         else
           _initialScreen = OverviewScreen();
         break;
+
       case AppStatus.waiting:
         _initialScreen = WaitingScreen();
         break;

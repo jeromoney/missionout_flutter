@@ -28,7 +28,7 @@ class AuthWidgetBuilder extends StatelessWidget {
               ),
               FutureProvider<Team>(
                 initialData: null,
-                create: (_) => authService.createTeam(),
+                create: (_) async => authService.createTeam(),
               )
             ],
             child: builder(context, snapshot),
