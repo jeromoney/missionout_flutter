@@ -11,8 +11,8 @@ import 'package:missionout/app/user_screen/user_screen.dart';
 import 'package:missionout/common_widgets/platform_alert_dialog.dart';
 import 'package:missionout/constants/strings.dart';
 import 'package:missionout/core/global_navigator_key.dart';
+import 'package:missionout/data_objects/is_loading_notifier.dart';
 import 'package:missionout/services/auth_service/auth_service.dart';
-import 'package:missionout/services/team/team.dart';
 import 'package:missionout/services/user/user.dart';
 import 'package:provider/provider.dart';
 
@@ -33,22 +33,29 @@ class _MissionOutAppState extends State<MissionOutApp> {
 
   @override
   Widget build(BuildContext context) {
-    switch (widget.appStatus) {
-      case AppStatus.signedOut:
-        _initialScreen = WelcomeScreen();
-        break;
+    final isLoading = context.watch<IsLoadingNotifier>().isLoading;
+    if (isLoading) {
+      _initialScreen = WelcomeScreen();
+    }
+    else
+    {
+      switch (widget.appStatus) {
+        case AppStatus.signedOut:
+          _initialScreen = WelcomeScreen();
+          break;
 
-      case AppStatus.signedIn:
-        final user = Provider.of<User>(context, listen: false);
-        if (user == null)
-          _initialScreen = SignOutScreen();
-        else
-          _initialScreen = OverviewScreen();
-        break;
+        case AppStatus.signedIn:
+          final user = Provider.of<User>(context, listen: false);
+          if (user == null)
+            _initialScreen = SignOutScreen();
+          else
+            _initialScreen = OverviewScreen();
+          break;
 
-      case AppStatus.waiting:
-        _initialScreen = WaitingScreen();
-        break;
+        case AppStatus.waiting:
+          _initialScreen = WaitingScreen();
+          break;
+      }
     }
 
     // created a new _navKey so need to update value of provider
@@ -103,11 +110,11 @@ class _SignOutScreenState extends State<SignOutScreen> {
           Provider.of<GlobalNavigatorKey>(context, listen: false).navKey;
       await PlatformAlertDialog(
         title: "Email address not identified",
-        content: "Sign up with a different email address or contact your administrator for help",
+        content:
+            "Sign up with a different email address or contact your administrator for help",
         defaultActionText: Strings.ok,
       ).show(navKey.currentState.overlay.context);
-      final authService =
-      Provider.of<AuthService>(context, listen: false);
+      final authService = Provider.of<AuthService>(context, listen: false);
       authService.signOut();
     });
   }

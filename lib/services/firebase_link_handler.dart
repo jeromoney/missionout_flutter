@@ -2,19 +2,21 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';
+import 'package:missionout/data_objects/is_loading_notifier.dart';
 import 'package:missionout/services/auth_service/auth_service.dart';
 import 'package:missionout/services/user/user.dart';
+import 'package:provider/provider.dart';
 
 import 'email_secure_store.dart';
 
 class FirebaseLinkHandler {
   final _logger = Logger("FirebaseLinkHandler");
-  final ValueNotifier<bool> isLoading = ValueNotifier<bool>(false);
   final AuthService auth;
   final EmailSecureStore emailStore;
+  final BuildContext context;
 
   FirebaseLinkHandler(
-      {Key key, @required this.auth, @required this.emailStore}) {
+      {Key key, @required this.auth, @required this.emailStore, @required this.context}) {
     _initDynamicLinks();
   }
 
@@ -33,8 +35,9 @@ class FirebaseLinkHandler {
   }
 
   Future<void> _signInWithEmail(String link) async {
+    final isLoadingProvider = Provider.of<IsLoadingNotifier>(context,listen: false);
     try {
-      isLoading.value = true;
+      isLoadingProvider.isLoading = true;
       // check that user is not signed in
       final User user = await auth.currentUser();
       if (user != null) {
@@ -56,7 +59,7 @@ class FirebaseLinkHandler {
     } on PlatformException catch (e) {
       _logger.warning("Platform exception: ${e.message}", e);
     } finally {
-      isLoading.value = false;
+      isLoadingProvider.isLoading = false;
     }
   }
 

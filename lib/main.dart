@@ -75,9 +75,10 @@ class MyApp extends StatelessWidget {
             ),
             ProxyProvider2<AuthService, EmailSecureStore, FirebaseLinkHandler>(
               lazy: false,
-              update:
-                  (_, AuthService authService, EmailSecureStore storage, __) =>
-                      FirebaseLinkHandler(
+              update: (BuildContext context, AuthService authService,
+                      EmailSecureStore storage, __) =>
+                  FirebaseLinkHandler(
+                context: context,
                 auth: authService,
                 emailStore: storage,
               ),
