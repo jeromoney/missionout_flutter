@@ -19,6 +19,7 @@ abstract class AuthService {
     @required String androidPackageName,
     @required bool androidInstallIfNotAvailable,
     @required String androidMinimumVersion,
+    bool userMustExist = false,
   });
 
 

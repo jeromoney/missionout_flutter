@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/data_objects/mission_address_arguments.dart';
-import 'package:missionout/services/auth_service/auth_service.dart';
 import 'package:provider/provider.dart';
 
 import 'package:missionout/data_objects/page.dart' as missionpage;

@@ -99,6 +99,7 @@ class AuthServiceAdapter extends AuthService {
     @required String androidPackageName,
     @required bool androidInstallIfNotAvailable,
     @required String androidMinimumVersion,
+    bool userMustExist = false,
   }) =>
       authService.sendSignInWithEmailLink(
         email: email,
@@ -108,17 +109,16 @@ class AuthServiceAdapter extends AuthService {
         androidPackageName: androidPackageName,
         androidInstallIfNotAvailable: androidInstallIfNotAvailable,
         androidMinimumVersion: androidMinimumVersion,
+        userMustExist: userMustExist
       );
 
   @override
   Future<User> signInWithApple({List<Scope> scopes}) =>
       authService.signInWithApple(scopes: scopes);
 
-
   @override
   Future<User> signInWithGoogle() => authService.signInWithGoogle();
 
   @override
   Future<void> signOut() => authService.signOut();
-
 }

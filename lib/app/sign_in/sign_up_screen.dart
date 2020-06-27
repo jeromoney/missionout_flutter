@@ -7,6 +7,7 @@ import 'package:missionout/common_widgets/platform_alert_dialog.dart';
 import 'package:missionout/constants/constants.dart';
 import 'package:missionout/common_widgets/platform_exception_alert_dialog.dart';
 import 'package:missionout/constants/strings.dart';
+import 'package:missionout/services/auth_service/auth_service.dart';
 import 'package:missionout/services/firebase_link_handler.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
@@ -99,6 +100,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       if (_showPasswordField) ...[
                         TextFormField(
+                          obscureText: true,
                           controller: widget._passwordController,
                           decoration: InputDecoration(
                               labelText: "password",
@@ -130,25 +132,40 @@ class _SignUpScreenState extends State<SignUpScreen> {
     final linkHandler =
         Provider.of<FirebaseLinkHandler>(context, listen: false);
     final email = "${widget._emailController.text}@$_domain";
-    try {
-      final PackageInfo packageInfo = await PackageInfo.fromPlatform();
-      await linkHandler.sendSignInWithEmailLink(
-          email: email,
-          url: Constants.firebaseProjectURl,
-          handleCodeInApp: true,
-          packageName: packageInfo.packageName,
-          androidInstallIfNotAvailable: true,
-          androidMinimumVersion: "18");
 
-      PlatformAlertDialog(
-        title: "Check your email",
-        content: "sent email to $email",
-        defaultActionText: "Ok",
-      ).show(context);
-    } on PlatformException catch (error) {
-      PlatformExceptionAlertDialog(
-              title: "Error sending email", exception: error)
-          .show(context);
+
+    if (!_showPasswordField)
+    {
+      try {
+        final PackageInfo packageInfo = await PackageInfo.fromPlatform();
+        await linkHandler.sendSignInWithEmailLink(
+            email: email,
+            url: Constants.firebaseProjectURl,
+            handleCodeInApp: true,
+            packageName: packageInfo.packageName,
+            androidInstallIfNotAvailable: true,
+            androidMinimumVersion: "18");
+
+        PlatformAlertDialog(
+          title: "Check your email",
+          content: "sent email to $email",
+          defaultActionText: "Ok",
+        ).show(context);
+      } on PlatformException catch (error) {
+        PlatformExceptionAlertDialog(
+                title: "Error sending email", exception: error)
+            .show(context);
+      }
+    }
+    else {
+      final authService = Provider.of<AuthService>(context, listen: false);
+      try {
+        await authService.createUserWithEmailAndPassword(email, widget._passwordController.text);
+      } on PlatformException catch (e) {
+        PlatformExceptionAlertDialog(
+            title: "Error signing in", exception: e)
+            .show(context);
+      }
     }
   }
 

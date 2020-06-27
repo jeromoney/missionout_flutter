@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:apple_sign_in/scope.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -48,8 +50,9 @@ class FirebaseAuthService extends AuthService {
       await Future.delayed(Duration(seconds: RETRY_WAIT));
     }
 
-    var data = document.data;
-    if (data == null){
+    final data = document.data as Map<String, dynamic>;
+
+    if (data == null) {
       _log.warning("Retries failed. Document still null");
       return null;
     }
@@ -65,8 +68,9 @@ class FirebaseAuthService extends AuthService {
     // If teamID is null, it means that backend set up script could not identify
     // the team automatically. e.g. User logged in from a normal gmail account.
     // Should return a null user but also automatically sign out user.
-    if (teamID == null){
-      _log.warning("Unable to identify the team that the user is assigned to. Logging out");
+    if (teamID == null) {
+      _log.warning(
+          "Unable to identify the team that the user is assigned to. Logging out");
       return null;
     }
 
@@ -102,11 +106,15 @@ class FirebaseAuthService extends AuthService {
       _log.warning("Phone number in old format, ignoring", error);
     }
 
+    // The user name is either served by the auth provider or can be stored in
+    // the database, since some auth methods do not provide a name.
+    final databaseDisplayName = data['displayName'];
+
     return MyFirebaseUser(
       uid: firebaseUser.uid,
       email: firebaseUser.email,
       photoUrl: firebaseUser.photoUrl,
-      displayName: firebaseUser.displayName,
+      displayName: databaseDisplayName ?? firebaseUser.displayName,
       teamID: teamID,
       isEditor: isEditor,
       voicePhoneNumber: voicePhoneNumber,
@@ -193,7 +201,17 @@ class FirebaseAuthService extends AuthService {
     @required String androidPackageName,
     @required bool androidInstallIfNotAvailable,
     @required String androidMinimumVersion,
+    bool userMustExist = false,
   }) async {
+    if (userMustExist) {
+      final List<String> signInMethods =
+          await _firebaseAuth.fetchSignInMethodsForEmail(email: email);
+      // List is empty if user not in database
+      if (signInMethods.isEmpty) {
+        throw StateError("User is not in database");
+      }
+    }
+
     return await _firebaseAuth.sendSignInWithEmailLink(
       email: email,
       url: url,

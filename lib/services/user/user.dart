@@ -29,4 +29,6 @@ abstract class User {
 
   updatePhoneNumber(
       {@required PhoneNumber phoneNumber, @required PhoneNumberType type});
+
+  updateDisplayName({@required String displayName}) {}
 }

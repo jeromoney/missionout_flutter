@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:missionout/common_widgets/platform_alert_dialog.dart';
+import 'package:provider/provider.dart';
+
 import 'package:missionout/constants/strings.dart';
 import 'package:missionout/data_objects/phone_number_holder.dart';
-import 'package:missionout/services/auth_service/auth_service.dart';
 import 'package:missionout/services/user/user.dart';
-import 'package:provider/provider.dart';
 
 import 'package:missionout/app/my_appbar.dart';
 
@@ -12,11 +14,12 @@ part 'phone_entry.w.dart';
 
 class UserScreen extends StatelessWidget {
   static const routeName = "/userScreen";
+  final displayNameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    final authService = Provider.of<AuthService>(context);
     final user = Provider.of<User>(context, listen: false);
+    displayNameController.text = user.displayName;
     final phoneNumberHolder =
         PhoneNumberHolder(user.mobilePhoneNumber, user.voicePhoneNumber);
     return Provider<PhoneNumberHolder>(
@@ -30,8 +33,16 @@ class UserScreen extends StatelessWidget {
                   child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Text(user.displayName ?? Strings.anonymousName),
                   Text(user.email ?? Strings.anonymousEmail),
+                  Text(user.displayName ?? Strings.anonymousName),
+                  TextFormField(
+                    controller: displayNameController,
+                    inputFormatters: [LengthLimitingTextInputFormatter(100)],
+                    decoration: InputDecoration(
+                      labelText: "Name",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
                   Provider<PhoneNumberType>(
                     create: (_) => PhoneNumberType.mobile,
                     child: PhoneEntry(),
@@ -40,7 +51,7 @@ class UserScreen extends StatelessWidget {
                     create: (_) => PhoneNumberType.voice,
                     child: PhoneEntry(),
                   ),
-                  _SubmitButton(),
+                  _SubmitButton(displayNameController),
                 ],
               )),
             ),
@@ -50,6 +61,10 @@ class UserScreen extends StatelessWidget {
 }
 
 class _SubmitButton extends StatefulWidget {
+  final TextEditingController displayNameController;
+
+  _SubmitButton(this.displayNameController);
+
   @override
   State<_SubmitButton> createState() => _SubmitButtonState();
 }
@@ -66,24 +81,30 @@ class _SubmitButtonState extends State<_SubmitButton> {
       case _ButtonState.idle:
         return RaisedButton(
           child: Text(Strings.submit),
-          onPressed: _submitPhoneNumber,
+          onPressed: _submitUpdate,
         );
       case _ButtonState.processing:
         return RaisedButton(
-          child: const SizedBox(child: CircularProgressIndicator(strokeWidth: 3.0,), height: 20.0,width: 20.0,),
+          child: const SizedBox(
+            child: CircularProgressIndicator(
+              strokeWidth: 3.0,
+            ),
+            height: 20.0,
+            width: 20.0,
+          ),
           onPressed: () {},
         );
       case _ButtonState.error:
         return RaisedButton(
           child: Text(Strings.submit),
-          onPressed: _submitPhoneNumber,
+          onPressed: _submitUpdate,
         );
       case _ButtonState.success:
         return Text(Strings.sucessEmoji);
     }
   }
 
-  _submitPhoneNumber() async {
+  _submitUpdate() async {
     if (Form.of(context).validate()) {
       setState(() {
         _buttonState = _ButtonState.processing;
@@ -91,25 +112,36 @@ class _SubmitButtonState extends State<_SubmitButton> {
       final user = Provider.of<User>(context, listen: false);
       final phoneNumberHolder =
           Provider.of<PhoneNumberHolder>(context, listen: false);
+      final futures = <Future>[];
       try {
         // Ensure that both async functions are called before the await
-        user.updatePhoneNumber(
-            phoneNumber: phoneNumberHolder.mobilePhoneNumber,
-            type: PhoneNumberType.mobile);
-        await user.updatePhoneNumber(
-            phoneNumber: phoneNumberHolder.voicePhoneNumber,
-            type: PhoneNumberType.voice);
+        if (user.mobilePhoneNumber != phoneNumberHolder.mobilePhoneNumber) {
+          futures.add(user.updatePhoneNumber(
+              phoneNumber: phoneNumberHolder.mobilePhoneNumber,
+              type: PhoneNumberType.mobile));
+        }
+        if (user.voicePhoneNumber != phoneNumberHolder.voicePhoneNumber) {
+          futures.add(user.updatePhoneNumber(
+              phoneNumber: phoneNumberHolder.voicePhoneNumber,
+              type: PhoneNumberType.voice));
+        }
+        if (user.displayName != widget.displayNameController.text){
+          futures.add(user.updateDisplayName(
+              displayName: widget.displayNameController.text));
+        }
+        await Future.wait(futures);
       } on Exception catch (e) {
-        final snackbar = SnackBar(
-          content: Text(Strings.errorPhoneSubmission),
-        );
-        Scaffold.of(context).showSnackBar(snackbar);
-
+        PlatformAlertDialog(
+          title: "Error",
+          content: Strings.errorPhoneSubmission,
+          defaultActionText: Strings.ok,
+        ).show(context);
         setState(() {
           _buttonState = _ButtonState.idle;
         });
         return;
       }
+
       setState(() {
         _buttonState = _ButtonState.success;
       });

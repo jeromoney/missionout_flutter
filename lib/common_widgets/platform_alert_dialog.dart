@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:missionout/scratch/constants/keys.dart';
+import 'package:missionout/constants/keys.dart';
 
 import 'platform_widget.dart';
 import 'package:flutter/material.dart';

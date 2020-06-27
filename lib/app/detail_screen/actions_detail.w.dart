@@ -122,7 +122,7 @@ class _ResponseOptionsState extends State<ResponseOptions> {
             if (selected) {
               // If selected is equal to false, that means the user deselected the chip so we should pass a null value.
               response = Response(
-                  teamMember: user.displayName ?? "unknown user", status: responseChips[index]);
+                  teamMember: user.displayName == null || user.displayName == '' ? user.email : user.displayName, status: responseChips[index]);
             }
 
             setState(() {

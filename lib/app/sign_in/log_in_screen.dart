@@ -27,6 +27,7 @@ class _LogInScreenState extends State<LogInScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _showPasswordField = false;
   FirebaseLinkHandler _linkHandler;
 
   @override
@@ -37,9 +38,10 @@ class _LogInScreenState extends State<LogInScreen> {
   }
 
   void _setEmailField() async {
-    final String email = await Provider.of<EmailSecureStore>(context, listen: false)
-        .getEmail()
-        .catchError((e) {
+    final String email =
+        await Provider.of<EmailSecureStore>(context, listen: false)
+            .getEmail()
+            .catchError((e) {
       widget._log.warning("Error retrieving saved email: $e");
     });
     _emailController.text = email;
@@ -53,8 +55,9 @@ class _LogInScreenState extends State<LogInScreen> {
     final appleSignInAvailable =
         Provider.of<AppleSignInAvailable>(context, listen: false);
     final signInManager = Provider.of<SignInManager>(context, listen: false);
+    final authService = Provider.of<AuthService>(context, listen: false);
+
     _linkHandler = Provider.of<FirebaseLinkHandler>(context, listen: false);
-    final _showPasswordField = false;
 
     return Scaffold(
       body: Center(
@@ -105,6 +108,7 @@ class _LogInScreenState extends State<LogInScreen> {
                           Padding(
                             padding: EdgeInsets.all(8.0),
                             child: TextFormField(
+                              obscureText: true,
                               controller: _passwordController,
                               validator: (password) {
                                 if (password.length < 6)
@@ -121,19 +125,29 @@ class _LogInScreenState extends State<LogInScreen> {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: RaisedButton(
-                                child: Text('Request email link'),
+                                child: Text(!_showPasswordField ? 'Request email link' : 'Sign in with password'),
                                 onPressed: () async {
                                   if (!_formKey.currentState.validate()) return;
-                                  _sendEmailLink();
-//                                  await authService
-//                                      .signInWithEmailAndPassword(
-//                                          _emailController.text,
-//                                          _passwordController.text)
-//                                      .catchError((error) {
-//                                    widget._log.warning(
-//                                        'Unable to login with email/password',
-//                                        error);
-//                                  });
+                                  if (!_showPasswordField) _sendEmailLink();
+                                  else {
+                                    await authService
+                                      .signInWithEmailAndPassword(
+                                          _emailController.text,
+                                          _passwordController.text)
+                                      .catchError((error) {
+                                        final snackbar = SnackBar(content: Text("Unable to login with email/password"),);
+                                        Scaffold.of(context).showSnackBar(snackbar);
+                                    widget._log.warning(
+                                        'Unable to login with email/password',
+                                        error);
+                                  });
+                                  }
+//
+                                },
+                                onLongPress: (){
+                                  setState(() {
+                                    _showPasswordField = !_showPasswordField;
+                                  });
                                 },
                               ),
                             )),
@@ -153,14 +167,26 @@ class _LogInScreenState extends State<LogInScreen> {
     try {
       final PackageInfo packageInfo = await PackageInfo.fromPlatform();
       // Send link
-      await _linkHandler.sendSignInWithEmailLink(
-        email: _emailController.text,
-        url: Constants.firebaseProjectURl,
-        handleCodeInApp: true,
-        packageName: packageInfo.packageName,
-        androidInstallIfNotAvailable: true,
-        androidMinimumVersion: '18',
-      );
+      try {
+        await _linkHandler.sendSignInWithEmailLink(
+            email: _emailController.text,
+            url: Constants.firebaseProjectURl,
+            handleCodeInApp: true,
+            packageName: packageInfo.packageName,
+            androidInstallIfNotAvailable: true,
+            androidMinimumVersion: '18',
+            userMustExist: true);
+      } on StateError catch (e) {
+        widget._log.warning("user entered an email that is not in database");
+        PlatformAlertDialog(
+          title: "Email not in database",
+          content:
+              "${_emailController.text} is not in database. Use the sign up option instead",
+          defaultActionText: Strings.ok,
+        ).show(context);
+        return;
+      }
+
       // Tell user we sent an email
       PlatformAlertDialog(
         title: Strings.checkYourEmail,

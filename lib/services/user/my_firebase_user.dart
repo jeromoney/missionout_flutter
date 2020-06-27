@@ -16,7 +16,7 @@ class MyFirebaseUser implements User {
   @override
   final String photoUrl;
   @override
-  final String displayName;
+  String displayName;
 
   // Values held in Firestore
   @override
@@ -31,6 +31,7 @@ class MyFirebaseUser implements User {
   // Implementation specific variables
   final Firestore _db = Firestore.instance;
   final _log = Logger('MyFirebaseUser');
+
   @override
   MyFirebaseUser(
       {@required this.uid,
@@ -74,5 +75,11 @@ class MyFirebaseUser implements User {
     }).catchError((error) {
       _log.warning('Error adding token to user document', error);
     });
+  }
+
+  @override
+  Future updateDisplayName({@required String displayName}) async {
+    await _db.document('users/$uid').updateData({'displayName': displayName});
+    this.displayName = displayName;
   }
 }

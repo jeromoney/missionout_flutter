@@ -52,4 +52,10 @@ class DemoUser implements User {
     // TODO: implement updatePhoneNumber
     throw UnimplementedError();
   }
+
+  @override
+  updateDisplayName({String displayName}) {
+    // TODO: implement updateDisplayName
+    throw UnimplementedError();
+  }
 }

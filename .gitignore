@@ -48,3 +48,5 @@ coverage/*
 *pubspec.lock
 
 lib/scratch/*
+
+firestore_rules/*

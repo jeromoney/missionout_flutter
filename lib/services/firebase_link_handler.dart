@@ -16,7 +16,10 @@ class FirebaseLinkHandler {
   final BuildContext context;
 
   FirebaseLinkHandler(
-      {Key key, @required this.auth, @required this.emailStore, @required this.context}) {
+      {Key key,
+      @required this.auth,
+      @required this.emailStore,
+      @required this.context}) {
     _initDynamicLinks();
   }
 
@@ -35,7 +38,8 @@ class FirebaseLinkHandler {
   }
 
   Future<void> _signInWithEmail(String link) async {
-    final isLoadingProvider = Provider.of<IsLoadingNotifier>(context,listen: false);
+    final isLoadingProvider =
+        Provider.of<IsLoadingNotifier>(context, listen: false);
     try {
       isLoadingProvider.isLoading = true;
       // check that user is not signed in
@@ -71,20 +75,21 @@ class FirebaseLinkHandler {
     @required String packageName,
     @required bool androidInstallIfNotAvailable,
     @required String androidMinimumVersion,
+    bool userMustExist = false,
   }) async {
     try {
       // Save to email store
       await emailStore.setEmail(email);
       // Send link
       await auth.sendSignInWithEmailLink(
-        email: email,
-        url: url,
-        handleCodeInApp: handleCodeInApp,
-        iOSBundleID: packageName,
-        androidPackageName: packageName,
-        androidInstallIfNotAvailable: androidInstallIfNotAvailable,
-        androidMinimumVersion: androidMinimumVersion,
-      );
+          email: email,
+          url: url,
+          handleCodeInApp: handleCodeInApp,
+          iOSBundleID: packageName,
+          androidPackageName: packageName,
+          androidInstallIfNotAvailable: androidInstallIfNotAvailable,
+          androidMinimumVersion: androidMinimumVersion,
+          userMustExist: userMustExist);
     } on PlatformException catch (e) {
       rethrow;
     }

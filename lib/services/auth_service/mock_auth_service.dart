@@ -5,7 +5,7 @@ import 'package:missionout/services/auth_service/auth_service.dart';
 import 'package:missionout/services/team/team.dart';
 import 'package:missionout/services/user/user.dart';
 
-class MockAuthService extends AuthService{
+class MockAuthService extends AuthService {
   @override
   Future<Team> createTeam() {
     // TODO: implement createTeam
@@ -24,13 +24,22 @@ class MockAuthService extends AuthService{
   }
 
   final StreamController<User> _onAuthStateChangedController =
-  StreamController<User>();
+      StreamController<User>();
+
   @override
   // TODO: implement onAuthStateChanged
   Stream<User> get onAuthStateChanged => _onAuthStateChangedController.stream;
 
   @override
-  Future<User> sendSignInWithEmailLink({String email, String url, bool handleCodeInApp, String iOSBundleID, String androidPackageName, bool androidInstallIfNotAvailable, String androidMinimumVersion}) {
+  Future<User> sendSignInWithEmailLink(
+      {String email,
+      String url,
+      bool handleCodeInApp,
+      String iOSBundleID,
+      String androidPackageName,
+      bool androidInstallIfNotAvailable,
+      String androidMinimumVersion,
+      bool userMustExist = false}) {
     // TODO: implement sendSignInWithEmailLink
     throw UnimplementedError();
   }
@@ -42,7 +51,10 @@ class MockAuthService extends AuthService{
   }
 
   @override
-  Future<User> signInWithEmailAndLink({String email, String link,}) {
+  Future<User> signInWithEmailAndLink({
+    String email,
+    String link,
+  }) {
     // TODO: implement signInWithEmailAndLink
     throw UnimplementedError();
   }
@@ -82,6 +94,4 @@ class MockAuthService extends AuthService{
     // TODO: implement signInWithEmailAndPassword
     throw UnimplementedError();
   }
-
-
 }
