@@ -50,3 +50,5 @@ coverage/*
 lib/scratch/*
 
 firestore_rules/*
+!firestore_rules/firestore.rules
+!firestore_rules/test/test.js

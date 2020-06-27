@@ -1,0 +1,55 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Access is denied unless explicity defined
+    match /{document=**}{
+      allow read,write:if false;
+    }
+  
+  // the one document that is allowed anonymous access
+  match /teamDomains/domains{
+  	allow read : if false;
+  }
+  
+  //		User can get,update own self
+  	 match /users/{user} {
+     // User can get their own file and update their own file
+      allow read, update : if request.auth.uid == user;
+    }
+
+   // 	User get own team	-- Editor can update their own team
+    match /teams/{team}/{document=**}{
+      // Users can get anything in their team folder
+      allow read: if get(/databases/$(database)/documents/users/$(request.auth.uid)).data.teamID == team;
+    }
+    match /teams/{team}{
+      // Editor can update the team information
+      allow update: if get(/databases/$(database)/documents/users/$(request.auth.uid)).data.teamID == team &&
+      get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isEditor == true;
+    }  
+		
+    // 	User can read own team -- Editor can write own team
+    match /teams/{team}/missions/{mission}{
+      // Users can read own team	write own team
+      allow write: if get(/databases/$(database)/documents/users/$(request.auth.uid)).data.teamID == team &&
+      get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isEditor == true;
+    }
+  
+	// Responses
+    match /teams/{team}/missions/{mission}/responses/{response}{
+      // Users can read own team and write own response
+      // allow read - is already given access by <<match /teams/{team}/{document=**}>> line
+      allow write: if request.auth.uid == response && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.teamID == team;
+      
+      // Editors have no additional privileges.
+      
+    }
+
+		// Pages
+    match /teams/{team}/missions/{mission}/pages/{page}{    
+      // Editor can create for their own team
+      allow create: if get(/databases/$(database)/documents/users/$(request.auth.uid)).data.teamID == team
+      && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isEditor == true;
+    }
+  }
+}
