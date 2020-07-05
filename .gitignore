@@ -47,7 +47,8 @@ coverage/*
 *Podfile.lock
 *pubspec.lock
 
-lib/scratch/*
 firestore_rules/*
 !firestore_rules/test/test.js
 !firestore_rules/firestore.rules
+
+*.g.dart

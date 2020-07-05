@@ -8,7 +8,7 @@ class Page {
   String address;
   Mission mission;
   Timestamp time;
-  bool onlyEditors;
+  bool onlyEditors; // Page is restricted to Editors only
 
   Page({@required this.creator, @required this.mission, this.onlyEditors = false});
 
