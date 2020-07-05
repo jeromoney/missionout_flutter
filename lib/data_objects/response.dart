@@ -1,35 +1,27 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 part 'response.g.dart';
 
+@JsonSerializable()
 class Response {
+  @JsonKey(required: true)
   final String teamMember;
+  @JsonKey(required: true)
   String status;
-  String drivingTime;
-  DocumentReference reference;
+  @JsonKey(ignore: true)
+  Timestamp time;
 
   Response({@required String teamMember, @required String status})
       : this.teamMember = teamMember,
-        this.status = status,
-        this.drivingTime = null,
-        this.reference = null;
+        this.status = status;
 
-  Response.fromMap(Map<String, dynamic> map, {this.reference})
-      : teamMember = map['teamMember'],
-        status = map['status'],
-        drivingTime = map['driving_time'];
+  factory Response.fromSnapshot(DocumentSnapshot snapshot) => _$ResponseFromJson(snapshot.data);
 
-  Response.fromSnapshot(DocumentSnapshot snapshot)
-      : this.fromMap(snapshot.data, reference: snapshot.reference);
-
-  Map<String, dynamic> toJson() => {
-        'teamMember': teamMember,
-        'status': status,
-        'time':  Timestamp.now(), //TODO - some bug in iOS doesn't allow FieldValue. Remove null when this is fixed,
-      };
-
+  Map<String, dynamic> toJson() => _$ResponseToJson(this)..['time'] = Timestamp.now(); //TODO - some bug in iOS doesn't allow FieldValue
+  
   @override
   bool operator ==(other) {
     return other.teamMember == teamMember;
