@@ -41,7 +41,7 @@ class EditDetail extends StatelessWidget {
                         cancelActionText: Strings.cancel,
                       ).show(context);
                       if (requestPage) {
-                        final page = missionpage.Page(
+                        final page = missionpage.Page.fromMission(
                             creator: user.displayName ?? "unknown person",
                             mission: mission,
                             onlyEditors: false);

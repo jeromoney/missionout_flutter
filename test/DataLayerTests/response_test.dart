@@ -10,7 +10,7 @@ void main() {
     final teamMember = 'Joe Smith';
     final status = 'his response';
     var response = Response(teamMember: teamMember, status: status);
-    response.reference = DocumentReferenceMock();
+    response.selfRef = DocumentReferenceMock();
 
     expect(response.teamMember, teamMember);
     expect(response.status, status);

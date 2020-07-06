@@ -1,6 +1,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:missionout/DataLayer/mission.dart';
+import 'package:missionout/data_objects/mission.dart';
 import 'package:test/test.dart';
 
 import '../Mock/document_snapshot_mock.dart';
@@ -29,7 +30,7 @@ void main() {
     expect(testMission.isStoodDown, true);
     expect(testMission.address, null);
 
-    var exportMission = testMission.toDatabase();
+    var exportMission = testMission.toMap();
     expect(exportMission['time'], isA<Timestamp>() );
     exportMission['time'] = myTime;
 

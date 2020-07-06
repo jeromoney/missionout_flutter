@@ -132,7 +132,7 @@ class _ResponseOptionsState extends State<ResponseOptions> {
 
               team.addResponse(
                 response: response,
-                docID: arguments.address,
+                docID: arguments.docId,
                 uid: user.uid,
               );
               _value = selected ? index : null;

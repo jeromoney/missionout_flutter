@@ -37,8 +37,12 @@ class SubmitMissionButton extends StatelessWidget {
     Mission myMission = mission;
     if (myMission == null) {
       // if mission is null that means we are creating new mission
-      myMission =
-          Mission(description, needForAction, locationDescription, geoPoint);
+      myMission = Mission.fromApp(
+        description: description,
+        needForAction: needForAction,
+        locationDescription: locationDescription,
+        location: geoPoint,
+      );
     } else {
       // update existing mission
       myMission.description = description;
@@ -70,11 +74,11 @@ class SubmitMissionButton extends StatelessWidget {
               ));
               return;
             }
-            myMission.reference = documentReference;
+            myMission.selfRef = documentReference;
 
             // send page to editors only
             final user = Provider.of<User>(context, listen: false);
-            final page = missionpage.Page(
+            final page = missionpage.Page.fromMission(
                 creator: user.displayName ?? "unknown user",
                 mission: myMission,
                 onlyEditors: true);

@@ -92,7 +92,7 @@ class BuildMissionResults extends StatelessWidget {
                 (formatTime(mission.time) ?? '')),
             onTap: () {
               final MissionAddressArguments arguments =
-                  MissionAddressArguments(mission.address);
+                  MissionAddressArguments(mission.address());
               Navigator.pushNamed(context, DetailScreen.routeName, arguments: arguments);
             },
           );

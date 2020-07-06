@@ -12,7 +12,7 @@ void main(){
     final description = 'Someone got hurt';
     final needForAction = 'need people to help';
     var mission = Mission(description,needForAction,null,null);
-    mission.reference = DocumentReferenceMock();
+    mission.selfRef = DocumentReferenceMock();
 
     var page = Page(creator:creator,mission:mission);
     expect(page.creator, creator);

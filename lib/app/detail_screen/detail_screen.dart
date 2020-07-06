@@ -71,7 +71,7 @@ class _DetailScreenStreamWrapper extends StatelessWidget {
 
     return StreamBuilder<Mission>(
         stream: team.fetchSingleMission(
-          docID: arguments.address,
+          docID: arguments.docId,
         ),
         builder: (context, snapshot) {
           switch (detailItem) {

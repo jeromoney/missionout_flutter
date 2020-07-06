@@ -25,7 +25,7 @@ class BuildResponseStream extends StatelessWidget {
 
     return StreamBuilder<List<Response>>(
       stream: team.fetchResponses(
-        docID: arguments.address,
+        docID: arguments.docId,
       ),
       builder: (context, snapshot) {
         // waiting

@@ -7,16 +7,28 @@ import 'package:missionout/services/team/team.dart';
 
 class DemoTeam with ChangeNotifier implements Team {
   List<Mission> _missions = [
-    Mission("Missing hiker", "need ground search team", "Passwater Gulch",
-        GeoPoint(27.966389, 86.889999)),
-    Mission(
-        "Injured skier", "snowmobilies report to bay", "Passwater Gulch", null),
-    Mission("Overdue backpacker", "report to bay for search assignment",
-        "Passwater Gulch", null),
-    Mission("Empty boat found on river",
-        "swiftwater team listen for assignments", "Passwater Gulch", null),
-    Mission("Injured horserider ", "assist EMS with evacuation",
-        "Passwater Gulch", null),
+    Mission.fromApp(
+        description: "Missing hiker",
+        needForAction: "need ground search team",
+        locationDescription: "Passwater Gulch",
+        location: GeoPoint(27.966389, 86.889999)),
+    Mission.fromApp(
+      description: "Injured skier",
+      needForAction: "snowmobilies report to bay",
+      locationDescription: "Passwater Pass",
+    ),
+    Mission.fromApp(
+        description: "Overdue backpacker",
+        needForAction: "report to bay for search assignment",
+        locationDescription: "Frontwind Gulch"),
+    Mission.fromApp(
+        description: "Empty boat found on river",
+        needForAction: "swiftwater team listen for assignments",
+        locationDescription: "Passwater Bay"),
+    Mission.fromApp(
+        description: "Injured horserider ",
+        needForAction: "assist EMS with evacuation",
+        locationDescription: "Passwater Gulch"),
   ];
 
   List<Response> _responses = [
@@ -40,7 +52,7 @@ class DemoTeam with ChangeNotifier implements Team {
 
   DemoTeam() {
     for (var i = 0; i < _missions.length; i++) {
-      _missions[i].reference = DemoReference(i);
+      _missions[i].selfRef = DemoReference(i) as DocumentReference; //TODO - this will probably break
     }
   }
 
@@ -63,6 +75,7 @@ class DemoTeam with ChangeNotifier implements Team {
     _missions.insert(0, mission);
     return DemoReference(0);
   }
+
   @override
   bool get isInitialized => true;
 
@@ -74,7 +87,8 @@ class DemoTeam with ChangeNotifier implements Team {
 
   @override
   addResponse({Response response, String docID, String uid}) {
-    if (response == null) { // User deselected response, so remove it
+    if (response == null) {
+      // User deselected response, so remove it
       int i = _responses.indexOf(Response(teamMember: "Elton", status: null));
       _responses.removeAt(i);
       return;

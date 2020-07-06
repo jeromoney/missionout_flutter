@@ -89,11 +89,11 @@ class FirestoreTeam implements Team {
   }) async {
     // if document reference exists in mission variable, than we are updating an existing mission rather than creating a new one.
     DocumentReference result;
-    if (mission.reference == null) {
+    if (mission.selfRef == null) {
       // reference doesn't exist so create new mission
       result = await _db
           .collection('teams/$teamID/missions')
-          .add(mission.toDatabase())
+          .add(mission.toMap())
           .then((value) {
         return value;
       }).catchError((error) {
@@ -103,8 +103,8 @@ class FirestoreTeam implements Team {
       return result;
     } else {
       // reference is not null so we just update mission.
-      await mission.reference.setData(mission.toDatabase(), merge: true);
-      result = mission.reference;
+      await mission.selfRef.setData(mission.toMap(), merge: true);
+      result = mission.selfRef;
     }
     return result;
   }
@@ -129,7 +129,7 @@ class FirestoreTeam implements Team {
     @required Mission mission,
   }) {
     _db
-        .document('teams/$teamID/missions/${mission.reference.documentID}')
+        .document('teams/$teamID/missions/${mission.selfRef.documentID}')
         .updateData({'isStoodDown': mission.isStoodDown});
   }
 
@@ -137,7 +137,7 @@ class FirestoreTeam implements Team {
   Future<void> addPage({
     @required missionpage.Page page,
   }) async {
-    String missionDocId = page.mission.address;
+    String missionDocId = page.address;
     await _db
         .collection('teams/$teamID/missions/$missionDocId/pages')
         .add(page.toJson())
