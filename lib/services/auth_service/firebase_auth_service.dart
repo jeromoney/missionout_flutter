@@ -128,20 +128,9 @@ class FirebaseAuthService extends AuthService {
       _log.warning("Team is null. User was not authenticated");
       return null;
     }
-    var document = await _db.collection('teams').document(teamID).get();
-    var data = document.data;
-
-    var optionalKeys = ["name", "location", "chatURI"];
-    var isMissingOptionalKey =
-        optionalKeys.any((requiredKey) => !data.containsKey(optionalKeys));
-    if (isMissingOptionalKey)
-      _log.warning("Missing optional key for Team; substituting null values.");
-
-    String name = data['name'];
-    GeoPoint location = data['location'];
-    String chatURI = data['chatURI'];
-    return FirestoreTeam(
-        teamID: teamID, name: name, location: location, chatURI: chatURI);
+    final DocumentSnapshot snapshot =
+        await _db.collection('teams').document(teamID).get();
+    return FirestoreTeam.fromSnapshot(snapshot);
   }
 
   @override

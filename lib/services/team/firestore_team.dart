@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
+import 'package:firestore_annotations/firestore_annotations.dart';
+
 
 import 'package:missionout/data_objects/mission.dart';
 import 'package:missionout/data_objects/page.dart' as missionpage;
@@ -8,12 +10,17 @@ import 'package:missionout/data_objects/response.dart';
 import 'package:missionout/services/team/team.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+part 'firestore_team.g.dart';
+
+@FirestoreDocument(hasSelfRef: false)
 class FirestoreTeam implements Team {
   final _log = Logger('FirestoreTeam');
   final Firestore _db = Firestore.instance;
   @override
+  @FirestoreAttribute(nullable: false)
   final String teamID;
   @override
+  @FirestoreAttribute(nullable: false)
   final String name;
   @override
   GeoPoint location;
@@ -24,15 +31,15 @@ class FirestoreTeam implements Team {
       {@required this.teamID, @required this.name, this.location, this.chatURI})
       : assert(teamID != null);
 
-  @override
-  dynamic get documentAddress => _firestoreDocumentAddress != null;
-
-  DocumentReference _firestoreDocumentAddress;
+  factory FirestoreTeam.fromSnapshot(DocumentSnapshot snapshot) =>
+      _$firestoreTeamFromSnapshot(snapshot);
 
   @override
   void launchChat() {
     launch(chatURI);
   }
+
+  // firestore reads
 
   @override
   Future updateLocation(GeoPoint locationVal) async {
@@ -82,6 +89,8 @@ class FirestoreTeam implements Team {
         .map((data) => Response.fromSnapshot(data))
         .toList());
   }
+
+  // firestore writes
 
   @override
   Future<DocumentReference> addMission({

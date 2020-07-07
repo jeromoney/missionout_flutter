@@ -13,8 +13,6 @@ abstract class Team {
 
   Team({@required this.teamID, @required this.name, this.location, this.chatURI});
 
-  dynamic get documentAddress; // Where the document is in database
-
   void launchChat();
 
   Stream<List<Mission>> fetchMissions();

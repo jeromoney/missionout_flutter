@@ -77,9 +77,6 @@ class DemoTeam with ChangeNotifier implements Team {
   }
 
   @override
-  bool get isInitialized => true;
-
-  @override
   Future<void> addPage({my.Page page}) {
     // TODO: implement addPage
     return null;
@@ -99,13 +96,6 @@ class DemoTeam with ChangeNotifier implements Team {
     else // found response, so replacing with new one
       _responses[i] = response;
   }
-
-  @override
-  bool get chatURIisAvailable => false;
-
-  @override
-  // TODO: implement documentAddress
-  get documentAddress => null;
 
   @override
   Stream<List<Mission>> fetchMissions() async* {
