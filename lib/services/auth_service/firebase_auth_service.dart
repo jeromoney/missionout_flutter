@@ -123,15 +123,7 @@ class FirebaseAuthService extends AuthService {
   }
 
   @override
-  Future<Team> createTeam() async {
-    if (teamID == null) {
-      _log.warning("Team is null. User was not authenticated");
-      return null;
-    }
-    final DocumentSnapshot snapshot =
-        await _db.collection('teams').document(teamID).get();
-    return FirestoreTeam.fromSnapshot(snapshot);
-  }
+  Future<Team> createTeam() async => await FirestoreTeam.fromTeamID(teamID);
 
   @override
   Future<User> currentUser() async {

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:firestore_annotations/firestore_annotations.dart';
 
-
 import 'package:missionout/data_objects/mission.dart';
 import 'package:missionout/data_objects/page.dart' as missionpage;
 import 'package:missionout/data_objects/response.dart';
@@ -31,6 +30,20 @@ class FirestoreTeam implements Team {
       {@required this.teamID, @required this.name, this.location, this.chatURI})
       : assert(teamID != null);
 
+  static Future<FirestoreTeam> fromTeamID(String teamID) async {
+    final log = Logger('FirestoreTeam');
+
+    if (teamID == null) {
+      log.warning("Team is null. User was not authenticated");
+      throw ArgumentError.notNull(teamID);
+    }
+
+    final db = Firestore.instance;
+    final DocumentSnapshot snapshot =
+        await db.collection('teams').document(teamID).get();
+    return FirestoreTeam.fromSnapshot(snapshot);
+  }
+
   factory FirestoreTeam.fromSnapshot(DocumentSnapshot snapshot) =>
       _$firestoreTeamFromSnapshot(snapshot);
 
@@ -40,26 +53,6 @@ class FirestoreTeam implements Team {
   }
 
   // firestore reads
-
-  @override
-  Future updateLocation(GeoPoint locationVal) async {
-    await _db.document('teams/$teamID').updateData({
-      'location': locationVal,
-    }).catchError((error) {
-      throw error;
-    });
-    location = locationVal;
-  }
-
-  @override
-  Future updateChatURI(String chatURIVal) async {
-    await _db.document('teams/$teamID').updateData({
-      'chatURI': chatURIVal,
-    }).catchError((error) {
-      throw error;
-    });
-    chatURI = chatURIVal;
-  }
 
   @override
   Stream<List<Mission>> fetchMissions() {
@@ -91,6 +84,26 @@ class FirestoreTeam implements Team {
   }
 
   // firestore writes
+
+  @override
+  Future updateLocation(GeoPoint locationVal) async {
+    await _db.document('teams/$teamID').updateData({
+      'location': locationVal,
+    }).catchError((error) {
+      throw error;
+    });
+    location = locationVal;
+  }
+
+  @override
+  Future updateChatURI(String chatURIVal) async {
+    await _db.document('teams/$teamID').updateData({
+      'chatURI': chatURIVal,
+    }).catchError((error) {
+      throw error;
+    });
+    chatURI = chatURIVal;
+  }
 
   @override
   Future<DocumentReference> addMission({

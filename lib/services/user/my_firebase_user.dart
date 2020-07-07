@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
@@ -7,8 +8,10 @@ import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:logging/logging.dart';
 
 import 'package:missionout/services/user/user.dart';
-
+const RETRY_COUNT = 5;
+const RETRY_WAIT = 3; // seconds
 class MyFirebaseUser implements User {
+
   @override
   final String uid;
   @override
@@ -31,6 +34,36 @@ class MyFirebaseUser implements User {
   // Implementation specific variables
   final Firestore _db = Firestore.instance;
   final _log = Logger('MyFirebaseUser');
+
+  static Future<DocumentSnapshot> getOOOL(FirebaseUser firebaseUser) async {
+    final log = Logger('MyFirebaseUser');
+    final Firestore db = Firestore.instance;
+
+    DocumentSnapshot snapshot;
+    for (var i = 1; i < RETRY_COUNT; i++) {
+      snapshot = await db
+          .collection('users')
+          .document(firebaseUser.uid)
+          .get()
+          .catchError((error) {
+        log.warning("Error retrieving user info from firestore", error);
+        return null;
+      });
+      if (snapshot.data == null)
+        log.warning(
+            "Race condition where the backend hasn't created the user account yet. Trying again");
+      else
+        break;
+      await Future.delayed(Duration(seconds: RETRY_WAIT));
+    }
+
+    final data = snapshot.data as Map<String, dynamic>;
+
+    if (data == null) {
+      log.warning("Retries failed. Document still null");
+      return null;
+    }
+  }
 
   @override
   MyFirebaseUser(
@@ -82,4 +115,5 @@ class MyFirebaseUser implements User {
     await _db.document('users/$uid').updateData({'displayName': displayName});
     this.displayName = displayName;
   }
+
 }
