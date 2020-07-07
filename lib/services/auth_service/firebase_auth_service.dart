@@ -30,7 +30,11 @@ class FirebaseAuthService extends AuthService {
 
   /// Combines data from Firebase with Firestore to return User
   Future<User> _userFromFirebase(FirebaseUser firebaseUser) async {
-    if (firebaseUser == null) return null;
+    if (firebaseUser == null) {
+      _log.warning('FirebaseUser can not be null');
+      throw ArgumentError.notNull('firebaseUser');
+    }
+    return MyFirebaseUser.fromFirebaseUser(firebaseUser);
     _firebaseUser = firebaseUser;
     var document;
     for (var i = 1; i < RETRY_COUNT; i++) {

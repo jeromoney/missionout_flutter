@@ -6,20 +6,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:logging/logging.dart';
+import 'package:firestore_annotations/firestore_annotations.dart';
 
 import 'package:missionout/services/user/user.dart';
+
+part 'my_firebase_user.g.dart';
+
 const RETRY_COUNT = 5;
 const RETRY_WAIT = 3; // seconds
+
+@FirestoreDocument(hasSelfRef: false)
 class MyFirebaseUser implements User {
+  // Values from FirebaseUser
+  FirebaseUser _firebaseUser;
 
   @override
-  final String uid;
+  String get uid => _firebaseUser.uid;
+
   @override
-  final String email;
+  String get email => _firebaseUser.email;
+
   @override
-  final String photoUrl;
+  String get photoUrl => _firebaseUser.photoUrl;
+
   @override
-  String displayName;
+  String get displayName => _firebaseUser.displayName ?? firestoreDisplayName;
+
+  String firestoreDisplayName;
 
   // Values held in Firestore
   @override
@@ -27,54 +40,61 @@ class MyFirebaseUser implements User {
   @override
   final bool isEditor;
   @override
+  @FirestoreAttribute(ignore: true)
   PhoneNumber voicePhoneNumber;
   @override
+  @FirestoreAttribute(ignore: true)
   PhoneNumber mobilePhoneNumber;
+
+  @FirestoreAttribute(alias: 'mobilePhoneNumber')
+  Map<String, String> mapMobilePhoneNumber;
+  @FirestoreAttribute(alias: 'voicePhoneNumber')
+  Map<String, String> mapVoicePhoneNumber;
 
   // Implementation specific variables
   final Firestore _db = Firestore.instance;
   final _log = Logger('MyFirebaseUser');
 
-  static Future<DocumentSnapshot> getOOOL(FirebaseUser firebaseUser) async {
+  static Future<MyFirebaseUser> fromFirebaseUser(
+      FirebaseUser firebaseUser) async {
     final log = Logger('MyFirebaseUser');
-    final Firestore db = Firestore.instance;
 
+    if (firebaseUser == null) {
+      log.warning("Team is null. User was not authenticated");
+      throw ArgumentError.notNull('firebaseUser');
+    }
+
+    final db = Firestore.instance;
     DocumentSnapshot snapshot;
-    for (var i = 1; i < RETRY_COUNT; i++) {
-      snapshot = await db
-          .collection('users')
-          .document(firebaseUser.uid)
-          .get()
-          .catchError((error) {
-        log.warning("Error retrieving user info from firestore", error);
-        return null;
-      });
-      if (snapshot.data == null)
+    for (var i = 1; i <= RETRY_COUNT; i++) {
+      snapshot = await db.collection('users').document(firebaseUser.uid).get();
+      if (snapshot.data == null) {
+        if (i == RETRY_COUNT) {
+          log.warning("Retries failed. Document still null");
+          return null;
+        }
         log.warning(
             "Race condition where the backend hasn't created the user account yet. Trying again");
-      else
+      } else
         break;
       await Future.delayed(Duration(seconds: RETRY_WAIT));
     }
-
-    final data = snapshot.data as Map<String, dynamic>;
-
-    if (data == null) {
-      log.warning("Retries failed. Document still null");
-      return null;
-    }
+    return MyFirebaseUser.fromSnapshot(snapshot).._firebaseUser = firebaseUser;
   }
+
+  factory MyFirebaseUser.fromSnapshot(DocumentSnapshot snapshot) =>
+      _$myFirebaseUserFromSnapshot(snapshot);
 
   @override
   MyFirebaseUser(
-      {@required this.uid,
-      @required this.email,
-      this.photoUrl,
-      this.displayName,
+      {uid,
+      email,
+      photoUrl,
+      this.firestoreDisplayName,
       @required this.teamID,
       @required this.isEditor,
-      this.voicePhoneNumber,
-      this.mobilePhoneNumber}) {
+      this.mapMobilePhoneNumber,
+      this.mapVoicePhoneNumber}) {
     addTokenToFirestore();
   }
 
@@ -115,5 +135,4 @@ class MyFirebaseUser implements User {
     await _db.document('users/$uid').updateData({'displayName': displayName});
     this.displayName = displayName;
   }
-
 }
