@@ -1,27 +1,29 @@
-
+import 'package:firestore_annotations/firestore_annotations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:json_annotation/json_annotation.dart';
 
 part 'response.g.dart';
 
-@JsonSerializable()
+@FirestoreDocument(hasSelfRef: false)
 class Response {
-  @JsonKey(required: true)
   final String teamMember;
-  @JsonKey(required: true)
-  String status;
-  @JsonKey(ignore: true)
-  Timestamp time;
+  final String status;
+  final Timestamp time;
 
-  Response({@required String teamMember, @required String status})
-      : this.teamMember = teamMember,
-        this.status = status;
+  Response(
+      {@required this.teamMember,
+      @required this.status,
+      this.time,
+      hashCode}); // Hacky- there is a bug in the firestore_annotations where hashCode is not being ignored. This allows the generated code to work
 
-  factory Response.fromSnapshot(DocumentSnapshot snapshot) => _$ResponseFromJson(snapshot.data);
+  Response.fromApp({@required this.teamMember, @required this.status})
+      : time = Timestamp.now();
 
-  Map<String, dynamic> toJson() => _$ResponseToJson(this)..['time'] = Timestamp.now(); //TODO - some bug in iOS doesn't allow FieldValue
-  
+  factory Response.fromSnapshot(DocumentSnapshot snapshot) =>
+      _$responseFromSnapshot(snapshot);
+
+  Map<String, dynamic> toJson() => _$responseToMap(this);
+
   @override
   bool operator ==(other) {
     return other.teamMember == teamMember;

@@ -12,8 +12,16 @@ class Page {
   final String needForAction;
   final String address;
   final bool onlyEditors; // Page is restricted to Editors only
+  final Timestamp time;
 
-  Page({this.creator, this.description, this.needForAction, this.address, this.onlyEditors});
+  Page({
+    this.creator,
+    this.description,
+    this.needForAction,
+    this.address,
+    this.onlyEditors,
+    this.time,
+  });
 
   Page.fromMission(
       {@required this.creator,
@@ -21,7 +29,9 @@ class Page {
       this.onlyEditors = false})
       : description = mission.description,
         needForAction = mission.needForAction,
-        address = mission.address();
+        address = mission.address(),
+        time = Timestamp.now();
 
-  Map<String, dynamic> toJson() => _$pageToMap(this); //some bug in iOS doesn't allow FieldValue
+  Map<String, dynamic> toJson() =>
+      _$pageToMap(this); //some bug in iOS doesn't allow FieldValue
 }

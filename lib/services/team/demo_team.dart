@@ -32,22 +32,22 @@ class DemoTeam with ChangeNotifier implements Team {
   ];
 
   List<Response> _responses = [
-    Response(teamMember: "Ameera Lott", status: "Responding"),
-    Response(teamMember: "Jazmine Burrows", status: "Delayed"),
-    Response(teamMember: "Susie Diaz", status: "Standby"),
-    Response(teamMember: "Eilish Watts", status: "Responding"),
-    Response(teamMember: "Deanna Mora", status: "Responding"),
-    Response(teamMember: "Addie Vega", status: "Delayed"),
-    Response(teamMember: "Franco Bolton", status: "Standby"),
-    Response(teamMember: "Grayson Burch", status: "Responding"),
-    Response(teamMember: "Levi Hinton", status: "Responding"),
-    Response(teamMember: "Karishma Appleton", status: "Delayed"),
-    Response(teamMember: "Myles Pollard", status: "Standby"),
-    Response(teamMember: "Ariah Snow", status: "Responding"),
-    Response(teamMember: "Lola-Rose Rudd", status: "Responding"),
-    Response(teamMember: "Kiyan Jones", status: "Delayed"),
-    Response(teamMember: "Leanna Travers", status: "Standby"),
-    Response(teamMember: "Vivaan Morton", status: "Responding"),
+    Response.fromApp(teamMember: "Ameera Lott", status: "Responding"),
+    Response.fromApp(teamMember: "Jazmine Burrows", status: "Delayed"),
+    Response.fromApp(teamMember: "Susie Diaz", status: "Standby"),
+    Response.fromApp(teamMember: "Eilish Watts", status: "Responding"),
+    Response.fromApp(teamMember: "Deanna Mora", status: "Responding"),
+    Response.fromApp(teamMember: "Addie Vega", status: "Delayed"),
+    Response.fromApp(teamMember: "Franco Bolton", status: "Standby"),
+    Response.fromApp(teamMember: "Grayson Burch", status: "Responding"),
+    Response.fromApp(teamMember: "Levi Hinton", status: "Responding"),
+    Response.fromApp(teamMember: "Karishma Appleton", status: "Delayed"),
+    Response.fromApp(teamMember: "Myles Pollard", status: "Standby"),
+    Response.fromApp(teamMember: "Ariah Snow", status: "Responding"),
+    Response.fromApp(teamMember: "Lola-Rose Rudd", status: "Responding"),
+    Response.fromApp(teamMember: "Kiyan Jones", status: "Delayed"),
+    Response.fromApp(teamMember: "Leanna Travers", status: "Standby"),
+    Response.fromApp(teamMember: "Vivaan Morton", status: "Responding"),
   ];
 
   DemoTeam() {
@@ -89,7 +89,7 @@ class DemoTeam with ChangeNotifier implements Team {
   addResponse({Response response, String docID, String uid}) {
     if (response == null) {
       // User deselected response, so remove it
-      int i = _responses.indexOf(Response(teamMember: "Elton", status: null));
+      int i = _responses.indexOf(Response.fromApp(teamMember: "Elton", status: null));
       _responses.removeAt(i);
       return;
     }
