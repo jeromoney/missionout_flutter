@@ -31,6 +31,7 @@ class FirebaseAuthService extends AuthService {
     }
     final User user = await MyFirebaseUser.fromFirebaseUser(firebaseUser);
     teamID = user.teamID;
+    _firebaseUser = firebaseUser;
     return user;
   }
 
