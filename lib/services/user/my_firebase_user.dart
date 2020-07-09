@@ -6,31 +6,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:logging/logging.dart';
-import 'package:firestore_annotations/firestore_annotations.dart';
 
 import 'package:missionout/services/user/user.dart';
-
-part 'my_firebase_user.g.dart';
 
 const RETRY_COUNT = 5;
 const RETRY_WAIT = 3; // seconds
 
-@FirestoreDocument(hasSelfRef: false)
 class MyFirebaseUser implements User {
   // Values from FirebaseUser
-  FirebaseUser _firebaseUser;
+  FirebaseUser firebaseUser;
 
   @override
-  String get uid => _firebaseUser.uid;
+  String get uid => firebaseUser.uid;
 
   @override
-  String get email => _firebaseUser.email;
+  String get email => firebaseUser.email;
 
   @override
-  String get photoUrl => _firebaseUser.photoUrl;
+  String get photoUrl => firebaseUser.photoUrl;
 
   @override
-  String get displayName => _firebaseUser.displayName ?? firestoreDisplayName;
+  String get displayName => firebaseUser.displayName ?? firestoreDisplayName;
 
   String firestoreDisplayName;
 
@@ -39,17 +35,11 @@ class MyFirebaseUser implements User {
   final String teamID;
   @override
   final bool isEditor;
+
   @override
-  @FirestoreAttribute(ignore: true)
   PhoneNumber voicePhoneNumber;
   @override
-  @FirestoreAttribute(ignore: true)
   PhoneNumber mobilePhoneNumber;
-
-  @FirestoreAttribute(alias: 'mobilePhoneNumber')
-  Map<String, String> mapMobilePhoneNumber;
-  @FirestoreAttribute(alias: 'voicePhoneNumber')
-  Map<String, String> mapVoicePhoneNumber;
 
   // Implementation specific variables
   final Firestore _db = Firestore.instance;
@@ -66,6 +56,9 @@ class MyFirebaseUser implements User {
 
     final db = Firestore.instance;
     DocumentSnapshot snapshot;
+    // When the user first logs in, the backend creates a record in Firestore.
+    // However, this async task might be front-run by the app and hence the need
+    // for retries
     for (var i = 1; i <= RETRY_COUNT; i++) {
       snapshot = await db.collection('users').document(firebaseUser.uid).get();
       if (snapshot.data == null) {
@@ -79,22 +72,75 @@ class MyFirebaseUser implements User {
         break;
       await Future.delayed(Duration(seconds: RETRY_WAIT));
     }
-    return MyFirebaseUser.fromSnapshot(snapshot).._firebaseUser = firebaseUser;
-  }
 
-  factory MyFirebaseUser.fromSnapshot(DocumentSnapshot snapshot) =>
-      _$myFirebaseUserFromSnapshot(snapshot);
+    final data = snapshot.data;
+    var requiredKeys = ["teamID"];
+    var isMissingRequiredKey =
+    requiredKeys.any((requiredKey) => !data.containsKey(requiredKey));
+    if (isMissingRequiredKey) {
+      log.severe("Missing required key for Team document in Firestore");
+      return null;
+    }
+    final String snapshotTeamID = data['teamID'];
+    // If teamID is null, it means that backend set up script could not identify
+    // the team automatically. e.g. User logged in from a normal gmail account.
+    // Should return a null user but also automatically sign out user.
+    if (snapshotTeamID == null) {
+      log.warning(
+          "Unable to identify the team that the user is assigned to. Logging out");
+      return null;
+    }
+
+    var optionalKeys = ["isEditor", "mobilePhoneNumber", "voicePhoneNumber"];
+    var isMissingOptionalKey =
+    optionalKeys.any((requiredKey) => !data.containsKey(optionalKeys));
+    if (isMissingOptionalKey)
+      log.warning("Missing optional key; substituting null values.");
+
+    bool isEditor;
+    data.containsKey('isEditor')
+        ? isEditor = data['isEditor']
+        : isEditor = false;
+
+    PhoneNumber mobilePhoneNumber;
+    PhoneNumber voicePhoneNumber;
+    try {
+      mobilePhoneNumber = PhoneNumber(
+          isoCode: data['mobilePhoneNumber']['isoCode'],
+          phoneNumber: data['mobilePhoneNumber']['phoneNumber']);
+    } on TypeError catch (error) {
+      log.warning("Phone number in old format, ignoring", error);
+    } on NoSuchMethodError catch (error) {
+      log.warning("Phone number in old format, ignoring", error);
+    }
+    try {
+      voicePhoneNumber = PhoneNumber(
+          isoCode: data['voicePhoneNumber']['isoCode'],
+          phoneNumber: data['voicePhoneNumber']['phoneNumber']);
+    } on TypeError catch (error) {
+      log.warning("Phone number in old format, ignoring", error);
+    } on NoSuchMethodError catch (error) {
+      log.warning("Phone number in old format, ignoring", error);
+    }
+
+
+    return MyFirebaseUser(
+        firebaseUser: firebaseUser,
+        firestoreDisplayName: data['displayName'],
+        teamID: snapshotTeamID,
+        isEditor: isEditor,
+        mobilePhoneNumber: mobilePhoneNumber,
+        voicePhoneNumber: voicePhoneNumber);
+  }
 
   @override
   MyFirebaseUser(
-      {uid,
-      email,
-      photoUrl,
+      {@required this.firebaseUser,
       this.firestoreDisplayName,
       @required this.teamID,
       @required this.isEditor,
-      this.mapMobilePhoneNumber,
-      this.mapVoicePhoneNumber}) {
+      this.mobilePhoneNumber,
+      this.voicePhoneNumber}) {
     addTokenToFirestore();
   }
 
@@ -133,6 +179,6 @@ class MyFirebaseUser implements User {
   @override
   Future updateDisplayName({@required String displayName}) async {
     await _db.document('users/$uid').updateData({'displayName': displayName});
-    this.displayName = displayName;
+    this.firestoreDisplayName = displayName;
   }
 }

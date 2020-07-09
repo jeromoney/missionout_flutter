@@ -1,4 +1,3 @@
-import 'dart:collection';
 
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:apple_sign_in/scope.dart';
@@ -8,7 +7,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:logging/logging.dart';
 
 import 'package:missionout/services/auth_service/auth_service.dart';
@@ -16,9 +14,6 @@ import 'package:missionout/services/team/firestore_team.dart';
 import 'package:missionout/services/team/team.dart';
 import 'package:missionout/services/user/my_firebase_user.dart';
 import 'package:missionout/services/user/user.dart';
-
-const RETRY_COUNT = 5;
-const RETRY_WAIT = 3;
 
 class FirebaseAuthService extends AuthService {
   final _log = Logger('FirebaseAuthService');
@@ -34,96 +29,9 @@ class FirebaseAuthService extends AuthService {
       _log.warning('FirebaseUser can not be null');
       throw ArgumentError.notNull('firebaseUser');
     }
-    return MyFirebaseUser.fromFirebaseUser(firebaseUser);
-    _firebaseUser = firebaseUser;
-    var document;
-    for (var i = 1; i < RETRY_COUNT; i++) {
-      document = await _db
-          .collection('users')
-          .document(firebaseUser.uid)
-          .get()
-          .catchError((error) {
-        _log.warning("Error retrieving user info from firestore", error);
-        return null;
-      });
-      if (document.data == null)
-        _log.warning(
-            "Race condition where the backend hasn't created the user account yet. Trying again");
-      else
-        break;
-      await Future.delayed(Duration(seconds: RETRY_WAIT));
-    }
-
-    final data = document.data as Map<String, dynamic>;
-
-    if (data == null) {
-      _log.warning("Retries failed. Document still null");
-      return null;
-    }
-
-    var requiredKeys = ["teamID"];
-    var isMissingRequiredKey =
-        requiredKeys.any((requiredKey) => !data.containsKey(requiredKey));
-    if (isMissingRequiredKey) {
-      _log.severe("Missing required key for Team document in Firestore");
-      return null;
-    }
-    teamID = data['teamID'];
-    // If teamID is null, it means that backend set up script could not identify
-    // the team automatically. e.g. User logged in from a normal gmail account.
-    // Should return a null user but also automatically sign out user.
-    if (teamID == null) {
-      _log.warning(
-          "Unable to identify the team that the user is assigned to. Logging out");
-      return null;
-    }
-
-    var optionalKeys = ["isEditor", "mobilePhoneNumber", "voicePhoneNumber"];
-    var isMissingOptionalKey =
-        optionalKeys.any((requiredKey) => !data.containsKey(optionalKeys));
-    if (isMissingOptionalKey)
-      _log.warning("Missing optional key; substituting null values.");
-
-    bool isEditor;
-    data.containsKey('isEditor')
-        ? isEditor = data['isEditor']
-        : isEditor = false;
-
-    PhoneNumber mobilePhoneNumber;
-    PhoneNumber voicePhoneNumber;
-    try {
-      mobilePhoneNumber = PhoneNumber(
-          isoCode: data['mobilePhoneNumber']['isoCode'],
-          phoneNumber: data['mobilePhoneNumber']['phoneNumber']);
-    } on TypeError catch (error) {
-      _log.warning("Phone number in old format, ignoring", error);
-    } on NoSuchMethodError catch (error) {
-      _log.warning("Phone number in old format, ignoring", error);
-    }
-    try {
-      voicePhoneNumber = PhoneNumber(
-          isoCode: data['voicePhoneNumber']['isoCode'],
-          phoneNumber: data['voicePhoneNumber']['phoneNumber']);
-    } on TypeError catch (error) {
-      _log.warning("Phone number in old format, ignoring", error);
-    } on NoSuchMethodError catch (error) {
-      _log.warning("Phone number in old format, ignoring", error);
-    }
-
-    // The user name is either served by the auth provider or can be stored in
-    // the database, since some auth methods do not provide a name.
-    final databaseDisplayName = data['displayName'];
-
-    return MyFirebaseUser(
-      uid: firebaseUser.uid,
-      email: firebaseUser.email,
-      photoUrl: firebaseUser.photoUrl,
-      displayName: databaseDisplayName ?? firebaseUser.displayName,
-      teamID: teamID,
-      isEditor: isEditor,
-      voicePhoneNumber: voicePhoneNumber,
-      mobilePhoneNumber: mobilePhoneNumber,
-    );
+    final User user = await MyFirebaseUser.fromFirebaseUser(firebaseUser);
+    teamID = user.teamID;
+    return user;
   }
 
   @override

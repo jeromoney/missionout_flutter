@@ -21,5 +21,5 @@ List<SingleChildStatelessWidget> PROVIDERS_FAKE = [
   ChangeNotifierProvider<User>(create: (_) => UserFake()),
   ChangeNotifierProvider<Team>(create: (_) => TeamFake()),
   Provider<PhoneNumberHolder>(create: (_) => PhoneNumberHolder(null, null)),
-  Provider<PhoneType>(create: (_) => PhoneType.voicePhoneNumber),
+  Provider<PhoneType>(create: (_) => PhoneType.getVoicePhoneNumber),
 ];
