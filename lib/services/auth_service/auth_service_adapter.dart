@@ -113,8 +113,8 @@ class AuthServiceAdapter extends AuthService {
       );
 
   @override
-  Future<User> signInWithApple({List<Scope> scopes}) =>
-      authService.signInWithApple(scopes: scopes);
+  Future<User> signInWithApple() =>
+      authService.signInWithApple();
 
   @override
   Future<User> signInWithGoogle() => authService.signInWithGoogle();

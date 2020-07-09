@@ -1,4 +1,3 @@
-
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:apple_sign_in/scope.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -118,7 +117,8 @@ class FirebaseAuthService extends AuthService {
   }
 
   @override
-  Future<User> signInWithApple({List<Scope> scopes = const []}) async {
+  Future<User> signInWithApple() async {
+    List<Scope> scopes = const [Scope.fullName, Scope.email];
     final AuthorizationResult result = await AppleSignIn.performRequests(
         [AppleIdRequest(requestedScopes: scopes)]);
     switch (result.status) {
@@ -133,7 +133,8 @@ class FirebaseAuthService extends AuthService {
 
         final authResult = await _firebaseAuth.signInWithCredential(credential);
         final firebaseUser = authResult.user;
-        if (scopes.contains(Scope.fullName)) {
+        final appleFullName = appleIdCredential.fullName;
+        if (scopes.contains(Scope.fullName) && appleFullName.givenName != null && appleFullName.familyName != null) {
           final updateUser = UserUpdateInfo();
           updateUser.displayName =
               '${appleIdCredential.fullName.givenName} ${appleIdCredential.fullName.familyName}';

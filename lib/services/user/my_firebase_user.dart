@@ -26,9 +26,8 @@ class MyFirebaseUser implements User {
   String get photoUrl => firebaseUser.photoUrl;
 
   @override
-  String get displayName => firebaseUser.displayName ?? firestoreDisplayName;
+  String get displayName => firebaseUser.displayName;
 
-  String firestoreDisplayName;
 
   // Values held in Firestore
   @override
@@ -126,7 +125,6 @@ class MyFirebaseUser implements User {
 
     return MyFirebaseUser(
         firebaseUser: firebaseUser,
-        firestoreDisplayName: data['displayName'],
         teamID: snapshotTeamID,
         isEditor: isEditor,
         mobilePhoneNumber: mobilePhoneNumber,
@@ -136,7 +134,6 @@ class MyFirebaseUser implements User {
   @override
   MyFirebaseUser(
       {@required this.firebaseUser,
-      this.firestoreDisplayName,
       @required this.teamID,
       @required this.isEditor,
       this.mobilePhoneNumber,
@@ -178,7 +175,9 @@ class MyFirebaseUser implements User {
 
   @override
   Future updateDisplayName({@required String displayName}) async {
-    await _db.document('users/$uid').updateData({'displayName': displayName});
-    this.firestoreDisplayName = displayName;
+    final updateUser = UserUpdateInfo();
+    updateUser.displayName = displayName;
+    await firebaseUser.updateProfile(updateUser);
+
   }
 }
