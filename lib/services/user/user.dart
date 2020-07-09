@@ -5,7 +5,7 @@ import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 enum PhoneNumberType { mobile, voice }
 
-abstract class User {
+abstract class User with ChangeNotifier{
   User(
       {@required this.uid,
       this.email,

@@ -23,8 +23,8 @@ class AuthWidgetBuilder extends StatelessWidget {
         if (user != null){
           return MultiProvider(
             providers: [
-              Provider<User>(
-                create: (_)=> user,
+              ChangeNotifierProvider<User>.value(
+                value:  user,
               ),
               FutureProvider<Team>(
                 initialData: null,

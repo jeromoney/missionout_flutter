@@ -18,7 +18,7 @@ class UserScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context, listen: false);
+    final user = Provider.of<User>(context, listen: true);
     displayNameController.text = user.displayName;
     final phoneNumberHolder =
         PhoneNumberHolder(user.mobilePhoneNumber, user.voicePhoneNumber);
@@ -34,7 +34,7 @@ class UserScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Text(user.email ?? Strings.anonymousEmail),
-                  Text(user.displayName ?? Strings.anonymousName),
+                  Consumer<User>(builder: (_, user, __) => Text(user.displayName ?? Strings.anonymousName),),
                   TextFormField(
                     controller: displayNameController,
                     inputFormatters: [LengthLimitingTextInputFormatter(100)],

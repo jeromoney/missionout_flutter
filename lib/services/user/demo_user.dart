@@ -57,4 +57,28 @@ class DemoUser implements User {
   @override
   PhoneNumber voicePhoneNumber =
       PhoneNumber(phoneNumber: "+12125551234", isoCode: "US");
+
+  @override
+  void addListener(listener) {
+    // TODO: implement addListener
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+  }
+
+  @override
+  // TODO: implement hasListeners
+  bool get hasListeners => throw UnimplementedError();
+
+  @override
+  void notifyListeners() {
+    // TODO: implement notifyListeners
+  }
+
+  @override
+  void removeListener(listener) {
+    // TODO: implement removeListener
+  }
 }

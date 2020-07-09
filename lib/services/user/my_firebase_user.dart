@@ -12,7 +12,7 @@ import 'package:missionout/services/user/user.dart';
 const RETRY_COUNT = 5;
 const RETRY_WAIT = 3; // seconds
 
-class MyFirebaseUser implements User {
+class MyFirebaseUser with ChangeNotifier implements User  {
   // Values from FirebaseUser
   FirebaseUser firebaseUser;
 
@@ -27,7 +27,6 @@ class MyFirebaseUser implements User {
 
   @override
   String get displayName => firebaseUser.displayName;
-
 
   // Values held in Firestore
   @override
@@ -75,7 +74,7 @@ class MyFirebaseUser implements User {
     final data = snapshot.data;
     var requiredKeys = ["teamID"];
     var isMissingRequiredKey =
-    requiredKeys.any((requiredKey) => !data.containsKey(requiredKey));
+        requiredKeys.any((requiredKey) => !data.containsKey(requiredKey));
     if (isMissingRequiredKey) {
       log.severe("Missing required key for Team document in Firestore");
       return null;
@@ -92,7 +91,7 @@ class MyFirebaseUser implements User {
 
     var optionalKeys = ["isEditor", "mobilePhoneNumber", "voicePhoneNumber"];
     var isMissingOptionalKey =
-    optionalKeys.any((requiredKey) => !data.containsKey(optionalKeys));
+        optionalKeys.any((requiredKey) => !data.containsKey(optionalKeys));
     if (isMissingOptionalKey)
       log.warning("Missing optional key; substituting null values.");
 
@@ -121,7 +120,6 @@ class MyFirebaseUser implements User {
     } on NoSuchMethodError catch (error) {
       log.warning("Phone number in old format, ignoring", error);
     }
-
 
     return MyFirebaseUser(
         firebaseUser: firebaseUser,
@@ -178,6 +176,8 @@ class MyFirebaseUser implements User {
     final updateUser = UserUpdateInfo();
     updateUser.displayName = displayName;
     await firebaseUser.updateProfile(updateUser);
-
+    firebaseUser = await FirebaseAuth.instance.currentUser();
+    notifyListeners();
   }
+
 }
