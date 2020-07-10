@@ -97,12 +97,7 @@ class ResponseOptions extends StatefulWidget {
 
 class _ResponseOptionsState extends State<ResponseOptions> {
   int _value;
-  List<String> responseChips = [
-    'Responding',
-    'Delayed',
-    'Standby',
-    'Unavailable'
-  ];
+  List<String> responseChips = Response.RESPONSES;
 
   _ResponseOptionsState();
 

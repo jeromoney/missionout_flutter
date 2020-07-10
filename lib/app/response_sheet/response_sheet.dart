@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:missionout/data_objects/mission_address_arguments.dart';
+import 'package:missionout/app/response_sheet/response_sheet_view_model.dart';
 import 'package:missionout/data_objects/response.dart';
-import 'package:missionout/services/team/team.dart';
-import 'package:missionout/services/user/user.dart';
 import 'package:missionout/app/my_appbar.dart';
-import 'package:provider/provider.dart';
 
 class ResponseScreen extends StatelessWidget {
   static const String routeName = "/responseScreen";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,13 +18,10 @@ class ResponseScreen extends StatelessWidget {
 class BuildResponseStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final team = Provider.of<Team>(context);
-    final MissionAddressArguments arguments = ModalRoute.of(context).settings.arguments;
+    final model = ResponseSheetViewModel(context: context);
 
     return StreamBuilder<List<Response>>(
-      stream: team.fetchResponses(
-        docID: arguments.docId,
-      ),
+      stream: model.responses(),
       builder: (context, snapshot) {
         // waiting
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -47,7 +42,7 @@ class BuildResponseStream extends StatelessWidget {
 
         // success
         responses.removeWhere((response) => response == null);
-        return BuildResponsesResult(
+        return _BuildResponsesResult(
           responses: responses,
         );
       },
@@ -55,12 +50,10 @@ class BuildResponseStream extends StatelessWidget {
   }
 }
 
-@visibleForTesting
-class BuildResponsesResult extends StatelessWidget {
+class _BuildResponsesResult extends StatelessWidget {
   final List<Response> responses;
 
-  const BuildResponsesResult({Key key, @required this.responses})
-      : super(key: key);
+  _BuildResponsesResult({Key key, @required this.responses}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
