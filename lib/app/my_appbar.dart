@@ -1,13 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/app/editor_screen/editor_screen.dart';
+import 'package:missionout/constants/constants.dart';
 import 'package:missionout/services/auth_service/auth_service.dart';
 import 'package:missionout/services/user/user.dart';
 import 'package:missionout/app/user_screen/user_screen.dart';
 import 'package:missionout/common_widgets/platform_alert_dialog.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-enum Menu { signOut, userOptions, editorOptions }
+enum Menu { signOut, userOptions, editorOptions, privacyPolicy }
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   String _title;
@@ -23,17 +25,17 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(title: Text(_title), actions: <Widget>[
       photoURLAvailable
           ? Container(
-              width: AppBar().preferredSize.height,
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: CachedNetworkImageProvider(user.photoUrl),
-                  )))
+          width: AppBar().preferredSize.height,
+          decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                fit: BoxFit.cover,
+                image: CachedNetworkImageProvider(user.photoUrl),
+              )))
           : Icon(
-              Icons.account_circle,
-              size: AppBar().preferredSize.height,
-            ),
+        Icons.account_circle,
+        size: AppBar().preferredSize.height,
+      ),
       PopupMenuButton<Menu>(
         key: Key('PopupMenuButton'),
         // Used for testing, since I can't find this with find.byType
@@ -50,7 +52,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                 if (didRequestSignOut) {
                   // tell User to sign out
                   final authService =
-                      Provider.of<AuthService>(context, listen: false);
+                  Provider.of<AuthService>(context, listen: false);
                   authService.signOut();
                 }
               }
@@ -62,7 +64,8 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                 // The code removes user and editor from the stack until the first non-options page is encountered
                 Navigator.of(context).pushNamedAndRemoveUntil(
                     UserScreen.routeName,
-                    (route) => ![UserScreen.routeName, EditorScreen.routeName]
+                        (route) =>
+                    ![UserScreen.routeName, EditorScreen.routeName]
                         .contains(route.settings.name));
               }
               break;
@@ -71,13 +74,20 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
               {
                 Navigator.of(context).pushNamedAndRemoveUntil(
                     EditorScreen.routeName,
-                    (route) => ![UserScreen.routeName, EditorScreen.routeName]
+                        (route) =>
+                    ![UserScreen.routeName, EditorScreen.routeName]
                         .contains(route.settings.name));
+              }
+              break;
+            case Menu.privacyPolicy:
+              {
+                launch(Constants.privacyPolicyURL);
               }
               break;
           }
         },
-        itemBuilder: (BuildContext context) => <PopupMenuEntry<Menu>>[
+        itemBuilder: (BuildContext context) =>
+        <PopupMenuEntry<Menu>>[
           PopupMenuItem<Menu>(
             value: Menu.userOptions,
             child: Text('User Options'),
@@ -90,6 +100,10 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
           PopupMenuItem<Menu>(
             value: Menu.signOut,
             child: Text('Sign out'),
+          ),
+          PopupMenuItem<Menu>(
+            value: Menu.privacyPolicy,
+            child: Text('Privacy Policy'),
           ),
         ],
       )

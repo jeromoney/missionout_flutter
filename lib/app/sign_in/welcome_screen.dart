@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:missionout/app/sign_in/log_in_screen.dart';
 import 'package:missionout/app/sign_in/team_domain_screen.dart';
+import 'package:missionout/constants/constants.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class WelcomeScreen extends StatefulWidget {
   static String routeName = "WelcomeScreen";
@@ -62,6 +64,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               ),
             ),
           ),
+          GestureDetector(
+            child: Text(
+              "Read our privacy policy",
+            ),
+            onTap: () {
+              launch(Constants.privacyPolicyURL);
+            },
+          )
         ],
       ),
     );
