@@ -34,97 +34,103 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _domain = ModalRoute.of(context).settings.arguments;
     _darkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
     final signInManager = Provider.of<SignInManager>(context, listen: false);
-    return Scaffold(
-        key: widget._scaffoldKey,
-        body: Center(
-          child: LayoutBuilder(
-            builder: (context, viewportConstraints) => SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                    maxWidth: Constants.column_width,
-                    minHeight: viewportConstraints.minHeight),
-                child: Form(
-                  key: widget._formKey,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 32.0),
-                        child: Column(
-                          children: <Widget>[
-                            flutter_auth_buttons.GoogleSignInButton(
-                              key: Key('Google Sign In Button'),
-                              onPressed: signInManager.signInWithGoogle,
-                              darkMode: _darkMode,
-                            ),
-                            if (_appleSignInAvailable)
-                              Container(
-                                child: flutter_auth_buttons.AppleSignInButton(
-                                  style: _darkMode
-                                      ? flutter_auth_buttons
-                                          .AppleButtonStyle.black
-                                      : flutter_auth_buttons
-                                          .AppleButtonStyle.white,
-                                  onPressed: signInManager.signInWithApple,
-                                ),
+    return GestureDetector(
+      onHorizontalDragUpdate: (details) {
+        if (details.delta.dx > 0) Navigator.of(context).pop();
+      },
+      child: Scaffold(
+          key: widget._scaffoldKey,
+          body: Center(
+            child: LayoutBuilder(
+              builder: (context, viewportConstraints) => SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                      maxWidth: Constants.column_width,
+                      minHeight: viewportConstraints.minHeight),
+                  child: Form(
+                    key: widget._formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 32.0),
+                          child: Column(
+                            children: <Widget>[
+                              flutter_auth_buttons.GoogleSignInButton(
+                                key: Key('Google Sign In Button'),
+                                onPressed: signInManager.signInWithGoogle,
+                                darkMode: _darkMode,
                               ),
+                              if (_appleSignInAvailable)
+                                Container(
+                                  child: flutter_auth_buttons.AppleSignInButton(
+                                    style: _darkMode
+                                        ? flutter_auth_buttons
+                                            .AppleButtonStyle.black
+                                        : flutter_auth_buttons
+                                            .AppleButtonStyle.white,
+                                    onPressed: signInManager.signInWithApple,
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                        Divider(),
+                        Row(
+                          children: <Widget>[
+                            SizedBox(
+                              width: Constants.column_width / 2,
+                              child: TextFormField(
+                                validator: (email) {
+                                  // The "@" can technically be in a username,
+                                  // but I think that is unlikely. I'm trying to
+                                  // people from entering their full email address.
+                                  if (email.contains('@'))
+                                    return 'Invalid user name';
+                                },
+                                controller: widget._emailController,
+                                decoration: InputDecoration(
+                                    labelText: "email user name",
+                                    hintText: "your.name",
+                                    border: UnderlineInputBorder()),
+                              ),
+                            ),
+                            Flexible(
+                              child: Text(
+                                "@$_domain",
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
                           ],
                         ),
-                      ),
-                      Divider(),
-                      Row(
-                        children: <Widget>[
-                          SizedBox(
-                            width: Constants.column_width / 2,
-                            child: TextFormField(
-                              validator: (email) {
-                                // The "@" can technically be in a username,
-                                // but I think that is unlikely. I'm trying to
-                                // people from entering their full email address.
-                                if (email.contains('@')) return 'Invalid user name';
-                              },
-                              controller: widget._emailController,
-                              decoration: InputDecoration(
-                                  labelText: "email user name",
-                                  hintText: "your.name",
-                                  border: UnderlineInputBorder()),
-                            ),
-                          ),
-                          Flexible(
-                            child: Text(
-                              "@$_domain",
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                        if (_showPasswordField) ...[
+                          TextFormField(
+                            obscureText: true,
+                            controller: widget._passwordController,
+                            decoration: InputDecoration(
+                                labelText: "password",
+                                border: UnderlineInputBorder()),
+                            validator: (password) {
+                              if (password.length < 6)
+                                return Strings.invalidPasswordTooShort;
+                            },
                           ),
                         ],
-                      ),
-                      if (_showPasswordField) ...[
-                        TextFormField(
-                          obscureText: true,
-                          controller: widget._passwordController,
-                          decoration: InputDecoration(
-                              labelText: "password",
-                              border: UnderlineInputBorder()),
-                          validator: (password) {
-                            if (password.length < 6)
-                              return Strings.invalidPasswordTooShort;
-                          },
+                        OutlineButton(
+                          onPressed: _sendEmailLink,
+                          onLongPress: _showPasswordMethod,
+                          child: Text(!_showPasswordField
+                              ? "Email login"
+                              : "Create login with password"),
                         ),
                       ],
-                      OutlineButton(
-                        onPressed: _sendEmailLink,
-                        onLongPress: _showPasswordMethod,
-                        child: Text(!_showPasswordField
-                            ? "Email login"
-                            : "Create login with password"),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ));
+          )),
+    );
   }
 
   Future _sendEmailLink() async {
@@ -133,9 +139,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         Provider.of<FirebaseLinkHandler>(context, listen: false);
     final email = "${widget._emailController.text}@$_domain";
 
-
-    if (!_showPasswordField)
-    {
+    if (!_showPasswordField) {
       try {
         final PackageInfo packageInfo = await PackageInfo.fromPlatform();
         await linkHandler.sendSignInWithEmailLink(
@@ -156,14 +160,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 title: "Error sending email", exception: error)
             .show(context);
       }
-    }
-    else {
+    } else {
       final authService = Provider.of<AuthService>(context, listen: false);
       try {
-        await authService.createUserWithEmailAndPassword(email, widget._passwordController.text);
+        await authService.createUserWithEmailAndPassword(
+            email, widget._passwordController.text);
       } on PlatformException catch (e) {
-        PlatformExceptionAlertDialog(
-            title: "Error signing in", exception: e)
+        PlatformExceptionAlertDialog(title: "Error signing in", exception: e)
             .show(context);
       }
     }

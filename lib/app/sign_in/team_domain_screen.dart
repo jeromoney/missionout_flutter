@@ -27,36 +27,41 @@ class _TeamDomainScreenState extends State<TeamDomainScreen> {
     // allows for async validation of form
     widget._formKey.currentState?.validate();
 
-    return Scaffold(
-      body: Center(
-        child: LayoutBuilder(
-          builder: (context, viewportConstraints) => ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: COLUMN_WIDTH,
-            ),
-            child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-              Form(
-                key: widget._formKey,
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    labelText: "Team Domain",
-                    hintText: "your_domain.com",
-                    border: UnderlineInputBorder(),
-                  ),
-                  controller: widget._domainController,
-                  validator: (email) {
-                    if (!_isDomainValid) return "Domain not found";
-                    return null;
-                  },
-                ),
+    return GestureDetector(
+      onHorizontalDragUpdate: (details){
+        if (details.delta.dx > 0) Navigator.of(context).pop();
+      },
+      child: Scaffold(
+        body: Center(
+          child: LayoutBuilder(
+            builder: (context, viewportConstraints) => ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: COLUMN_WIDTH,
               ),
-              RaisedButton(
-                onPressed: _submitDomain,
-                child: Text('Continue →'),
-              )
-            ]),
+              child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                Form(
+                  key: widget._formKey,
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      labelText: "Team Domain",
+                      hintText: "your_domain.com",
+                      border: UnderlineInputBorder(),
+                    ),
+                    controller: widget._domainController,
+                    validator: (email) {
+                      if (!_isDomainValid) return "Domain not found";
+                      return null;
+                    },
+                  ),
+                ),
+                RaisedButton(
+                  onPressed: _submitDomain,
+                  child: Text('Continue →'),
+                )
+              ]),
+            ),
           ),
         ),
       ),

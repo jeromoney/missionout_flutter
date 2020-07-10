@@ -59,102 +59,107 @@ class _LogInScreenState extends State<LogInScreen> {
 
     _linkHandler = Provider.of<FirebaseLinkHandler>(context, listen: false);
 
-    return Scaffold(
-      body: Center(
-        child: LayoutBuilder(
-          builder: (context, viewportConstraints) => SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                  maxWidth: Constants.column_width,
-                  minHeight: viewportConstraints.maxHeight),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  GoogleSignInButton(
-                    text: 'Log in with Google',
-                    darkMode: darkMode,
-                    onPressed: signInManager.signInWithGoogle,
-                  ),
-                  if (appleSignInAvailable.isAvailable) ...[
-                    AppleSignInButton(
-                      text: 'Log in with Apple',
-                      style: darkMode
-                          ? AppleButtonStyle.black
-                          : AppleButtonStyle.white,
-                      onPressed: signInManager.signInWithApple,
-                    )
-                  ],
-                  Divider(),
-                  Form(
-                    key: _formKey,
-                    child: Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: TextFormField(
-                            controller: _emailController,
-                            validator: (email) {
-                              if (!EmailValidator.validate(email))
-                                return 'Enter a valid email';
-                            },
-                            decoration: InputDecoration(
-                              labelText: 'Email',
-                              border: OutlineInputBorder(),
-                            ),
-                          ),
-                        ),
-                        if (_showPasswordField) ...[
+    return GestureDetector(
+      onHorizontalDragUpdate: (details){
+        if (details.delta.dx > 0) Navigator.of(context).pop();
+      },
+      child: Scaffold(
+        body: Center(
+          child: LayoutBuilder(
+            builder: (context, viewportConstraints) => SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                    maxWidth: Constants.column_width,
+                    minHeight: viewportConstraints.maxHeight),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    GoogleSignInButton(
+                      text: 'Log in with Google',
+                      darkMode: darkMode,
+                      onPressed: signInManager.signInWithGoogle,
+                    ),
+                    if (appleSignInAvailable.isAvailable) ...[
+                      AppleSignInButton(
+                        text: 'Log in with Apple',
+                        style: darkMode
+                            ? AppleButtonStyle.black
+                            : AppleButtonStyle.white,
+                        onPressed: signInManager.signInWithApple,
+                      )
+                    ],
+                    Divider(),
+                    Form(
+                      key: _formKey,
+                      child: Column(
+                        children: <Widget>[
                           Padding(
                             padding: EdgeInsets.all(8.0),
                             child: TextFormField(
-                              obscureText: true,
-                              controller: _passwordController,
-                              validator: (password) {
-                                if (password.length < 6)
-                                  return 'Password too short (less than 6 characters)';
+                              controller: _emailController,
+                              validator: (email) {
+                                if (!EmailValidator.validate(email))
+                                  return 'Enter a valid email';
                               },
                               decoration: InputDecoration(
-                                  labelText: 'Password',
-                                  border: OutlineInputBorder()),
-                            ),
-                          )
-                        ],
-                        SizedBox(
-                            width: Constants.column_width,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: RaisedButton(
-                                child: Text(!_showPasswordField ? 'Request email link' : 'Sign in with password'),
-                                onPressed: () async {
-                                  if (!_formKey.currentState.validate()) return;
-                                  if (!_showPasswordField) _sendEmailLink();
-                                  else {
-                                    await authService
-                                      .signInWithEmailAndPassword(
-                                          _emailController.text,
-                                          _passwordController.text)
-                                      .catchError((error) {
-                                        final snackbar = SnackBar(content: Text("Unable to login with email/password"),);
-                                        Scaffold.of(context).showSnackBar(snackbar);
-                                    widget._log.warning(
-                                        'Unable to login with email/password',
-                                        error);
-                                  });
-                                  }
-//
-                                },
-                                onLongPress: (){
-                                  setState(() {
-                                    _showPasswordField = !_showPasswordField;
-                                  });
-                                },
+                                labelText: 'Email',
+                                border: OutlineInputBorder(),
                               ),
-                            )),
-                      ],
+                            ),
+                          ),
+                          if (_showPasswordField) ...[
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                obscureText: true,
+                                controller: _passwordController,
+                                validator: (password) {
+                                  if (password.length < 6)
+                                    return 'Password too short (less than 6 characters)';
+                                },
+                                decoration: InputDecoration(
+                                    labelText: 'Password',
+                                    border: OutlineInputBorder()),
+                              ),
+                            )
+                          ],
+                          SizedBox(
+                              width: Constants.column_width,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: RaisedButton(
+                                  child: Text(!_showPasswordField ? 'Request email link' : 'Sign in with password'),
+                                  onPressed: () async {
+                                    if (!_formKey.currentState.validate()) return;
+                                    if (!_showPasswordField) _sendEmailLink();
+                                    else {
+                                      await authService
+                                        .signInWithEmailAndPassword(
+                                            _emailController.text,
+                                            _passwordController.text)
+                                        .catchError((error) {
+                                          final snackbar = SnackBar(content: Text("Unable to login with email/password"),);
+                                          Scaffold.of(context).showSnackBar(snackbar);
+                                      widget._log.warning(
+                                          'Unable to login with email/password',
+                                          error);
+                                    });
+                                    }
+//
+                                  },
+                                  onLongPress: (){
+                                    setState(() {
+                                      _showPasswordField = !_showPasswordField;
+                                    });
+                                  },
+                                ),
+                              )),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
