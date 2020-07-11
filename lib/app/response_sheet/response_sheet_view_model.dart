@@ -6,6 +6,7 @@ import 'package:missionout/data_objects/response.dart';
 import 'package:missionout/services/team/team.dart';
 import 'package:missionout/services/user/user.dart';
 import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
 
 class ResponseSheetViewModel {
   final BuildContext context;
@@ -20,9 +21,16 @@ class ResponseSheetViewModel {
                 as MissionAddressArguments)
             .docId;
 
-  // The user's [Response] is first and the rest are sorted by response type
-  Stream<List<Response>> responses() {
+  Stream<Tuple2<Response, List<Response>>> responses() {
     return team.fetchResponses(docID: docId).map((responses) {
+      final index = responses
+          .indexWhere((response) => response.selfRef.path.contains(user.uid));
+      Response selfResponse;
+      if (index == -1)
+        selfResponse = null;
+      else
+        selfResponse = responses.removeAt(index);
+
       // status that match so sort by name
       responses.sort((response1, response2) {
         if (response1.status == response2.status)
@@ -34,12 +42,7 @@ class ResponseSheetViewModel {
 
         return response1.status.compareTo(response2.status);
       });
-      final int index = responses
-          .indexWhere((response) => response.selfRef.path.contains(user.uid));
-      if (index == -1) return responses;
-      final selfResponse = responses.removeAt(index);
-      responses.insert(0, selfResponse);
-      return responses;
+      return Tuple2<Response, List<Response>>(selfResponse, responses);
     });
   }
 }

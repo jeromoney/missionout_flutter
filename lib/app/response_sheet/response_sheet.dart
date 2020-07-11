@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:missionout/app/response_sheet/response_sheet_view_model.dart';
 import 'package:missionout/data_objects/response.dart';
 import 'package:missionout/app/my_appbar.dart';
+import 'package:tuple/tuple.dart';
 
 class ResponseScreen extends StatelessWidget {
   static const String routeName = "/responseScreen";
@@ -20,7 +21,7 @@ class BuildResponseStream extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = ResponseSheetViewModel(context: context);
 
-    return StreamBuilder<List<Response>>(
+    return StreamBuilder<Tuple2<Response, List<Response>>>(
       stream: model.responses(),
       builder: (context, snapshot) {
         // waiting
@@ -36,12 +37,12 @@ class BuildResponseStream extends StatelessWidget {
         final responses = snapshot.data;
 
         // no results
-        if (responses.length == 0) {
+        if (responses.item1 == null && responses.item2.length == 0) {
           return Center(child: Text('No responses yet.'));
         }
 
         // success
-        responses.removeWhere((response) => response == null);
+        responses.item2.removeWhere((response) => response == null);
         return _BuildResponsesResult(
           responses: responses,
         );
@@ -51,24 +52,46 @@ class BuildResponseStream extends StatelessWidget {
 }
 
 class _BuildResponsesResult extends StatelessWidget {
-  final List<Response> responses;
+  final Response selfResponse;
+  final List<Response> otherResponses;
 
-  _BuildResponsesResult({Key key, @required this.responses}) : super(key: key);
+  _BuildResponsesResult({Key key, @required responses})
+      : this.selfResponse = responses.item1,
+        this.otherResponses = responses.item2,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    List<DataRow> firstRow = [];
+    if (selfResponse != null) {
+      firstRow.add(DataRow(cells: <DataCell>[
+        DataCell(Text(
+          selfResponse.teamMember ?? '',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        )),
+        DataCell(Text(
+          selfResponse.status ?? '',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        )),
+      ]));
+    }
+    List<DataRow> otherRows = [];
+    otherRows.addAll(otherResponses
+        .map((response) => DataRow(cells: <DataCell>[
+              DataCell(Text(
+                response.teamMember ?? '',
+              )),
+              DataCell(Text(response.status ?? '')),
+            ]))
+        .toList());
+
     return SingleChildScrollView(
-      child: DataTable(
-          columns: [
-            DataColumn(label: Text('Team Member')),
-            DataColumn(label: Text('Status')),
-          ],
-          rows: responses
-              .map((response) => DataRow(cells: <DataCell>[
-                    DataCell(Text(response.teamMember ?? '')),
-                    DataCell(Text(response.status ?? '')),
-                  ]))
-              .toList()),
-    );
+        child: DataTable(
+      columns: [
+        DataColumn(label: Text('Team Member')),
+        DataColumn(label: Text('Status')),
+      ],
+      rows: firstRow + otherRows,
+    ));
   }
 }
