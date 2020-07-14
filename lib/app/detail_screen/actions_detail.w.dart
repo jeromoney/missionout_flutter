@@ -7,7 +7,7 @@ class ActionsDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final team = Provider.of<Team>(context);
+    final model = DetailScreenViewModel(context: context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -22,17 +22,8 @@ class ActionsDetail extends StatelessWidget {
           children: <Widget>[
             IconButton(
               icon: Icon(Icons.chat),
-              onPressed: team.chatURI != null
-                  ? () {
-                      try {
-                        team.launchChat();
-                      } catch (e) {
-                        Scaffold.of(context).showSnackBar(SnackBar(
-                          content: Text('Error: Is Slack installed?'),
-                        ));
-                      }
-                    }
-                  : null,
+              onPressed:
+                  model.chatURIAvailable ? () => model.launchChat() : null,
             ),
             Builder(builder: (context) {
               // waiting -- just show button as disabled
@@ -53,33 +44,12 @@ class ActionsDetail extends StatelessWidget {
                 // If no location is provided, disable the button
                 onPressed: mission.location == null
                     ? null
-                    : () {
-                        final geoPoint = mission.location;
-                        final lat = geoPoint.latitude;
-                        final lon = geoPoint.longitude;
-                        // launches location in external map application.
-                        // currently optimized for gmaps. The location is opened
-                        // as a query "?q=" so the label is displayed.
-                        String url;
-                        if (Platform.isAndroid){
-                          url = 'geo:0,0?q=$lat,$lon';
-                        }
-                        else if (Platform.isIOS || Platform.isMacOS){
-                          url = 'http://maps.apple.com/?q=$lat,$lon';
-                        }
-                        else {
-                          throw Exception("Non-supported platform");
-                        }
-                        launch(url);
-                      },
+                    : () => model.launchMap(mission),
               );
             }),
             IconButton(
               icon: Icon(Icons.people),
-              onPressed: () {
-                final MissionAddressArguments arguments = ModalRoute.of(context).settings.arguments;
-                Navigator.of(context).pushNamed(ResponseScreen.routeName, arguments: arguments);
-              },
+              onPressed: () => model.displayResponseSheet(),
             ),
           ],
         ),
@@ -96,13 +66,13 @@ class ResponseOptions extends StatefulWidget {
 }
 
 class _ResponseOptionsState extends State<ResponseOptions> {
+  DetailScreenViewModel _model;
   int _value;
   List<String> responseChips = Response.RESPONSES;
 
-  _ResponseOptionsState();
-
   @override
   Widget build(BuildContext context) {
+    _model = DetailScreenViewModel(context: context);
     return Wrap(
       spacing: 8.0, // gap between adjacent chips
       runSpacing: 4.0, // gap between lines
@@ -111,25 +81,19 @@ class _ResponseOptionsState extends State<ResponseOptions> {
           label: Text(responseChips[index]),
           selected: _value == index,
           onSelected: (bool selected) {
-            final user = Provider.of<User>(context, listen: false);
-
             Response response;
             if (selected) {
               // If selected is equal to false, that means the user deselected the chip so we should pass a null value.
               response = Response.fromApp(
-                  teamMember: user.displayName == null || user.displayName == '' ? user.email : user.displayName, status: responseChips[index]);
+                  teamMember:
+                      _model.displayName == null || _model.displayName == ''
+                          ? _model.email
+                          : _model.displayName,
+                  status: responseChips[index]);
             }
 
             setState(() {
-              final user = Provider.of<User>(context, listen: false);
-              final team = Provider.of<Team>(context, listen: false);
-              final MissionAddressArguments arguments = ModalRoute.of(context).settings.arguments;
-
-              team.addResponse(
-                response: response,
-                docID: arguments.docId,
-                uid: user.uid,
-              );
+              _model.addResponse(response: response);
               _value = selected ? index : null;
             });
           },

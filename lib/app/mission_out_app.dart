@@ -72,7 +72,7 @@ class _MissionOutAppState extends State<MissionOutApp> {
         EditorScreen.routeName: (context) => EditorScreen(),
         UserScreen.routeName: (context) => UserScreen(),
         DetailScreen.routeName: (context) => DetailScreen(),
-        ResponseScreen.routeName: (context) => ResponseScreen(),
+        ResponseSheet.routeName: (context) => ResponseSheet(),
         // Sign In Screens
         WelcomeScreen.routeName: (context) => WelcomeScreen(),
         SignUpScreen.routeName: (context) => SignUpScreen(),

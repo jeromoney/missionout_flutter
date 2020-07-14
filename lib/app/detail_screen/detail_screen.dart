@@ -1,59 +1,130 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:missionout/app/detail_screen/detail_screen_view_model.dart';
 import 'package:missionout/constants/strings.dart';
-import 'package:missionout/data_objects/mission_address_arguments.dart';
-import 'package:missionout/services/auth_service/auth_service.dart';
 import 'package:missionout/common_widgets/platform_alert_dialog.dart';
+import 'package:missionout/services/response_sheet_controller.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'dart:io' show Platform;
 
 import 'package:missionout/data_objects/mission.dart';
-import 'package:missionout/data_objects/page.dart' as missionpage;
 import 'package:missionout/data_objects/response.dart';
-import 'package:missionout/services/team/team.dart';
-import 'package:missionout/services/user/user.dart';
 import 'package:missionout/app/create_screen/create_screen.dart';
 import 'package:missionout/app/my_appbar.dart';
 import 'package:missionout/app/response_sheet/response_sheet.dart';
 import 'package:missionout/utils.dart';
-
+import 'package:missionout/data_objects/page.dart' as missionpage;
 
 
 part 'actions_detail.w.dart';
+
 part 'edit_detail.w.dart';
+
 part 'info_detail.w.dart';
+
+const BLUR = 10.0;
 
 class DetailScreen extends StatelessWidget {
   static const String routeName = "/detailScreen";
 
   @override
   Widget build(BuildContext context) {
-    // Remove route if accessed from create screen
-    return Scaffold(
-        appBar: MyAppBar(title: 'Detail',),
-        body: SingleChildScrollView(
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 16.0, right: 24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  _DetailScreenStreamWrapper(detailItem: InfoDetail,),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 24.0),
-                    child: Divider(
-                      thickness: 1,
-                    ),
-                  ),
-                  _DetailScreenStreamWrapper(detailItem: ActionsDetail),
-                  _DetailScreenStreamWrapper(detailItem: EditDetail),
-                ],
-              ),
+    return ChangeNotifierProvider<ResponseSheetController>(
+      create: (_) => ResponseSheetController(),
+      child: _ControllerConsumer(),
+    );
+  }
+}
+
+// The onTap method needs a new context below the provider
+class _ControllerConsumer extends StatefulWidget {
+  final Widget _detailScreen = _DetailScreenState();
+
+  @override
+  __ControllerConsumerState createState() => __ControllerConsumerState();
+}
+
+class __ControllerConsumerState extends State<_ControllerConsumer> {
+  DetailScreenViewModel _model;
+
+  Widget get showResponsesWidget => Stack(children: <Widget>[
+        widget._detailScreen,
+        ClipRect(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaY: BLUR, sigmaX: BLUR),
+            child: Container(
+              color: Colors.black.withOpacity(0),
             ),
           ),
-        ));
+        ),
+        IgnorePointer(
+          child: Center(child: ResponseSheet()),
+        ),
+      ]);
+
+  @override
+  Widget build(BuildContext context) {
+    _model = DetailScreenViewModel(context: context);
+    return Consumer<ResponseSheetController>(
+      builder: (_, controller, __) => GestureDetector(
+          child: Builder(
+            builder: (_) {
+              final bool showResponseSheet = controller.showResponseSheet;
+              return Stack(children: <Widget>[
+                widget._detailScreen,
+                showResponseSheet
+                    ? ClipRect(
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaY: BLUR, sigmaX: BLUR),
+                          child: Container(
+                            color: Colors.black.withOpacity(0),
+                          ),
+                        ),
+                      )
+                    : Container(),
+                showResponseSheet
+                    ? IgnorePointer(
+                        child: Center(child: ResponseSheet()),
+                      )
+                    : Container(),
+              ]);
+            },
+          ),
+          onTap: _model.hideResponseSheet),
+    );
   }
+}
+
+class _DetailScreenState extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) => Scaffold(
+      appBar: MyAppBar(
+        title: 'Detail',
+      ),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 16.0, right: 24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                _DetailScreenStreamWrapper(
+                  detailItem: InfoDetail,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 24.0),
+                  child: Divider(
+                    thickness: 1,
+                  ),
+                ),
+                _DetailScreenStreamWrapper(detailItem: ActionsDetail),
+                _DetailScreenStreamWrapper(detailItem: EditDetail),
+              ],
+            ),
+          ),
+        ),
+      ));
 }
 
 // Stream wrapper for the individual components. Helps separate code for testing
@@ -65,19 +136,17 @@ class _DetailScreenStreamWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final team = Provider.of<Team>(context);
-    final MissionAddressArguments arguments = ModalRoute.of(context).settings.arguments;
-    assert(arguments != null);
+    final model = DetailScreenViewModel(context: context);
 
     return StreamBuilder<Mission>(
-        stream: team.fetchSingleMission(
-          docID: arguments.docId,
-        ),
+        stream: model.fetchSingleMission(),
         builder: (context, snapshot) {
           switch (detailItem) {
             case InfoDetail:
               {
-                return InfoDetail(snapshot: snapshot,);
+                return InfoDetail(
+                  snapshot: snapshot,
+                );
               }
             case ActionsDetail:
               {

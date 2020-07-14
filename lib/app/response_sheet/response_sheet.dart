@@ -1,22 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:missionout/app/response_sheet/response_sheet_view_model.dart';
 import 'package:missionout/data_objects/response.dart';
-import 'package:missionout/app/my_appbar.dart';
 import 'package:tuple/tuple.dart';
 
-class ResponseScreen extends StatelessWidget {
+class ResponseSheet extends StatelessWidget {
   static const String routeName = "/responseScreen";
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: MyAppBar(title: 'Responses'),
-      body: BuildResponseStream(),
-    );
-  }
+  Widget build(BuildContext context) => Card(child: _BuildResponseStream(),);
 }
 
-class BuildResponseStream extends StatelessWidget {
+class _BuildResponseStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = ResponseSheetViewModel(context: context);

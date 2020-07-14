@@ -1,34 +1,37 @@
 part of 'detail_screen.dart';
 
-class EditDetail extends StatelessWidget {
+class EditDetail extends StatefulWidget {
   final AsyncSnapshot snapshot;
-
   const EditDetail({Key key, @required this.snapshot}) : super(key: key);
+  @override
+  _EditDetailState createState() => _EditDetailState();
+}
 
+class _EditDetailState extends State<EditDetail> {
+  DetailScreenViewModel _model;
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context);
-    final team = Provider.of<Team>(context);
+    _model = DetailScreenViewModel(context: context);
     // waiting
-    if (snapshot.connectionState == ConnectionState.waiting) {
+    if (widget.snapshot.connectionState == ConnectionState.waiting) {
       return LinearProgressIndicator();
     }
     // error
-    if (snapshot.data == null) {
+    if (widget.snapshot.data == null) {
       return Text(Strings.errorMessage);
     }
     // success
-    final Mission mission = snapshot.data;
+    final Mission mission = widget.snapshot.data;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        user.isEditor
+        _model.isEditor
             ? Divider(
                 thickness: 1,
               )
             : SizedBox.shrink(),
-        user.isEditor
+        _model.isEditor
             ? ButtonBar(
                 children: <Widget>[
                   FlatButton(
@@ -42,13 +45,12 @@ class EditDetail extends StatelessWidget {
                       ).show(context);
                       if (requestPage) {
                         final page = missionpage.Page.fromMission(
-                            creator: user.displayName ?? "unknown person",
+                            creator: _model.displayName ?? "unknown person",
                             mission: mission,
                             onlyEditors: false);
-                        team.addPage(page: page);
+                        _model.addPage(page: page);
                         Navigator.pop(context);
                       }
-                      ;
                     },
                   ),
                   FlatButton(
@@ -63,7 +65,7 @@ class EditDetail extends StatelessWidget {
                         mission.isStoodDown ? '(un)Standown' : 'Stand down'),
                     onPressed: () {
                       mission.isStoodDown = !mission.isStoodDown;
-                      team.standDownMission(
+                      _model.standDownMission(
                         mission: mission,
                       );
                     },
