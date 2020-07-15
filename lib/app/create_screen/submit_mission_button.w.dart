@@ -1,6 +1,6 @@
 part of 'create_screen.dart';
 
-class SubmitMissionButton extends StatelessWidget {
+class SubmitMissionButton extends StatefulWidget {
   final Mission mission;
   final TextEditingController descriptionController;
   final TextEditingController actionController;
@@ -18,23 +18,30 @@ class SubmitMissionButton extends StatelessWidget {
       @required this.mission})
       : super(key: key);
 
+  @override
+  _SubmitMissionButtonState createState() => _SubmitMissionButtonState();
+}
+
+class _SubmitMissionButtonState extends State<SubmitMissionButton> {
+  CreateScreenModel _model;
+
   Mission _fetchMission() {
     // Create a mission from the form fields
-    final description = descriptionController.text;
-    final needForAction = actionController.text;
-    final locationDescription = locationController.text;
+    final description = widget.descriptionController.text;
+    final needForAction = widget.actionController.text;
+    final locationDescription = widget.locationController.text;
 
     GeoPoint geoPoint;
-    if (latitudeController.text.isEmpty) {
+    if (widget.latitudeController.text.isEmpty) {
       // no lat/lon is given so just set to null
       geoPoint = null;
     } else {
-      final latitude = double.parse(latitudeController.text);
-      final longitude = double.parse(longitudeController.text);
+      final latitude = double.parse(widget.latitudeController.text);
+      final longitude = double.parse(widget.longitudeController.text);
       geoPoint = GeoPoint(latitude, longitude);
     }
 
-    Mission myMission = mission;
+    Mission myMission = widget.mission;
     if (myMission == null) {
       // if mission is null that means we are creating new mission
       myMission = Mission.fromApp(
@@ -55,6 +62,7 @@ class SubmitMissionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    _model = CreateScreenModel(context: context);
     return RaisedButton(
       child: Text('Submit'),
       onPressed: () async {
@@ -64,9 +72,7 @@ class SubmitMissionButton extends StatelessWidget {
           ));
           final myMission = _fetchMission();
 
-          final team = Provider.of<Team>(context, listen: false);
-
-          await team.addMission(mission: myMission).then((documentReference) {
+          await _model.addMission(mission: myMission).then((documentReference) {
             if (documentReference == null) {
               // there was an error adding mission to database
               Scaffold.of(context).showSnackBar(SnackBar(
@@ -77,12 +83,11 @@ class SubmitMissionButton extends StatelessWidget {
             myMission.selfRef = documentReference;
 
             // send page to editors only
-            final user = Provider.of<User>(context, listen: false);
             final page = missionpage.Page.fromMission(
-                creator: user.displayName ?? "unknown user",
+                creator: _model.displayName ?? "unknown user",
                 mission: myMission,
                 onlyEditors: true);
-            team.addPage(page: page);
+            _model.addPage(page: page);
             Navigator.pushReplacementNamed(context, DetailScreen.routeName,
                 arguments: MissionAddressArguments(documentReference));
             ;

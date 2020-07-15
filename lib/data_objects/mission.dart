@@ -18,6 +18,10 @@ class Mission {
   String address() => selfRef
       ?.documentID; // Tried a getter but there is a bug in firestore_annotations that doesn't allow the field to be ignored
 
+  String timeSincePresent() {
+    return null;
+  }
+
   Mission({
     this.selfRef,
     this.description,
@@ -34,12 +38,11 @@ class Mission {
     this.needForAction,
     this.locationDescription,
     this.isStoodDown = false,
-  }) : this.time = Timestamp.now(); //some bug in iOS doesn't allow FieldValue.
+  });
 
   /* constructors */
   factory Mission.fromSnapshot(DocumentSnapshot snapshot) =>
       _$missionFromSnapshot(snapshot);
 
-  Map<String, dynamic> toMap() => _$missionToMap(this);
-
+  Map<String, dynamic> toMap() => _$missionToMap(this)..["time"] = FieldValue.serverTimestamp();
 }

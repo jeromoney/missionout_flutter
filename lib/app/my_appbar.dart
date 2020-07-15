@@ -12,17 +12,14 @@ import 'package:url_launcher/url_launcher.dart';
 enum Menu { signOut, userOptions, editorOptions, privacyPolicy }
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
-  String _title;
-
-  MyAppBar({@required String title}) {
-    _title = title;
-  }
+  final String title;
+  MyAppBar({@required this.title});
 
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
     final photoURLAvailable = user.photoUrl != null;
-    return AppBar(title: Text(_title), actions: <Widget>[
+    return AppBar(title: Text(title), actions: <Widget>[
       photoURLAvailable
           ? Container(
           width: AppBar().preferredSize.height,

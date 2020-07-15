@@ -48,9 +48,7 @@ class FirestoreTeam implements Team {
       _$firestoreTeamFromSnapshot(snapshot);
 
   @override
-  void launchChat() {
-    launch(chatURI);
-  }
+  void launchChat() => launch(chatURI);
 
   // firestore reads
 
@@ -119,7 +117,7 @@ class FirestoreTeam implements Team {
           .then((value) {
         return value;
       }).catchError((error) {
-        _log.warning('Error adding mission to firestor', error);
+        _log.warning('Error adding mission to Firestore', error);
         return null; // returning null indicates problem with firebase. user probably should just retry
       });
       return result;
