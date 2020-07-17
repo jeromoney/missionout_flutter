@@ -37,7 +37,7 @@ class FCMMessageHandler {
       onMessage: (Map<String, dynamic> message) async {
         final navKey = Provider.of<GlobalNavigatorKey>(context, listen: false).navKey;
         _log.info("Received onMessage message");
-        final notification = FCMMessage(message);
+        final notification = FCMMessage.fromMessage(message);
         PlatformAlertDialog(
           title: "Update: ${notification.title}",
           content: notification.body,

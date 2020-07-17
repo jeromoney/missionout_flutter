@@ -1,7 +1,7 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
-import 'package:missionout/data_objects/mission_address_arguments.dart';
 import 'package:missionout/data_objects/response.dart';
 import 'package:missionout/services/team/team.dart';
 import 'package:missionout/services/user/user.dart';
@@ -10,21 +10,19 @@ import 'package:tuple/tuple.dart';
 
 class ResponseSheetViewModel {
   final BuildContext context;
-  final Team team;
-  final String docId;
-  final User user;
+  final Team _team;
+  final DocumentReference _documentReference;
+  final User _user;
 
   ResponseSheetViewModel({@required this.context})
-      : this.team = Provider.of<Team>(context),
-        this.user = Provider.of<User>(context),
-        this.docId = (ModalRoute.of(context).settings.arguments
-                as MissionAddressArguments)
-            .docId;
+      : this._team = Provider.of<Team>(context),
+        this._user = Provider.of<User>(context),
+        this._documentReference = Provider.of<DocumentReference>(context);
 
   Stream<Tuple2<Response, List<Response>>> responses() {
-    return team.fetchResponses(docID: docId).map((responses) {
+    return _team.fetchResponses(documentReference: _documentReference).map((responses) {
       final index = responses
-          .indexWhere((response) => response.selfRef.path.contains(user.uid));
+          .indexWhere((response) => response.selfRef.path.contains(_user.uid));
       Response selfResponse;
       if (index == -1)
         selfResponse = null;

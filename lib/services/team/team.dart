@@ -8,29 +8,26 @@ import 'package:missionout/data_objects/response.dart';
 abstract class Team {
   final String teamID;
   final String name;
-   GeoPoint location;
    String chatURI; // URI for messaging app
 
-  Team({@required this.teamID, @required this.name, this.location, this.chatURI});
+  Team({@required this.teamID, @required this.name, this.chatURI});
 
   void launchChat();
 
   Stream<List<Mission>> fetchMissions();
 
-  Stream<Mission> fetchSingleMission({@required String docID});
+  Stream<Mission> fetchSingleMission({@required DocumentReference documentReference});
 
-  Stream<List<Response>> fetchResponses({@required String docID});
+  Stream<List<Response>> fetchResponses({@required DocumentReference documentReference});
 
   Future<dynamic> addMission({@required Mission mission});
 
   void standDownMission({@required Mission mission});
 
   /// Interface with database. A page is uploaded to a server who will then act on the data
-  Future<void> addPage({
+  Future addPage({
     @required missionpage.Page page,
   });
-
-  Future updateLocation(GeoPoint locationVal);
 
   Future updateChatURI(String chatURIVal);
 

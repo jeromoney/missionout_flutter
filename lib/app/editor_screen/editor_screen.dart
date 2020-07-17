@@ -11,8 +11,6 @@ part 'team_submit_raised_button.w.dart';
 
 part 'uri_text_form_field.w.dart';
 
-const HEADQUARTERS_FEATURE_FLAG = false;
-
 class EditorScreen extends StatelessWidget {
   static const routeName = "/editorScreen";
 
@@ -39,13 +37,7 @@ class EditorOptionsFormState extends State<EditorOptionsForm> {
     final _formKey = GlobalKey<FormState>();
     final chatURIController = TextEditingController();
     chatURIController.text = team.chatURI;
-    final lonController = TextEditingController();
-    final latController = TextEditingController();
 
-    if (HEADQUARTERS_FEATURE_FLAG) {
-      lonController.text = team.location?.longitude.toString();
-      latController.text = team.location?.latitude.toString();
-    }
 
     return Form(
       key: _formKey,
@@ -59,18 +51,8 @@ class EditorOptionsFormState extends State<EditorOptionsForm> {
               child: Text(team.name ?? ''),
             ),
             URITextFormField(controller: chatURIController),
-            if (HEADQUARTERS_FEATURE_FLAG)
-              LatLonInput(
-                //hiding this feature since matching functionality is not implemented
-                latController: latController,
-                lonController: lonController,
-                fieldDescription:
-                    'Headquarters GPS Location in decimal degrees',
-              ),
             TeamSubmitRaisedButton(
               formKey: _formKey,
-              latController: latController,
-              lonController: lonController,
               chatURIController: chatURIController,
             ),
           ],

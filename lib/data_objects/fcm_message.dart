@@ -1,23 +1,30 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
+
 class FCMMessage {
-  String _title;
-  String get title => _title;
-  String _body;
-  String get body => _body;
+  final String title;
+  final String body;
 
-  FCMMessage(Map<String, dynamic> message) {
+  FCMMessage({@required this.title, @required this.body});
+
+  factory FCMMessage.fromMessage(Map<String, dynamic> message) {
+    String title;
+    String body;
     if (Platform.isIOS || Platform.isMacOS) {
-      _title = message["aps"]["alert"]["title"] ??
-          ArgumentError("Expected json format for iOS of form [\"aps\"][\"alert\"][\"title\"] ");
-      _body = message["aps"]["alert"]["body"] ?? "";
-
+      title = message["aps"]["alert"]["title"] ??
+          ArgumentError(
+              "Expected json format for iOS of form [\"aps\"][\"alert\"][\"title\"] ");
+      body = message["aps"]["alert"]["body"] ?? "";
+    } else if (Platform.isAndroid) {
+      title = message["notification"]["title"] ??
+          ArgumentError(
+              "Expected json format for Android of form [\"notification\"][\"title\"] ");
+      body = message["notification"]["body"] ?? "";
     }
-    else if (Platform.isAndroid) {
-      _title = message["notification"]["title"] ??
-          ArgumentError("Expected json format for Android of form [\"notification\"][\"title\"] ");
-      _body = message["notification"]["body"] ?? "";
-    }
+    return FCMMessage(
+      title: title,
+      body: body,
+    );
   }
-
 }

@@ -22,12 +22,10 @@ class FirestoreTeam implements Team {
   @FirestoreAttribute(nullable: false)
   final String name;
   @override
-  GeoPoint location;
-  @override
-  String chatURI;
+   String chatURI;
 
   FirestoreTeam(
-      {@required this.teamID, @required this.name, this.location, this.chatURI})
+      {@required this.teamID, @required this.name, this.chatURI})
       : assert(teamID != null);
 
   static Future<FirestoreTeam> fromTeamID(String teamID) async {
@@ -64,17 +62,18 @@ class FirestoreTeam implements Team {
   }
 
   @override
-  Stream<Mission> fetchSingleMission({@required String docID}) {
+  Stream<Mission> fetchSingleMission(
+      {@required DocumentReference documentReference}) {
     return _db
-        .document('teams/$teamID/missions/$docID')
+        .document(documentReference.path)
         .snapshots()
         .map((snapshot) => Mission.fromSnapshot(snapshot));
   }
 
   @override
-  Stream<List<Response>> fetchResponses({@required String docID}) {
+  Stream<List<Response>> fetchResponses({@required DocumentReference documentReference}) {
     final ref = _db
-        .collection('teams/$teamID/missions/$docID/responses')
+        .collection('${documentReference.path}/responses')
         .orderBy('status', descending: true);
     return ref.snapshots().map((snapShots) => snapShots.documents
         .map((data) => Response.fromSnapshot(data))
@@ -82,16 +81,6 @@ class FirestoreTeam implements Team {
   }
 
   // firestore writes
-
-  @override
-  Future updateLocation(GeoPoint locationVal) async {
-    await _db.document('teams/$teamID').updateData({
-      'location': locationVal,
-    }).catchError((error) {
-      throw error;
-    });
-    location = locationVal;
-  }
 
   @override
   Future updateChatURI(String chatURIVal) async {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:missionout/app/detail_screen/detail_screen.dart';
 import 'package:missionout/app/editor_screen/editor_screen.dart';
-import 'package:missionout/app/overview_screen.dart';
+import 'package:missionout/app/overview_screen/overview_screen.dart';
 import 'package:missionout/app/response_sheet/response_sheet.dart';
 import 'package:missionout/app/sign_in/log_in_screen.dart';
 import 'package:missionout/app/sign_in/sign_up_screen.dart';

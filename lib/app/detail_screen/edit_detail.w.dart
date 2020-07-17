@@ -57,16 +57,16 @@ class _EditDetailState extends State<EditDetail> {
                     child: const Text('Edit'),
                     onPressed: () {
                       Navigator.of(context)
-                          .pushReplacement(CreatePopupRoute(mission));
+                          .pushReplacement(CreatePopupRoute());
                     },
                   ),
                   FlatButton(
                     child: Text(
                         mission.isStoodDown ? '(un)Standown' : 'Stand down'),
                     onPressed: () {
-                      mission.isStoodDown = !mission.isStoodDown;
+                      final newMission = mission.clone(isStoodDown: !mission.isStoodDown);
                       _model.standDownMission(
-                        mission: mission,
+                        mission: newMission,
                       );
                     },
                   ),

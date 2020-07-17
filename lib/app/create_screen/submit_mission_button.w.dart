@@ -41,8 +41,8 @@ class _SubmitMissionButtonState extends State<SubmitMissionButton> {
       geoPoint = GeoPoint(latitude, longitude);
     }
 
-    Mission myMission = widget.mission;
-    if (myMission == null) {
+    Mission myMission;
+    if (widget.mission == null) {
       // if mission is null that means we are creating new mission
       myMission = Mission.fromApp(
         description: description,
@@ -52,10 +52,12 @@ class _SubmitMissionButtonState extends State<SubmitMissionButton> {
       );
     } else {
       // update existing mission
-      myMission.description = description;
-      myMission.needForAction = needForAction;
-      myMission.locationDescription = locationDescription;
-      myMission.location = geoPoint;
+      myMission = widget.mission.clone(
+        description: description,
+        needForAction: needForAction,
+        locationDescription: locationDescription,
+        location: geoPoint,
+      );
     }
     return myMission;
   }
@@ -72,26 +74,19 @@ class _SubmitMissionButtonState extends State<SubmitMissionButton> {
           ));
           final myMission = _fetchMission();
 
-          await _model.addMission(mission: myMission).then((documentReference) {
-            if (documentReference == null) {
-              // there was an error adding mission to database
-              Scaffold.of(context).showSnackBar(SnackBar(
-                content: Text('Error uploading mission'),
-              ));
-              return;
-            }
-            myMission.selfRef = documentReference;
+          try {
+            await _model.addMission(mission: myMission);
+          } on HttpException {
+            Scaffold.of(context).showSnackBar(SnackBar(
+              content: Text('Error uploading mission'),
+            ));
+            return;
+          }
 
-            // send page to editors only
-            final page = missionpage.Page.fromMission(
-                creator: _model.displayName ?? "unknown user",
-                mission: myMission,
-                onlyEditors: true);
-            _model.addPage(page: page);
-            Navigator.pushReplacementNamed(context, DetailScreen.routeName,
-                arguments: MissionAddressArguments(documentReference));
-            ;
-          });
+          Navigator.pushReplacementNamed(
+            context,
+            DetailScreen.routeName,
+          );
         }
       },
     );

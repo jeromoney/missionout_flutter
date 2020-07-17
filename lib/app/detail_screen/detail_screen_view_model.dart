@@ -1,11 +1,11 @@
 import 'dart:io' show Platform;
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:missionout/data_objects/page.dart' as missionpage;
 import 'package:missionout/data_objects/mission.dart';
-import 'package:missionout/data_objects/mission_address_arguments.dart';
 import 'package:missionout/data_objects/response.dart';
 import 'package:missionout/services/response_sheet_controller.dart';
 import 'package:missionout/services/team/team.dart';
@@ -16,29 +16,23 @@ import 'package:url_launcher/url_launcher.dart';
 class DetailScreenViewModel {
   final BuildContext context;
   final Team team;
-  final String docId;
+  final DocumentReference documentReference;
   final User user;
+  final ResponseSheetController responseSheetController;
 
   DetailScreenViewModel({@required this.context})
-      : this.team = Provider.of<Team>(context),
-        this.user = Provider.of<User>(context),
-        this.docId = (ModalRoute.of(context).settings.arguments
-                as MissionAddressArguments)
-            .docId;
+      : this.team = context.watch<Team>(),
+        this.user = context.watch<User>(),
+        this.documentReference = context.watch<DocumentReference>(),
+        assert(context.watch<DocumentReference>() != null),
+        this.responseSheetController = context.watch<ResponseSheetController>();
 
-  Stream<Mission> fetchSingleMission() => team.fetchSingleMission(docID: docId);
+  Stream<Mission> fetchSingleMission() =>
+      team.fetchSingleMission(documentReference: documentReference);
 
-  displayResponseSheet() {
-    final responseSheetController =
-        Provider.of<ResponseSheetController>(context, listen: false);
-    responseSheetController.showResponseSheet = true;
-  }
+  displayResponseSheet() => responseSheetController.showResponseSheet = true;
 
-  hideResponseSheet() {
-    final responseSheetController =
-        Provider.of<ResponseSheetController>(context, listen: false);
-    responseSheetController.showResponseSheet = false;
-  }
+  hideResponseSheet() => responseSheetController.showResponseSheet = false;
 
   launchChat() {
     try {
@@ -76,8 +70,8 @@ class DetailScreenViewModel {
 
   bool get isEditor => user.isEditor;
 
-  addResponse({@required Response response}) =>
-      team.addResponse(response: response, docID: docId, uid: user.uid);
+  addResponse({@required Response response}) => team.addResponse(
+      response: response, docID: documentReference.documentID, uid: user.uid);
 
   addPage({@required missionpage.Page page}) => team.addPage(page: page);
 

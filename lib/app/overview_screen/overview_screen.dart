@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:missionout/data_objects/mission_address_arguments.dart';
-import 'package:missionout/utils.dart';
-import 'package:provider/provider.dart';
 
+import 'package:missionout/app/overview_screen/overview_screen_model.dart';
+import 'package:missionout/utils.dart';
 import 'package:missionout/data_objects/mission.dart';
-import 'package:missionout/services/team/team.dart';
-import 'package:missionout/services/user/user.dart';
-import 'package:missionout/app/create_screen/create_screen.dart';
-import 'package:missionout/app/detail_screen/detail_screen.dart';
 import 'package:missionout/app/my_appbar.dart';
 
 class OverviewScreen extends StatelessWidget {
@@ -15,18 +10,18 @@ class OverviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context);
-    if (user == null) return LinearProgressIndicator();
+    final model = OverviewScreenModel(context: context);
+    model.resetReference();
+    if (model.user == null) return LinearProgressIndicator();
     return Scaffold(
         key: Key("Overview Screen"),
         appBar: MyAppBar(title: 'Overview'),
         body: BuildMissionStream(),
-        floatingActionButton: user.isEditor // only show FAB to editors
+        floatingActionButton: model.isEditor // only show FAB to editors
             ? FloatingActionButton(
                 child: Icon(Icons.create),
-                onPressed: () {
-                  Navigator.of(context).push(CreatePopupRoute());
-                })
+                onPressed: model.navigateToCreate,
+              )
             : null);
   }
 }
@@ -34,11 +29,11 @@ class OverviewScreen extends StatelessWidget {
 class BuildMissionStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final team = Provider.of<Team>(context);
-    if (team == null) return LinearProgressIndicator();
+    final model = OverviewScreenModel(context: context);
+    if (model.team == null) return LinearProgressIndicator();
 
     return StreamBuilder<List<Mission>>(
-        stream: team.fetchMissions(),
+        stream: model.fetchMissions(),
         builder: (context, snapshot) {
           // waiting
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -70,17 +65,25 @@ class BuildMissionStream extends StatelessWidget {
   }
 }
 
-class BuildMissionResults extends StatelessWidget {
+class BuildMissionResults extends StatefulWidget {
   final List<Mission> missions;
 
   const BuildMissionResults({Key key, @required this.missions})
       : super(key: key);
 
   @override
+  _BuildMissionResultsState createState() => _BuildMissionResultsState();
+}
+
+class _BuildMissionResultsState extends State<BuildMissionResults> {
+  OverviewScreenModel model;
+
+  @override
   Widget build(BuildContext context) {
+    model = OverviewScreenModel(context: context);
     return ListView.separated(
         itemBuilder: (BuildContext context, int index) {
-          final mission = missions[index];
+          final mission = widget.missions[index];
 
           return ListTile(
             title: Text(mission.description ?? '',
@@ -91,13 +94,11 @@ class BuildMissionResults extends StatelessWidget {
                 ' ' +
                 (formatTime(mission.time) ?? '')),
             onTap: () {
-              final MissionAddressArguments arguments =
-                  MissionAddressArguments(mission.address());
-              Navigator.pushNamed(context, DetailScreen.routeName, arguments: arguments);
+              model.navigateToDetail(documentReference: mission.selfRef);
             },
           );
         },
         separatorBuilder: (context, index) => Divider(),
-        itemCount: missions.length);
+        itemCount: widget.missions.length);
   }
 }

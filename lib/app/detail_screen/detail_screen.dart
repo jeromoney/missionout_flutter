@@ -15,7 +15,6 @@ import 'package:missionout/app/response_sheet/response_sheet.dart';
 import 'package:missionout/utils.dart';
 import 'package:missionout/data_objects/page.dart' as missionpage;
 
-
 part 'actions_detail.w.dart';
 
 part 'edit_detail.w.dart';
@@ -28,12 +27,11 @@ class DetailScreen extends StatelessWidget {
   static const String routeName = "/detailScreen";
 
   @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider<ResponseSheetController>(
-      create: (_) => ResponseSheetController(),
-      child: _ControllerConsumer(),
-    );
-  }
+  Widget build(BuildContext context) =>
+      ChangeNotifierProvider<ResponseSheetController>(
+        create: (_) => ResponseSheetController(),
+        child: _ControllerConsumer(),
+      );
 }
 
 // The onTap method needs a new context below the provider
@@ -73,7 +71,7 @@ class __ControllerConsumerState extends State<_ControllerConsumer> {
               return Stack(children: <Widget>[
                 widget._detailScreen,
                 showResponseSheet
-                    ? ClipRect(
+                    ?  ClipRect(
                         child: BackdropFilter(
                           filter: ImageFilter.blur(sigmaY: BLUR, sigmaX: BLUR),
                           child: Container(

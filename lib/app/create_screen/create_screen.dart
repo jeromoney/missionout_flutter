@@ -1,9 +1,9 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:missionout/app/create_screen/create_screen_model.dart';
-import 'package:missionout/data_objects/mission_address_arguments.dart';
-import 'package:missionout/data_objects/page.dart' as missionpage;
 import 'package:missionout/data_objects/mission.dart';
 import 'package:missionout/app/detail_screen/detail_screen.dart';
 import 'package:missionout/app/my_appbar.dart';
@@ -11,55 +11,54 @@ import 'package:missionout/core/lat_lon_input.w.dart';
 
 part 'submit_mission_button.w.dart';
 
-
 class CreateScreen extends StatelessWidget {
-  final Mission mission;
-
-  CreateScreen([Mission mission]) : this.mission = mission;
-
   @override
   Widget build(BuildContext context) {
+    final model = CreateScreenModel(context: context);
     return Scaffold(
       appBar: MyAppBar(
-          title: mission == null ? 'Create a mission' : 'Edit mission'),
-      body: MissionForm(mission),
+          title: model.isEditExistingMission
+              ? 'Edit mission'
+              : 'Create a mission'),
+      body: _MissionForm(),
     );
   }
 }
 
-class MissionForm extends StatefulWidget {
-  final Mission mission;
-
-  MissionForm([Mission mission]) : this.mission = mission;
-
+class _MissionForm extends StatefulWidget {
   @override
-  MissionFormState createState() {
-    return MissionFormState(mission);
-  }
+  _MissionFormState createState() => _MissionFormState();
 }
 
-class MissionFormState extends State<MissionForm> {
-  final Mission mission;
-
-  MissionFormState([Mission mission]) : this.mission = mission;
-
+class _MissionFormState extends State<_MissionForm> {
   final descriptionController = TextEditingController();
   final actionController = TextEditingController();
   final locationController = TextEditingController();
   final latitudeController = TextEditingController();
   final longitudeController = TextEditingController();
 
+  Mission mission;
+
+  getMission() {
+    final model = CreateScreenModel(context: context);
+    setState(() async {
+      mission = await model.getCurrentMission();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final model = CreateScreenModel(context: context);
+    var mission;
     // set the value if editing an existing mission
-    if (mission != null) {
+    if (model.isEditExistingMission) {
       descriptionController.text = mission.description ?? '';
       actionController.text = mission.needForAction ?? '';
       locationController.text = mission.locationDescription ?? '';
       final latValue = mission.location?.latitude ?? '';
       final lonValue = mission.location?.longitude ?? '';
-      latitudeController.text =  latValue.toString();
-      longitudeController.text =  lonValue.toString();
+      latitudeController.text = latValue.toString();
+      longitudeController.text = lonValue.toString();
     }
     return SingleChildScrollView(
       child: Padding(
@@ -72,7 +71,8 @@ class MissionFormState extends State<MissionForm> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   controller: descriptionController,
-                  decoration: InputDecoration(labelText: 'Description', border: OutlineInputBorder()),
+                  decoration: InputDecoration(
+                      labelText: 'Description', border: OutlineInputBorder()),
                   validator: (value) {
                     if (value.isEmpty) {
                       return 'Description required';
@@ -85,14 +85,18 @@ class MissionFormState extends State<MissionForm> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   controller: actionController,
-                  decoration: InputDecoration(labelText: 'Need for action', border: OutlineInputBorder()),
+                  decoration: InputDecoration(
+                      labelText: 'Need for action',
+                      border: OutlineInputBorder()),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   controller: locationController,
-                  decoration: InputDecoration(labelText: 'Location description', border: OutlineInputBorder()),
+                  decoration: InputDecoration(
+                      labelText: 'Location description',
+                      border: OutlineInputBorder()),
                 ),
               ),
               LatLonInput(
@@ -133,9 +137,6 @@ class MissionFormState extends State<MissionForm> {
 
 class CreatePopupRoute extends PopupRoute {
   // A popup route is used so back navigation doesn't go back to this screen.
-  final Mission _mission;
-
-  CreatePopupRoute([Mission mission]) : this._mission = mission;
 
   @override
   Color get barrierColor => Colors.red;
@@ -152,6 +153,6 @@ class CreatePopupRoute extends PopupRoute {
   @override
   Widget buildPage(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation) {
-    return CreateScreen(_mission);
+    return CreateScreen();
   }
 }
