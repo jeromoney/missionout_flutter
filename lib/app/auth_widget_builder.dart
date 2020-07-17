@@ -1,7 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:missionout/data_objects/mission.dart';
 import 'package:missionout/services/team/team.dart';
 import 'package:missionout/services/auth_service/auth_service.dart';
 import 'package:missionout/services/user/user.dart';
@@ -31,12 +28,6 @@ class AuthWidgetBuilder extends StatelessWidget {
                 initialData: null,
                 create: (_) async => authService.createTeam(),
               ),
-              Provider<DocumentReferenceHolder>(
-                create: (_) => DocumentReferenceHolder(),
-              ),
-              ProxyProvider<DocumentReferenceHolder, DocumentReference>(
-                update: (_, holder, ___) => holder.documentReference,
-              )
             ],
             child: builder(context, snapshot),
           );
@@ -46,8 +37,4 @@ class AuthWidgetBuilder extends StatelessWidget {
       },
     );
   }
-}
-
-class DocumentReferenceHolder {
-  DocumentReference documentReference;
 }

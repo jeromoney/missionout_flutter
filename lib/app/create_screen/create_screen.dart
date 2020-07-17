@@ -8,19 +8,31 @@ import 'package:missionout/data_objects/mission.dart';
 import 'package:missionout/app/detail_screen/detail_screen.dart';
 import 'package:missionout/app/my_appbar.dart';
 import 'package:missionout/core/lat_lon_input.w.dart';
+import 'package:provider/provider.dart';
 
 part 'submit_mission_button.w.dart';
 
 class CreateScreen extends StatelessWidget {
+  final DocumentReference documentReference;
+
+  CreateScreen({this.documentReference});
+
   @override
   Widget build(BuildContext context) {
-    final model = CreateScreenModel(context: context);
-    return Scaffold(
-      appBar: MyAppBar(
-          title: model.isEditExistingMission
-              ? 'Edit mission'
-              : 'Create a mission'),
-      body: _MissionForm(),
+    return Provider.value(
+      value: documentReference,
+      child: Builder(
+        builder: (context) {
+          final model = CreateScreenModel(context: context);
+          return Scaffold(
+            appBar: MyAppBar(
+                title: model.isEditExistingMission
+                    ? 'Edit mission'
+                    : 'Create a mission'),
+            body: _MissionForm(),
+          );
+        },
+      ),
     );
   }
 }
@@ -37,26 +49,31 @@ class _MissionFormState extends State<_MissionForm> {
   final latitudeController = TextEditingController();
   final longitudeController = TextEditingController();
 
-  Mission mission;
+  Mission _mission;
+  CreateScreenModel _model;
 
-  getMission() {
-    final model = CreateScreenModel(context: context);
-    setState(() async {
-      mission = await model.getCurrentMission();
-    });
+  getMission() async {
+    if (_model.isEditExistingMission)
+      _mission = await _model.getCurrentMission();
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => getMission());
   }
 
   @override
   Widget build(BuildContext context) {
-    final model = CreateScreenModel(context: context);
-    var mission;
+    _model = CreateScreenModel(context: context);
     // set the value if editing an existing mission
-    if (model.isEditExistingMission) {
-      descriptionController.text = mission.description ?? '';
-      actionController.text = mission.needForAction ?? '';
-      locationController.text = mission.locationDescription ?? '';
-      final latValue = mission.location?.latitude ?? '';
-      final lonValue = mission.location?.longitude ?? '';
+    if (_model.isEditExistingMission && _mission != null) {
+      descriptionController.text = _mission.description ?? '';
+      actionController.text = _mission.needForAction ?? '';
+      locationController.text = _mission.locationDescription ?? '';
+      final latValue = _mission.location?.latitude ?? '';
+      final lonValue = _mission.location?.longitude ?? '';
       latitudeController.text = latValue.toString();
       longitudeController.text = lonValue.toString();
     }
@@ -109,7 +126,7 @@ class _MissionFormState extends State<_MissionForm> {
                   top: 16.0,
                 ),
                 child: SubmitMissionButton(
-                  mission: mission,
+                  mission: _mission,
                   locationController: locationController,
                   latitudeController: latitudeController,
                   longitudeController: longitudeController,
@@ -136,6 +153,10 @@ class _MissionFormState extends State<_MissionForm> {
 }
 
 class CreatePopupRoute extends PopupRoute {
+  final DocumentReference documentReference;
+
+  CreatePopupRoute({this.documentReference});
+
   // A popup route is used so back navigation doesn't go back to this screen.
 
   @override
@@ -153,6 +174,8 @@ class CreatePopupRoute extends PopupRoute {
   @override
   Widget buildPage(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation) {
-    return CreateScreen();
+    return CreateScreen(
+      documentReference: documentReference,
+    );
   }
 }

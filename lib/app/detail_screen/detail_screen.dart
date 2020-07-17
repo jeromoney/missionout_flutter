@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:missionout/app/detail_screen/detail_screen_view_model.dart';
 import 'package:missionout/constants/strings.dart';
 import 'package:missionout/common_widgets/platform_alert_dialog.dart';
+import 'package:missionout/data_objects/mission_address_arguments.dart';
 import 'package:missionout/services/response_sheet_controller.dart';
 import 'package:provider/provider.dart';
 
@@ -27,11 +28,11 @@ class DetailScreen extends StatelessWidget {
   static const String routeName = "/detailScreen";
 
   @override
-  Widget build(BuildContext context) =>
-      ChangeNotifierProvider<ResponseSheetController>(
+  Widget build(BuildContext context){
+    return ChangeNotifierProvider<ResponseSheetController>(
         create: (_) => ResponseSheetController(),
         child: _ControllerConsumer(),
-      );
+      );}
 }
 
 // The onTap method needs a new context below the provider

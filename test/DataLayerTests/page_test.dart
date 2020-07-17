@@ -14,8 +14,8 @@ void main(){
     var mission = Mission(description,needForAction,null,null);
     mission.selfRef = DocumentReferenceMock();
 
-    var page = Page(creator:creator,mission:mission);
+    var page = Page(creator:creator,_mission:mission);
     expect(page.creator, creator);
-    expect(page.mission,mission);
+    expect(page._mission,mission);
   });
 }

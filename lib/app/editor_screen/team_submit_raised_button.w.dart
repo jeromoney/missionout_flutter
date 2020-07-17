@@ -12,7 +12,7 @@ class TeamSubmitRaisedButton extends StatefulWidget {
 
   @override
   State createState() => TeamSubmitRaisedButtonState(
-      chatURIController: chantroller,
+      chatURIController: chatURIController,
       formKey: formKey);
 }
 

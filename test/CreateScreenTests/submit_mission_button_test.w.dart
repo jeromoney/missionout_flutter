@@ -26,7 +26,7 @@ void main() {
                   },
                 ),
                 SubmitMissionButton(
-                  mission: null,
+                  _mission: null,
                   actionController: TextEditingController(),
                   longitudeController: TextEditingController(),
                   latitudeController: TextEditingController(),
@@ -62,7 +62,7 @@ void main() {
                       },
                     ),
                     SubmitMissionButton(
-                      mission: null,
+                      _mission: null,
                       actionController: TextEditingController(),
                       longitudeController: TextEditingController(),
                       latitudeController: TextEditingController(),
@@ -105,7 +105,7 @@ void main() {
                       },
                     ),
                     SubmitMissionButton(
-                      mission: null,
+                      _mission: null,
                       actionController: TextEditingController(),
                       longitudeController: TextEditingController(),
                       latitudeController: TextEditingController(),
@@ -147,7 +147,7 @@ void main() {
                       },
                     ),
                     SubmitMissionButton(
-                      mission: null,
+                      _mission: null,
                       actionController: TextEditingController(),
                       longitudeController: TextEditingController(),
                       latitudeController: TextEditingController(),
@@ -175,7 +175,7 @@ void main() {
       lonController.text = '14.0';
 
       SubmitMissionButton widget = SubmitMissionButton(
-        mission: null,
+        _mission: null,
         locationController: someController,
         descriptionController: someController,
         latitudeController: latController,
@@ -199,7 +199,7 @@ void main() {
       lonController.text = '14.0';
 
       SubmitMissionButton widget = SubmitMissionButton(
-        mission: Mission('some','thing','location',null),
+        _mission: Mission('some','thing','location',null),
         locationController: locationController,
         descriptionController: descriptionController,
         latitudeController: latController,

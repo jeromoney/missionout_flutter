@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
+import 'package:missionout/data_objects/mission_address_arguments.dart';
 import 'package:missionout/data_objects/response.dart';
 import 'package:missionout/services/team/team.dart';
 import 'package:missionout/services/user/user.dart';
@@ -17,7 +18,7 @@ class ResponseSheetViewModel {
   ResponseSheetViewModel({@required this.context})
       : this._team = Provider.of<Team>(context),
         this._user = Provider.of<User>(context),
-        this._documentReference = Provider.of<DocumentReference>(context);
+        this._documentReference = (ModalRoute.of(context).settings.arguments as MissionAddressArguments).reference;
 
   Stream<Tuple2<Response, List<Response>>> responses() {
     return _team.fetchResponses(documentReference: _documentReference).map((responses) {

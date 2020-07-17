@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:missionout/app/create_screen/create_screen.dart';
+import 'package:missionout/data_objects/mission_address_arguments.dart';
 import 'package:missionout/data_objects/page.dart' as missionpage;
 import 'package:missionout/data_objects/mission.dart';
 import 'package:missionout/data_objects/response.dart';
@@ -23,8 +25,7 @@ class DetailScreenViewModel {
   DetailScreenViewModel({@required this.context})
       : this.team = context.watch<Team>(),
         this.user = context.watch<User>(),
-        this.documentReference = context.watch<DocumentReference>(),
-        assert(context.watch<DocumentReference>() != null),
+        this.documentReference = (ModalRoute.of(context).settings.arguments as MissionAddressArguments).reference,
         this.responseSheetController = context.watch<ResponseSheetController>();
 
   Stream<Mission> fetchSingleMission() =>
@@ -77,4 +78,10 @@ class DetailScreenViewModel {
 
   standDownMission({@required Mission mission}) =>
       team.standDownMission(mission: mission);
+
+  navigateToCreateScreen() {
+    assert(documentReference != null);
+    Navigator.of(context)
+        .pushReplacement(CreatePopupRoute(documentReference: documentReference),);
+  }
 }

@@ -11,7 +11,6 @@ class OverviewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = OverviewScreenModel(context: context);
-    model.resetReference();
     if (model.user == null) return LinearProgressIndicator();
     return Scaffold(
         key: Key("Overview Screen"),
@@ -94,7 +93,7 @@ class _BuildMissionResultsState extends State<BuildMissionResults> {
                 ' ' +
                 (formatTime(mission.time) ?? '')),
             onTap: () {
-              model.navigateToDetail(documentReference: mission.selfRef);
+              model.navigateToDetail(documentReference: mission.selfRef, mission: mission);
             },
           );
         },

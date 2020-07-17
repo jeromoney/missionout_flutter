@@ -56,8 +56,7 @@ class _EditDetailState extends State<EditDetail> {
                   FlatButton(
                     child: const Text('Edit'),
                     onPressed: () {
-                      Navigator.of(context)
-                          .pushReplacement(CreatePopupRoute());
+                      _model.navigateToCreateScreen();
                     },
                   ),
                   FlatButton(
