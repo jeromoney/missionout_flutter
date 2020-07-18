@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import 'package:missionout/app/create_screen/create_screen_model.dart';
+import 'package:missionout/app/create_sheet/create_sheet_model.dart';
 import 'package:missionout/data_objects/mission.dart';
 import 'package:missionout/app/detail_screen/detail_screen.dart';
 import 'package:missionout/app/my_appbar.dart';
@@ -23,7 +23,7 @@ class CreateScreen extends StatelessWidget {
       value: documentReference,
       child: Builder(
         builder: (context) {
-          final model = CreateScreenModel(context: context);
+          final model = CreateSheetModel(context);
           return Scaffold(
             appBar: MyAppBar(
                 title: model.isEditExistingMission
@@ -50,7 +50,7 @@ class _MissionFormState extends State<_MissionForm> {
   final longitudeController = TextEditingController();
 
   Mission _mission;
-  CreateScreenModel _model;
+  CreateSheetModel _model;
 
   getMission() async {
     if (_model.isEditExistingMission)
@@ -66,7 +66,7 @@ class _MissionFormState extends State<_MissionForm> {
 
   @override
   Widget build(BuildContext context) {
-    _model = CreateScreenModel(context: context);
+    _model = CreateSheetModel(context);
     // set the value if editing an existing mission
     if (_model.isEditExistingMission && _mission != null) {
       descriptionController.text = _mission.description ?? '';

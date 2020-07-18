@@ -1,16 +1,14 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:missionout/app/detail_screen/detail_screen_view_model.dart';
 import 'package:missionout/constants/strings.dart';
 import 'package:missionout/common_widgets/platform_alert_dialog.dart';
-import 'package:missionout/data_objects/mission_address_arguments.dart';
-import 'package:missionout/services/response_sheet_controller.dart';
 import 'package:provider/provider.dart';
 
 import 'package:missionout/data_objects/mission.dart';
 import 'package:missionout/data_objects/response.dart';
-import 'package:missionout/app/create_screen/create_screen.dart';
 import 'package:missionout/app/my_appbar.dart';
 import 'package:missionout/app/response_sheet/response_sheet.dart';
 import 'package:missionout/utils.dart';
@@ -29,23 +27,25 @@ class DetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<ResponseSheetController>(
-      create: (_) => null,
-      child: _ControllerConsumer(),
+    return Provider<StreamController<bool>>(
+      create: (_) => StreamController<bool>(),
+      child: _StreamConsumer(),
     );
   }
 }
 
 // The onTap method needs a new context below the provider
-class _ControllerConsumer extends StatefulWidget {
+class _StreamConsumer extends StatefulWidget {
   final Widget _detailScreen = _DetailScreenState();
+
   @override
-  __ControllerConsumerState createState() => __ControllerConsumerState();
+  _StreamConsumerState createState() => _StreamConsumerState();
 }
 
-class __ControllerConsumerState extends State<_ControllerConsumer> {
+class _StreamConsumerState extends State<_StreamConsumer> {
   DetailScreenViewModel _model;
   int _widgetIndex = 0;
+  StreamSubscription _subscription;
 
   Widget get showResponsesWidget => Stack(children: <Widget>[
         widget._detailScreen,
@@ -62,21 +62,35 @@ class __ControllerConsumerState extends State<_ControllerConsumer> {
         ),
       ]);
 
-  showResponseSheet(){
+  showResponseSheet(bool isShowResponses) {
     setState(() {
-      _widgetIndex = 1;
+      if (isShowResponses)
+        _widgetIndex = 0;
+      else
+        _widgetIndex = 1;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _subscription = context
+        .read<StreamController<bool>>()
+        .stream
+        .listen((isShowResponses) => showResponseSheet(isShowResponses));
+  }
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     _model = DetailScreenViewModel(context: context);
     return GestureDetector(
-      onTap: () {
-        setState(() {
-          _widgetIndex = 0;
-        });
-      },
+      onTap: _model.hideResponseSheet,
       child: IndexedStack(
         index: _widgetIndex,
         children: <Widget>[
@@ -99,34 +113,6 @@ class __ControllerConsumerState extends State<_ControllerConsumer> {
           )
         ],
       ),
-    );
-
-    return Consumer<ResponseSheetController>(
-      builder: (_, controller, __) => GestureDetector(
-          child: Builder(
-            builder: (_) {
-              final bool showResponseSheet = controller.showResponseSheet;
-              return Stack(children: <Widget>[
-                widget._detailScreen,
-                showResponseSheet
-                    ? ClipRect(
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaY: BLUR, sigmaX: BLUR),
-                          child: Container(
-                            color: Colors.black.withOpacity(0),
-                          ),
-                        ),
-                      )
-                    : Container(),
-                showResponseSheet
-                    ? IgnorePointer(
-                        child: Center(child: ResponseSheet()),
-                      )
-                    : Container(),
-              ]);
-            },
-          ),
-          onTap: _model.hideResponseSheet),
     );
   }
 }

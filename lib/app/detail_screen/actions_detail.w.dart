@@ -49,7 +49,7 @@ class ActionsDetail extends StatelessWidget {
             }),
             IconButton(
               icon: Icon(Icons.people),
-              onPressed: () => model.displayResponseSheet(),
+              onPressed: model.displayResponseSheet,
             ),
           ],
         ),

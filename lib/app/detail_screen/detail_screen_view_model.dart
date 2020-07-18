@@ -1,15 +1,15 @@
+import 'dart:async';
 import 'dart:io' show Platform;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:missionout/app/create_screen/create_screen.dart';
+import 'package:missionout/app/create_sheet/create_sheet.dart';
 import 'package:missionout/data_objects/mission_address_arguments.dart';
 import 'package:missionout/data_objects/page.dart' as missionpage;
 import 'package:missionout/data_objects/mission.dart';
 import 'package:missionout/data_objects/response.dart';
-import 'package:missionout/services/response_sheet_controller.dart';
 import 'package:missionout/services/team/team.dart';
 import 'package:missionout/services/user/user.dart';
 import 'package:provider/provider.dart';
@@ -20,20 +20,22 @@ class DetailScreenViewModel {
   final Team team;
   final DocumentReference documentReference;
   final User user;
-  final ResponseSheetController responseSheetController;
+  final StreamController<bool> sheetStreamController;
 
   DetailScreenViewModel({@required this.context})
       : this.team = context.watch<Team>(),
         this.user = context.watch<User>(),
-        this.documentReference = (ModalRoute.of(context).settings.arguments as MissionAddressArguments).reference,
-        this.responseSheetController = context.watch<ResponseSheetController>();
+        this.documentReference = (ModalRoute.of(context).settings.arguments
+                as MissionAddressArguments)
+            .reference,
+        this.sheetStreamController = context.watch<StreamController<bool>>();
 
   Stream<Mission> fetchSingleMission() =>
       team.fetchSingleMission(documentReference: documentReference);
 
-  displayResponseSheet() {}//responseSheetController.showResponseSheet = true;
+  displayResponseSheet() => sheetStreamController.add(false);
 
-  hideResponseSheet() => responseSheetController.showResponseSheet = false;
+  hideResponseSheet() => sheetStreamController.add(true);
 
   launchChat() {
     try {
@@ -81,7 +83,8 @@ class DetailScreenViewModel {
 
   navigateToCreateScreen() {
     assert(documentReference != null);
-    Navigator.of(context)
-        .pushReplacement(CreatePopupRoute(documentReference: documentReference),);
+    Navigator.of(context).pushReplacement(
+      CreatePopupRoute(documentReference: documentReference),
+    );
   }
 }
