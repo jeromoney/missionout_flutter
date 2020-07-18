@@ -7,14 +7,15 @@ class ResponseSheet extends StatelessWidget {
   static const String routeName = "/responseScreen";
 
   @override
-  Widget build(BuildContext context) => Card(child: _BuildResponseStream(),);
+  Widget build(BuildContext context) => Card(
+        child: _BuildResponseStream(),
+      );
 }
 
 class _BuildResponseStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final model = ResponseSheetViewModel(context: context);
-
+    final model = ResponseSheetViewModel(context);
     return StreamBuilder<Tuple2<Response, List<Response>>>(
       stream: model.responses(),
       builder: (context, snapshot) {
@@ -25,14 +26,14 @@ class _BuildResponseStream extends StatelessWidget {
 
         // error
         if (snapshot.data == null) {
-          return Text('There was an error.');
+          return Center(child: Text('There was an error.'), widthFactor: 2.0, heightFactor: 5.0,);
         }
 
         final responses = snapshot.data;
 
         // no results
         if (responses.item1 == null && responses.item2.length == 0) {
-          return Center(child: Text('No responses yet.'));
+          return Center(child: Text('No responses yet.'), widthFactor: 2.0, heightFactor: 5.0,);
         }
 
         // success

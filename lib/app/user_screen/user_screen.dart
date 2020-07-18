@@ -18,7 +18,7 @@ class UserScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context, listen: true);
+    final user = context.watch<User>();
     displayNameController.text = user.displayName;
     final phoneNumberHolder =
         PhoneNumberHolder(user.mobilePhoneNumber, user.voicePhoneNumber);
@@ -109,9 +109,8 @@ class _SubmitButtonState extends State<_SubmitButton> {
       setState(() {
         _buttonState = _ButtonState.processing;
       });
-      final user = Provider.of<User>(context, listen: false);
-      final phoneNumberHolder =
-          Provider.of<PhoneNumberHolder>(context, listen: false);
+      final user = context.read<User>();
+      final phoneNumberHolder = context.read<PhoneNumberHolder>();
       final futures = <Future>[];
       try {
         // Ensure that both async functions are called before the await

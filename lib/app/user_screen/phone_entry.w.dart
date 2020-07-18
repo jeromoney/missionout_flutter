@@ -15,8 +15,8 @@ class _PhoneEntryState extends State<PhoneEntry> {
   @override
   void initState() {
     super.initState();
-    final user = Provider.of<User>(context, listen: false);
-    final phoneType = Provider.of<PhoneNumberType>(context, listen: false);
+    final user = context.read<User>();
+    final phoneType = context.read<PhoneNumberType>();
     switch (phoneType)
       {case PhoneNumberType.mobile:
       _phoneEntryVisible = user.mobilePhoneNumber != null;
@@ -39,7 +39,7 @@ class _PhoneEntryState extends State<PhoneEntry> {
       child: Column(
         children: <Widget>[
           CheckboxListTile(
-            title: Text((Provider.of<PhoneNumberType>(context, listen: false) ==
+            title: Text((context.read<PhoneNumberType>() ==
                 PhoneNumberType.mobile)
                 ? 'Receive mobile pages'
                 : 'Receive voice calls'),
@@ -68,8 +68,8 @@ class _MyInternationalPhoneNumberInputState
 
   @override
   Widget build(BuildContext context) {
-    _phoneType = Provider.of<PhoneNumberType>(context, listen: false);
-    _phoneNumberHolder = Provider.of<PhoneNumberHolder>(context, listen: false);
+    _phoneType = context.read<PhoneNumberType>();
+    _phoneNumberHolder = context.read<PhoneNumberHolder>();
 
     String labelText;
     String hintText;

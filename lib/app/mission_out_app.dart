@@ -45,7 +45,7 @@ class _MissionOutAppState extends State<MissionOutApp> {
           break;
 
         case AppStatus.signedIn:
-          final user = Provider.of<User>(context, listen: false);
+          final user = context.watch<User>();
           if (user == null)
             _initialScreen = SignOutScreen();
           else
@@ -114,7 +114,7 @@ class _SignOutScreenState extends State<SignOutScreen> {
             "Sign up with a different email address or contact your administrator for help",
         defaultActionText: Strings.ok,
       ).show(navKey.currentState.overlay.context);
-      final authService = Provider.of<AuthService>(context, listen: false);
+      final authService = context.read<AuthService>();
       authService.signOut();
     });
   }

@@ -35,7 +35,7 @@ class FCMMessageHandler {
     });
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
-        final navKey = Provider.of<GlobalNavigatorKey>(context, listen: false).navKey;
+        final navKey = context.read<GlobalNavigatorKey>().navKey;
         _log.info("Received onMessage message");
         final notification = FCMMessage.fromMessage(message);
         PlatformAlertDialog(

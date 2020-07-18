@@ -28,23 +28,24 @@ class DetailScreen extends StatelessWidget {
   static const String routeName = "/detailScreen";
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return ChangeNotifierProvider<ResponseSheetController>(
-        create: (_) => ResponseSheetController(),
-        child: _ControllerConsumer(),
-      );}
+      create: (_) => null,
+      child: _ControllerConsumer(),
+    );
+  }
 }
 
 // The onTap method needs a new context below the provider
 class _ControllerConsumer extends StatefulWidget {
   final Widget _detailScreen = _DetailScreenState();
-
   @override
   __ControllerConsumerState createState() => __ControllerConsumerState();
 }
 
 class __ControllerConsumerState extends State<_ControllerConsumer> {
   DetailScreenViewModel _model;
+  int _widgetIndex = 0;
 
   Widget get showResponsesWidget => Stack(children: <Widget>[
         widget._detailScreen,
@@ -61,9 +62,45 @@ class __ControllerConsumerState extends State<_ControllerConsumer> {
         ),
       ]);
 
+  showResponseSheet(){
+    setState(() {
+      _widgetIndex = 1;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     _model = DetailScreenViewModel(context: context);
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _widgetIndex = 0;
+        });
+      },
+      child: IndexedStack(
+        index: _widgetIndex,
+        children: <Widget>[
+          widget._detailScreen,
+          Stack(
+            children: <Widget>[
+              widget._detailScreen,
+              ClipRect(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaY: BLUR, sigmaX: BLUR),
+                  child: Container(
+                    color: Colors.black.withOpacity(0),
+                  ),
+                ),
+              ),
+              IgnorePointer(
+                child: Center(child: ResponseSheet()),
+              )
+            ],
+          )
+        ],
+      ),
+    );
+
     return Consumer<ResponseSheetController>(
       builder: (_, controller, __) => GestureDetector(
           child: Builder(
@@ -72,7 +109,7 @@ class __ControllerConsumerState extends State<_ControllerConsumer> {
               return Stack(children: <Widget>[
                 widget._detailScreen,
                 showResponseSheet
-                    ?  ClipRect(
+                    ? ClipRect(
                         child: BackdropFilter(
                           filter: ImageFilter.blur(sigmaY: BLUR, sigmaX: BLUR),
                           child: Container(

@@ -39,7 +39,7 @@ class _LogInScreenState extends State<LogInScreen> {
 
   void _setEmailField() async {
     final String email =
-        await Provider.of<EmailSecureStore>(context, listen: false)
+        await context.read<EmailSecureStore>()
             .getEmail()
             .catchError((e) {
       widget._log.warning("Error retrieving saved email: $e");
@@ -53,11 +53,11 @@ class _LogInScreenState extends State<LogInScreen> {
     final bool darkMode =
         MediaQuery.of(context).platformBrightness == Brightness.dark;
     final appleSignInAvailable =
-        Provider.of<AppleSignInAvailable>(context, listen: false);
-    final signInManager = Provider.of<SignInManager>(context, listen: false);
-    final authService = Provider.of<AuthService>(context, listen: false);
+    context.read<AppleSignInAvailable>();
+    final signInManager = context.read<SignInManager>();
+    final authService = context.read<AuthService>();
 
-    _linkHandler = Provider.of<FirebaseLinkHandler>(context, listen: false);
+    _linkHandler = context.read<FirebaseLinkHandler>();
 
     return GestureDetector(
       onHorizontalDragUpdate: (details){

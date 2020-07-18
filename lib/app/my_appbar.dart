@@ -17,7 +17,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context);
+    final user = context.watch<User>();
     final photoURLAvailable = user.photoUrl != null;
     return AppBar(title: Text(title), actions: <Widget>[
       photoURLAvailable
@@ -48,8 +48,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ).show(context);
                 if (didRequestSignOut) {
                   // tell User to sign out
-                  final authService =
-                  Provider.of<AuthService>(context, listen: false);
+                  final authService = context.read<AuthService>();
                   authService.signOut();
                 }
               }

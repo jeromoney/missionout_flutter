@@ -33,7 +33,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     _domain = ModalRoute.of(context).settings.arguments;
     _darkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
-    final signInManager = Provider.of<SignInManager>(context, listen: false);
+    final signInManager = context.read<SignInManager>();
     return GestureDetector(
       onHorizontalDragUpdate: (details) {
         if (details.delta.dx > 0) Navigator.of(context).pop();
@@ -135,8 +135,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Future _sendEmailLink() async {
     if (!widget._formKey.currentState.validate()) return;
-    final linkHandler =
-        Provider.of<FirebaseLinkHandler>(context, listen: false);
+    final linkHandler = context.read<FirebaseLinkHandler>();
     final email = "${widget._emailController.text}@$_domain";
 
     if (!_showPasswordField) {
@@ -161,7 +160,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             .show(context);
       }
     } else {
-      final authService = Provider.of<AuthService>(context, listen: false);
+      final authService = context.read<AuthService>();
       try {
         await authService.createUserWithEmailAndPassword(
             email, widget._passwordController.text);

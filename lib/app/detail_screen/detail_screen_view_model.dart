@@ -31,7 +31,7 @@ class DetailScreenViewModel {
   Stream<Mission> fetchSingleMission() =>
       team.fetchSingleMission(documentReference: documentReference);
 
-  displayResponseSheet() => responseSheetController.showResponseSheet = true;
+  displayResponseSheet() {}//responseSheetController.showResponseSheet = true;
 
   hideResponseSheet() => responseSheetController.showResponseSheet = false;
 

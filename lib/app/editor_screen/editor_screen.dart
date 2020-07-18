@@ -33,7 +33,7 @@ class EditorOptionsForm extends StatefulWidget {
 class EditorOptionsFormState extends State<EditorOptionsForm> {
   @override
   Widget build(BuildContext context) {
-    final team = Provider.of<Team>(context);
+    final team = context.watch<Team>();
     final _formKey = GlobalKey<FormState>();
     final chatURIController = TextEditingController();
     chatURIController.text = team.chatURI;

@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:missionout/app/auth_widget_builder.dart';
 import 'package:missionout/app/create_screen/create_screen.dart';
 import 'package:missionout/app/detail_screen/detail_screen.dart';
 import 'package:missionout/data_objects/mission.dart';
@@ -14,9 +13,9 @@ class OverviewScreenModel {
   final Team team;
   final User user;
 
-  OverviewScreenModel({@required this.context})
-      : this.team = Provider.of<Team>(context),
-        this.user = Provider.of<User>(context);
+  OverviewScreenModel(this.context)
+      : this.team = context.watch<Team>(),
+        this.user = context.watch<User>();
 
   bool get isEditor => user?.isEditor;
 

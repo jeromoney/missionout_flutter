@@ -15,9 +15,9 @@ class ResponseSheetViewModel {
   final DocumentReference _documentReference;
   final User _user;
 
-  ResponseSheetViewModel({@required this.context})
-      : this._team = Provider.of<Team>(context),
-        this._user = Provider.of<User>(context),
+  ResponseSheetViewModel(this.context)
+      : this._team = context.watch<Team>(),
+        this._user = context.watch<User>(),
         this._documentReference = (ModalRoute.of(context).settings.arguments as MissionAddressArguments).reference;
 
   Stream<Tuple2<Response, List<Response>>> responses() {

@@ -36,7 +36,7 @@ class TeamSubmitRaisedButtonState extends State<TeamSubmitRaisedButton> {
             Scaffold.of(context)
                 .showSnackBar(SnackBar(content: Text('Processing Data')));
             try {
-              final team = Provider.of<Team>(context, listen: false);
+              final team = context.read<Team>();
               await team.updateChatURI(chatURIController.text);
               Scaffold.of(context).hideCurrentSnackBar();
 

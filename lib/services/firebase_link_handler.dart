@@ -38,8 +38,7 @@ class FirebaseLinkHandler {
   }
 
   Future<void> _signInWithEmail(String link) async {
-    final isLoadingProvider =
-        Provider.of<IsLoadingNotifier>(context, listen: false);
+    final isLoadingProvider = context.read<IsLoadingNotifier>();
     try {
       isLoadingProvider.isLoading = true;
       // check that user is not signed in

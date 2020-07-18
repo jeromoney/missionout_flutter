@@ -10,7 +10,7 @@ class OverviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = OverviewScreenModel(context: context);
+    final model = OverviewScreenModel(context);
     if (model.user == null) return LinearProgressIndicator();
     return Scaffold(
         key: Key("Overview Screen"),
@@ -28,7 +28,7 @@ class OverviewScreen extends StatelessWidget {
 class BuildMissionStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final model = OverviewScreenModel(context: context);
+    final model = OverviewScreenModel(context);
     if (model.team == null) return LinearProgressIndicator();
 
     return StreamBuilder<List<Mission>>(
@@ -79,7 +79,7 @@ class _BuildMissionResultsState extends State<BuildMissionResults> {
 
   @override
   Widget build(BuildContext context) {
-    model = OverviewScreenModel(context: context);
+    model = OverviewScreenModel(context);
     return ListView.separated(
         itemBuilder: (BuildContext context, int index) {
           final mission = widget.missions[index];
