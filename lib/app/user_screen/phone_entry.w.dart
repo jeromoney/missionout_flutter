@@ -39,7 +39,7 @@ class _PhoneEntryState extends State<PhoneEntry> {
       child: Column(
         children: <Widget>[
           CheckboxListTile(
-            title: Text((context.read<PhoneNumberType>() ==
+            title: Text((context.watch<PhoneNumberType>() ==
                 PhoneNumberType.mobile)
                 ? 'Receive mobile pages'
                 : 'Receive voice calls'),
@@ -68,8 +68,8 @@ class _MyInternationalPhoneNumberInputState
 
   @override
   Widget build(BuildContext context) {
-    _phoneType = context.read<PhoneNumberType>();
-    _phoneNumberHolder = context.read<PhoneNumberHolder>();
+    _phoneType = context.watch<PhoneNumberType>();
+    _phoneNumberHolder = context.watch<PhoneNumberHolder>();
 
     String labelText;
     String hintText;
