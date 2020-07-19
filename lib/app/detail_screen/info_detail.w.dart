@@ -20,9 +20,10 @@ class InfoDetail extends StatelessWidget {
     // success
     final Mission mission = snapshot.data;
     String locationAndTime;
-    if (mission.time != null && mission.locationDescription != null)
+    if (mission.locationDescription != null && mission.locationDescription != "")
       locationAndTime =
           "${mission.locationDescription} — ${mission.timeSincePresent()}";
+    else locationAndTime = mission.timeSincePresent();
     final strikeThroughStyle =
         TextStyle(decoration: TextDecoration.lineThrough);
     return Column(
