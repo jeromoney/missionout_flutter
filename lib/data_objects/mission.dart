@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firestore_annotations/firestore_annotations.dart';
 import 'package:flutter/material.dart';
+import 'package:time_ago_provider/time_ago_provider.dart' as timeAgo;
 
 part 'mission.g.dart';
 
@@ -18,9 +19,8 @@ class Mission {
   String address() => selfRef
       ?.documentID; // Tried a getter but there is a bug in firestore_annotations that doesn't allow the field to be ignored
 
-  String timeSincePresent() {
-    return null;
-  }
+  String timeSincePresent() =>
+      timeAgo.format(time.toDate(), locale: "en_long");
 
   const Mission({
     this.selfRef,

@@ -2,6 +2,7 @@ part of 'detail_screen.dart';
 
 class InfoDetail extends StatelessWidget {
   final AsyncSnapshot snapshot;
+
   const InfoDetail({Key key, this.snapshot}) : super(key: key);
 
   @override
@@ -18,48 +19,40 @@ class InfoDetail extends StatelessWidget {
 
     // success
     final Mission mission = snapshot.data;
-
+    String locationAndTime;
+    if (mission.time != null && mission.locationDescription != null)
+      locationAndTime =
+          "${mission.locationDescription} — ${mission.timeSincePresent()}";
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Baseline(
-          baseline: 44,
+            baseline: 24,
+            baselineType: TextBaseline.alphabetic,
+            child: Text(
+              locationAndTime,
+              style: Theme.of(context).textTheme.bodyText2,
+            )),
+        Baseline(
+          baseline: 32,
           baselineType: TextBaseline.alphabetic,
           child: Text(
             mission.description,
-            style: Theme.of(context).textTheme.headline,
+            style: Theme.of(context).textTheme.headline6,
           ),
         ),
         Baseline(
           baseline: 24,
           baselineType: TextBaseline.alphabetic,
           child: Text(
-            formatTime(mission.time) +
-                (mission.isStoodDown ? ' stood down' : ''),
-            style: Theme.of(context).textTheme.subtitle,
-          ),
-        ),
-        Baseline(
-            baseline: 32,
-            baselineType: TextBaseline.alphabetic,
-            child: Text(
-              mission.locationDescription,
-              style: Theme.of(context).textTheme.headline
-              ,
-            )),
-        Baseline(
-          baseline: 26,
-          baselineType: TextBaseline.alphabetic,
-          child: Text(
             mission.needForAction,
             style: mission.isStoodDown
                 ? TextStyle(decoration: TextDecoration.lineThrough)
-                : Theme.of(context).textTheme.body1,
+                : Theme.of(context).textTheme.bodyText1,
           ),
         ),
       ],
     );
   }
 }
-
