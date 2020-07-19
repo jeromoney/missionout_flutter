@@ -41,7 +41,7 @@ class Mission {
   })  : this.time = null,
         this.selfRef = null;
 
-  Mission clone({
+  Mission copyWith({
     DocumentReference selfRef,
     String description,
     GeoPoint location,

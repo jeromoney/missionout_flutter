@@ -10,7 +10,6 @@ import 'package:missionout/services/user/user.dart';
 import 'package:missionout/data_objects/page.dart' as missionpage;
 import 'package:provider/provider.dart';
 
-
 class CreateSheetModel {
   final BuildContext context;
   final Team _team;
@@ -30,9 +29,7 @@ class CreateSheetModel {
 
   editMission({@required Mission mission}) async {
     final reference = await _team.addMission(mission: mission);
-    final MissionAddressArguments arguments =
-        MissionAddressArguments(reference);
-    Navigator.pushNamed(context, DetailScreen.routeName, arguments: arguments);
+    _navigateToDetail(reference);
   }
 
   Future addMission({@required Mission mission}) async {
@@ -42,7 +39,7 @@ class CreateSheetModel {
       // there was an error adding mission to database
       throw HttpException("Error adding mission to database");
     }
-    final referencedMission = mission.clone(selfRef: reference);
+    final referencedMission = mission.copyWith(selfRef: reference);
 
     // send page to editors only
     final page = missionpage.Page.fromMission(
@@ -50,8 +47,14 @@ class CreateSheetModel {
         mission: referencedMission,
         onlyEditors: true);
     _team.addPage(page: page);
+    _navigateToDetail(reference);
+  }
+
+  _navigateToDetail(DocumentReference reference) {
+    assert(reference != null);
     final MissionAddressArguments arguments =
         MissionAddressArguments(reference);
+    assert(arguments?.reference != null);
     Navigator.pushNamed(context, DetailScreen.routeName, arguments: arguments);
   }
 

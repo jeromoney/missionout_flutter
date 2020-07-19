@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:missionout/app/detail_screen/detail_screen_view_model.dart';
 import 'package:missionout/constants/strings.dart';
 import 'package:missionout/common_widgets/platform_alert_dialog.dart';
+import 'package:missionout/data_objects/mission_address_arguments.dart';
 import 'package:provider/provider.dart';
 
 import 'package:missionout/data_objects/mission.dart';
 import 'package:missionout/data_objects/response.dart';
 import 'package:missionout/app/my_appbar.dart';
 import 'package:missionout/app/response_sheet/response_sheet.dart';
-import 'package:missionout/utils.dart';
 import 'package:missionout/data_objects/page.dart' as missionpage;
 
 part 'actions_detail.w.dart';
@@ -27,6 +27,9 @@ class DetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final arguments = (ModalRoute.of(context).settings.arguments
+    as MissionAddressArguments);
+    assert(arguments?.reference != null);
     return Provider<StreamController<bool>>(
       create: (_) => StreamController<bool>(),
       child: _StreamConsumer(),

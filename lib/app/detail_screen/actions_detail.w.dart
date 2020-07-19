@@ -2,13 +2,11 @@ part of 'detail_screen.dart';
 
 class ActionsDetail extends StatelessWidget {
   final AsyncSnapshot snapshot;
-
   const ActionsDetail({Key key, this.snapshot}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final model = DetailScreenViewModel(context);
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -71,8 +69,7 @@ class _ResponseOptionsState extends State<ResponseOptions> {
   List<String> responseChips = Response.RESPONSES;
 
   getInitialResponseState() async {
-    if (_value == null)
-    {
+    if (_value == null) {
       _value = await _model.getCurrentlySelectedResponse();
       setState(() {});
     }

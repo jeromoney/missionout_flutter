@@ -52,7 +52,7 @@ class _SubmitMissionButtonState extends State<SubmitMissionButton> {
       );
     } else {
       // update existing mission
-      myMission = widget.mission.clone(
+      myMission = widget.mission.copyWith(
         description: description,
         needForAction: needForAction,
         locationDescription: locationDescription,
@@ -75,18 +75,16 @@ class _SubmitMissionButtonState extends State<SubmitMissionButton> {
           final myMission = _fetchMission();
 
           try {
-            await _model.addMission(mission: myMission);
+            if (_model.isEditExistingMission)
+              await _model.editMission(mission: myMission);
+            else
+              await _model.addMission(mission: myMission);
           } on HttpException {
             Scaffold.of(context).showSnackBar(SnackBar(
               content: Text('Error uploading mission'),
             ));
             return;
           }
-
-          Navigator.pushReplacementNamed(
-            context,
-            DetailScreen.routeName,
-          );
         }
       },
     );

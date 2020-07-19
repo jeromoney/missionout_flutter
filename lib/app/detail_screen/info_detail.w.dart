@@ -23,6 +23,8 @@ class InfoDetail extends StatelessWidget {
     if (mission.time != null && mission.locationDescription != null)
       locationAndTime =
           "${mission.locationDescription} — ${mission.timeSincePresent()}";
+    final strikeThroughStyle =
+        TextStyle(decoration: TextDecoration.lineThrough);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -32,14 +34,21 @@ class InfoDetail extends StatelessWidget {
             baselineType: TextBaseline.alphabetic,
             child: Text(
               locationAndTime,
-              style: Theme.of(context).textTheme.bodyText2,
+              style: mission.isStoodDown
+                  ? Theme.of(context).textTheme.bodyText2.merge(strikeThroughStyle)
+                  : Theme.of(context).textTheme.bodyText2,
             )),
         Baseline(
           baseline: 32,
           baselineType: TextBaseline.alphabetic,
           child: Text(
             mission.description,
-            style: Theme.of(context).textTheme.headline6,
+            style: mission.isStoodDown
+                ? Theme.of(context)
+                    .textTheme
+                    .headline6
+                    .merge(strikeThroughStyle)
+                : Theme.of(context).textTheme.headline6,
           ),
         ),
         Baseline(
@@ -48,7 +57,10 @@ class InfoDetail extends StatelessWidget {
           child: Text(
             mission.needForAction,
             style: mission.isStoodDown
-                ? TextStyle(decoration: TextDecoration.lineThrough)
+                ? Theme.of(context)
+                    .textTheme
+                    .bodyText1
+                    .merge(strikeThroughStyle)
                 : Theme.of(context).textTheme.bodyText1,
           ),
         ),

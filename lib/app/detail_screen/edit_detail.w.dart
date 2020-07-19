@@ -63,7 +63,7 @@ class _EditDetailState extends State<EditDetail> {
                     child: Text(
                         mission.isStoodDown ? '(un)Standown' : 'Stand down'),
                     onPressed: () {
-                      final newMission = mission.clone(isStoodDown: !mission.isStoodDown);
+                      final newMission = mission.copyWith(isStoodDown: !mission.isStoodDown);
                       _model.standDownMission(
                         mission: newMission,
                       );
