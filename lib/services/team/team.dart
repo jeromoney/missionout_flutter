@@ -20,6 +20,8 @@ abstract class Team {
 
   Stream<List<Response>> fetchResponses({@required DocumentReference documentReference});
 
+  Future<Response> fetchUserResponse({@required DocumentReference documentReference, @required String uid});
+
   Future<dynamic> addMission({@required Mission mission});
 
   void standDownMission({@required Mission mission});
@@ -30,7 +32,6 @@ abstract class Team {
   });
 
   Future updateChatURI(String chatURIVal);
-
 
   addResponse({
     @required Response response,

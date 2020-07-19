@@ -22,7 +22,7 @@ class DetailScreenViewModel {
   final User user;
   final StreamController<bool> sheetStreamController;
 
-  DetailScreenViewModel({@required this.context})
+  DetailScreenViewModel(this.context)
       : this.team = context.watch<Team>(),
         this.user = context.watch<User>(),
         this.documentReference = (ModalRoute.of(context).settings.arguments
@@ -86,5 +86,11 @@ class DetailScreenViewModel {
     Navigator.of(context).pushReplacement(
       CreatePopupRoute(documentReference: documentReference),
     );
+  }
+
+   Future<int> getCurrentlySelectedResponse() async {
+    final response = await team.fetchUserResponse(documentReference: documentReference, uid: user.uid);
+    if (response == null) return -1;
+    return Response.RESPONSES.indexOf(response.status);
   }
 }

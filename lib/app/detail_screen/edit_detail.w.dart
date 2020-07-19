@@ -11,7 +11,7 @@ class _EditDetailState extends State<EditDetail> {
   DetailScreenViewModel _model;
   @override
   Widget build(BuildContext context) {
-    _model = DetailScreenViewModel(context: context);
+    _model = DetailScreenViewModel(context);
     // waiting
     if (widget.snapshot.connectionState == ConnectionState.waiting) {
       return LinearProgressIndicator();

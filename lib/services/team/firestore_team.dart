@@ -22,10 +22,9 @@ class FirestoreTeam implements Team {
   @FirestoreAttribute(nullable: false)
   final String name;
   @override
-   String chatURI;
+  String chatURI;
 
-  FirestoreTeam(
-      {@required this.teamID, @required this.name, this.chatURI})
+  FirestoreTeam({@required this.teamID, @required this.name, this.chatURI})
       : assert(teamID != null);
 
   static Future<FirestoreTeam> fromTeamID(String teamID) async {
@@ -38,7 +37,7 @@ class FirestoreTeam implements Team {
 
     final db = Firestore.instance;
     final DocumentSnapshot snapshot =
-        await db.collection('teams').document(teamID).get();
+    await db.collection('teams').document(teamID).get();
     return FirestoreTeam.fromSnapshot(snapshot);
   }
 
@@ -71,13 +70,23 @@ class FirestoreTeam implements Team {
   }
 
   @override
-  Stream<List<Response>> fetchResponses({@required DocumentReference documentReference}) {
+  Future<Response> fetchUserResponse(
+      {@required DocumentReference documentReference, @required String uid}) async {
+    final snapshot = await _db.document("${documentReference.path}/responses/$uid").get();
+    if (snapshot.data == null) return null;
+    return Response.fromSnapshot(snapshot);
+  }
+
+  @override
+  Stream<List<Response>> fetchResponses(
+      {@required DocumentReference documentReference}) {
     final ref = _db
         .collection('${documentReference.path}/responses')
         .orderBy('status', descending: true);
-    return ref.snapshots().map((snapShots) => snapShots.documents
-        .map((data) => Response.fromSnapshot(data))
-        .toList());
+    return ref.snapshots().map((snapShots) =>
+        snapShots.documents
+            .map((data) => Response.fromSnapshot(data))
+            .toList());
   }
 
   // firestore writes
@@ -86,8 +95,6 @@ class FirestoreTeam implements Team {
   Future updateChatURI(String chatURIVal) async {
     await _db.document('teams/$teamID').updateData({
       'chatURI': chatURIVal,
-    }).catchError((error) {
-      throw error;
     });
     chatURI = chatURIVal;
   }
@@ -125,7 +132,7 @@ class FirestoreTeam implements Team {
     @required String uid,
   }) async {
     DocumentReference document =
-        _db.collection('teams/$teamID/missions/$docID/responses').document(uid);
+    _db.collection('teams/$teamID/missions/$docID/responses').document(uid);
     if (response != null) {
       await document.setData(response.toJson());
     } else {

@@ -7,7 +7,7 @@ class ActionsDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = DetailScreenViewModel(context: context);
+    final model = DetailScreenViewModel(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -70,9 +70,18 @@ class _ResponseOptionsState extends State<ResponseOptions> {
   int _value;
   List<String> responseChips = Response.RESPONSES;
 
+  getInitialResponseState() async {
+    if (_value == null)
+    {
+      _value = await _model.getCurrentlySelectedResponse();
+      setState(() {});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    _model = DetailScreenViewModel(context: context);
+    _model = DetailScreenViewModel(context);
+    getInitialResponseState();
     return Wrap(
       spacing: 8.0, // gap between adjacent chips
       runSpacing: 4.0, // gap between lines
@@ -91,9 +100,8 @@ class _ResponseOptionsState extends State<ResponseOptions> {
                           : _model.displayName,
                   status: responseChips[index]);
             }
-
+            _model.addResponse(response: response);
             setState(() {
-              _model.addResponse(response: response);
               _value = selected ? index : null;
             });
           },

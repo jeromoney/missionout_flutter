@@ -36,7 +36,7 @@ class DetailScreen extends StatelessWidget {
 
 // The onTap method needs a new context below the provider
 class _StreamConsumer extends StatefulWidget {
-  final Widget _detailScreen = _DetailScreenState();
+  final Widget _detailScreen = _DetailScreenBuild();
 
   @override
   _StreamConsumerState createState() => _StreamConsumerState();
@@ -88,7 +88,7 @@ class _StreamConsumerState extends State<_StreamConsumer> {
 
   @override
   Widget build(BuildContext context) {
-    _model = DetailScreenViewModel(context: context);
+    _model = DetailScreenViewModel(context);
     return GestureDetector(
       onTap: _model.hideResponseSheet,
       child: IndexedStack(
@@ -117,7 +117,7 @@ class _StreamConsumerState extends State<_StreamConsumer> {
   }
 }
 
-class _DetailScreenState extends StatelessWidget {
+class _DetailScreenBuild extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
       appBar: MyAppBar(
@@ -158,7 +158,7 @@ class _DetailScreenStreamWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = DetailScreenViewModel(context: context);
+    final model = DetailScreenViewModel(context);
 
     return StreamBuilder<Mission>(
         stream: model.fetchSingleMission(),
