@@ -7,12 +7,13 @@ import 'package:flutter/foundation.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:logging/logging.dart';
 
+import 'package:missionout/data_objects/phone_number_record.dart';
 import 'package:missionout/services/user/user.dart';
 
 const RETRY_COUNT = 5;
 const RETRY_WAIT = 3; // seconds
 
-class MyFirebaseUser with ChangeNotifier implements User  {
+class MyFirebaseUser with ChangeNotifier implements User {
   // Values from FirebaseUser
   FirebaseUser firebaseUser;
 
@@ -180,4 +181,32 @@ class MyFirebaseUser with ChangeNotifier implements User  {
     notifyListeners();
   }
 
+  @override
+  Future<List<PhoneNumberRecord>> fetchPhoneNumbers() async {
+    final ref = await _db
+        .collection('teams/$teamID/phoneNumbers')
+        .where("uid", isEqualTo: uid)
+        .getDocuments();
+    return ref.documents
+        .map((snapshot) => PhoneNumberRecord.fromSnapshot(snapshot))
+        .where((phoneNumberRecord) => phoneNumberRecord != null)
+        .toList();
+  }
+
+  @override
+  Future addPhoneNumber(PhoneNumberRecord phoneNumberRecord) async {
+    assert(phoneNumberRecord.uid == uid);
+    await _db
+        .collection('teams/$teamID/phoneNumbers')
+        .document()
+        .setData(phoneNumberRecord.toMap());
+  }
+
+  @override
+  Future<List<PhoneNumberRecord>> deletePhoneNumber(PhoneNumberRecord phoneNumberRecord) async {
+    final documentReference = phoneNumberRecord.selfRef;
+    assert(documentReference != null);
+    await documentReference.delete();
+    return fetchPhoneNumbers();
+  }
 }

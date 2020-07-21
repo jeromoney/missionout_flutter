@@ -59,6 +59,7 @@ class CreateSheetModel {
   }
 
   Future<Mission> getCurrentMission() async {
+    if (!isEditExistingMission) return Future(null);
     return await _team
         .fetchSingleMission(documentReference: _documentReference)
         .first;

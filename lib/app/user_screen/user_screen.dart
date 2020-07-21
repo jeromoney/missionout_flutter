@@ -1,61 +1,63 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-import 'package:missionout/common_widgets/platform_alert_dialog.dart';
-import 'package:provider/provider.dart';
 
+import 'package:missionout/app/user_screen/user_screen_model.dart';
+import 'package:missionout/data_objects/phone_number_record.dart';
 import 'package:missionout/constants/strings.dart';
-import 'package:missionout/data_objects/phone_number_holder.dart';
-import 'package:missionout/services/user/user.dart';
 
 import 'package:missionout/app/my_appbar.dart';
 
-part 'phone_entry.w.dart';
-
-class UserScreen extends StatelessWidget {
+class UserScreen extends StatefulWidget {
   static const routeName = "/userScreen";
+
+  @override
+  _UserScreenState createState() => _UserScreenState();
+}
+
+class _UserScreenState extends State<UserScreen> {
   final displayNameController = TextEditingController();
+
+  UserScreenModel _model;
 
   @override
   Widget build(BuildContext context) {
-    final user = context.watch<User>();
-    displayNameController.text = user.displayName;
-    final phoneNumberHolder =
-        PhoneNumberHolder(user.mobilePhoneNumber, user.voicePhoneNumber);
-    return Provider<PhoneNumberHolder>(
-      create: (_) => phoneNumberHolder,
-      child: Scaffold(
-          appBar: MyAppBar(title: Strings.userScreenTitle),
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Form(
-                  child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Text(user.email ?? Strings.anonymousEmail),
-                  Consumer<User>(builder: (_, user, __) => Text(user.displayName ?? Strings.anonymousName),),
-                  TextFormField(
-                    controller: displayNameController,
-                    inputFormatters: [LengthLimitingTextInputFormatter(100)],
-                    decoration: InputDecoration(
-                      labelText: "Name",
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  Provider<PhoneNumberType>(
-                    create: (_) => PhoneNumberType.mobile,
-                    child: PhoneEntry(),
-                  ),
-                  Provider<PhoneNumberType>(
-                    create: (_) => PhoneNumberType.voice,
-                    child: PhoneEntry(),
-                  ),
-                  _SubmitButton(displayNameController),
-                ],
-              )),
-            ),
+    _model = UserScreenModel(context);
+
+    displayNameController.text = _model.user.displayName;
+
+    return Scaffold(
+      appBar: MyAppBar(title: Strings.userScreenTitle),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Form(
+              child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(_model.user.email ?? Strings.anonymousEmail),
+              Text(_model.user.displayName ?? Strings.anonymousName),
+              TextFormField(
+                controller: displayNameController,
+                inputFormatters: [LengthLimitingTextInputFormatter(100)],
+                decoration: InputDecoration(
+                  labelText: "Name",
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              _SubmitButton(displayNameController),
+              PhoneNumberList(),
+            ],
           )),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          _model.addPhoneNumber(null);
+        },
+      ),
     );
   }
 }
@@ -105,49 +107,109 @@ class _SubmitButtonState extends State<_SubmitButton> {
   }
 
   _submitUpdate() async {
-    if (Form.of(context).validate()) {
-      setState(() {
-        _buttonState = _ButtonState.processing;
-      });
-      final user = context.read<User>();
-      final phoneNumberHolder = context.read<PhoneNumberHolder>();
-      final futures = <Future>[];
-      try {
-        // Ensure that both async functions are called before the await
-        if (user.mobilePhoneNumber != phoneNumberHolder.mobilePhoneNumber) {
-          futures.add(user.updatePhoneNumber(
-              phoneNumber: phoneNumberHolder.mobilePhoneNumber,
-              type: PhoneNumberType.mobile));
-        }
-        if (user.voicePhoneNumber != phoneNumberHolder.voicePhoneNumber) {
-          futures.add(user.updatePhoneNumber(
-              phoneNumber: phoneNumberHolder.voicePhoneNumber,
-              type: PhoneNumberType.voice));
-        }
-        if (user.displayName != widget.displayNameController.text){
-          futures.add(user.updateDisplayName(
-              displayName: widget.displayNameController.text));
-        }
-        await Future.wait(futures);
-      } on Exception catch (e) {
-        PlatformAlertDialog(
-          title: "Error",
-          content: Strings.errorPhoneSubmission,
-          defaultActionText: Strings.ok,
-        ).show(context);
-        setState(() {
-          _buttonState = _ButtonState.idle;
-        });
-        return;
-      }
+//    if (Form.of(context).validate()) {
+//      setState(() {
+//        _buttonState = _ButtonState.processing;
+//      });
+//      final phoneNumberHolder = context.read<PhoneNumberHolder>();
+//      final futures = <Future>[];
+//      try {
+//        // Ensure that both async functions are called before the await
+//        if (user.mobilePhoneNumber != phoneNumberHolder.mobilePhoneNumber) {
+//          futures.add(user.updatePhoneNumber(
+//              phoneNumber: phoneNumberHolder.mobilePhoneNumber,
+//              type: PhoneNumberType.mobile));
+//        }
+//        if (user.voicePhoneNumber != phoneNumberHolder.voicePhoneNumber) {
+//          futures.add(user.updatePhoneNumber(
+//              phoneNumber: phoneNumberHolder.voicePhoneNumber,
+//              type: PhoneNumberType.voice));
+//        }
+//        if (user.displayName != widget.displayNameController.text) {
+//          futures.add(user.updateDisplayName(
+//              displayName: widget.displayNameController.text));
+//        }
+//        await Future.wait(futures);
+//      } on Exception catch (e) {
+//        PlatformAlertDialog(
+//          title: "Error",
+//          content: Strings.errorPhoneSubmission,
+//          defaultActionText: Strings.ok,
+//        ).show(context);
+//        setState(() {
+//          _buttonState = _ButtonState.idle;
+//        });
+//        return;
+//      }
+//
+//      setState(() {
+//        _buttonState = _ButtonState.success;
+//      });
+//    } else {
+//      Scaffold.of(context).showSnackBar(SnackBar(
+//        content: Text(Strings.phoneNumberError),
+//      ));
+//    }
+  }
+}
 
-      setState(() {
-        _buttonState = _ButtonState.success;
-      });
-    } else {
-      Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text(Strings.phoneNumberError),
-      ));
-    }
+class PhoneNumberList extends StatefulWidget {
+  @override
+  _PhoneNumberListState createState() => _PhoneNumberListState();
+}
+
+class _PhoneNumberListState extends State<PhoneNumberList> {
+  UserScreenModel _model;
+  List<PhoneNumberRecord> _phoneNumbers;
+
+  @override
+  Widget build(BuildContext context) {
+    _model = UserScreenModel(context);
+
+    return FutureBuilder(
+        future: _model.fetchPhoneNumbers(),
+        builder: (_, snapshot) {
+          if (snapshot.hasError) return Text("Error");
+          if (snapshot.connectionState == ConnectionState.waiting)
+            return CircularProgressIndicator();
+          _phoneNumbers = snapshot.data;
+          if (_phoneNumbers == null || _phoneNumbers.length == 0)
+            return Text("No phone numbers. Add one now.");
+
+          return ListView.separated(
+              shrinkWrap: true,
+              itemBuilder: (_, index) {
+                final phoneNumberRecord = _phoneNumbers[index];
+                final phoneNumber = phoneNumberRecord.getPhoneNumber();
+                return Dismissible(
+                    direction: DismissDirection.startToEnd,
+                    onDismissed: (_) async {
+                      await _model.removePhoneNumberRecord(phoneNumberRecord);
+                      setState(() {
+                        _phoneNumbers.removeAt(index);
+                      });
+                    },
+                    key: UniqueKey(),
+                    background: Container(
+                      color: Colors.red,
+                      child: Icon(Icons.delete_forever),
+                    ),
+                    child: ListTile(
+                      title: FutureBuilder(
+                        future: PhoneNumber.getParsableNumber(phoneNumber),
+                        builder: (_, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) return Container();
+                          if (!snapshot.hasData)
+                            return Text("Error with phone number");
+                          return Text(snapshot.data);
+                        },
+                      ),
+                      subtitle: Text("ooga booga"),
+                    ));
+              },
+              separatorBuilder: (_, __) => Divider(),
+              itemCount: _phoneNumbers.length);
+        });
   }
 }

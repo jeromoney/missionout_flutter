@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 
 import 'package:missionout/app/create_sheet/create_sheet_model.dart';
 import 'package:missionout/data_objects/mission.dart';
-import 'package:missionout/app/detail_screen/detail_screen.dart';
 import 'package:missionout/app/my_appbar.dart';
 import 'package:missionout/core/lat_lon_input.w.dart';
 import 'package:provider/provider.dart';
@@ -49,95 +48,92 @@ class _MissionFormState extends State<_MissionForm> {
   final latitudeController = TextEditingController();
   final longitudeController = TextEditingController();
 
-  Mission _mission;
   CreateSheetModel _model;
-
-  getMission() async {
-    if (_model.isEditExistingMission)
-      _mission = await _model.getCurrentMission();
-    setState(() {});
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => getMission());
-  }
 
   @override
   Widget build(BuildContext context) {
     _model = CreateSheetModel(context);
     // set the value if editing an existing mission
-    if (_model.isEditExistingMission && _mission != null) {
-      descriptionController.text = _mission.description ?? '';
-      actionController.text = _mission.needForAction ?? '';
-      locationController.text = _mission.locationDescription ?? '';
-      final latValue = _mission.location?.latitude ?? '';
-      final lonValue = _mission.location?.longitude ?? '';
-      latitudeController.text = latValue.toString();
-      longitudeController.text = lonValue.toString();
-    }
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: Form(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  controller: descriptionController,
-                  decoration: InputDecoration(
-                      labelText: 'Description', border: OutlineInputBorder()),
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Description required';
-                    }
-                    return null;
-                  },
-                ),
+
+    return FutureBuilder(
+      future: _model.getCurrentMission(),
+      builder: (_, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) return CircularProgressIndicator();
+        if (snapshot.hasError) return Text("Error retrieving current mission");
+        final mission = snapshot.data;
+        if (mission != null) {
+          descriptionController.text = mission.description ?? '';
+          actionController.text = mission.needForAction ?? '';
+          locationController.text = mission.locationDescription ?? '';
+          final latValue = mission.location?.latitude ?? '';
+          final lonValue = mission.location?.longitude ?? '';
+          latitudeController.text = latValue.toString();
+          longitudeController.text = lonValue.toString();
+        }
+        return SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Form(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      controller: descriptionController,
+                      decoration: InputDecoration(
+                          labelText: 'Description',
+                          border: OutlineInputBorder()),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Description required';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      controller: actionController,
+                      decoration: InputDecoration(
+                          labelText: 'Need for action',
+                          border: OutlineInputBorder()),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      controller: locationController,
+                      decoration: InputDecoration(
+                          labelText: 'Location description',
+                          border: OutlineInputBorder()),
+                    ),
+                  ),
+                  LatLonInput(
+                    fieldDescription: 'GPS coordinates in Decimal Degrees',
+                    lonController: longitudeController,
+                    latController: latitudeController,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: 16.0,
+                    ),
+                    child: SubmitMissionButton(
+                      mission: mission,
+                      locationController: locationController,
+                      latitudeController: latitudeController,
+                      longitudeController: longitudeController,
+                      actionController: actionController,
+                      descriptionController: descriptionController,
+                    ),
+                  )
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  controller: actionController,
-                  decoration: InputDecoration(
-                      labelText: 'Need for action',
-                      border: OutlineInputBorder()),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  controller: locationController,
-                  decoration: InputDecoration(
-                      labelText: 'Location description',
-                      border: OutlineInputBorder()),
-                ),
-              ),
-              LatLonInput(
-                fieldDescription: 'GPS coordinates in Decimal Degrees',
-                lonController: longitudeController,
-                latController: latitudeController,
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                  top: 16.0,
-                ),
-                child: SubmitMissionButton(
-                  mission: _mission,
-                  locationController: locationController,
-                  latitudeController: latitudeController,
-                  longitudeController: longitudeController,
-                  actionController: actionController,
-                  descriptionController: descriptionController,
-                ),
-              )
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 

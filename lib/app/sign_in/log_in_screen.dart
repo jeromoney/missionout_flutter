@@ -36,7 +36,7 @@ class _LogInScreenState extends State<LogInScreen> {
     _emailController.text = "";
     _setEmailField();
   }
-
+ // TODO - refactor this with futurebuilder
   void _setEmailField() async {
     final String email =
         await context.read<EmailSecureStore>()
@@ -53,11 +53,11 @@ class _LogInScreenState extends State<LogInScreen> {
     final bool darkMode =
         MediaQuery.of(context).platformBrightness == Brightness.dark;
     final appleSignInAvailable =
-    context.read<AppleSignInAvailable>();
-    final signInManager = context.read<SignInManager>();
-    final authService = context.read<AuthService>();
+    context.watch<AppleSignInAvailable>();
+    final signInManager = context.watch<SignInManager>();
+    final authService = context.watch<AuthService>();
 
-    _linkHandler = context.read<FirebaseLinkHandler>();
+    _linkHandler = context.watch<FirebaseLinkHandler>();
 
     return GestureDetector(
       onHorizontalDragUpdate: (details){
