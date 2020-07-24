@@ -7,6 +7,7 @@ import 'package:missionout/app/sign_in/log_in_screen.dart';
 import 'package:missionout/app/sign_in/sign_up_screen.dart';
 import 'package:missionout/app/sign_in/team_domain_screen.dart';
 import 'package:missionout/app/sign_in/welcome_screen.dart';
+import 'package:missionout/app/user_edit_screen/user_edit_screen.dart';
 import 'package:missionout/app/user_screen/user_screen.dart';
 import 'package:missionout/common_widgets/platform_alert_dialog.dart';
 import 'package:missionout/constants/strings.dart';
@@ -71,6 +72,7 @@ class _MissionOutAppState extends State<MissionOutApp> {
         OverviewScreen.routeName: (context) => OverviewScreen(),
         EditorScreen.routeName: (context) => EditorScreen(),
         UserScreen.routeName: (context) => UserScreen(),
+        UserEditScreen.routeName: (context) => UserEditScreen(),
         DetailScreen.routeName: (context) => DetailScreen(),
         ResponseSheet.routeName: (context) => ResponseSheet(),
         // Sign In Screens

@@ -6,7 +6,7 @@ class ActionsDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = DetailScreenViewModel(context);
+    final model = DetailScreenModel(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -64,7 +64,7 @@ class ResponseOptions extends StatefulWidget {
 }
 
 class _ResponseOptionsState extends State<ResponseOptions> {
-  DetailScreenViewModel _model;
+  DetailScreenModel _model;
   int _value;
   List<String> responseChips = Response.RESPONSES;
 
@@ -77,7 +77,7 @@ class _ResponseOptionsState extends State<ResponseOptions> {
 
   @override
   Widget build(BuildContext context) {
-    _model = DetailScreenViewModel(context);
+    _model = DetailScreenModel(context);
     getInitialResponseState();
     return Wrap(
       spacing: 8.0, // gap between adjacent chips

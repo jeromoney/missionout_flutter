@@ -78,11 +78,10 @@ class Strings {
   static const String pageTeamConsequence = 'The entire team will be alerted.';
 
   // User Screen
-  static const String userScreenTitle = 'User Options';
+  static const String userScreenTitle = 'Profile';
   static const String phoneNumberError =
       'Please correct errors in phone numbers';
   static const String submit = 'Submit';
-  static const String sucessEmoji = '✔️';
   static const String anonymousName = 'anonymous';
   static const String anonymousEmail = 'unknown email';
   static const String errorPhoneSubmission = 'Error occurred while submitting phone number.';

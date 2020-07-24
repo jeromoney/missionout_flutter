@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:missionout/app/detail_screen/detail_screen_view_model.dart';
+import 'package:missionout/app/detail_screen/detail_screen_model.dart';
 import 'package:missionout/constants/strings.dart';
 import 'package:missionout/common_widgets/platform_alert_dialog.dart';
 import 'package:missionout/data_objects/mission_address_arguments.dart';
@@ -46,7 +46,7 @@ class _StreamConsumer extends StatefulWidget {
 }
 
 class _StreamConsumerState extends State<_StreamConsumer> {
-  DetailScreenViewModel _model;
+  DetailScreenModel _model;
   int _widgetIndex = 0;
   StreamSubscription _subscription;
 
@@ -91,7 +91,7 @@ class _StreamConsumerState extends State<_StreamConsumer> {
 
   @override
   Widget build(BuildContext context) {
-    _model = DetailScreenViewModel(context);
+    _model = DetailScreenModel(context);
     return GestureDetector(
       onTap: _model.hideResponseSheet,
       child: IndexedStack(
@@ -113,7 +113,7 @@ class _StreamConsumerState extends State<_StreamConsumer> {
                 child: Center(child: ResponseSheet()),
               )
             ],
-          )
+          ),
         ],
       ),
     );
@@ -161,7 +161,7 @@ class _DetailScreenStreamWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = DetailScreenViewModel(context);
+    final model = DetailScreenModel(context);
 
     return StreamBuilder<Mission>(
         stream: model.fetchSingleMission(),

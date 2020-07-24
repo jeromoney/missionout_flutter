@@ -182,15 +182,14 @@ class MyFirebaseUser with ChangeNotifier implements User {
   }
 
   @override
-  Future<List<PhoneNumberRecord>> fetchPhoneNumbers() async {
-    final ref = await _db
+  Stream<List<PhoneNumberRecord>> fetchPhoneNumbers() {
+    final ref = _db
         .collection('teams/$teamID/phoneNumbers')
-        .where("uid", isEqualTo: uid)
-        .getDocuments();
-    return ref.documents
-        .map((snapshot) => PhoneNumberRecord.fromSnapshot(snapshot))
+        .where("uid", isEqualTo: uid);
+    return ref.snapshots().map((snapShots) => snapShots.documents
+        .map((data) => PhoneNumberRecord.fromSnapshot(data))
         .where((phoneNumberRecord) => phoneNumberRecord != null)
-        .toList();
+        .toList());
   }
 
   @override
@@ -203,10 +202,10 @@ class MyFirebaseUser with ChangeNotifier implements User {
   }
 
   @override
-  Future<List<PhoneNumberRecord>> deletePhoneNumber(PhoneNumberRecord phoneNumberRecord) async {
+  Future deletePhoneNumber(
+      PhoneNumberRecord phoneNumberRecord) async {
     final documentReference = phoneNumberRecord.selfRef;
     assert(documentReference != null);
     await documentReference.delete();
-    return fetchPhoneNumbers();
   }
 }

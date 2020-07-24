@@ -86,7 +86,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
         <PopupMenuEntry<Menu>>[
           PopupMenuItem<Menu>(
             value: Menu.userOptions,
-            child: Text('User Options'),
+            child: Text('Profile'),
           ),
           if (user.isEditor)
             PopupMenuItem<Menu>(

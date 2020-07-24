@@ -10,13 +10,13 @@ import 'package:missionout/services/user/user.dart';
 import 'package:missionout/data_objects/page.dart' as missionpage;
 import 'package:provider/provider.dart';
 
-class CreateSheetModel {
+class CreateScreenModel {
   final BuildContext context;
   final Team _team;
   final User _user;
   final DocumentReference _documentReference;
 
-  CreateSheetModel(this.context)
+  CreateScreenModel(this.context)
       : this._team = context.watch<Team>(),
         this._user = context.watch<User>(),
         this._documentReference = context.watch<DocumentReference>();

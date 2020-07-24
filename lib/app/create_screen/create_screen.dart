@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:missionout/app/create_screen/create_screen_model.dart';
 
-import 'package:missionout/app/create_sheet/create_sheet_model.dart';
 import 'package:missionout/data_objects/mission.dart';
 import 'package:missionout/app/my_appbar.dart';
 import 'package:missionout/core/lat_lon_input.w.dart';
@@ -13,7 +13,6 @@ part 'submit_mission_button.w.dart';
 
 class CreateScreen extends StatelessWidget {
   final DocumentReference documentReference;
-
   CreateScreen({this.documentReference});
 
   @override
@@ -22,7 +21,7 @@ class CreateScreen extends StatelessWidget {
       value: documentReference,
       child: Builder(
         builder: (context) {
-          final model = CreateSheetModel(context);
+          final model = CreateScreenModel(context);
           return Scaffold(
             appBar: MyAppBar(
                 title: model.isEditExistingMission
@@ -38,27 +37,26 @@ class CreateScreen extends StatelessWidget {
 
 class _MissionForm extends StatefulWidget {
   @override
-  _MissionFormState createState() => _MissionFormState();
+  __MissionFormState createState() => __MissionFormState();
 }
 
-class _MissionFormState extends State<_MissionForm> {
+class __MissionFormState extends State<_MissionForm> {
   final descriptionController = TextEditingController();
   final actionController = TextEditingController();
   final locationController = TextEditingController();
   final latitudeController = TextEditingController();
   final longitudeController = TextEditingController();
 
-  CreateSheetModel _model;
-
   @override
   Widget build(BuildContext context) {
-    _model = CreateSheetModel(context);
+    final model = CreateScreenModel(context);
     // set the value if editing an existing mission
 
     return FutureBuilder(
-      future: _model.getCurrentMission(),
+      future: model.getCurrentMission(),
       builder: (_, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) return CircularProgressIndicator();
+        if (snapshot.connectionState == ConnectionState.waiting)
+          return CircularProgressIndicator();
         if (snapshot.hasError) return Text("Error retrieving current mission");
         final mission = snapshot.data;
         if (mission != null) {

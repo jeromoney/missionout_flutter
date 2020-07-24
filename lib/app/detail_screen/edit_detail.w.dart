@@ -8,10 +8,10 @@ class EditDetail extends StatefulWidget {
 }
 
 class _EditDetailState extends State<EditDetail> {
-  DetailScreenViewModel _model;
+  DetailScreenModel _model;
   @override
   Widget build(BuildContext context) {
-    _model = DetailScreenViewModel(context);
+    _model = DetailScreenModel(context);
     // waiting
     if (widget.snapshot.connectionState == ConnectionState.waiting) {
       return LinearProgressIndicator();

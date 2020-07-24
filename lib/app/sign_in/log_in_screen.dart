@@ -36,7 +36,7 @@ class _LogInScreenState extends State<LogInScreen> {
     _emailController.text = "";
     _setEmailField();
   }
- // TODO - refactor this with futurebuilder
+ // TODO - refactor this with futurebuilder, refactor with view model
   void _setEmailField() async {
     final String email =
         await context.read<EmailSecureStore>()

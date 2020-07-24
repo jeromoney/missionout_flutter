@@ -1,4 +1,4 @@
-part of 'create_sheet.dart';
+part of 'create_screen.dart';
 
 class SubmitMissionButton extends StatefulWidget {
   final Mission mission;
@@ -23,7 +23,7 @@ class SubmitMissionButton extends StatefulWidget {
 }
 
 class _SubmitMissionButtonState extends State<SubmitMissionButton> {
-  CreateSheetModel _model;
+  CreateScreenModel _model;
 
   Mission _fetchMission() {
     // Create a mission from the form fields
@@ -64,7 +64,7 @@ class _SubmitMissionButtonState extends State<SubmitMissionButton> {
 
   @override
   Widget build(BuildContext context) {
-    _model = CreateSheetModel(context);
+    _model = CreateScreenModel(context);
     return RaisedButton(
       child: Text('Submit'),
       onPressed: () async {

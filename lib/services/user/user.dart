@@ -33,9 +33,9 @@ abstract class User with ChangeNotifier{
 
   updateDisplayName({@required String displayName});
 
-  Future<List<PhoneNumberRecord>> fetchPhoneNumbers();
+  Stream<List<PhoneNumberRecord>> fetchPhoneNumbers();
 
   Future addPhoneNumber(PhoneNumberRecord phoneNumberRecord);
 
-  Future<List<PhoneNumberRecord>> deletePhoneNumber(PhoneNumberRecord phoneNumberRecord);
+  Future deletePhoneNumber(PhoneNumberRecord phoneNumberRecord);
 }
