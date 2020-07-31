@@ -1,10 +1,9 @@
 import 'dart:async';
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 import 'package:missionout/app/user_edit_screen/user_edit_screen_model.dart';
+import 'package:missionout/common_widgets/my_blur.dart';
 import 'package:missionout/data_objects/phone_number_record.dart';
 import 'package:provider/provider.dart';
 
@@ -12,29 +11,25 @@ import '../my_appbar.dart';
 
 part 'phone_entry.w.dart';
 
-const BLUR = 10.0;
-
 class UserEditScreen extends StatelessWidget {
   static const routeName = "/userEditScreen";
 
   @override
   Widget build(BuildContext context) {
     return Provider<StreamController<bool>>(
-      create: (_) => StreamController<bool>.broadcast(),
+      create: (_) => StreamController<bool>(),
       child: Builder(
-        builder: (context) => GestureDetector(
-          onTap: () => context.read<StreamController<bool>>().add(false),
-          child: Scaffold(
+        builder: (context) => Scaffold(
             appBar: MyAppBar(
               title: "Edit Profile",
             ),
             body: Stack(children: <Widget>[
               _UserEditScreenBody(),
-              _MyBlur(),
-              PhoneEntry(),
+              MyBlur(
+                child: PhoneEntry(),
+              ),
             ]),
           ),
-        ),
       ),
     );
   }
@@ -73,18 +68,21 @@ class _UserEditScreenBodyState extends State<_UserEditScreenBody> {
               ),
             ),
           ),
-          FlatButton(
-            onPressed: () async {
-              if (_formKey.currentState.validate()) {
-                await model.updateName(nameController.text);
-                final snackbar = SnackBar(
-                  content: Text("Saved name"),
-                );
-                Scaffold.of(context).showSnackBar(snackbar);
-              }
-            },
-            child: Align(
-              alignment: Alignment(0.66, 0),
+          Align(
+            alignment: Alignment(0.66, 0),
+            child: FlatButton(
+              padding: EdgeInsets.all(0.0),
+              textColor: Theme.of(context).primaryColor,
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              onPressed: () async {
+                if (_formKey.currentState.validate()) {
+                  await model.updateName(nameController.text);
+                  final snackbar = SnackBar(
+                    content: Text("Saved name"),
+                  );
+                  Scaffold.of(context).showSnackBar(snackbar);
+                }
+              },
               child: Text("Save"),
             ),
           ),
@@ -139,7 +137,10 @@ class _PhoneNumberListState extends State<_PhoneNumberList> {
   Widget build(BuildContext context) {
     final model = UserEditScreenModel(context);
     if (phoneNumbers == null || phoneNumbers.length == 0)
-      return Text("No phone numbers. Add one now.");
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text("No phone numbers. Add one now."),
+      );
     return ListView.separated(
         shrinkWrap: true,
         itemBuilder: (_, index) {

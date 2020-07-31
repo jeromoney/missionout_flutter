@@ -55,7 +55,10 @@ class _UserScreenState extends State<UserScreen> {
                     return Text("Error retrieving phone numbers");
                   final List<PhoneNumberRecord> phoneNumbers = snapshot.data;
                   if (!snapshot.hasData || phoneNumbers.length == 0)
-                    return Text("No phone numbers. Add one.");
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text("No phone numbers to sends alerts. Add one."),
+                    );
                   return ListView.separated(
                       shrinkWrap: true,
                       itemBuilder: (_, index) {

@@ -4,44 +4,47 @@ import 'package:missionout/data_objects/response.dart';
 import 'package:tuple/tuple.dart';
 
 class ResponseSheet extends StatelessWidget {
-  static const String routeName = "/responseScreen";
-
-  @override
-  Widget build(BuildContext context) => Card(
-        child: _BuildResponseStream(),
-      );
-}
-
-class _BuildResponseStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = ResponseSheetViewModel(context);
-    return StreamBuilder<Tuple2<Response, List<Response>>>(
-      stream: model.responses(),
-      builder: (context, snapshot) {
-        // waiting
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return LinearProgressIndicator();
-        }
+    return Dialog(
+      child: AbsorbPointer(
+        child: StreamBuilder<Tuple2<Response, List<Response>>>(
+          stream: model.responses(),
+          builder: (context, snapshot) {
+            // waiting
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return LinearProgressIndicator();
+            }
 
-        // error
-        if (snapshot.data == null) {
-          return Center(child: Text('There was an error.'), widthFactor: 2.0, heightFactor: 5.0,);
-        }
+            // error
+            if (snapshot.data == null) {
+              return Center(
+                child: Text('There was an error.'),
+                widthFactor: 2.0,
+                heightFactor: 5.0,
+              );
+            }
 
-        final responses = snapshot.data;
+            final responses = snapshot.data;
 
-        // no results
-        if (responses.item1 == null && responses.item2.length == 0) {
-          return Center(child: Text('No responses yet.'), widthFactor: 2.0, heightFactor: 5.0,);
-        }
+            // no results
+            if (responses.item1 == null && responses.item2.length == 0) {
+              return Center(
+                child: Text('No responses yet.'),
+                widthFactor: 2.0,
+                heightFactor: 5.0,
+              );
+            }
 
-        // success
-        responses.item2.removeWhere((response) => response == null);
-        return _BuildResponsesResult(
-          responses: responses,
-        );
-      },
+            // success
+            responses.item2.removeWhere((response) => response == null);
+            return _BuildResponsesResult(
+              responses: responses,
+            );
+          },
+        ),
+      ),
     );
   }
 }

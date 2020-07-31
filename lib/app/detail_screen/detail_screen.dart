@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:missionout/app/detail_screen/detail_screen_model.dart';
+import 'package:missionout/common_widgets/my_blur.dart';
 import 'package:missionout/constants/strings.dart';
 import 'package:missionout/common_widgets/platform_alert_dialog.dart';
 import 'package:missionout/data_objects/mission_address_arguments.dart';
@@ -20,101 +21,26 @@ part 'edit_detail.w.dart';
 
 part 'info_detail.w.dart';
 
-const BLUR = 10.0;
-
 class DetailScreen extends StatelessWidget {
   static const String routeName = "/detailScreen";
 
   @override
   Widget build(BuildContext context) {
-    final arguments = (ModalRoute.of(context).settings.arguments
-    as MissionAddressArguments);
+    final arguments =
+        (ModalRoute.of(context).settings.arguments as MissionAddressArguments);
     assert(arguments?.reference != null);
     return Provider<StreamController<bool>>(
       create: (_) => StreamController<bool>(),
-      child: _StreamConsumer(),
-    );
-  }
-}
-
-// The onTap method needs a new context below the provider
-class _StreamConsumer extends StatefulWidget {
-  final Widget _detailScreen = _DetailScreenBuild();
-
-  @override
-  _StreamConsumerState createState() => _StreamConsumerState();
-}
-
-class _StreamConsumerState extends State<_StreamConsumer> {
-  DetailScreenModel _model;
-  int _widgetIndex = 0;
-  StreamSubscription _subscription;
-
-  Widget get showResponsesWidget => Stack(children: <Widget>[
-        widget._detailScreen,
-        ClipRect(
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaY: BLUR, sigmaX: BLUR),
-            child: Container(
-              color: Colors.black.withOpacity(0),
-            ),
-          ),
-        ),
-        IgnorePointer(
-          child: Center(child: ResponseSheet()),
-        ),
-      ]);
-
-  showResponseSheet(bool isShowResponses) {
-    setState(() {
-      if (isShowResponses)
-        _widgetIndex = 0;
-      else
-        _widgetIndex = 1;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _subscription = context
-        .read<StreamController<bool>>()
-        .stream
-        .listen((isShowResponses) => showResponseSheet(isShowResponses));
-  }
-
-  @override
-  void dispose() {
-    _subscription.cancel();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    _model = DetailScreenModel(context);
-    return GestureDetector(
-      onTap: _model.hideResponseSheet,
-      child: IndexedStack(
-        index: _widgetIndex,
-        children: <Widget>[
-          widget._detailScreen,
-          Stack(
+      child: Builder(
+        builder: (context) => GestureDetector(
+          onTap: () => context.read<StreamController<bool>>().add(false),
+          child: Stack(
             children: <Widget>[
-              widget._detailScreen,
-              ClipRect(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaY: BLUR, sigmaX: BLUR),
-                  child: Container(
-                    color: Colors.black.withOpacity(0),
-                  ),
-                ),
-              ),
-              IgnorePointer(
-                child: Center(child: ResponseSheet()),
-              )
+              _DetailScreenBuild(),
+              MyBlur(child: ResponseSheet(),),
             ],
           ),
-        ],
+        ),
       ),
     );
   }

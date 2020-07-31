@@ -6,79 +6,58 @@ class PhoneEntry extends StatefulWidget {
 }
 
 class _PhoneEntryState extends State<PhoneEntry> {
-  StreamSubscription _subscription;
-  bool _isShowPhoneInput = false;
-
   /// If user selects checkbox, phone text entry appears.
   bool _allowPhoneCalls = false;
   bool _allowTexts = false;
 
   @override
-  void initState() {
-    super.initState();
-    _subscription = context
-        .read<StreamController<bool>>()
-        .stream
-        .listen((isShowPhoneInput) =>
-        setState(() {
-          _isShowPhoneInput = isShowPhoneInput;
-        })
-    );
-  }
-
-  @override
-  void dispose() {
-    if (_subscription != null) _subscription.cancel();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return _isShowPhoneInput ? Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: IgnorePointer(
-        child: Center(
-          child: SizedBox(
-            width: double.infinity,
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(right: 16.0),
-                  child: MyInternationalPhoneNumberInput(),
-                ),
-                CheckboxListTile(
-                  secondary: Icon(
-                    Icons.phone,
-                    size: 24,
-                  ),
-                  title: Text('Receive phone call pages'),
-                  value: _allowPhoneCalls,
-                  onChanged: (value) {
-                    setState(() {
-                      _allowPhoneCalls = !_allowPhoneCalls;
-                    });
-                  },
-                ),
-                CheckboxListTile(
-                  secondary: Icon(
-                    Icons.sms,
-                    size: 24,
-                  ),
-                  title: Text('Receive SMS text pages'),
-                  subtitle: Text('Message and data rates may apply'),
-                  value: _allowTexts,
-                  onChanged: (value) {
-                    setState(() {
-                      _allowTexts = !_allowTexts;
-                    });
-                  },
-                ),
-              ],
+    return Center(
+      child: Container(
+        decoration: BoxDecoration(
+            border: Border.all(color: Colors.black),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(5.0)),
+        padding: const EdgeInsets.all(16.0),
+        margin: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(right: 16.0),
+              child: MyInternationalPhoneNumberInput(),
             ),
-          ),
+            CheckboxListTile(
+              secondary: Icon(
+                Icons.phone,
+                size: 24,
+              ),
+              title: Text('Receive phone call pages'),
+              value: _allowPhoneCalls,
+              onChanged: (value) {
+                setState(() {
+                  _allowPhoneCalls = !_allowPhoneCalls;
+                });
+              },
+            ),
+            CheckboxListTile(
+              secondary: Icon(
+                Icons.sms,
+                size: 24,
+              ),
+              title: Text('Receive SMS text pages'),
+              subtitle: Text('Message and data rates may apply'),
+              value: _allowTexts,
+              onChanged: (value) {
+                setState(() {
+                  _allowTexts = !_allowTexts;
+                });
+              },
+            ),
+          ],
         ),
       ),
-    ) : Container();
+    );
   }
 }
 
@@ -108,50 +87,4 @@ class _MyInternationalPhoneNumberInputState
       onInputChanged: (PhoneNumber phoneNumber) {},
     );
   }
-}
-
-class _MyBlur extends StatefulWidget {
-  @override
-  __MyBlurState createState() => __MyBlurState();
-}
-
-class __MyBlurState extends State<_MyBlur> {
-  StreamSubscription _subscription;
-  bool _isShowPhoneInput = false;
-
-
-  @override
-  void initState() {
-    super.initState();
-    _subscription = context
-        .read<StreamController<bool>>()
-        .stream
-        .listen((isShowPhoneInput) =>
-        setState(() {
-          _isShowPhoneInput = isShowPhoneInput;
-        })
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return _isShowPhoneInput ? Center(
-      child: ClipRect(
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaY: BLUR, sigmaX: BLUR),
-          child: Container(
-            color: Colors.black.withOpacity(0),
-          ),
-        ),
-      ),
-    ) : Container();
-  }
-
-  @override
-  void dispose() {
-    if (_subscription != null) _subscription.cancel();
-    super.dispose();
-  }
-
-
 }

@@ -33,9 +33,9 @@ class DetailScreenModel {
   Stream<Mission> fetchSingleMission() =>
       team.fetchSingleMission(documentReference: documentReference);
 
-  displayResponseSheet() => sheetStreamController.add(false);
+  displayResponseSheet() => sheetStreamController.add(true);
 
-  hideResponseSheet() => sheetStreamController.add(true);
+  hideResponseSheet() => sheetStreamController.add(false);
 
   launchChat() {
     try {
