@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:missionout/app/user_edit_screen/user_edit_screen.dart';
 import 'package:missionout/constants/strings.dart';
@@ -13,8 +11,7 @@ class UserScreenModel {
   final Team team;
   final User user;
 
-  Future<List<PhoneNumberRecord>> get phoneNumbers =>
-      user.fetchPhoneNumbers().first;
+  Stream<List<PhoneNumberRecord>> get phoneNumbers => user.fetchPhoneNumbers();
 
   String get teamName => team.teamID;
 
@@ -25,8 +22,6 @@ class UserScreenModel {
   UserScreenModel(this.context)
       : this.team = context.watch<Team>(),
         this.user = context.watch<User>();
-
-
 
   editUserOptions() => Navigator.pushNamed(context, UserEditScreen.routeName);
 }

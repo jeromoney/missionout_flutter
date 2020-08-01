@@ -16,6 +16,7 @@ class UserScreen extends StatefulWidget {
 
 class _UserScreenState extends State<UserScreen> {
   UserScreenModel _model;
+
   @override
   Widget build(BuildContext context) {
     _model = UserScreenModel(context);
@@ -46,8 +47,8 @@ class _UserScreenState extends State<UserScreen> {
               Divider(
                 thickness: 2,
               ),
-              FutureBuilder(
-                future: _model.phoneNumbers,
+              StreamBuilder(
+                stream: _model.phoneNumbers,
                 builder: (_, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting)
                     return CircularProgressIndicator();
@@ -60,12 +61,14 @@ class _UserScreenState extends State<UserScreen> {
                       child: Text("No phone numbers to sends alerts. Add one."),
                     );
                   return ListView.separated(
-                      shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
                       itemBuilder: (_, index) {
                         final phoneNumberRecord = phoneNumbers[index];
                         final phoneNumber = phoneNumberRecord.getPhoneNumber();
                         return FutureBuilder(
-                          future: PhoneNumber.getParsableNumber(phoneNumber),
+                          future: PhoneNumber.getParsableNumber(phoneNumber)
+                              .catchError((e) => phoneNumber.phoneNumber),
                           builder: (_, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) return Container();
@@ -74,15 +77,26 @@ class _UserScreenState extends State<UserScreen> {
                             final String phoneNumberString = snapshot.data;
                             return ListTile(
                               title: Text(phoneNumberString),
-                              trailing: Row(mainAxisSize: MainAxisSize.min,
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
-                                    child: Icon(Icons.phone, color: phoneNumberRecord.allowCalls ? Colors.green : null,),
+                                    child: Icon(
+                                      Icons.phone,
+                                      color: phoneNumberRecord.allowCalls
+                                          ? Colors.green
+                                          : null,
+                                    ),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
-                                    child: Icon(Icons.sms, color: phoneNumberRecord.allowText ? Colors.green : null,),
+                                    child: Icon(
+                                      Icons.sms,
+                                      color: phoneNumberRecord.allowText
+                                          ? Colors.green
+                                          : null,
+                                    ),
                                   )
                                 ],
                               ),

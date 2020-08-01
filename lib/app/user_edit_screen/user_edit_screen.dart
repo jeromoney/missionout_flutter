@@ -13,23 +13,22 @@ part 'phone_entry.w.dart';
 
 class UserEditScreen extends StatelessWidget {
   static const routeName = "/userEditScreen";
-
   @override
   Widget build(BuildContext context) {
     return Provider<StreamController<bool>>(
       create: (_) => StreamController<bool>(),
       child: Builder(
         builder: (context) => Scaffold(
-            appBar: MyAppBar(
-              title: "Edit Profile",
-            ),
-            body: Stack(children: <Widget>[
-              _UserEditScreenBody(),
-              MyBlur(
-                child: PhoneEntry(),
-              ),
-            ]),
+          appBar: MyAppBar(
+            title: "Edit Profile",
           ),
+          body: Stack(children: <Widget>[
+
+            _UserEditScreenBody(),MyBlur(
+              child: PhoneEntry(),
+            ),
+          ]),
+        ),
       ),
     );
   }
@@ -89,8 +88,8 @@ class _UserEditScreenBodyState extends State<_UserEditScreenBody> {
           Divider(
             thickness: 2.0,
           ),
-          FutureBuilder(
-            future: model.phoneNumbers,
+          StreamBuilder(
+            stream: model.phoneNumbers,
             builder: (_, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting)
                 return LinearProgressIndicator();
@@ -147,7 +146,7 @@ class _PhoneNumberListState extends State<_PhoneNumberList> {
           final phoneNumberRecord = phoneNumbers[index];
           final phoneNumber = phoneNumberRecord.getPhoneNumber();
           return FutureBuilder(
-            future: PhoneNumber.getParsableNumber(phoneNumber),
+            future: PhoneNumber.getParsableNumber(phoneNumber).catchError((e) => phoneNumber.phoneNumber),
             initialData: "",
             builder: (_, parsedPhoneNumber) => ListTile(
               title: Text(parsedPhoneNumber.data),

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:missionout/constants/strings.dart';
@@ -20,8 +19,7 @@ class UserEditScreenModel {
         this.phoneInputStreamController =
             context.watch<StreamController<bool>>();
 
-  Future<List<PhoneNumberRecord>> get phoneNumbers async =>
-      user.fetchPhoneNumbers().first;
+  Stream<List<PhoneNumberRecord>> get phoneNumbers => user.fetchPhoneNumbers();
 
   String get displayName => user.displayName ?? Strings.anonymousName;
 
@@ -32,18 +30,8 @@ class UserEditScreenModel {
         .showSnackBar(SnackBar(content: Text("Deleted phone number")));
   }
 
-  Future<PhoneNumberRecord> addPhoneNumber(
-      PhoneNumberRecord phoneNumberRecord) async {
-    final boogs = 1000000000 + Random().nextInt(4000000000);
-    final phoneNumberRecord = PhoneNumberRecord(
-      uid: user.uid,
-      isoCode: "US",
-      phoneNumber: "+1${boogs.toString()}",
-      allowText: true,
-      allowCalls: false,
-    );
+  Future addPhoneNumber(PhoneNumberRecord phoneNumberRecord) async {
     await user.addPhoneNumber(phoneNumberRecord);
-    return phoneNumberRecord;
   }
 
   Future updateName(String displayName) async =>
