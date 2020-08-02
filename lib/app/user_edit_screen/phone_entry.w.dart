@@ -15,13 +15,8 @@ class _PhoneEntryState extends State<PhoneEntry> {
   Widget build(BuildContext context) {
     final model = UserEditScreenModel(context);
     return Center(
-      child: Container(
-        decoration: BoxDecoration(
-            border: Border.all(color: Colors.black),
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(5.0)),
-        padding: const EdgeInsets.all(16.0),
-        margin: const EdgeInsets.all(8.0),
+      child: Card(
+        margin: const EdgeInsets.all(16.0),
         child: Provider<PhoneNumberHolder>(
           create: (context) => PhoneNumberHolder(),
           child: Form(
@@ -30,7 +25,7 @@ class _PhoneEntryState extends State<PhoneEntry> {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(right: 16.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: MyInternationalPhoneNumberInput(),
                 ),
                 CheckboxFormField(

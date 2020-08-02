@@ -13,10 +13,8 @@ class ResponseSheet extends StatelessWidget {
           stream: model.responses(),
           builder: (context, snapshot) {
             // waiting
-            if (snapshot.connectionState == ConnectionState.waiting) {
+            if (snapshot.connectionState == ConnectionState.waiting)
               return LinearProgressIndicator();
-            }
-
             // error
             if (snapshot.data == null) {
               return Center(
