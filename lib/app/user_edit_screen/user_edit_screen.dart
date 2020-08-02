@@ -24,11 +24,12 @@ class UserEditScreen extends StatelessWidget {
             title: "Edit Profile",
           ),
           body: Stack(children: <Widget>[
-            _UserEditScreenBody(),
+            SingleChildScrollView(child: _UserEditScreenBody()),
             MyBlur(
               child: PhoneEntry(),
             ),
           ]),
+          resizeToAvoidBottomInset: false,
         ),
       ),
     );
@@ -120,10 +121,11 @@ class _UserEditScreenBodyState extends State<_UserEditScreenBody> {
 
 class _PhoneNumberList extends StatefulWidget {
   final List<PhoneNumberRecord> phoneNumbers;
+
   _PhoneNumberList(this.phoneNumbers);
+
   @override
-  _PhoneNumberListState createState() =>
-      _PhoneNumberListState();
+  _PhoneNumberListState createState() => _PhoneNumberListState();
 }
 
 class _PhoneNumberListState extends State<_PhoneNumberList> {
@@ -137,6 +139,7 @@ class _PhoneNumberListState extends State<_PhoneNumberList> {
         child: Text("No phone numbers. Add one now."),
       );
     return ListView.separated(
+      physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         itemBuilder: (_, index) {
           final phoneNumberRecord = widget.phoneNumbers[index];

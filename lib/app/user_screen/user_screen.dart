@@ -61,7 +61,7 @@ class _UserScreenState extends State<UserScreen> {
                       child: Text("No phone numbers to sends alerts. Add one."),
                     );
                   return ListView.separated(
-                    scrollDirection: Axis.vertical,
+                    physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                       itemBuilder: (_, index) {
                         final phoneNumberRecord = phoneNumbers[index];

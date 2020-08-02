@@ -43,7 +43,7 @@ class _PhoneEntryState extends State<PhoneEntry> {
                   onSaved: (value) => this._allowTexts = value,
                   validator: (value) => value || _allowPhoneCalls
                       ? null
-                      : "At least one checkbox must be checked",
+                      : "At least one option must be checked",
                 ),
                 CheckboxFormField(
                   title: Text('Receive phone call pages'),
@@ -54,7 +54,7 @@ class _PhoneEntryState extends State<PhoneEntry> {
                   onSaved: (value) => this._allowPhoneCalls = value,
                   validator: (value) => value || _allowTexts
                       ? null
-                      : "At least one checkbox must be checked",
+                      : "At least one option must be checked",
                 ),
                 Builder(
                   builder: (context) => Align(
