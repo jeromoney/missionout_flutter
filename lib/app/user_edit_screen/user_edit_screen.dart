@@ -13,6 +13,7 @@ part 'phone_entry.w.dart';
 
 class UserEditScreen extends StatelessWidget {
   static const routeName = "/userEditScreen";
+
   @override
   Widget build(BuildContext context) {
     return Provider<StreamController<bool>>(
@@ -23,8 +24,8 @@ class UserEditScreen extends StatelessWidget {
             title: "Edit Profile",
           ),
           body: Stack(children: <Widget>[
-
-            _UserEditScreenBody(),MyBlur(
+            _UserEditScreenBody(),
+            MyBlur(
               child: PhoneEntry(),
             ),
           ]),
@@ -88,7 +89,7 @@ class _UserEditScreenBodyState extends State<_UserEditScreenBody> {
           Divider(
             thickness: 2.0,
           ),
-          StreamBuilder(
+          StreamBuilder<List<PhoneNumberRecord>>(
             stream: model.phoneNumbers,
             builder: (_, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting)
@@ -119,21 +120,16 @@ class _UserEditScreenBodyState extends State<_UserEditScreenBody> {
 
 class _PhoneNumberList extends StatefulWidget {
   final List<PhoneNumberRecord> phoneNumbers;
-
   _PhoneNumberList(this.phoneNumbers);
-
   @override
   _PhoneNumberListState createState() =>
-      _PhoneNumberListState(this.phoneNumbers);
+      _PhoneNumberListState();
 }
 
 class _PhoneNumberListState extends State<_PhoneNumberList> {
-  List<PhoneNumberRecord> phoneNumbers;
-
-  _PhoneNumberListState(this.phoneNumbers);
-
   @override
   Widget build(BuildContext context) {
+    final phoneNumbers = widget.phoneNumbers;
     final model = UserEditScreenModel(context);
     if (phoneNumbers == null || phoneNumbers.length == 0)
       return Padding(
@@ -143,10 +139,11 @@ class _PhoneNumberListState extends State<_PhoneNumberList> {
     return ListView.separated(
         shrinkWrap: true,
         itemBuilder: (_, index) {
-          final phoneNumberRecord = phoneNumbers[index];
+          final phoneNumberRecord = widget.phoneNumbers[index];
           final phoneNumber = phoneNumberRecord.getPhoneNumber();
           return FutureBuilder(
-            future: PhoneNumber.getParsableNumber(phoneNumber).catchError((e) => phoneNumber.phoneNumber),
+            future: PhoneNumber.getParsableNumber(phoneNumber)
+                .catchError((e) => phoneNumber.phoneNumber),
             initialData: "",
             builder: (_, parsedPhoneNumber) => ListTile(
               title: Text(parsedPhoneNumber.data),
