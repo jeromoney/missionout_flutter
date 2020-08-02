@@ -15,12 +15,9 @@ class UserScreen extends StatefulWidget {
 }
 
 class _UserScreenState extends State<UserScreen> {
-  UserScreenModel _model;
-
   @override
   Widget build(BuildContext context) {
-    _model = UserScreenModel(context);
-
+    final model = UserScreenModel(context);
     return Scaffold(
       appBar: MyAppBar(title: Strings.userScreenTitle),
       body: SingleChildScrollView(
@@ -31,24 +28,24 @@ class _UserScreenState extends State<UserScreen> {
             children: <Widget>[
               ListTile(
                 leading: Icon(Icons.group),
-                title: Text(_model.teamName),
+                title: Text(model.teamName),
                 enabled: true,
               ),
               ListTile(
                 leading: Icon(Icons.person),
-                title: Text(_model.displayName),
+                title: Text(model.displayName),
                 enabled: true,
               ),
               ListTile(
                 leading: Icon(Icons.email),
-                title: Text(_model.email),
+                title: Text(model.email),
                 enabled: true,
               ),
               Divider(
                 thickness: 2,
               ),
               StreamBuilder(
-                stream: _model.phoneNumbers,
+                stream: model.phoneNumbers,
                 builder: (_, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting)
                     return CircularProgressIndicator();
@@ -61,8 +58,8 @@ class _UserScreenState extends State<UserScreen> {
                       child: Text("No phone numbers to sends alerts. Add one."),
                     );
                   return ListView.separated(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
                       itemBuilder: (_, index) {
                         final phoneNumberRecord = phoneNumbers[index];
                         final phoneNumber = phoneNumberRecord.getPhoneNumber();
@@ -114,7 +111,7 @@ class _UserScreenState extends State<UserScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.edit),
-        onPressed: _model.editUserOptions,
+        onPressed: model.editUserOptions,
       ),
     );
   }

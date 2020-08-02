@@ -8,7 +8,7 @@ class ResponseSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = ResponseSheetViewModel(context);
     return Dialog(
-      child: AbsorbPointer(
+      child: SingleChildScrollView(
         child: StreamBuilder<Tuple2<Response, List<Response>>>(
           stream: model.responses(),
           builder: (context, snapshot) {
