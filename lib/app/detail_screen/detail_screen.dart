@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:missionout/app/detail_screen/detail_screen_model.dart';
+import 'package:missionout/common_widgets/mission_map/google_mission_map.dart';
 import 'package:missionout/common_widgets/my_blur.dart';
 import 'package:missionout/constants/strings.dart';
 import 'package:missionout/common_widgets/platform_alert_dialog.dart';
@@ -11,7 +13,6 @@ import 'package:provider/provider.dart';
 
 import 'package:missionout/data_objects/mission.dart';
 import 'package:missionout/data_objects/response.dart';
-import 'package:missionout/app/my_appbar.dart';
 import 'package:missionout/app/response_sheet/response_sheet.dart';
 import 'package:missionout/data_objects/page.dart' as missionpage;
 
@@ -37,7 +38,9 @@ class DetailScreen extends StatelessWidget {
           child: Stack(
             children: <Widget>[
               _DetailScreenBuild(),
-              MyBlur(child: ResponseSheet(),),
+              MyBlur(
+                child: ResponseSheet(),
+              ),
             ],
           ),
         ),
@@ -48,34 +51,67 @@ class DetailScreen extends StatelessWidget {
 
 class _DetailScreenBuild extends StatelessWidget {
   @override
-  Widget build(BuildContext context) => Scaffold(
-      appBar: MyAppBar(
-        title: 'Detail',
-      ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 16.0, right: 24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                _DetailScreenStreamWrapper(
-                  detailItem: InfoDetail,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 24.0),
-                  child: Divider(
-                    thickness: 1,
-                  ),
-                ),
-                _DetailScreenStreamWrapper(detailItem: ActionsDetail),
-                _DetailScreenStreamWrapper(detailItem: EditDetail),
-              ],
+  Widget build(BuildContext context) {
+    final model = DetailScreenModel(context);
+    return Scaffold(
+        body: SingleChildScrollView(
+      child: Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            StreamBuilder<LatLng>(
+              stream: model.missionLocation,
+              builder: (_, snapshot) {
+                if (snapshot.hasError || snapshot.data == null)
+                  return SafeArea(
+                      child: IconButton(
+                        onPressed: model.navigateToOverviewScreen,
+                        icon: Icon(Icons.clear),
+                      ));
+                if (snapshot.connectionState == ConnectionState.waiting)
+                  return CircularProgressIndicator();
+                final location = snapshot.data;
+                return Container(
+                    constraints: BoxConstraints.expand(
+                        height: MediaQuery.of(context).size.height / 3),
+                    child: Stack(children: <Widget>[
+                      StreamBuilder(builder: (_, snapshot) {
+                        return GoogleMissionMap(location);
+                      }),
+                      SafeArea(
+                          child: IconButton(
+                        onPressed: model.navigateToOverviewScreen,
+                        icon: Icon(Icons.clear),
+                      )),
+                    ]));
+              },
             ),
-          ),
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0, right: 24.0),
+              child: _DetailScreenStreamWrapper(
+                detailItem: InfoDetail,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 24.0),
+              child: Divider(
+                thickness: 1,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0, right: 24.0),
+              child: _DetailScreenStreamWrapper(detailItem: ActionsDetail),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0, right: 24.0),
+              child: _DetailScreenStreamWrapper(detailItem: EditDetail),
+            ),
+          ],
         ),
-      ));
+      ),
+    ));
+  }
 }
 
 // Stream wrapper for the individual components. Helps separate code for testing

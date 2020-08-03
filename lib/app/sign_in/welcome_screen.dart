@@ -4,45 +4,22 @@ import 'package:missionout/app/sign_in/team_domain_screen.dart';
 import 'package:missionout/constants/constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class WelcomeScreen extends StatefulWidget {
+class WelcomeScreen extends StatelessWidget {
   static String routeName = "WelcomeScreen";
-
-  @override
-  State<WelcomeScreen> createState() => _WelcomeScreenState();
-}
-
-class _WelcomeScreenState extends State<WelcomeScreen> {
-  bool _darkMode;
-
   @override
   Widget build(BuildContext context) {
-    _darkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
     return Scaffold(
-      backgroundColor: !_darkMode ? Colors.white : Colors.grey[800],
+      backgroundColor: Colors.white,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           Container(
             child: Align(
               alignment: Alignment.bottomCenter,
-              child: !_darkMode
-                  ? Image(
-                      key: Key('Welcome Logo'),
-                      image: AssetImage('graphics/missionoutlogo.png'),
-                    )
-                  : ColorFiltered(
-                      // Inverts black logo to white
-                      colorFilter: ColorFilter.matrix([
-                        //R  G   B    A  Const
-                        -1, 0, 0, 0, 255, //
-                        0, -1, 0, 0, 255, //
-                        0, 0, -1, 0, 255, //
-                        0, 0, 0, 1, 0, //
-                      ]),
-                      child: Image(
-                        image: AssetImage('graphics/missionoutlogo.png'),
-                      ),
-                    ),
+              child: Image(
+                key: Key('Welcome Logo'),
+                image: AssetImage('graphics/missionoutlogo.png'),
+              ),
             ),
           ),
           Container(

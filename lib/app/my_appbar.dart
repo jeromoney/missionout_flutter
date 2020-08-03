@@ -11,6 +11,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 enum Menu { signOut, userOptions, editorOptions, privacyPolicy }
 
+const EDITOR_OPTIONS_ENABLED = false;
+
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   MyAppBar({@required this.title});
@@ -88,7 +90,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
             value: Menu.userOptions,
             child: Text('Profile'),
           ),
-          if (user.isEditor)
+          if (user.isEditor && EDITOR_OPTIONS_ENABLED)
             PopupMenuItem<Menu>(
               value: Menu.editorOptions,
               child: Text('Editor Options'),

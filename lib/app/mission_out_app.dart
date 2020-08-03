@@ -65,7 +65,6 @@ class _MissionOutAppState extends State<MissionOutApp> {
       navigatorKey: _navKey,
       title: 'Mission Out',
       theme: ThemeData(primarySwatch: Colors.blueGrey),
-      darkTheme: ThemeData.dark(),
       home: _initialScreen,
       routes: {
         OverviewScreen.routeName: (context) => OverviewScreen(),

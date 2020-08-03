@@ -24,7 +24,6 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  bool _darkMode = false;
   bool _appleSignInAvailable = false;
   bool _showPasswordField = false;
   String _domain;
@@ -32,7 +31,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     _domain = ModalRoute.of(context).settings.arguments;
-    _darkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
     final signInManager = context.read<SignInManager>();
     return GestureDetector(
       onHorizontalDragUpdate: (details) {
@@ -59,15 +57,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               flutter_auth_buttons.GoogleSignInButton(
                                 key: Key('Google Sign In Button'),
                                 onPressed: signInManager.signInWithGoogle,
-                                darkMode: _darkMode,
                               ),
                               if (_appleSignInAvailable)
                                 Container(
                                   child: flutter_auth_buttons.AppleSignInButton(
-                                    style: _darkMode
-                                        ? flutter_auth_buttons
-                                            .AppleButtonStyle.black
-                                        : flutter_auth_buttons
+                                    style: flutter_auth_buttons
                                             .AppleButtonStyle.white,
                                     onPressed: signInManager.signInWithApple,
                                   ),

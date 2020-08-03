@@ -15,7 +15,8 @@
         android:label="missionout"
         android:icon="@mipmap/mo_launcher_icon">
         <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@drawable/notification_logo" />
-
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAiXIGXt2iVitp_c6Rmuz9ebzOinpsch4o"/>
         <activity
             android:name="com.beaterboofs.missionout.MainActivity"
             android:launchMode="singleTop"

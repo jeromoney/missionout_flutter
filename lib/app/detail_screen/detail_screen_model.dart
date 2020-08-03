@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:missionout/app/create_screen/create_screen.dart';
 import 'package:missionout/data_objects/mission_address_arguments.dart';
 import 'package:missionout/data_objects/page.dart' as missionpage;
@@ -29,6 +30,16 @@ class DetailScreenModel {
                 as MissionAddressArguments)
             .reference,
         this.sheetStreamController = context.watch<StreamController<bool>>();
+
+  Stream<LatLng> get missionLocation {
+    final mission =
+        team.fetchSingleMission(documentReference: documentReference);
+    return mission.map((mission) {
+      final location = mission.location;
+      if (location == null) return null;
+      return LatLng(location.latitude, location.longitude);
+    });
+  }
 
   Stream<Mission> fetchSingleMission() =>
       team.fetchSingleMission(documentReference: documentReference);
@@ -88,8 +99,11 @@ class DetailScreenModel {
     );
   }
 
-   Future<int> getCurrentlySelectedResponse() async {
-    final response = await team.fetchUserResponse(documentReference: documentReference, uid: user.uid);
+  navigateToOverviewScreen() => Navigator.of(context).pop();
+
+  Future<int> getCurrentlySelectedResponse() async {
+    final response = await team.fetchUserResponse(
+        documentReference: documentReference, uid: user.uid);
     if (response == null) return -1;
     return Response.RESPONSES.indexOf(response.status);
   }

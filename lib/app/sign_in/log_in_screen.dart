@@ -50,8 +50,6 @@ class _LogInScreenState extends State<LogInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bool darkMode =
-        MediaQuery.of(context).platformBrightness == Brightness.dark;
     final appleSignInAvailable =
     context.watch<AppleSignInAvailable>();
     final signInManager = context.watch<SignInManager>();
@@ -77,15 +75,12 @@ class _LogInScreenState extends State<LogInScreen> {
                   children: <Widget>[
                     GoogleSignInButton(
                       text: 'Log in with Google',
-                      darkMode: darkMode,
                       onPressed: signInManager.signInWithGoogle,
                     ),
                     if (appleSignInAvailable.isAvailable) ...[
                       AppleSignInButton(
                         text: 'Log in with Apple',
-                        style: darkMode
-                            ? AppleButtonStyle.black
-                            : AppleButtonStyle.white,
+                        style:  AppleButtonStyle.white,
                         onPressed: signInManager.signInWithApple,
                       )
                     ],

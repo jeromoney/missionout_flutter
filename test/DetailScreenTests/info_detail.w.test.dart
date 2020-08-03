@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:missionout/DataLayer/mission.dart';
 import 'package:missionout/UI/DetailScreen/detail_screen.dart';
-import 'package:missionout/utils.dart';
+import 'package:missionout/utils/utils.dart';
 
 
 void main() {

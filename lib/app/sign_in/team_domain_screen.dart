@@ -19,11 +19,9 @@ class TeamDomainScreen extends StatefulWidget {
 
 class _TeamDomainScreenState extends State<TeamDomainScreen> {
   bool _isDomainValid = true;
-  bool _darkMode;
 
   @override
   Widget build(BuildContext context) {
-    _darkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
     // allows for async validation of form
     widget._formKey.currentState?.validate();
 
