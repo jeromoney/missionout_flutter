@@ -19,18 +19,14 @@ class UserEditScreen extends StatelessWidget {
     return Provider<StreamController<bool>>(
       create: (_) => StreamController<bool>(),
       child: Builder(
-        builder: (context) => Scaffold(
-          appBar: MyAppBar(
-            title: "Edit Profile",
+        builder: (context) => Stack(children: <Widget>[
+          Scaffold(appBar: MyAppBar(
+          title: "Edit Profile",
+        ), body: SingleChildScrollView(child: _UserEditScreenBody())),
+          MyBlur(
+            child: PhoneEntry(),
           ),
-          body: Stack(children: <Widget>[
-            SingleChildScrollView(child: _UserEditScreenBody()),
-            MyBlur(
-              child: PhoneEntry(),
-            ),
-          ]),
-          resizeToAvoidBottomInset: false,
-        ),
+        ]),
       ),
     );
   }

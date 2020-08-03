@@ -25,7 +25,7 @@ class _PhoneEntryState extends State<PhoneEntry> {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 8.0),
                   child: MyInternationalPhoneNumberInput(),
                 ),
                 CheckboxFormField(

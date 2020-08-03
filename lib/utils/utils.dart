@@ -6,5 +6,5 @@ String formatTime(Timestamp time) {
     return '';
   }
   final dateTime = time.toDate();
-  return DateFormat('yyyy-MM-dd kk:mm').format(dateTime);
+  return DateFormat('MM-dd kk:mm').format(dateTime);
 }

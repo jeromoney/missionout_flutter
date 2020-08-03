@@ -57,7 +57,6 @@ class __MissionFormState extends State<_MissionForm> {
       builder: (_, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting)
           return CircularProgressIndicator();
-        if (snapshot.hasError) return Text("Error retrieving current mission");
         final mission = snapshot.data;
         if (mission != null) {
           descriptionController.text = mission.description ?? '';

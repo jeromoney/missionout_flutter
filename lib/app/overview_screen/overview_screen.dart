@@ -83,14 +83,15 @@ class _BuildMissionResultsState extends State<BuildMissionResults> {
     return ListView.separated(
         itemBuilder: (BuildContext context, int index) {
           final mission = widget.missions[index];
-
+          final strikeThroughStyle =
+          TextStyle(decoration: TextDecoration.lineThrough);
           return ListTile(
             title: Text(mission.description ?? '',
                 style: mission.isStoodDown ?? false
-                    ? TextStyle(decoration: TextDecoration.lineThrough)
-                    : Theme.of(context).textTheme.body1),
+                    ? Theme.of(context).textTheme.bodyText2.merge(strikeThroughStyle)
+                    : Theme.of(context).textTheme.bodyText2),
             subtitle: Text((mission.needForAction ?? '') +
-                ' ' +
+                ' — ' +
                 (formatTime(mission.time) ?? '')),
             onTap: () {
               model.navigateToDetail(documentReference: mission.selfRef, mission: mission);

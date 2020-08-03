@@ -82,7 +82,7 @@ class _DetailScreenBuild extends StatelessWidget {
                       SafeArea(
                           child: IconButton(
                         onPressed: model.navigateToOverviewScreen,
-                        icon: Icon(Icons.clear),
+                        icon: Icon(Icons.clear, size: 32,),
                       )),
                     ]));
               },

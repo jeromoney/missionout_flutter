@@ -55,7 +55,7 @@ class CreateScreenModel {
     final MissionAddressArguments arguments =
         MissionAddressArguments(reference);
     assert(arguments?.reference != null);
-    Navigator.pushNamed(context, DetailScreen.routeName, arguments: arguments);
+    Navigator.pushReplacementNamed(context, DetailScreen.routeName, arguments: arguments);
   }
 
   Future<Mission> getCurrentMission() async {
