@@ -5,7 +5,7 @@ import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:missionout/app/user_screen/user_screen_model.dart';
 import 'package:missionout/data_objects/phone_number_record.dart';
 import 'package:missionout/constants/strings.dart';
-import 'package:missionout/app/my_appbar.dart';
+import 'package:missionout/app/my_appbar/my_appbar.dart';
 
 class UserScreen extends StatefulWidget {
   static const routeName = "/userScreen";

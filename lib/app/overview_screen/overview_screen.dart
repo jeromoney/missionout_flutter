@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:missionout/app/overview_screen/overview_screen_model.dart';
 import 'package:missionout/utils/utils.dart';
 import 'package:missionout/data_objects/mission.dart';
-import 'package:missionout/app/my_appbar.dart';
+import 'package:missionout/app/my_appbar/my_appbar.dart';
 
 class OverviewScreen extends StatelessWidget {
   static const routeName = "/overviewScreen";

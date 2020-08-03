@@ -7,7 +7,7 @@ import 'package:missionout/common_widgets/my_blur.dart';
 import 'package:missionout/data_objects/phone_number_record.dart';
 import 'package:provider/provider.dart';
 
-import '../my_appbar.dart';
+import '../my_appbar/my_appbar.dart';
 
 part 'phone_entry.w.dart';
 

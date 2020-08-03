@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:missionout/services/team/team.dart';
-import 'package:missionout/app/my_appbar.dart';
+import 'package:missionout/app/my_appbar/my_appbar.dart';
 
 part 'team_submit_raised_button.w.dart';
 

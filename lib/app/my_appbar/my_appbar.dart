@@ -1,13 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:missionout/app/editor_screen/editor_screen.dart';
-import 'package:missionout/constants/constants.dart';
-import 'package:missionout/services/auth_service/auth_service.dart';
-import 'package:missionout/services/user/user.dart';
+import 'package:missionout/app/user_edit_screen/user_edit_screen.dart';
 import 'package:missionout/app/user_screen/user_screen.dart';
-import 'package:missionout/common_widgets/platform_alert_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'package:missionout/constants/constants.dart';
+import 'package:missionout/services/user/user.dart';
+import 'package:missionout/common_widgets/platform_alert_dialog.dart';
+
+import 'my_appbar_model.dart';
 
 enum Menu { signOut, userOptions, editorOptions, privacyPolicy }
 
@@ -15,26 +17,28 @@ const EDITOR_OPTIONS_ENABLED = false;
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
+
   MyAppBar({@required this.title});
 
   @override
   Widget build(BuildContext context) {
     final user = context.watch<User>();
     final photoURLAvailable = user.photoUrl != null;
+    final model = MyAppBarModel(context);
     return AppBar(title: Text(title), actions: <Widget>[
       photoURLAvailable
           ? Container(
-          width: AppBar().preferredSize.height,
-          decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                image: CachedNetworkImageProvider(user.photoUrl),
-              )))
+              width: AppBar().preferredSize.height,
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: CachedNetworkImageProvider(model.user.photoUrl),
+                  )))
           : Icon(
-        Icons.account_circle,
-        size: AppBar().preferredSize.height,
-      ),
+              Icons.account_circle,
+              size: AppBar().preferredSize.height,
+            ),
       PopupMenuButton<Menu>(
         key: Key('PopupMenuButton'),
         // Used for testing, since I can't find this with find.byType
@@ -50,31 +54,20 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ).show(context);
                 if (didRequestSignOut) {
                   // tell User to sign out
-                  final authService = context.read<AuthService>();
-                  authService.signOut();
+                  model.signOut();
                 }
               }
               break;
 
             case Menu.userOptions:
               {
-                // Any screen that navigates from the app bar needs to be removed from the navigator stack
-                // The code removes user and editor from the stack until the first non-options page is encountered
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                    UserScreen.routeName,
-                        (route) =>
-                    ![UserScreen.routeName, EditorScreen.routeName]
-                        .contains(route.settings.name));
+                model.navigateToUserOptions();
               }
               break;
 
             case Menu.editorOptions:
               {
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                    EditorScreen.routeName,
-                        (route) =>
-                    ![UserScreen.routeName, EditorScreen.routeName]
-                        .contains(route.settings.name));
+                model.navigateToEditorOptions();
               }
               break;
             case Menu.privacyPolicy:
@@ -84,9 +77,10 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
               break;
           }
         },
-        itemBuilder: (BuildContext context) =>
-        <PopupMenuEntry<Menu>>[
+        itemBuilder: (BuildContext context) => <PopupMenuEntry<Menu>>[
           PopupMenuItem<Menu>(
+            enabled: !{UserScreen.routeName, UserEditScreen.routeName}
+                .contains(ModalRoute.of(context)?.settings?.name),
             value: Menu.userOptions,
             child: Text('Profile'),
           ),
@@ -110,28 +104,4 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
-}
-
-class OptionsPopupRoute extends PopupRoute {
-  // A popup route is used so back navigation doesn't go back to this screen.
-
-  // CreatePopupRoute([Mission mission]) : this._mission = mission;
-
-  @override
-  Color get barrierColor => Colors.red;
-
-  @override
-  bool get barrierDismissible => false;
-
-  @override
-  String get barrierLabel => "Close";
-
-  @override
-  Duration get transitionDuration => const Duration(milliseconds: 300);
-
-  @override
-  Widget buildPage(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation) {
-    return UserScreen();
-  }
 }
