@@ -7,7 +7,7 @@ class ResponseSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = ResponseSheetViewModel(context);
-    return Dialog(
+    return Card(
       child: SingleChildScrollView(
         child: StreamBuilder<Tuple2<Response, List<Response>>>(
           stream: model.responses(),

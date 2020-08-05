@@ -39,11 +39,9 @@ class _MyBlurState extends State<MyBlur> {
               context.read<StreamController<bool>>().add(false);
             },
             child: Center(
-              child: ClipRect(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaY: BLUR, sigmaX: BLUR),
-                  child: widget.child,
-                ),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaY: BLUR, sigmaX: BLUR),
+                child: widget.child,
               ),
             ),
           )
