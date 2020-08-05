@@ -21,7 +21,7 @@ class UserEditScreenModel {
 
   Stream<List<PhoneNumberRecord>> get phoneNumbers => user.fetchPhoneNumbers();
 
-  String get displayName => user.displayName ?? Strings.anonymousName;
+  String get displayName => user.displayName ?? '';
 
   Future<List<PhoneNumberRecord>> removePhoneNumberRecord(
       PhoneNumberRecord phoneNumberRecord) async {

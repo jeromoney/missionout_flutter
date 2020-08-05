@@ -14,7 +14,8 @@ class _PhoneEntryState extends State<PhoneEntry> {
   @override
   Widget build(BuildContext context) {
     final model = UserEditScreenModel(context);
-    return Center(
+    return Align(
+      alignment: Alignment.topCenter,
       child: Card(
         margin: const EdgeInsets.all(16.0),
         child: Provider<PhoneNumberHolder>(
@@ -107,8 +108,6 @@ class _MyInternationalPhoneNumberInputState
     String hintText;
 
     return InternationalPhoneNumberInput(
-      // This means that if the user deletes their number, they are opting to not receive pages.
-      selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
       countries: ["US"],
       inputDecoration: InputDecoration(labelText: labelText),
       hintText: hintText,

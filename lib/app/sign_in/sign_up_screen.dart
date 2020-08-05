@@ -7,6 +7,7 @@ import 'package:missionout/common_widgets/platform_alert_dialog.dart';
 import 'package:missionout/constants/constants.dart';
 import 'package:missionout/common_widgets/platform_exception_alert_dialog.dart';
 import 'package:missionout/constants/strings.dart';
+import 'package:missionout/services/apple_sign_in_available.dart';
 import 'package:missionout/services/auth_service/auth_service.dart';
 import 'package:missionout/services/firebase_link_handler.dart';
 import 'package:package_info/package_info.dart';
@@ -24,14 +25,15 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  bool _appleSignInAvailable = false;
   bool _showPasswordField = false;
   String _domain;
 
   @override
   Widget build(BuildContext context) {
+    final appleSignInAvailable =
+    context.watch<AppleSignInAvailable>();
     _domain = ModalRoute.of(context).settings.arguments;
-    final signInManager = context.read<SignInManager>();
+    final signInManager = context.watch<SignInManager>();
     return GestureDetector(
       onHorizontalDragUpdate: (details) {
         if (details.delta.dx > 0) Navigator.of(context).pop();
@@ -58,7 +60,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 key: Key('Google Sign In Button'),
                                 onPressed: signInManager.signInWithGoogle,
                               ),
-                              if (_appleSignInAvailable)
+                              if (appleSignInAvailable.isAvailable)
                                 Container(
                                   child: flutter_auth_buttons.AppleSignInButton(
                                     style: flutter_auth_buttons

@@ -20,9 +20,11 @@ class UserEditScreen extends StatelessWidget {
       create: (_) => StreamController<bool>(),
       child: Builder(
         builder: (context) => Stack(children: <Widget>[
-          Scaffold(appBar: MyAppBar(
-          title: "Edit Profile",
-        ), body: SingleChildScrollView(child: _UserEditScreenBody())),
+          Scaffold(
+              appBar: MyAppBar(
+                title: "Edit Profile",
+              ),
+              body: _UserEditScreenBody()),
           MyBlur(
             child: PhoneEntry(),
           ),
@@ -135,7 +137,7 @@ class _PhoneNumberListState extends State<_PhoneNumberList> {
         child: Text("No phone numbers. Add one now."),
       );
     return ListView.separated(
-      physics: NeverScrollableScrollPhysics(),
+        physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         itemBuilder: (_, index) {
           final phoneNumberRecord = widget.phoneNumbers[index];
