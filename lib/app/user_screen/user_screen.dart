@@ -55,7 +55,7 @@ class _UserScreenState extends State<UserScreen> {
                   if (!snapshot.hasData || phoneNumbers.length == 0)
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text("No phone numbers to sends alerts. Add one."),
+                      child: Text("No phone numbers to receive alerts. Add one."),
                     );
                   return ListView.separated(
                       physics: NeverScrollableScrollPhysics(),

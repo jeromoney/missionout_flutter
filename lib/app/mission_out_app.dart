@@ -11,7 +11,6 @@ import 'package:missionout/app/user_screen/user_screen.dart';
 import 'package:missionout/common_widgets/platform_alert_dialog.dart';
 import 'package:missionout/constants/strings.dart';
 import 'package:missionout/core/global_navigator_key.dart';
-import 'package:missionout/data_objects/is_loading_notifier.dart';
 import 'package:missionout/services/auth_service/auth_service.dart';
 import 'package:missionout/services/user/user.dart';
 import 'package:provider/provider.dart';
@@ -33,29 +32,22 @@ class _MissionOutAppState extends State<MissionOutApp> {
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = context.watch<IsLoadingNotifier>().isLoading;
-    if (isLoading) {
-      _initialScreen = WelcomeScreen();
-    }
-    else
-    {
-      switch (widget.appStatus) {
-        case AppStatus.signedOut:
-          _initialScreen = WelcomeScreen();
-          break;
+    switch (widget.appStatus) {
+      case AppStatus.signedOut:
+        _initialScreen = WelcomeScreen();
+        break;
 
-        case AppStatus.signedIn:
-          final user = context.watch<User>();
-          if (user == null)
-            _initialScreen = SignOutScreen();
-          else
-            _initialScreen = OverviewScreen();
-          break;
+      case AppStatus.signedIn:
+        final user = context.watch<User>();
+        if (user == null)
+          _initialScreen = SignOutScreen();
+        else
+          _initialScreen = OverviewScreen();
+        break;
 
-        case AppStatus.waiting:
-          _initialScreen = WaitingScreen();
-          break;
-      }
+      case AppStatus.waiting:
+        _initialScreen = WaitingScreen();
+        break;
     }
 
     // created a new _navKey so need to update value of provider

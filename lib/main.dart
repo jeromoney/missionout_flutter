@@ -65,8 +65,8 @@ class MyApp extends StatelessWidget {
                         AuthService authService, SignInManager signInManager) =>
                     SignInManager(
                       authService: authService,
-                      isLoading:
-                          ValueNotifier<bool>(isLoadingNotifier.isLoading),
+                      isLoadingNotifier:
+                      isLoadingNotifier,
                     )),
             Provider<EmailSecureStore>(
               lazy: false,
