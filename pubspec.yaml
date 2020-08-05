@@ -79,8 +79,6 @@ flutter:
     - graphics/missionoutlogo.png
     - sounds/teleportSound.mp4
     - sounds/teleportSound.m4a
-    - graphics/apple.png
-
 
 
   # To add assets to your application, add an assets section, like this:
