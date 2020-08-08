@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';
@@ -21,7 +22,13 @@ class SignInManager {
     } on PlatformException catch (e) {
       isLoadingNotifier.isLoading = false;
       _log.warning('Unable to complete sign in process', e);
-    } catch (e) {
+    }
+    on AuthException catch (e){
+      // User signed in but has not been assigned a team yet
+      isLoadingNotifier.isLoading = false;
+      rethrow;
+    }
+    catch (e) {
       isLoadingNotifier.isLoading = false;
       rethrow;
     }

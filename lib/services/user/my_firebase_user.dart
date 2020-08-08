@@ -87,7 +87,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
     if (snapshotTeamID == null) {
       log.warning(
           "Unable to identify the team that the user is assigned to. Logging out");
-      return null;
+      throw AuthException("000", "User has not been assigned to a team yet");
     }
 
     var optionalKeys = ["isEditor", "mobilePhoneNumber", "voicePhoneNumber"];
@@ -136,7 +136,8 @@ class MyFirebaseUser with ChangeNotifier implements User {
       @required this.teamID,
       @required this.isEditor,
       this.mobilePhoneNumber,
-      this.voicePhoneNumber}) {
+      this.voicePhoneNumber})
+      : assert(teamID != null) {
     addTokenToFirestore();
   }
 
@@ -202,8 +203,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
   }
 
   @override
-  Future deletePhoneNumber(
-      PhoneNumberRecord phoneNumberRecord) async {
+  Future deletePhoneNumber(PhoneNumberRecord phoneNumberRecord) async {
     final documentReference = phoneNumberRecord.selfRef;
     assert(documentReference != null);
     await documentReference.delete();

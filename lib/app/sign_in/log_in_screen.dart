@@ -1,19 +1,11 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:logging/logging.dart';
-import 'package:missionout/app/sign_in/sign_in_manager.dart';
-import 'package:missionout/common_widgets/platform_alert_dialog.dart';
-import 'package:missionout/common_widgets/platform_exception_alert_dialog.dart';
+
 import 'package:missionout/constants/constants.dart';
-import 'package:missionout/constants/strings.dart';
-import 'package:missionout/services/apple_sign_in_available.dart';
-import 'package:missionout/services/auth_service/auth_service.dart';
-import 'package:missionout/services/email_secure_store.dart';
-import 'package:missionout/services/firebase_link_handler.dart';
-import 'package:package_info/package_info.dart';
-import 'package:provider/provider.dart';
+
+import 'log_in_screen_model.dart';
 
 class LogInScreen extends StatefulWidget {
   static const routeName = '/logInScreen';
@@ -28,37 +20,26 @@ class _LogInScreenState extends State<LogInScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _showPasswordField = false;
-  FirebaseLinkHandler _linkHandler;
 
   @override
   void initState() {
     super.initState();
     _emailController.text = "";
-    _setEmailField();
+    _setEmailField(context);
   }
- // TODO - refactor this with futurebuilder, refactor with view model
-  void _setEmailField() async {
-    final String email =
-        await context.read<EmailSecureStore>()
-            .getEmail()
-            .catchError((e) {
-      widget._log.warning("Error retrieving saved email: $e");
-    });
-    _emailController.text = email;
+
+  // TODO - refactor this with futurebuilder,
+  void _setEmailField(BuildContext context) async {
+    _emailController.text = await LoginScreenModel.getEmail(context);
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    final appleSignInAvailable =
-    context.watch<AppleSignInAvailable>();
-    final signInManager = context.watch<SignInManager>();
-    final authService = context.watch<AuthService>();
-
-    _linkHandler = context.watch<FirebaseLinkHandler>();
+    final model = LoginScreenModel(context);
 
     return GestureDetector(
-      onHorizontalDragUpdate: (details){
+      onHorizontalDragUpdate: (details) {
         if (details.delta.dx > 0) Navigator.of(context).pop();
       },
       child: Scaffold(
@@ -75,13 +56,19 @@ class _LogInScreenState extends State<LogInScreen> {
                   children: <Widget>[
                     GoogleSignInButton(
                       text: 'Log in with Google',
-                      onPressed: signInManager.signInWithGoogle,
+                      onPressed: () {
+                        try {
+                          model.signInWithGoogle;
+                        } on Exception catch (e) {
+                          //assert(false);
+                        }
+                      },
                     ),
-                    if (appleSignInAvailable.isAvailable) ...[
+                    if (model.isAppleSignInAvailable) ...[
                       AppleSignInButton(
                         text: 'Log in with Apple',
-                        style:  AppleButtonStyle.white,
-                        onPressed: signInManager.signInWithApple,
+                        style: AppleButtonStyle.white,
+                        onPressed: model.signInWithApple,
                       )
                     ],
                     Divider(),
@@ -124,26 +111,34 @@ class _LogInScreenState extends State<LogInScreen> {
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: RaisedButton(
-                                  child: Text(!_showPasswordField ? 'Request email link' : 'Sign in with password'),
+                                  child: Text(!_showPasswordField
+                                      ? 'Request email link'
+                                      : 'Sign in with password'),
                                   onPressed: () async {
-                                    if (!_formKey.currentState.validate()) return;
-                                    if (!_showPasswordField) _sendEmailLink();
+                                    if (!_formKey.currentState.validate())
+                                      return;
+                                    if (!_showPasswordField)
+                                      model.sendEmailLink(
+                                          email: _emailController.text);
                                     else {
-                                      await authService
-                                        .signInWithEmailAndPassword(
-                                            _emailController.text,
-                                            _passwordController.text)
-                                        .catchError((error) {
-                                          final snackbar = SnackBar(content: Text("Unable to login with email/password"),);
-                                          Scaffold.of(context).showSnackBar(snackbar);
-                                      widget._log.warning(
-                                          'Unable to login with email/password',
-                                          error);
-                                    });
+                                      await model
+                                          .signInWithEmailAndPassword(
+                                              _emailController.text,
+                                              _passwordController.text)
+                                          .catchError((error) {
+                                        final snackbar = SnackBar(
+                                          content: Text(
+                                              "Unable to login with email/password"),
+                                        );
+                                        Scaffold.of(context)
+                                            .showSnackBar(snackbar);
+                                        widget._log.warning(
+                                            'Unable to login with email/password',
+                                            error);
+                                      });
                                     }
-//
                                   },
-                                  onLongPress: (){
+                                  onLongPress: () {
                                     setState(() {
                                       _showPasswordField = !_showPasswordField;
                                     });
@@ -161,43 +156,5 @@ class _LogInScreenState extends State<LogInScreen> {
         ),
       ),
     );
-  }
-
-  Future<void> _sendEmailLink() async {
-    try {
-      final PackageInfo packageInfo = await PackageInfo.fromPlatform();
-      // Send link
-      try {
-        await _linkHandler.sendSignInWithEmailLink(
-            email: _emailController.text,
-            url: Constants.firebaseProjectURl,
-            handleCodeInApp: true,
-            packageName: packageInfo.packageName,
-            androidInstallIfNotAvailable: true,
-            androidMinimumVersion: '18',
-            userMustExist: true);
-      } on StateError catch (e) {
-        widget._log.warning("user entered an email that is not in database");
-        PlatformAlertDialog(
-          title: "Email not in database",
-          content:
-              "${_emailController.text} is not in database. Use the sign up option instead",
-          defaultActionText: Strings.ok,
-        ).show(context);
-        return;
-      }
-
-      // Tell user we sent an email
-      PlatformAlertDialog(
-        title: Strings.checkYourEmail,
-        content: Strings.activationLinkSent(_emailController.text),
-        defaultActionText: Strings.ok,
-      ).show(context);
-    } on PlatformException catch (e) {
-      PlatformExceptionAlertDialog(
-        title: Strings.errorSendingEmail,
-        exception: e,
-      ).show(context);
-    }
   }
 }
