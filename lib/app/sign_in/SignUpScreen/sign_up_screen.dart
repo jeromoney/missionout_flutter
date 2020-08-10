@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart'
     as flutter_auth_buttons;
+import 'package:missionout/app/sign_in/SignUpScreen/sign_up_screen_model.dart';
 import 'package:missionout/app/sign_in/sign_in_manager.dart';
 import 'package:missionout/common_widgets/platform_alert_dialog.dart';
 import 'package:missionout/constants/constants.dart';
@@ -30,6 +31,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final model = SignUpScreenModel(context);
     final appleSignInAvailable =
     context.watch<AppleSignInAvailable>();
     _domain = ModalRoute.of(context).settings.arguments;

@@ -21,29 +21,21 @@ class AuthWidget extends StatefulWidget {
 
 class _AuthWidgetState extends State<AuthWidget> {
   @override
-  Widget build(BuildContext context) {
-    return Directionality(
+  Widget build(BuildContext context) => Directionality(
       textDirection: TextDirection.ltr,
-      child: Builder(
-        builder: (context) {
-          AppStatus appStatus;
-          if (widget.userSnapshot.connectionState == ConnectionState.active) {
-            widget.userSnapshot.hasData
-                ? appStatus = AppStatus.signedIn
-                : appStatus = AppStatus.signedOut;
-          } else
-            appStatus = AppStatus.waiting;
-
-          return Consumer<IsLoadingNotifier>(
-            builder: (_, isLoadingNotifier, __) {
-              if (isLoadingNotifier.isLoading) appStatus = AppStatus.waiting;
-              return MissionOutApp(
-                appStatus: appStatus,
-              );
-            },
-          );
-        },
-      ),
-    );
-  }
+      child: Consumer<IsLoadingNotifier>(builder: (_, isLoadingNotifier, __) {
+        AppStatus appStatus = AppStatus.waiting;
+        if (isLoadingNotifier.isLoading)
+          appStatus = AppStatus.waiting;
+        else if (widget.userSnapshot.connectionState ==
+            ConnectionState.active) {
+          widget.userSnapshot.hasData
+              ? appStatus = AppStatus.signedIn
+              : appStatus = AppStatus.signedOut;
+        }
+        return MissionOutApp(
+          key: UniqueKey(),
+          appStatus: appStatus,
+        );
+      }));
 }

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';
@@ -6,13 +7,13 @@ import 'package:missionout/common_widgets/platform_alert_dialog.dart';
 import 'package:missionout/common_widgets/platform_exception_alert_dialog.dart';
 import 'package:missionout/constants/constants.dart';
 import 'package:missionout/constants/strings.dart';
+import 'package:missionout/core/global_navigator_key.dart';
 import 'package:missionout/services/apple_sign_in_available.dart';
 import 'package:missionout/services/auth_service/auth_service.dart';
 import 'package:missionout/services/email_secure_store.dart';
 import 'package:missionout/services/firebase_link_handler.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
-
 
 class LoginScreenModel {
   final BuildContext context;
@@ -30,9 +31,24 @@ class LoginScreenModel {
 
   bool get isAppleSignInAvailable => _appleSignInAvailable.isAvailable;
 
-  dynamic get signInWithGoogle => _signInManager.signInWithGoogle();
+  Future _signIn(Future Function() signInMethod) async {
+    try {
+      await signInMethod();
+    } on AuthException catch (e) {
+      // context will change during this method, so we need to grab current context.
+      // This doesn't work since the
+//      final navKey = context.read<GlobalNavigatorKey>().navKey;
+//      PlatformAlertDialog(
+//        title: "Team is not yet assigned",
+//        content: "Try another account or contact your team administrator",
+//        defaultActionText: Strings.ok,
+//      ).show(navKey.currentState.overlay.context);
+    }
+  }
 
-  dynamic get signInWithApple => _signInManager.signInWithApple();
+  Future signInWithGoogle() async => _signIn(_signInManager.signInWithGoogle);
+
+  Future signInWithApple() async => _signIn(_signInManager.signInWithApple);
 
   static Future<String> getEmail(BuildContext context) async {
     // Method is called in init method with a different context, so slightly

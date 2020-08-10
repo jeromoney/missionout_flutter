@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:logging/logging.dart';
-import 'package:missionout/app/sign_in/sign_up_screen.dart';
+import 'package:missionout/app/sign_in/SignUpScreen/sign_up_screen.dart';
 
 const COLUMN_WIDTH = 308.0;
 

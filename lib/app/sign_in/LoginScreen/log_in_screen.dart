@@ -1,15 +1,12 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
-import 'package:logging/logging.dart';
-
 import 'package:missionout/constants/constants.dart';
 
 import 'log_in_screen_model.dart';
 
 class LogInScreen extends StatefulWidget {
   static const routeName = '/logInScreen';
-  final _log = Logger('LogInScreen');
 
   @override
   _LogInScreenState createState() => _LogInScreenState();
@@ -18,8 +15,6 @@ class LogInScreen extends StatefulWidget {
 class _LogInScreenState extends State<LogInScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  bool _showPasswordField = false;
 
   @override
   void initState() {
@@ -37,7 +32,6 @@ class _LogInScreenState extends State<LogInScreen> {
   @override
   Widget build(BuildContext context) {
     final model = LoginScreenModel(context);
-
     return GestureDetector(
       onHorizontalDragUpdate: (details) {
         if (details.delta.dx > 0) Navigator.of(context).pop();
@@ -56,13 +50,7 @@ class _LogInScreenState extends State<LogInScreen> {
                   children: <Widget>[
                     GoogleSignInButton(
                       text: 'Log in with Google',
-                      onPressed: () {
-                        try {
-                          model.signInWithGoogle;
-                        } on Exception catch (e) {
-                          //assert(false);
-                        }
-                      },
+                      onPressed: model.signInWithGoogle,
                     ),
                     if (model.isAppleSignInAvailable) ...[
                       AppleSignInButton(
@@ -90,58 +78,17 @@ class _LogInScreenState extends State<LogInScreen> {
                               ),
                             ),
                           ),
-                          if (_showPasswordField) ...[
-                            Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: TextFormField(
-                                obscureText: true,
-                                controller: _passwordController,
-                                validator: (password) {
-                                  if (password.length < 6)
-                                    return 'Password too short (less than 6 characters)';
-                                },
-                                decoration: InputDecoration(
-                                    labelText: 'Password',
-                                    border: OutlineInputBorder()),
-                              ),
-                            )
-                          ],
                           SizedBox(
                               width: Constants.column_width,
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: RaisedButton(
-                                  child: Text(!_showPasswordField
-                                      ? 'Request email link'
-                                      : 'Sign in with password'),
+                                  child: Text('Request email link'),
                                   onPressed: () async {
                                     if (!_formKey.currentState.validate())
                                       return;
-                                    if (!_showPasswordField)
-                                      model.sendEmailLink(
-                                          email: _emailController.text);
-                                    else {
-                                      await model
-                                          .signInWithEmailAndPassword(
-                                              _emailController.text,
-                                              _passwordController.text)
-                                          .catchError((error) {
-                                        final snackbar = SnackBar(
-                                          content: Text(
-                                              "Unable to login with email/password"),
-                                        );
-                                        Scaffold.of(context)
-                                            .showSnackBar(snackbar);
-                                        widget._log.warning(
-                                            'Unable to login with email/password',
-                                            error);
-                                      });
-                                    }
-                                  },
-                                  onLongPress: () {
-                                    setState(() {
-                                      _showPasswordField = !_showPasswordField;
-                                    });
+                                    model.sendEmailLink(
+                                        email: _emailController.text);
                                   },
                                 ),
                               )),

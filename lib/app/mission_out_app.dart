@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:missionout/app/detail_screen/detail_screen.dart';
 import 'package:missionout/app/editor_screen/editor_screen.dart';
 import 'package:missionout/app/overview_screen/overview_screen.dart';
-import 'package:missionout/app/sign_in/log_in_screen.dart';
-import 'package:missionout/app/sign_in/sign_up_screen.dart';
+import 'package:missionout/app/sign_in/LoginScreen/log_in_screen.dart';
+import 'package:missionout/app/sign_in/SignUpScreen/sign_up_screen.dart';
 import 'package:missionout/app/sign_in/team_domain_screen.dart';
 import 'package:missionout/app/sign_in/welcome_screen.dart';
 import 'package:missionout/app/user_edit_screen/user_edit_screen.dart';
@@ -17,47 +17,39 @@ import 'package:provider/provider.dart';
 
 enum AppStatus { signedOut, signedIn, waiting }
 
-class MissionOutApp extends StatefulWidget {
+class MissionOutApp extends StatelessWidget {
   final AppStatus appStatus;
 
   MissionOutApp({Key key, @required this.appStatus}) : super(key: key);
 
   @override
-  _MissionOutAppState createState() => _MissionOutAppState();
-}
-
-class _MissionOutAppState extends State<MissionOutApp> {
-  final GlobalKey<NavigatorState> _navKey = GlobalKey<NavigatorState>();
-  Widget _initialScreen;
-
-  @override
   Widget build(BuildContext context) {
-    switch (widget.appStatus) {
+    Widget initialScreen;
+    final GlobalKey<NavigatorState> navKey = GlobalKey<NavigatorState>();
+    Provider.of<GlobalNavigatorKey>(context, listen: false).navKey = navKey;
+
+    switch (appStatus) {
       case AppStatus.signedOut:
-        _initialScreen = WelcomeScreen();
+        initialScreen = WelcomeScreen();
         break;
 
       case AppStatus.signedIn:
-        final user = context.watch<User>();
-        if (user == null)
-          _initialScreen = SignOutScreen();
+        if (context.watch<User>() == null)
+          initialScreen = SignOutScreen();
         else
-          _initialScreen = OverviewScreen();
+          initialScreen = OverviewScreen();
         break;
 
       case AppStatus.waiting:
-        _initialScreen = WaitingScreen();
+        initialScreen = WaitingScreen();
         break;
     }
 
-    // created a new _navKey so need to update value of provider
-    Provider.of<GlobalNavigatorKey>(context, listen: false).navKey = _navKey;
-
     return MaterialApp(
-      navigatorKey: _navKey,
+      navigatorKey: navKey,
       title: 'Mission Out',
       theme: ThemeData(primarySwatch: Colors.blueGrey),
-      home: _initialScreen,
+      home: initialScreen,
       routes: {
         OverviewScreen.routeName: (context) => OverviewScreen(),
         EditorScreen.routeName: (context) => EditorScreen(),
