@@ -7,7 +7,6 @@ import 'package:missionout/common_widgets/platform_alert_dialog.dart';
 import 'package:missionout/common_widgets/platform_exception_alert_dialog.dart';
 import 'package:missionout/constants/constants.dart';
 import 'package:missionout/constants/strings.dart';
-import 'package:missionout/core/global_navigator_key.dart';
 import 'package:missionout/services/apple_sign_in_available.dart';
 import 'package:missionout/services/auth_service/auth_service.dart';
 import 'package:missionout/services/email_secure_store.dart';
@@ -35,14 +34,11 @@ class LoginScreenModel {
     try {
       await signInMethod();
     } on AuthException catch (e) {
-      // context will change during this method, so we need to grab current context.
-      // This doesn't work since the
-//      final navKey = context.read<GlobalNavigatorKey>().navKey;
-//      PlatformAlertDialog(
-//        title: "Team is not yet assigned",
-//        content: "Try another account or contact your team administrator",
-//        defaultActionText: Strings.ok,
-//      ).show(navKey.currentState.overlay.context);
+      PlatformAlertDialog(
+        title: "Team is not yet assigned",
+        content: "Try another account or contact your team administrator",
+        defaultActionText: Strings.ok,
+      ).show(context);
     }
   }
 

@@ -15,12 +15,12 @@ import 'package:missionout/services/auth_service/auth_service.dart';
 import 'package:missionout/services/user/user.dart';
 import 'package:provider/provider.dart';
 
-enum AppStatus { signedOut, signedIn, waiting }
+enum AppStatus { signedOut, signedIn }
 
 class MissionOutApp extends StatelessWidget {
   final AppStatus appStatus;
 
-  MissionOutApp({Key key, @required this.appStatus}) : super(key: key);
+  MissionOutApp({@required this.appStatus});
 
   @override
   Widget build(BuildContext context) {
@@ -38,10 +38,6 @@ class MissionOutApp extends StatelessWidget {
           initialScreen = SignOutScreen();
         else
           initialScreen = OverviewScreen();
-        break;
-
-      case AppStatus.waiting:
-        initialScreen = WaitingScreen();
         break;
     }
 

@@ -47,8 +47,10 @@ class FirebaseAuthService extends AuthService {
   void dispose() {}
 
   @override
-  Stream<User> get onAuthStateChanged =>
-      _firebaseAuth.onAuthStateChanged.asyncMap(_userFromFirebase);
+  Stream<User> get onAuthStateChanged {
+    var i = 1;
+    return _firebaseAuth.onAuthStateChanged.asyncMap(_userFromFirebase);
+  }
 
   @override
   Future<User> signInWithEmailAndPassword(String email, String password) async {
