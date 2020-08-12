@@ -117,8 +117,13 @@ class AuthServiceAdapter extends AuthService {
       authService.signInWithApple();
 
   @override
+  Future<User> signInWithDemo() => authService.signInWithDemo();
+
+  @override
   Future<User> signInWithGoogle() => authService.signInWithGoogle();
 
   @override
   Future<void> signOut() => authService.signOut();
+
+
 }

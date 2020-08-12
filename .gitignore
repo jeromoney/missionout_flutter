@@ -52,3 +52,5 @@ firestore_rules/*
 !firestore_rules/firestore.rules
 
 *.g.dart
+
+*secrets.dart

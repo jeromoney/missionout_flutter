@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:missionout/services/team/team.dart';
 import 'package:missionout/services/auth_service/auth_service.dart';
+import 'package:missionout/services/team/team.dart';
 import 'package:missionout/services/user/user.dart';
 import 'package:provider/provider.dart';
 
@@ -27,6 +27,10 @@ class AuthWidgetBuilder extends StatelessWidget {
               FutureProvider<Team>(
                 initialData: null,
                 create: (_) async => authService.createTeam(),
+                catchError: (_, __) {
+                  var i = 1;
+                  return null;
+                },
               ),
             ],
             child: builder(context, snapshot),

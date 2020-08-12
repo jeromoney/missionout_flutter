@@ -32,7 +32,7 @@ dependencies:
   intl: ^0.16.0
   flutter_auth_buttons: ^0.9.0
   tuple: ^1.0.3
-  provider: ^4.1.1
+  provider: ^4.1.2
   firebase_core:  ^0.4.4
   firebase_messaging: ^6.0.15
   phone_number: ^0.6.2+1
@@ -47,7 +47,7 @@ dependencies:
   logging: ">=0.11.4 <2.0.0"
   json_annotation: ^3.0.1
   time_ago_provider: ^2.0.5
-  google_maps_flutter: ^0.5.28+1
+  google_maps_flutter: ^0.5.29
 
 
 dev_dependencies:

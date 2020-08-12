@@ -182,6 +182,12 @@ class FirebaseAuthService extends AuthService {
   }
 
   @override
+  Future<User> signInWithDemo() async {
+    final authResult = await _firebaseAuth.signInAnonymously();
+    return _userFromFirebase(authResult.user);
+  }
+
+  @override
   Future<void> signOut() async {
     if (_firebaseUser == null)
       throw StateError("Signin out a user that is null");
@@ -198,4 +204,6 @@ class FirebaseAuthService extends AuthService {
     await GoogleSignIn().signOut();
     await _firebaseAuth.signOut();
   }
+
+
 }

@@ -94,4 +94,10 @@ class MockAuthService extends AuthService {
     // TODO: implement signInWithEmailAndPassword
     throw UnimplementedError();
   }
+
+  @override
+  Future<User> signInWithDemo() {
+    // TODO: implement signInWithDemo
+    throw UnimplementedError();
+  }
 }

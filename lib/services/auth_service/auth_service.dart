@@ -25,6 +25,8 @@ abstract class AuthService {
 
   Future<User> signInWithGoogle();
   Future<User> signInWithApple();
+  Future<User> signInWithDemo();
+
 
   Future<void> signOut();
 
@@ -32,4 +34,5 @@ abstract class AuthService {
   Future<Team> createTeam();
 
   void dispose();
+
 }

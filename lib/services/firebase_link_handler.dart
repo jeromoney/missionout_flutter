@@ -2,6 +2,7 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';
+import 'package:missionout/constants/secrets.dart';
 import 'package:missionout/data_objects/is_loading_notifier.dart';
 import 'package:missionout/services/auth_service/auth_service.dart';
 import 'package:missionout/services/user/user.dart';
@@ -31,13 +32,15 @@ class FirebaseLinkHandler {
     FirebaseDynamicLinks.instance.onLink(
         onSuccess: (PendingDynamicLinkData dynamicLink) async {
       final Uri link = dynamicLink?.link;
-      if (link != null) _signInWithEmail(dynamicLink.toString());
+      if (link?.path == Secrets.IOS_PATH) {
+        _signInToDemo();
+      } else if (link != null) _signInWithEmail(dynamicLink.toString());
     }, onError: (OnLinkErrorException e) async {
       _logger.warning("Error processing firebase link", e);
     });
   }
 
-  Future<void> _signInWithEmail(String link) async {
+  Future _signInWithEmail(String link) async {
     final isLoadingProvider = context.read<IsLoadingNotifier>();
     try {
       isLoadingProvider.isLoading = true;
@@ -91,6 +94,16 @@ class FirebaseLinkHandler {
           userMustExist: userMustExist);
     } on PlatformException catch (e) {
       rethrow;
+    }
+  }
+
+  Future _signInToDemo() async {
+    final isLoadingProvider = context.read<IsLoadingNotifier>();
+    try {
+      isLoadingProvider.isLoading = true;
+      auth.signInWithDemo();
+    } finally {
+      isLoadingProvider.isLoading = false;
     }
   }
 }

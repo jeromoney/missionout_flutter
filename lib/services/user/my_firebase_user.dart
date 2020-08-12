@@ -1,12 +1,12 @@
 import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:logging/logging.dart';
-
 import 'package:missionout/data_objects/phone_number_record.dart';
 import 'package:missionout/services/user/user.dart';
 
@@ -18,7 +18,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
   FirebaseUser firebaseUser;
 
   @override
-  String get uid => firebaseUser.uid;
+  String get uid => !firebaseUser.isAnonymous ? firebaseUser.uid : 'anonymous';
 
   @override
   String get email => firebaseUser.email;
@@ -27,7 +27,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
   String get photoUrl => firebaseUser.photoUrl;
 
   @override
-  String get displayName => firebaseUser.displayName;
+  String get displayName => !firebaseUser.isAnonymous ? firebaseUser.displayName : 'anonymous';
 
   // Values held in Firestore
   @override
@@ -46,8 +46,11 @@ class MyFirebaseUser with ChangeNotifier implements User {
 
   static Future<MyFirebaseUser> fromFirebaseUser(
       FirebaseUser firebaseUser) async {
-    final log = Logger('MyFirebaseUser');
+    if (firebaseUser.isAnonymous)
+      return MyFirebaseUser(
+          firebaseUser: firebaseUser, teamID: "demoteam.com", isEditor: false);
 
+    final log = Logger('MyFirebaseUser');
     if (firebaseUser == null) {
       log.warning("Team is null. User was not authenticated");
       throw ArgumentError.notNull('firebaseUser');
@@ -90,7 +93,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
       throw AuthException("000", "User has not been assigned to a team yet");
     }
 
-    var optionalKeys = ["isEditor", "mobilePhoneNumber", "voicePhoneNumber"];
+    var optionalKeys = ["isEditor"];
     var isMissingOptionalKey =
         optionalKeys.any((requiredKey) => !data.containsKey(optionalKeys));
     if (isMissingOptionalKey)
@@ -101,33 +104,11 @@ class MyFirebaseUser with ChangeNotifier implements User {
         ? isEditor = data['isEditor']
         : isEditor = false;
 
-    PhoneNumber mobilePhoneNumber;
-    PhoneNumber voicePhoneNumber;
-    try {
-      mobilePhoneNumber = PhoneNumber(
-          isoCode: data['mobilePhoneNumber']['isoCode'],
-          phoneNumber: data['mobilePhoneNumber']['phoneNumber']);
-    } on TypeError catch (error) {
-      log.warning("Phone number in old format, ignoring", error);
-    } on NoSuchMethodError catch (error) {
-      log.warning("Phone number in old format, ignoring", error);
-    }
-    try {
-      voicePhoneNumber = PhoneNumber(
-          isoCode: data['voicePhoneNumber']['isoCode'],
-          phoneNumber: data['voicePhoneNumber']['phoneNumber']);
-    } on TypeError catch (error) {
-      log.warning("Phone number in old format, ignoring", error);
-    } on NoSuchMethodError catch (error) {
-      log.warning("Phone number in old format, ignoring", error);
-    }
-
     return MyFirebaseUser(
-        firebaseUser: firebaseUser,
-        teamID: snapshotTeamID,
-        isEditor: isEditor,
-        mobilePhoneNumber: mobilePhoneNumber,
-        voicePhoneNumber: voicePhoneNumber);
+      firebaseUser: firebaseUser,
+      teamID: snapshotTeamID,
+      isEditor: isEditor,
+    );
   }
 
   @override
@@ -138,7 +119,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
       this.mobilePhoneNumber,
       this.voicePhoneNumber})
       : assert(teamID != null) {
-    addTokenToFirestore();
+    _addTokenToFirestore();
   }
 
   @override
@@ -160,7 +141,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
 
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
-  Future<void> addTokenToFirestore() async {
+  Future _addTokenToFirestore() async {
     // Setting up the user will be the responsibility of the server.
     // This method adds the user token to firestore
     final fcmToken = await _firebaseMessaging.getToken();
