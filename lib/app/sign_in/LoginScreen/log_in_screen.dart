@@ -10,24 +10,29 @@ import 'log_in_screen_model.dart';
 class LogInScreen extends StatefulWidget {
   static const routeName = '/logInScreen';
 
+  final String gmailDomain = null;
+  final showGoogleButton = true;
+  final showAppleButton = true;
+  final showEmailLogin = true;
+
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+
   @override
   _LogInScreenState createState() => _LogInScreenState();
 }
 
 class _LogInScreenState extends State<LogInScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-
   @override
   void initState() {
     super.initState();
-    _emailController.text = "";
+    widget._emailController.text = "";
     _setEmailField(context);
   }
 
   // TODO - refactor this with futurebuilder,
   void _setEmailField(BuildContext context) async {
-    _emailController.text = await LoginScreenModel.getEmail(context);
+    widget._emailController.text = await LoginScreenModel.getEmail(context);
     setState(() {});
   }
 
@@ -56,53 +61,60 @@ class _LogInScreenState extends State<LogInScreen> {
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          GoogleSignInButton(
-                            text: 'Log in with Google',
-                            onPressed: model.signInWithGoogle,
-                          ),
-                          if (model.isAppleSignInAvailable) ...[
+                          if (widget.showGoogleButton)
+                            GoogleSignInButton(
+                              text: 'Log in with Google',
+                              onPressed: model.signInWithGoogle,
+                            ),
+                          if (model.isAppleSignInAvailable &&
+                              widget.showAppleButton) ...[
                             AppleSignInButton(
                               text: 'Log in with Apple',
                               style: AppleButtonStyle.white,
                               onPressed: model.signInWithApple,
                             )
                           ],
-                          Divider(),
-                          Form(
-                            key: _formKey,
-                            child: Column(
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: TextFormField(
-                                    controller: _emailController,
-                                    validator: (email) {
-                                      if (!EmailValidator.validate(email))
-                                        return 'Enter a valid email';
-                                    },
-                                    decoration: InputDecoration(
-                                      labelText: 'Email',
-                                      border: OutlineInputBorder(),
+                          if (widget.showEmailLogin &&
+                              (widget.showAppleButton ||
+                                  widget.showGoogleButton))
+                            Divider(),
+                          if (widget.showEmailLogin)
+                            Form(
+                              key: widget._formKey,
+                              child: Column(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: TextFormField(
+                                      controller: widget._emailController,
+                                      validator: (email) {
+                                        if (!EmailValidator.validate(email))
+                                          return 'Enter a valid email';
+                                      },
+                                      decoration: InputDecoration(
+                                        labelText: 'Email',
+                                        border: OutlineInputBorder(),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                SizedBox(
-                                    width: Constants.column_width,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: RaisedButton(
-                                        child: Text('Request email link'),
-                                        onPressed: () async {
-                                          if (!_formKey.currentState.validate())
-                                            return;
-                                          model.sendEmailLink(
-                                              email: _emailController.text);
-                                        },
-                                      ),
-                                    )),
-                              ],
+                                  SizedBox(
+                                      width: Constants.column_width,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: RaisedButton(
+                                          child: Text('Request email link'),
+                                          onPressed: () async {
+                                            if (!widget._formKey.currentState
+                                                .validate()) return;
+                                            model.sendEmailLink(
+                                                email: widget
+                                                    ._emailController.text);
+                                          },
+                                        ),
+                                      )),
+                                ],
+                              ),
                             ),
-                          ),
                         ],
                       ),
                     ),

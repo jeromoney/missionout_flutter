@@ -54,3 +54,4 @@ firestore_rules/*
 *.g.dart
 
 *secrets.dart
+*.last_build_id

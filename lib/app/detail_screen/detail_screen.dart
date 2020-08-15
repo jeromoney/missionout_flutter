@@ -4,17 +4,16 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:missionout/app/detail_screen/detail_screen_model.dart';
+import 'package:missionout/app/response_sheet/response_sheet.dart';
 import 'package:missionout/common_widgets/mission_map/google_mission_map.dart';
 import 'package:missionout/common_widgets/my_blur.dart';
-import 'package:missionout/constants/strings.dart';
 import 'package:missionout/common_widgets/platform_alert_dialog.dart';
-import 'package:missionout/data_objects/mission_address_arguments.dart';
-import 'package:provider/provider.dart';
-
+import 'package:missionout/constants/strings.dart';
 import 'package:missionout/data_objects/mission.dart';
-import 'package:missionout/data_objects/response.dart';
-import 'package:missionout/app/response_sheet/response_sheet.dart';
+import 'package:missionout/data_objects/mission_address_arguments.dart';
 import 'package:missionout/data_objects/page.dart' as missionpage;
+import 'package:missionout/data_objects/response.dart';
+import 'package:provider/provider.dart';
 
 part 'actions_detail.w.dart';
 
@@ -66,9 +65,11 @@ class _DetailScreenBuild extends StatelessWidget {
                 if (snapshot.hasError || snapshot.data == null)
                   return SafeArea(
                       child: IconButton(
-                        onPressed: model.navigateToOverviewScreen,
-                        icon: Icon(Icons.clear),
-                      ));
+                    onPressed: model.navigateToOverviewScreen,
+                    color: Colors.black,
+                    icon: Icon(Icons.cancel),
+                    iconSize: 32,
+                  ));
                 if (snapshot.connectionState == ConnectionState.waiting)
                   return CircularProgressIndicator();
                 final location = snapshot.data;
@@ -82,7 +83,11 @@ class _DetailScreenBuild extends StatelessWidget {
                       SafeArea(
                           child: IconButton(
                         onPressed: model.navigateToOverviewScreen,
-                        icon: Icon(Icons.clear, size: 32,),
+                        icon: Icon(
+                          Icons.cancel,
+                          size: 32,
+                          color: Colors.white,
+                        ),
                       )),
                     ]));
               },
