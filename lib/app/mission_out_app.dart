@@ -3,8 +3,6 @@ import 'package:missionout/app/detail_screen/detail_screen.dart';
 import 'package:missionout/app/editor_screen/editor_screen.dart';
 import 'package:missionout/app/overview_screen/overview_screen.dart';
 import 'package:missionout/app/sign_in/LoginScreen/log_in_screen.dart';
-import 'package:missionout/app/sign_in/SignUpScreen/sign_up_screen.dart';
-import 'package:missionout/app/sign_in/team_domain_screen.dart';
 import 'package:missionout/app/sign_in/welcome_screen.dart';
 import 'package:missionout/app/user_edit_screen/user_edit_screen.dart';
 import 'package:missionout/app/user_screen/user_screen.dart';
@@ -54,9 +52,7 @@ class MissionOutApp extends StatelessWidget {
         DetailScreen.routeName: (context) => DetailScreen(),
         // Sign In Screens
         WelcomeScreen.routeName: (context) => WelcomeScreen(),
-        SignUpScreen.routeName: (context) => SignUpScreen(),
         LogInScreen.routeName: (context) => LogInScreen(),
-        TeamDomainScreen.routeName: (context) => TeamDomainScreen(),
         // Loading Screen
         WaitingScreen.routeName: (context) => WaitingScreen(),
       },
