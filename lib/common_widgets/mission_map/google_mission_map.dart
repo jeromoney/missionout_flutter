@@ -13,6 +13,8 @@ class GoogleMissionMap extends MissionMap {
             position: center,
           )
         },
+        myLocationEnabled: false,
+        myLocationButtonEnabled: false,
         zoomControlsEnabled: false,
         rotateGesturesEnabled: false,
         scrollGesturesEnabled: false,
