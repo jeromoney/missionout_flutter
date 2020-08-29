@@ -1,13 +1,15 @@
+import 'dart:convert';
+
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:apple_sign_in/scope.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logging/logging.dart';
-
 import 'package:missionout/services/auth_service/auth_service.dart';
 import 'package:missionout/services/team/firestore_team.dart';
 import 'package:missionout/services/team/team.dart';
@@ -71,7 +73,7 @@ class FirebaseAuthService extends AuthService {
   }
 
   @override
-  Future<void> sendPasswordResetEmail(String email) async {
+  Future sendPasswordResetEmail(String email) async {
     await _firebaseAuth.sendPasswordResetEmail(email: email);
   }
 
@@ -88,7 +90,7 @@ class FirebaseAuthService extends AuthService {
   }
 
   @override
-  Future<void> sendSignInWithEmailLink({
+  Future sendSignInWithEmailLink({
     @required String email,
     @required String url,
     @required bool handleCodeInApp,
@@ -98,13 +100,19 @@ class FirebaseAuthService extends AuthService {
     @required String androidMinimumVersion,
     bool userMustExist = false,
   }) async {
+    // Intercept the hush hush email and sign into demo mode
+    DocumentSnapshot hashRef =
+        await _db.document('/demopassword/demopassword').get();
+    final hash = hashRef.data['hashed'];
+    final bytes = utf8.encode(email); // data being hashed
+    final digest = sha1.convert(bytes);
+    if (digest.toString().toUpperCase() == hash) return signInWithDemo();
+
     if (userMustExist) {
       final List<String> signInMethods =
           await _firebaseAuth.fetchSignInMethodsForEmail(email: email);
       // List is empty if user not in database
-      if (signInMethods.isEmpty) {
-        throw StateError("User is not in database");
-      }
+      if (signInMethods.isEmpty) throw StateError("User is not in database");
     }
 
     return await _firebaseAuth.sendSignInWithEmailLink(
@@ -136,7 +144,9 @@ class FirebaseAuthService extends AuthService {
         final authResult = await _firebaseAuth.signInWithCredential(credential);
         final firebaseUser = authResult.user;
         final appleFullName = appleIdCredential.fullName;
-        if (scopes.contains(Scope.fullName) && appleFullName.givenName != null && appleFullName.familyName != null) {
+        if (scopes.contains(Scope.fullName) &&
+            appleFullName.givenName != null &&
+            appleFullName.familyName != null) {
           final updateUser = UserUpdateInfo();
           updateUser.displayName =
               '${appleIdCredential.fullName.givenName} ${appleIdCredential.fullName.familyName}';
@@ -188,7 +198,7 @@ class FirebaseAuthService extends AuthService {
   }
 
   @override
-  Future<void> signOut() async {
+  Future signOut() async {
     if (_firebaseUser == null)
       throw StateError("Signin out a user that is null");
     // remove token from Firestore from first, before user signs out
@@ -204,6 +214,4 @@ class FirebaseAuthService extends AuthService {
     await GoogleSignIn().signOut();
     await _firebaseAuth.signOut();
   }
-
-
 }

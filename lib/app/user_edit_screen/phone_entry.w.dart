@@ -75,10 +75,6 @@ class _PhoneEntryState extends State<PhoneEntry> {
                             allowText: _allowTexts,
                           );
                           await model.addPhoneNumber(phoneNumberRecord);
-                          final snackbar = SnackBar(
-                            content: Text("Saved number"),
-                          );
-                          Scaffold.of(context).showSnackBar(snackbar);
                           context.read<StreamController<bool>>().add(false);
                         }
                       },

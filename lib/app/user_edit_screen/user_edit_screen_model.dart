@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:missionout/constants/strings.dart';
 import 'package:missionout/data_objects/phone_number_record.dart';
 import 'package:missionout/services/team/team.dart';
 import 'package:missionout/services/user/user.dart';
@@ -23,7 +22,7 @@ class UserEditScreenModel {
 
   String get displayName => user.displayName ?? '';
 
-  Future<List<PhoneNumberRecord>> removePhoneNumberRecord(
+  Future removePhoneNumberRecord(
       PhoneNumberRecord phoneNumberRecord) async {
     await user.deletePhoneNumber(phoneNumberRecord);
     Scaffold.of(context)

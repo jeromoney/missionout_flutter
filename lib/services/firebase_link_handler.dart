@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 
 import 'email_secure_store.dart';
 
-enum LinkModes { emailSignIn, demo, loginCustomization }
+enum LinkModes { emailSignIn, loginCustomization, initialize }
 
 class FirebaseLinkHandler {
   final _logger = Logger("FirebaseLinkHandler");
@@ -29,17 +29,6 @@ class FirebaseLinkHandler {
   void _initDynamicLinks() async {
     final PendingDynamicLinkData data =
         await FirebaseDynamicLinks.instance.getInitialLink();
-    final linkMode = getLinkMode(data);
-    switch (linkMode) {
-      case LinkModes.emailSignIn:
-        break;
-      case LinkModes.demo:
-        // TODO: Handle this case.
-        break;
-      case LinkModes.loginCustomization:
-        // TODO: Handle this case.
-        break;
-    }
     final Uri deepLink = data?.link;
     if (deepLink != null) _signInWithEmail(deepLink.toString());
     FirebaseDynamicLinks.instance.onLink(
@@ -118,9 +107,5 @@ class FirebaseLinkHandler {
     } finally {
       isLoadingProvider.isLoading = false;
     }
-  }
-
-  LinkModes getLinkMode(PendingDynamicLinkData data) {
-    return LinkModes.demo;
   }
 }

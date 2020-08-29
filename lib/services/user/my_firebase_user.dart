@@ -46,9 +46,9 @@ class MyFirebaseUser with ChangeNotifier implements User {
 
   static Future<MyFirebaseUser> fromFirebaseUser(
       FirebaseUser firebaseUser) async {
-    if (firebaseUser.isAnonymous)
+    if (firebaseUser.isAnonymous) // TODO -- REMOVE AFTER APP STORE APPROVAL
       return MyFirebaseUser(
-          firebaseUser: firebaseUser, teamID: "demoteam.com", isEditor: false);
+          firebaseUser: firebaseUser, teamID: "demoteam.com", isEditor: true);
 
     final log = Logger('MyFirebaseUser');
     if (firebaseUser == null) {
@@ -76,8 +76,8 @@ class MyFirebaseUser with ChangeNotifier implements User {
     }
 
     final data = snapshot.data;
-    var requiredKeys = ["teamID"];
-    var isMissingRequiredKey =
+    final requiredKeys = ["teamID"];
+    final isMissingRequiredKey =
         requiredKeys.any((requiredKey) => !data.containsKey(requiredKey));
     if (isMissingRequiredKey) {
       log.severe("Missing required key for Team document in Firestore");
@@ -93,8 +93,8 @@ class MyFirebaseUser with ChangeNotifier implements User {
       throw AuthException("000", "User has not been assigned to a team yet");
     }
 
-    var optionalKeys = ["isEditor"];
-    var isMissingOptionalKey =
+    final optionalKeys = ["isEditor"];
+    final isMissingOptionalKey =
         optionalKeys.any((requiredKey) => !data.containsKey(optionalKeys));
     if (isMissingOptionalKey)
       log.warning("Missing optional key; substituting null values.");
