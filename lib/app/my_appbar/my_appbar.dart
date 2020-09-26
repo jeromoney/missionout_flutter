@@ -2,12 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/app/user_edit_screen/user_edit_screen.dart';
 import 'package:missionout/app/user_screen/user_screen.dart';
-import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
-
+import 'package:missionout/common_widgets/platform_alert_dialog.dart';
 import 'package:missionout/constants/constants.dart';
 import 'package:missionout/services/user/user.dart';
-import 'package:missionout/common_widgets/platform_alert_dialog.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'my_appbar_model.dart';
 

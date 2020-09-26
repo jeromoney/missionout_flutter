@@ -6,6 +6,7 @@ abstract class StringValidator {
 
 class RegexValidator implements StringValidator {
   RegexValidator({this.regexSource});
+
   final String regexSource;
 
   @override
@@ -30,10 +31,12 @@ class RegexValidator implements StringValidator {
 
 class ValidatorInputFormatter implements TextInputFormatter {
   ValidatorInputFormatter({this.editingValidator});
+
   final StringValidator editingValidator;
 
   @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
     final bool oldValueValid = editingValidator.isValid(oldValue.text);
     final bool newValueValid = editingValidator.isValid(newValue.text);
     if (oldValueValid && !newValueValid) {
@@ -60,6 +63,7 @@ class NonEmptyStringValidator extends StringValidator {
 
 class MinLengthStringValidator extends StringValidator {
   MinLengthStringValidator(this.minLength);
+
   final int minLength;
 
   @override
@@ -70,8 +74,10 @@ class MinLengthStringValidator extends StringValidator {
 
 class EmailAndPasswordValidators {
   final TextInputFormatter emailInputFormatter =
-  ValidatorInputFormatter(editingValidator: EmailEditingRegexValidator());
+      ValidatorInputFormatter(editingValidator: EmailEditingRegexValidator());
   final StringValidator emailSubmitValidator = EmailSubmitRegexValidator();
-  final StringValidator passwordRegisterSubmitValidator = MinLengthStringValidator(8);
-  final StringValidator passwordSignInSubmitValidator = NonEmptyStringValidator();
+  final StringValidator passwordRegisterSubmitValidator =
+      MinLengthStringValidator(8);
+  final StringValidator passwordSignInSubmitValidator =
+      NonEmptyStringValidator();
 }

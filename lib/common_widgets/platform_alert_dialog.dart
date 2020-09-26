@@ -1,10 +1,10 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:missionout/constants/keys.dart';
 
 import 'platform_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 
 class PlatformAlertDialog extends PlatformWidget {
   PlatformAlertDialog({
@@ -80,6 +80,7 @@ class PlatformAlertDialog extends PlatformWidget {
 
 class PlatformAlertDialogAction extends PlatformWidget {
   PlatformAlertDialogAction({this.child, this.onPressed});
+
   final Widget child;
   final VoidCallback onPressed;
 

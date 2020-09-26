@@ -11,15 +11,15 @@ class EmailSecureStore {
   static const String storageUserEmailAddressKey = "userEmailKey";
 
   Future<void> setEmail(String email) async {
-    await flutterSecureStorage.write(key: storageUserEmailAddressKey, value: email);
+    await flutterSecureStorage.write(
+        key: storageUserEmailAddressKey, value: email);
   }
 
   Future<void> clearEmail() async {
     await flutterSecureStorage.delete(key: storageUserEmailAddressKey);
   }
 
-  Future<String> getEmail() async{
+  Future<String> getEmail() async {
     return await flutterSecureStorage.read(key: storageUserEmailAddressKey);
   }
-
 }

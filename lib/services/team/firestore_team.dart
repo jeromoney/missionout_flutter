@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firestore_annotations/firestore_annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
-import 'package:firestore_annotations/firestore_annotations.dart';
-
 import 'package:missionout/data_objects/mission.dart';
 import 'package:missionout/data_objects/page.dart' as missionpage;
 import 'package:missionout/data_objects/response.dart';
@@ -37,7 +36,7 @@ class FirestoreTeam implements Team {
 
     final db = Firestore.instance;
     final DocumentSnapshot snapshot =
-    await db.collection('teams').document(teamID).get();
+        await db.collection('teams').document(teamID).get();
     return FirestoreTeam.fromSnapshot(snapshot);
   }
 
@@ -71,8 +70,10 @@ class FirestoreTeam implements Team {
 
   @override
   Future<Response> fetchUserResponse(
-      {@required DocumentReference documentReference, @required String uid}) async {
-    final snapshot = await _db.document("${documentReference.path}/responses/$uid").get();
+      {@required DocumentReference documentReference,
+      @required String uid}) async {
+    final snapshot =
+        await _db.document("${documentReference.path}/responses/$uid").get();
     if (snapshot.data == null) return null;
     return Response.fromSnapshot(snapshot);
   }
@@ -83,10 +84,9 @@ class FirestoreTeam implements Team {
     final ref = _db
         .collection('${documentReference.path}/responses')
         .orderBy('status', descending: true);
-    return ref.snapshots().map((snapShots) =>
-        snapShots.documents
-            .map((data) => Response.fromSnapshot(data))
-            .toList());
+    return ref.snapshots().map((snapShots) => snapShots.documents
+        .map((data) => Response.fromSnapshot(data))
+        .toList());
   }
 
   // firestore writes
@@ -132,7 +132,7 @@ class FirestoreTeam implements Team {
     @required String uid,
   }) async {
     DocumentReference document =
-    _db.collection('teams/$teamID/missions/$docID/responses').document(uid);
+        _db.collection('teams/$teamID/missions/$docID/responses').document(uid);
     if (response != null) {
       await document.setData(response.toJson());
     } else {

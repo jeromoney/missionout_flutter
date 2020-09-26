@@ -1,13 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:missionout/app/my_appbar/my_appbar.dart';
+import 'package:missionout/services/team/team.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:missionout/services/team/team.dart';
-import 'package:missionout/app/my_appbar/my_appbar.dart';
-
 part 'team_submit_raised_button.w.dart';
-
 part 'uri_text_form_field.w.dart';
 
 class EditorScreen extends StatelessWidget {
@@ -36,7 +33,6 @@ class EditorOptionsFormState extends State<EditorOptionsForm> {
     final _formKey = GlobalKey<FormState>();
     final chatURIController = TextEditingController();
     chatURIController.text = team.chatURI;
-
 
     return Form(
       key: _formKey,

@@ -84,5 +84,6 @@ class Strings {
   static const String submit = 'Submit';
   static const String anonymousName = 'anonymous';
   static const String anonymousEmail = 'unknown email';
-  static const String errorPhoneSubmission = 'Error occurred while submitting phone number.';
+  static const String errorPhoneSubmission =
+      'Error occurred while submitting phone number.';
 }

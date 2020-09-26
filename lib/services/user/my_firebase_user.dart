@@ -27,7 +27,8 @@ class MyFirebaseUser with ChangeNotifier implements User {
   String get photoUrl => firebaseUser.photoUrl;
 
   @override
-  String get displayName => !firebaseUser.isAnonymous ? firebaseUser.displayName : 'anonymous';
+  String get displayName =>
+      !firebaseUser.isAnonymous ? firebaseUser.displayName : 'anonymous';
 
   // Values held in Firestore
   @override

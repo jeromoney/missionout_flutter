@@ -16,9 +16,7 @@ import 'package:missionout/data_objects/response.dart';
 import 'package:provider/provider.dart';
 
 part 'actions_detail.w.dart';
-
 part 'edit_detail.w.dart';
-
 part 'info_detail.w.dart';
 
 class DetailScreen extends StatelessWidget {

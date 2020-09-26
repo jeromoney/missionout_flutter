@@ -19,8 +19,7 @@ class Mission {
   String address() => selfRef
       ?.documentID; // Tried a getter but there is a bug in firestore_annotations that doesn't allow the field to be ignored
 
-  String timeSincePresent() =>
-      timeAgo.format(time.toDate(), locale: "en_long");
+  String timeSincePresent() => timeAgo.format(time.toDate(), locale: "en_long");
 
   const Mission({
     this.selfRef,

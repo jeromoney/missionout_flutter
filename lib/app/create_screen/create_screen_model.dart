@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:missionout/app/detail_screen/detail_screen.dart';
 import 'package:missionout/data_objects/mission.dart';
 import 'package:missionout/data_objects/mission_address_arguments.dart';
+import 'package:missionout/data_objects/page.dart' as missionpage;
 import 'package:missionout/services/team/team.dart';
 import 'package:missionout/services/user/user.dart';
-import 'package:missionout/data_objects/page.dart' as missionpage;
 import 'package:provider/provider.dart';
 
 class CreateScreenModel {
@@ -55,7 +55,8 @@ class CreateScreenModel {
     final MissionAddressArguments arguments =
         MissionAddressArguments(reference);
     assert(arguments?.reference != null);
-    Navigator.pushReplacementNamed(context, DetailScreen.routeName, arguments: arguments);
+    Navigator.pushReplacementNamed(context, DetailScreen.routeName,
+        arguments: arguments);
   }
 
   Future<Mission> getCurrentMission() async {

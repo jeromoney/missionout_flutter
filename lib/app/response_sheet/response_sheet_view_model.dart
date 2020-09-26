@@ -18,10 +18,14 @@ class ResponseSheetViewModel {
   ResponseSheetViewModel(this.context)
       : this._team = context.watch<Team>(),
         this._user = context.watch<User>(),
-        this._documentReference = (ModalRoute.of(context).settings.arguments as MissionAddressArguments).reference;
+        this._documentReference = (ModalRoute.of(context).settings.arguments
+                as MissionAddressArguments)
+            .reference;
 
   Stream<Tuple2<Response, List<Response>>> responses() {
-    return _team.fetchResponses(documentReference: _documentReference).map((responses) {
+    return _team
+        .fetchResponses(documentReference: _documentReference)
+        .map((responses) {
       final index = responses
           .indexWhere((response) => response.selfRef.path.contains(_user.uid));
       Response selfResponse;

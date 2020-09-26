@@ -1,5 +1,5 @@
-import 'package:firestore_annotations/firestore_annotations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firestore_annotations/firestore_annotations.dart';
 import 'package:flutter/foundation.dart';
 
 part 'response.g.dart';
@@ -7,12 +7,7 @@ part 'response.g.dart';
 @FirestoreDocument(hasSelfRef: true)
 class Response {
   @FirestoreAttribute(ignore: true)
-  static const RESPONSES = [
-  'Responding',
-  'Delayed',
-  'Standby',
-  'Unavailable'
-  ];
+  static const RESPONSES = ['Responding', 'Delayed', 'Standby', 'Unavailable'];
 
   final DocumentReference selfRef;
   final String teamMember;

@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-
 class LatLonInput extends StatelessWidget {
   final TextEditingController latController;
   final TextEditingController lonController;
   final String fieldDescription;
 
   const LatLonInput(
-      {Key key, @required this.latController, @required this.lonController, @required this.fieldDescription})
+      {Key key,
+      @required this.latController,
+      @required this.lonController,
+      @required this.fieldDescription})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final keyboardType = TextInputType.numberWithOptions(signed: true, decimal: true);
+    final keyboardType =
+        TextInputType.numberWithOptions(signed: true, decimal: true);
     final inputFormatters = <TextInputFormatter>[
       WhitelistingTextInputFormatter(RegExp('[0-9\.\-]'))
     ];
@@ -58,7 +61,7 @@ class LatLonInput extends StatelessWidget {
 
 @visibleForTesting
 String latValidator(String value, TextEditingController companionController) {
-  if (value == '' && companionController.text == ''){
+  if (value == '' && companionController.text == '') {
     // User left both fields blank
     return null;
   }
@@ -71,11 +74,12 @@ String latValidator(String value, TextEditingController companionController) {
   }
   return null;
 }
+
 @visibleForTesting
 // if nothing is returned, then lon validates as true
 // ignore: missing_return
 String lonValidator(String value, TextEditingController companionController) {
-  if (value == '' && companionController.text == ''){
+  if (value == '' && companionController.text == '') {
     // User left both fields blank
     return null;
   }

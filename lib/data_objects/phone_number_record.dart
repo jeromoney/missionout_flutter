@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:firestore_annotations/firestore_annotations.dart';
+import 'package:flutter/foundation.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:logging/logging.dart';
 
@@ -25,7 +25,8 @@ class PhoneNumberRecord {
       @required this.allowCalls});
 
   // this should be a getter but problems with firestore annotations package
-  PhoneNumber getPhoneNumber() => PhoneNumber(isoCode: isoCode, phoneNumber: phoneNumber);
+  PhoneNumber getPhoneNumber() =>
+      PhoneNumber(isoCode: isoCode, phoneNumber: phoneNumber);
 
   /* constructors */
   factory PhoneNumberRecord.fromSnapshot(DocumentSnapshot snapshot) {

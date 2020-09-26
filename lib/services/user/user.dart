@@ -1,12 +1,11 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:missionout/data_objects/phone_number_record.dart';
 
-
 enum PhoneNumberType { mobile, voice }
 
-abstract class User with ChangeNotifier{
+abstract class User with ChangeNotifier {
   User(
       {@required this.uid,
       this.email,

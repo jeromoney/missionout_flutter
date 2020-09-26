@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:missionout/app/editor_screen/editor_screen.dart';
 import 'package:missionout/app/user_screen/user_screen.dart';
 import 'package:missionout/services/auth_service/auth_service.dart';
-import 'package:provider/provider.dart';
-
 import 'package:missionout/services/user/user.dart';
+import 'package:provider/provider.dart';
 
 class MyAppBarModel {
   final BuildContext context;

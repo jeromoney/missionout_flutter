@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-
-import 'package:missionout/app/overview_screen/overview_screen_model.dart';
-import 'package:missionout/utils/utils.dart';
-import 'package:missionout/data_objects/mission.dart';
 import 'package:missionout/app/my_appbar/my_appbar.dart';
+import 'package:missionout/app/overview_screen/overview_screen_model.dart';
+import 'package:missionout/data_objects/mission.dart';
+import 'package:missionout/utils/utils.dart';
 
 class OverviewScreen extends StatelessWidget {
   static const routeName = "/overviewScreen";
@@ -84,17 +83,21 @@ class _BuildMissionResultsState extends State<BuildMissionResults> {
         itemBuilder: (BuildContext context, int index) {
           final mission = widget.missions[index];
           final strikeThroughStyle =
-          TextStyle(decoration: TextDecoration.lineThrough);
+              TextStyle(decoration: TextDecoration.lineThrough);
           return ListTile(
             title: Text(mission.description ?? '',
                 style: mission.isStoodDown ?? false
-                    ? Theme.of(context).textTheme.bodyText2.merge(strikeThroughStyle)
+                    ? Theme.of(context)
+                        .textTheme
+                        .bodyText2
+                        .merge(strikeThroughStyle)
                     : Theme.of(context).textTheme.bodyText2),
             subtitle: Text((mission.needForAction ?? '') +
                 ' — ' +
                 (formatTime(mission.time) ?? '')),
             onTap: () {
-              model.navigateToDetail(documentReference: mission.selfRef, mission: mission);
+              model.navigateToDetail(
+                  documentReference: mission.selfRef, mission: mission);
             },
           );
         },

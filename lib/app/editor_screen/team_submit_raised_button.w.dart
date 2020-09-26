@@ -4,16 +4,15 @@ class TeamSubmitRaisedButton extends StatefulWidget {
   final formKey;
   final chatURIController;
 
-  const TeamSubmitRaisedButton(
-      {Key key,
-      @required this.formKey,
-      @required this.chatURIController,})
-      : super(key: key);
+  const TeamSubmitRaisedButton({
+    Key key,
+    @required this.formKey,
+    @required this.chatURIController,
+  }) : super(key: key);
 
   @override
   State createState() => TeamSubmitRaisedButtonState(
-      chatURIController: chatURIController,
-      formKey: formKey);
+      chatURIController: chatURIController, formKey: formKey);
 }
 
 class TeamSubmitRaisedButtonState extends State<TeamSubmitRaisedButton> {
@@ -21,9 +20,10 @@ class TeamSubmitRaisedButtonState extends State<TeamSubmitRaisedButton> {
   final TextEditingController chatURIController;
   Icon resultIcon;
 
-  TeamSubmitRaisedButtonState(
-      {@required this.formKey,
-      @required this.chatURIController,});
+  TeamSubmitRaisedButtonState({
+    @required this.formKey,
+    @required this.chatURIController,
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -2,6 +2,7 @@ part of 'detail_screen.dart';
 
 class ActionsDetail extends StatelessWidget {
   final AsyncSnapshot snapshot;
+
   const ActionsDetail({Key key, this.snapshot}) : super(key: key);
 
   @override

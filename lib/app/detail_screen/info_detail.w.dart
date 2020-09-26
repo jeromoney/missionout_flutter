@@ -20,10 +20,12 @@ class InfoDetail extends StatelessWidget {
     // success
     final Mission mission = snapshot.data;
     String locationAndTime;
-    if (mission.locationDescription != null && mission.locationDescription != "")
+    if (mission.locationDescription != null &&
+        mission.locationDescription != "")
       locationAndTime =
           "${mission.locationDescription} — ${mission.timeSincePresent()}";
-    else locationAndTime = mission.timeSincePresent();
+    else
+      locationAndTime = mission.timeSincePresent();
     final strikeThroughStyle =
         TextStyle(decoration: TextDecoration.lineThrough);
     return Column(
@@ -36,7 +38,10 @@ class InfoDetail extends StatelessWidget {
             child: Text(
               locationAndTime,
               style: mission.isStoodDown
-                  ? Theme.of(context).textTheme.bodyText2.merge(strikeThroughStyle)
+                  ? Theme.of(context)
+                      .textTheme
+                      .bodyText2
+                      .merge(strikeThroughStyle)
                   : Theme.of(context).textTheme.bodyText2,
             )),
         Baseline(

@@ -2,13 +2,16 @@ part of 'detail_screen.dart';
 
 class EditDetail extends StatefulWidget {
   final AsyncSnapshot snapshot;
+
   const EditDetail({Key key, @required this.snapshot}) : super(key: key);
+
   @override
   _EditDetailState createState() => _EditDetailState();
 }
 
 class _EditDetailState extends State<EditDetail> {
   DetailScreenModel _model;
+
   @override
   Widget build(BuildContext context) {
     _model = DetailScreenModel(context);
@@ -63,7 +66,8 @@ class _EditDetailState extends State<EditDetail> {
                     child: Text(
                         mission.isStoodDown ? '(un)Standown' : 'Stand down'),
                     onPressed: () {
-                      final newMission = mission.copyWith(isStoodDown: !mission.isStoodDown);
+                      final newMission =
+                          mission.copyWith(isStoodDown: !mission.isStoodDown);
                       _model.standDownMission(
                         mission: newMission,
                       );

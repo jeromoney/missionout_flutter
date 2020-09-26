@@ -3,16 +3,16 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/app/create_screen/create_screen_model.dart';
-
-import 'package:missionout/data_objects/mission.dart';
 import 'package:missionout/app/my_appbar/my_appbar.dart';
 import 'package:missionout/core/lat_lon_input.w.dart';
+import 'package:missionout/data_objects/mission.dart';
 import 'package:provider/provider.dart';
 
 part 'submit_mission_button.w.dart';
 
 class CreateScreen extends StatelessWidget {
   final DocumentReference documentReference;
+
   CreateScreen({this.documentReference});
 
   @override

@@ -3,10 +3,12 @@ part of 'editor_screen.dart';
 class URITextFormField extends StatefulWidget {
   final TextEditingController controller;
 
-  const URITextFormField({Key key,@required this.controller}) : super(key: key);
+  const URITextFormField({Key key, @required this.controller})
+      : super(key: key);
 
   @override
-  URITextFormFieldState createState() => URITextFormFieldState(controller: controller);
+  URITextFormFieldState createState() =>
+      URITextFormFieldState(controller: controller);
 }
 
 class URITextFormFieldState extends State<URITextFormField> {
@@ -24,8 +26,7 @@ class URITextFormFieldState extends State<URITextFormField> {
           TextFormField(
             controller: controller,
             decoration: InputDecoration(
-                suffixIcon:
-                Icon(_uriIsValidated ? Icons.check : null),
+                suffixIcon: Icon(_uriIsValidated ? Icons.check : null),
                 errorText: _errorMessage,
                 border: OutlineInputBorder(),
                 labelText: 'Chat URI',
@@ -50,8 +51,7 @@ class URITextFormFieldState extends State<URITextFormField> {
                     content: Text(
                         'Error launching URI. Try something like slack://channel?team={TEAM_ID}&id={CHANNEL_ID}'));
                 Scaffold.of(context).showSnackBar(snackBar);
-              }
-              finally {
+              } finally {
                 // close keyboard
                 FocusScope.of(context).requestFocus(FocusNode());
               }

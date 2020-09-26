@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:apple_sign_in/scope.dart';
 import 'package:flutter/foundation.dart';
 import 'package:missionout/services/auth_service/auth_service.dart';
 import 'package:missionout/services/auth_service/firebase_auth_service.dart';
@@ -102,19 +101,17 @@ class AuthServiceAdapter extends AuthService {
     bool userMustExist = false,
   }) =>
       authService.sendSignInWithEmailLink(
-        email: email,
-        url: url,
-        handleCodeInApp: handleCodeInApp,
-        iOSBundleID: iOSBundleID,
-        androidPackageName: androidPackageName,
-        androidInstallIfNotAvailable: androidInstallIfNotAvailable,
-        androidMinimumVersion: androidMinimumVersion,
-        userMustExist: userMustExist
-      );
+          email: email,
+          url: url,
+          handleCodeInApp: handleCodeInApp,
+          iOSBundleID: iOSBundleID,
+          androidPackageName: androidPackageName,
+          androidInstallIfNotAvailable: androidInstallIfNotAvailable,
+          androidMinimumVersion: androidMinimumVersion,
+          userMustExist: userMustExist);
 
   @override
-  Future<User> signInWithApple() =>
-      authService.signInWithApple();
+  Future<User> signInWithApple() => authService.signInWithApple();
 
   @override
   Future<User> signInWithDemo() => authService.signInWithDemo();
@@ -124,6 +121,4 @@ class AuthServiceAdapter extends AuthService {
 
   @override
   Future<void> signOut() => authService.signOut();
-
-
 }
