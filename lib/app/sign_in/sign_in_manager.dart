@@ -1,4 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -14,6 +14,7 @@ class SignInManager {
 
   SignInManager({@required this.authService, @required this.isLoadingNotifier});
 
+  // ignore: missing_return
   Future<User> _signIn(Future<User> Function() signInMethod) async {
     isLoadingNotifier.isLoading = true;
     try {
@@ -23,7 +24,7 @@ class SignInManager {
     } on PlatformException catch (e) {
       isLoadingNotifier.isLoading = false;
       _log.warning('Unable to complete sign in process', e);
-    } on AuthException catch (e) {
+    } on auth.FirebaseAuthException {
       // User signed in but has not been assigned a team yet
       isLoadingNotifier.isLoading = false;
       rethrow;
@@ -36,7 +37,7 @@ class SignInManager {
   Future signInWithGoogle() async {
     try {
       await _signIn(authService.signInWithGoogle);
-    } on AuthException catch (e) {
+    } on auth.FirebaseAuthException {
       final googleSignIn = GoogleSignIn();
       googleSignIn.disconnect();
       isLoadingNotifier.isLoading = false;

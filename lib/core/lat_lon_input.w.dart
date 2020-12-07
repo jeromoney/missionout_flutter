@@ -18,7 +18,7 @@ class LatLonInput extends StatelessWidget {
     final keyboardType =
         TextInputType.numberWithOptions(signed: true, decimal: true);
     final inputFormatters = <TextInputFormatter>[
-      WhitelistingTextInputFormatter(RegExp('[0-9\.\-]'))
+      FilteringTextInputFormatter.allow(RegExp('[0-9\.\-]'))
     ];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

@@ -72,7 +72,7 @@ class MockAuthService extends AuthService {
   }
 
   @override
-  Future<bool> isSignInWithEmailLink(String link) {
+  bool isSignInWithEmailLink(String link) {
     // TODO: implement isSignInWithEmailLink
     throw UnimplementedError();
   }

@@ -87,6 +87,7 @@ class _LogInScreenState extends State<LogInScreen> {
                                     padding: EdgeInsets.all(8.0),
                                     child: TextFormField(
                                       controller: widget._emailController,
+                                      // ignore: missing_return
                                       validator: (email) {
                                         if (!EmailValidator.validate(email))
                                           return 'Enter a valid email';

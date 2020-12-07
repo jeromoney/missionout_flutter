@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';
@@ -13,6 +12,7 @@ import 'package:missionout/services/email_secure_store.dart';
 import 'package:missionout/services/firebase_link_handler.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginScreenModel {
   final BuildContext context;
@@ -33,7 +33,7 @@ class LoginScreenModel {
   Future _signIn(Future Function() signInMethod) async {
     try {
       await signInMethod();
-    } on AuthException catch (e) {
+    } on FirebaseAuthException{
       PlatformAlertDialog(
         title: "Team is not yet assigned",
         content: "Try another account or contact your team administrator",
@@ -72,7 +72,7 @@ class LoginScreenModel {
             androidInstallIfNotAvailable: true,
             androidMinimumVersion: '18',
             userMustExist: true);
-      } on StateError catch (e) {
+      } on StateError {
         _log.warning("user entered an email that is not in database");
         PlatformAlertDialog(
           title: "Email not in database",

@@ -8,12 +8,12 @@ import 'package:missionout/data_objects/response.dart';
 import 'package:missionout/services/team/team.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-part 'firestore_team.g.dart';
+part 'firestore_team_generated.dart';
 
 @FirestoreDocument(hasSelfRef: false)
 class FirestoreTeam implements Team {
   final _log = Logger('FirestoreTeam');
-  final Firestore _db = Firestore.instance;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
   @override
   @FirestoreAttribute(nullable: false)
   final String teamID;
@@ -34,9 +34,9 @@ class FirestoreTeam implements Team {
       throw ArgumentError.notNull(teamID);
     }
 
-    final db = Firestore.instance;
+    final db = FirebaseFirestore.instance;
     final DocumentSnapshot snapshot =
-        await db.collection('teams').document(teamID).get();
+        await db.collection('teams').doc(teamID).get();
     return FirestoreTeam.fromSnapshot(snapshot);
   }
 
@@ -56,14 +56,14 @@ class FirestoreTeam implements Team {
         .limit(QUERY_LIMIT)
         .orderBy('time', descending: true);
     return ref.snapshots().map((snapShots) =>
-        snapShots.documents.map((data) => Mission.fromSnapshot(data)).toList());
+        snapShots.docs.map((data) => Mission.fromSnapshot(data)).toList());
   }
 
   @override
   Stream<Mission> fetchSingleMission(
       {@required DocumentReference documentReference}) {
     return _db
-        .document(documentReference.path)
+        .doc(documentReference.path)
         .snapshots()
         .map((snapshot) => Mission.fromSnapshot(snapshot));
   }
@@ -73,7 +73,7 @@ class FirestoreTeam implements Team {
       {@required DocumentReference documentReference,
       @required String uid}) async {
     final snapshot =
-        await _db.document("${documentReference.path}/responses/$uid").get();
+        await _db.doc("${documentReference.path}/responses/$uid").get();
     if (snapshot.data == null) return null;
     return Response.fromSnapshot(snapshot);
   }
@@ -84,7 +84,7 @@ class FirestoreTeam implements Team {
     final ref = _db
         .collection('${documentReference.path}/responses')
         .orderBy('status', descending: true);
-    return ref.snapshots().map((snapShots) => snapShots.documents
+    return ref.snapshots().map((snapShots) => snapShots.docs
         .map((data) => Response.fromSnapshot(data))
         .toList());
   }
@@ -93,7 +93,7 @@ class FirestoreTeam implements Team {
 
   @override
   Future updateChatURI(String chatURIVal) async {
-    await _db.document('teams/$teamID').updateData({
+    await _db.doc('teams/$teamID').update({
       'chatURI': chatURIVal,
     });
     chatURI = chatURIVal;
@@ -119,7 +119,7 @@ class FirestoreTeam implements Team {
       return result;
     } else {
       // reference is not null so we just update mission.
-      await mission.selfRef.setData(mission.toMap(), merge: true);
+      await mission.selfRef.set(mission.toMap(), SetOptions(merge: true));
       result = mission.selfRef;
     }
     return result;
@@ -132,9 +132,9 @@ class FirestoreTeam implements Team {
     @required String uid,
   }) async {
     DocumentReference document =
-        _db.collection('teams/$teamID/missions/$docID/responses').document(uid);
+        _db.collection('teams/$teamID/missions/$docID/responses').doc(uid);
     if (response != null) {
-      await document.setData(response.toJson());
+      await document.set(response.toJson());
     } else {
       await document.delete();
     }
@@ -145,8 +145,8 @@ class FirestoreTeam implements Team {
     @required Mission mission,
   }) {
     _db
-        .document('teams/$teamID/missions/${mission.selfRef.documentID}')
-        .updateData({'isStoodDown': mission.isStoodDown});
+        .doc('teams/$teamID/missions/${mission.selfRef.id}')
+        .update({'isStoodDown': mission.isStoodDown});
   }
 
   @override

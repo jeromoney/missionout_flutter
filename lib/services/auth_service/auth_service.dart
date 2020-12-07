@@ -3,6 +3,7 @@ import 'package:missionout/services/team/team.dart';
 import 'package:missionout/services/user/user.dart';
 
 abstract class AuthService {
+
   Future<User> currentUser();
 
   Future<User> signInWithEmailAndLink({String email, String link});
@@ -13,7 +14,7 @@ abstract class AuthService {
 
   Future<void> sendPasswordResetEmail(String email);
 
-  Future<bool> isSignInWithEmailLink(String link);
+  bool isSignInWithEmailLink(String link);
 
   Future<void> sendSignInWithEmailLink({
     @required String email,

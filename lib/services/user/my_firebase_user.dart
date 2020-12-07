@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +15,7 @@ const RETRY_WAIT = 3; // seconds
 
 class MyFirebaseUser with ChangeNotifier implements User {
   // Values from FirebaseUser
-  FirebaseUser firebaseUser;
+  auth.User firebaseUser;
 
   @override
   String get uid => !firebaseUser.isAnonymous ? firebaseUser.uid : 'anonymous';
@@ -24,7 +24,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
   String get email => firebaseUser.email;
 
   @override
-  String get photoUrl => firebaseUser.photoUrl;
+  String get photoUrl => firebaseUser.photoURL;
 
   @override
   String get displayName =>
@@ -42,11 +42,11 @@ class MyFirebaseUser with ChangeNotifier implements User {
   PhoneNumber mobilePhoneNumber;
 
   // Implementation specific variables
-  final Firestore _db = Firestore.instance;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
   final _log = Logger('MyFirebaseUser');
 
   static Future<MyFirebaseUser> fromFirebaseUser(
-      FirebaseUser firebaseUser) async {
+      auth.User firebaseUser) async {
     if (firebaseUser.isAnonymous) // TODO -- REMOVE AFTER APP STORE APPROVAL
       return MyFirebaseUser(
           firebaseUser: firebaseUser, teamID: "demoteam.com", isEditor: true);
@@ -57,13 +57,13 @@ class MyFirebaseUser with ChangeNotifier implements User {
       throw ArgumentError.notNull('firebaseUser');
     }
 
-    final db = Firestore.instance;
+    final db = FirebaseFirestore.instance;
     DocumentSnapshot snapshot;
     // When the user first logs in, the backend creates a record in Firestore.
     // However, this async task might be front-run by the app and hence the need
     // for retries
     for (var i = 1; i <= RETRY_COUNT; i++) {
-      snapshot = await db.collection('users').document(firebaseUser.uid).get();
+      snapshot = await db.collection('users').doc(firebaseUser.uid).get();
       if (snapshot.data == null) {
         if (i == RETRY_COUNT) {
           log.warning("Retries failed. Document still null");
@@ -76,7 +76,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
       await Future.delayed(Duration(seconds: RETRY_WAIT));
     }
 
-    final data = snapshot.data;
+    final Map data = snapshot.data();
     final requiredKeys = ["teamID"];
     final isMissingRequiredKey =
         requiredKeys.any((requiredKey) => !data.containsKey(requiredKey));
@@ -91,7 +91,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
     if (snapshotTeamID == null) {
       log.warning(
           "Unable to identify the team that the user is assigned to. Logging out");
-      throw AuthException("000", "User has not been assigned to a team yet");
+      throw auth.FirebaseAuthException(message: "User has not been assigned to a team yet");
     }
 
     final optionalKeys = ["isEditor"];
@@ -126,12 +126,12 @@ class MyFirebaseUser with ChangeNotifier implements User {
   @override
   Future updatePhoneNumber(
       {@required PhoneNumber phoneNumber,
-      @required PhoneNumberType type}) async {
-    type == PhoneNumberType.mobile
+      @required PhoneType type}) async {
+    type == PhoneType.mobile
         ? mobilePhoneNumber = phoneNumber
         : voicePhoneNumber = phoneNumber;
-    await _db.document('users/$uid').updateData({
-      (type == PhoneNumberType.mobile
+    await _db.doc('users/$uid').update({
+      (type == PhoneType.mobile
           ? 'mobilePhoneNumber'
           : 'voicePhoneNumber'): {
         'isoCode': phoneNumber.isoCode,
@@ -146,7 +146,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
     // Setting up the user will be the responsibility of the server.
     // This method adds the user token to firestore
     final fcmToken = await _firebaseMessaging.getToken();
-    await _db.collection('users').document(this.uid).updateData({
+    await _db.collection('users').doc(this.uid).update({
       'tokens': FieldValue.arrayUnion([fcmToken])
     }).then((value) {
       _log.info('Added token to user document: $fcmToken', fcmToken);
@@ -157,10 +157,8 @@ class MyFirebaseUser with ChangeNotifier implements User {
 
   @override
   Future updateDisplayName({@required String displayName}) async {
-    final updateUser = UserUpdateInfo();
-    updateUser.displayName = displayName;
-    await firebaseUser.updateProfile(updateUser);
-    firebaseUser = await FirebaseAuth.instance.currentUser();
+    await auth.FirebaseAuth.instance.currentUser.updateProfile(displayName: displayName);
+    firebaseUser = auth.FirebaseAuth.instance.currentUser;
     notifyListeners();
   }
 
@@ -169,7 +167,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
     final ref = _db
         .collection('teams/$teamID/phoneNumbers')
         .where("uid", isEqualTo: uid);
-    return ref.snapshots().map((snapShots) => snapShots.documents
+    return ref.snapshots().map((snapShots) => snapShots.docs
         .map((data) => PhoneNumberRecord.fromSnapshot(data))
         .where((phoneNumberRecord) => phoneNumberRecord != null)
         .toList());
@@ -180,8 +178,8 @@ class MyFirebaseUser with ChangeNotifier implements User {
     assert(phoneNumberRecord.uid == uid);
     await _db
         .collection('teams/$teamID/phoneNumbers')
-        .document()
-        .setData(phoneNumberRecord.toMap());
+        .doc()
+        .set(phoneNumberRecord.toMap());
   }
 
   @override

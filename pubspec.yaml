@@ -24,44 +24,40 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  firebase_auth: ^0.16.0
-  firebase_dynamic_links: ^0.5.1
+  firebase_auth: ^0.18.4
+  firebase_dynamic_links: ^0.6.3
   google_sign_in: ^4.4.6
   url_launcher: ^5.4.7
-  cloud_firestore: ^0.13.5
+  cloud_firestore: ^0.14.4
   intl: ^0.16.0
-  flutter_auth_buttons: ^0.9.0
+  flutter_auth_buttons: ^0.10.0
   tuple: ^1.0.3
   provider: ^4.1.2
-  firebase_core:  ^0.4.4
-  firebase_messaging: ^6.0.15
-  phone_number: ^0.6.2+1
+  firebase_core:  ^0.5.3
+  firebase_messaging: ^7.0.3
+  phone_number: ^0.8.1
   tel_input: ^0.2.2
-  intl_phone_number_input: ^0.4.1
+  intl_phone_number_input: ^0.5.2+2
   cached_network_image: ^2.2.0
-  flutter_local_notifications: ^1.4.3 # Used for iOS only
+  flutter_local_notifications: ^3.0.2 # Used for iOS only
   apple_sign_in: ^0.1.0 #used for ios only
   email_validator: ^1.0.0
   package_info: ^0.4.0
   flutter_secure_storage: ^3.3.1+1
   logging: ">=0.11.4 <2.0.0"
   json_annotation: ^3.0.1
-  time_ago_provider: ^2.0.5
-  google_maps_flutter: ^0.5.29
+  time_ago_provider: ^3.1.0
+  google_maps_flutter: ^1.0.6
   crypto: ^2.1.5
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_driver:
-    sdk: flutter
   test: any
   mockito: ^4.1.1
   build_runner: ^1.10.0
-  json_serializable: ^3.3.0
-  firestore_serializable: ^0.0.15
-
+  json_serializable: ^3.5.1
 
 
 

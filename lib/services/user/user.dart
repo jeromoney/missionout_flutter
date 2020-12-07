@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:missionout/data_objects/phone_number_record.dart';
 
-enum PhoneNumberType { mobile, voice }
+enum PhoneType { mobile, voice }
 
 abstract class User with ChangeNotifier {
   User(
@@ -28,7 +28,7 @@ abstract class User with ChangeNotifier {
   PhoneNumber mobilePhoneNumber;
 
   updatePhoneNumber(
-      {@required PhoneNumber phoneNumber, @required PhoneNumberType type});
+      {@required PhoneNumber phoneNumber, @required PhoneType type});
 
   updateDisplayName({@required String displayName});
 

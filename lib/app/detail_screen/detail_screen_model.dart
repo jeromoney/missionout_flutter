@@ -85,7 +85,7 @@ class DetailScreenModel {
   bool get isEditor => user.isEditor;
 
   addResponse({@required Response response}) => team.addResponse(
-      response: response, docID: documentReference.documentID, uid: user.uid);
+      response: response, docID: documentReference.id, uid: user.uid);
 
   addPage({@required missionpage.Page page}) => team.addPage(page: page);
 

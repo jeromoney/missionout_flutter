@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
 import 'package:missionout/app/my_appbar/my_appbar.dart';
 import 'package:missionout/app/overview_screen/overview_screen_model.dart';
 import 'package:missionout/data_objects/mission.dart';
-import 'package:missionout/utils/utils.dart';
 
 class OverviewScreen extends StatelessWidget {
   static const routeName = "/overviewScreen";
@@ -94,7 +95,7 @@ class _BuildMissionResultsState extends State<BuildMissionResults> {
                     : Theme.of(context).textTheme.bodyText2),
             subtitle: Text((mission.needForAction ?? '') +
                 ' — ' +
-                (formatTime(mission.time) ?? '')),
+                (DateFormat.yMMMd().format(mission.time.toDate()) ?? '')),
             onTap: () {
               model.navigateToDetail(
                   documentReference: mission.selfRef, mission: mission);

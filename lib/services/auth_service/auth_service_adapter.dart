@@ -86,7 +86,7 @@ class AuthServiceAdapter extends AuthService {
       authService.signInWithEmailAndLink(email: email, link: link);
 
   @override
-  Future<bool> isSignInWithEmailLink(String link) =>
+  bool isSignInWithEmailLink(String link) =>
       authService.isSignInWithEmailLink(link);
 
   @override

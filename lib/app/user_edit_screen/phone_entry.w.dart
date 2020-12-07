@@ -134,7 +134,7 @@ class CheckboxFormField extends FormField<bool> {
             onSaved: onSaved,
             validator: validator,
             initialValue: initialValue,
-            autovalidate: autoValidate,
+            autovalidateMode: AutovalidateMode.always,
             builder: (FormFieldState<bool> state) => CheckboxListTile(
                   secondary: secondary,
                   dense: state.hasError,

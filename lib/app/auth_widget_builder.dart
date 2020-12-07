@@ -19,6 +19,7 @@ class AuthWidgetBuilder extends StatelessWidget {
       builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
         final user = snapshot.data;
         if (user != null) {
+          assert(user.teamID != null);
           return MultiProvider(
             providers: [
               ChangeNotifierProvider<User>.value(
@@ -28,7 +29,6 @@ class AuthWidgetBuilder extends StatelessWidget {
                 initialData: null,
                 create: (_) async => authService.createTeam(),
                 catchError: (_, __) {
-                  var i = 1;
                   return null;
                 },
               ),

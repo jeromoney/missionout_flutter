@@ -51,7 +51,7 @@ class FCMMessageHandler {
         var iOSPlatformChannelSpecifics = IOSNotificationDetails(
             presentSound: true, sound: "school_fire_alarm.m4a");
         var platformChannelSpecifics =
-            NotificationDetails(null, iOSPlatformChannelSpecifics);
+            NotificationDetails(iOS:iOSPlatformChannelSpecifics);
         await _flutterLocalNotificationsPlugin.show(0, message["description"],
             message["needForAction"], platformChannelSpecifics);
       },

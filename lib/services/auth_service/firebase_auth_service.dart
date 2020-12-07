@@ -4,7 +4,7 @@ import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:apple_sign_in/scope.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -18,30 +18,35 @@ import 'package:missionout/services/user/user.dart';
 
 class FirebaseAuthService extends AuthService {
   final _log = Logger('FirebaseAuthService');
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  final Firestore _db = Firestore.instance;
-  final _firebaseMessaging = FirebaseMessaging();
-  FirebaseUser _firebaseUser;
+  final auth.FirebaseAuth _firebaseAuth =  auth.FirebaseAuth.instance;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  auth.User _firebaseUser;
   String teamID;
 
+
   /// Combines data from Firebase with Firestore to return User
-  Future<User> _userFromFirebase(FirebaseUser firebaseUser) async {
+  Future<MyFirebaseUser> _userFromFirebase(auth.User firebaseUser) async {
     if (firebaseUser == null) {
       _log.warning('FirebaseUser can not be null');
       throw ArgumentError.notNull('firebaseUser');
     }
-    final User user = await MyFirebaseUser.fromFirebaseUser(firebaseUser);
-    teamID = user.teamID;
+    final MyFirebaseUser myUser =
+        await MyFirebaseUser.fromFirebaseUser(firebaseUser);
+    teamID = myUser.teamID;
     _firebaseUser = firebaseUser;
-    return user;
+    return myUser;
   }
 
   @override
-  Future<Team> createTeam() async => await FirestoreTeam.fromTeamID(teamID);
+  Future<Team> createTeam() async {
+    assert(teamID != null);
+    return await FirestoreTeam.fromTeamID(teamID);
+  }
 
   @override
   Future<User> currentUser() async {
-    final firebaseUser = await _firebaseAuth.currentUser();
+    final firebaseUser = _firebaseAuth.currentUser;
     return _userFromFirebase(firebaseUser);
   }
 
@@ -49,15 +54,13 @@ class FirebaseAuthService extends AuthService {
   void dispose() {}
 
   @override
-  Stream<User> get onAuthStateChanged {
-    var i = 1;
-    return _firebaseAuth.onAuthStateChanged.asyncMap(_userFromFirebase);
-  }
+  Stream<User> get onAuthStateChanged =>
+      _firebaseAuth.authStateChanges().asyncMap(_userFromFirebase);
 
   @override
   Future<User> signInWithEmailAndPassword(String email, String password) async {
-    final AuthResult authResult = await _firebaseAuth
-        .signInWithCredential(EmailAuthProvider.getCredential(
+    final auth.UserCredential authResult = await _firebaseAuth
+        .signInWithCredential(auth.EmailAuthProvider.credential(
       email: email,
       password: password,
     ));
@@ -67,7 +70,7 @@ class FirebaseAuthService extends AuthService {
   @override
   Future<User> createUserWithEmailAndPassword(
       String email, String password) async {
-    final AuthResult authResult = await _firebaseAuth
+    final auth.UserCredential authResult = await _firebaseAuth
         .createUserWithEmailAndPassword(email: email, password: password);
     return _userFromFirebase(authResult.user);
   }
@@ -79,15 +82,14 @@ class FirebaseAuthService extends AuthService {
 
   @override
   Future<User> signInWithEmailAndLink({String email, String link}) async {
-    final AuthResult authResult =
-        await _firebaseAuth.signInWithEmailAndLink(email: email, link: link);
+    final auth.UserCredential authResult =
+        await _firebaseAuth.signInWithEmailLink(email: email, emailLink: link);
     return _userFromFirebase(authResult.user);
   }
 
   @override
-  Future<bool> isSignInWithEmailLink(String link) async {
-    return await _firebaseAuth.isSignInWithEmailLink(link);
-  }
+  bool isSignInWithEmailLink(String link) =>
+      _firebaseAuth.isSignInWithEmailLink(link);
 
   @override
   Future sendSignInWithEmailLink({
@@ -102,28 +104,28 @@ class FirebaseAuthService extends AuthService {
   }) async {
     // Intercept the hush hush email and sign into demo mode
     DocumentSnapshot hashRef =
-        await _db.document('/demopassword/demopassword').get();
-    final hash = hashRef.data['hashed'];
+        await _db.doc('/demopassword/demopassword').get();
+    final hash = hashRef.data()['hashed'];
     final bytes = utf8.encode(email); // data being hashed
     final digest = sha1.convert(bytes);
     if (digest.toString().toUpperCase() == hash) return signInWithDemo();
 
     if (userMustExist) {
       final List<String> signInMethods =
-          await _firebaseAuth.fetchSignInMethodsForEmail(email: email);
+          await _firebaseAuth.fetchSignInMethodsForEmail(email);
       // List is empty if user not in database
       if (signInMethods.isEmpty) throw StateError("User is not in database");
     }
-
-    return await _firebaseAuth.sendSignInWithEmailLink(
-      email: email,
-      url: url,
-      handleCodeInApp: handleCodeInApp,
-      iOSBundleID: iOSBundleID,
-      androidPackageName: androidPackageName,
-      androidInstallIfNotAvailable: androidInstallIfNotAvailable,
-      androidMinimumVersion: androidMinimumVersion,
-    );
+    return await _firebaseAuth.sendSignInLinkToEmail(
+        email: email,
+        actionCodeSettings: auth.ActionCodeSettings(
+          url: url,
+          handleCodeInApp: handleCodeInApp,
+          iOSBundleId: iOSBundleID,
+          androidPackageName: androidPackageName,
+          androidInstallApp: androidInstallIfNotAvailable,
+          androidMinimumVersion: androidMinimumVersion,
+        ));
   }
 
   @override
@@ -134,8 +136,8 @@ class FirebaseAuthService extends AuthService {
     switch (result.status) {
       case AuthorizationStatus.authorized:
         final appleIdCredential = result.credential;
-        final oAuthProvider = OAuthProvider(providerId: 'apple.com');
-        final credential = oAuthProvider.getCredential(
+        final oAuthProvider = auth.OAuthProvider('apple.com');
+        final credential = oAuthProvider.credential(
           idToken: String.fromCharCodes(appleIdCredential.identityToken),
           accessToken:
               String.fromCharCodes(appleIdCredential.authorizationCode),
@@ -147,10 +149,10 @@ class FirebaseAuthService extends AuthService {
         if (scopes.contains(Scope.fullName) &&
             appleFullName.givenName != null &&
             appleFullName.familyName != null) {
-          final updateUser = UserUpdateInfo();
-          updateUser.displayName =
+          final displayName =
               '${appleIdCredential.fullName.givenName} ${appleIdCredential.fullName.familyName}';
-          await firebaseUser.updateProfile(updateUser);
+          await auth.FirebaseAuth.instance.currentUser
+              .updateProfile(displayName: displayName);
         }
         return _userFromFirebase(firebaseUser);
       case AuthorizationStatus.error:
@@ -182,11 +184,11 @@ class FirebaseAuthService extends AuthService {
       throw PlatformException(
           code: 'ERROR_MISSING_GOOGLE_AUTH_TOKEN',
           message: 'Missing Google Auth Token');
-    final credential = GoogleAuthProvider.getCredential(
+    final credential = auth.GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-    final AuthResult authResult =
+    final auth.UserCredential authResult =
         await _firebaseAuth.signInWithCredential(credential);
     return _userFromFirebase(authResult.user);
   }
@@ -203,7 +205,7 @@ class FirebaseAuthService extends AuthService {
       throw StateError("Signin out a user that is null");
     // remove token from Firestore from first, before user signs out
     var fcmToken = await _firebaseMessaging.getToken();
-    _db.collection('users').document(_firebaseUser.uid).updateData({
+    _db.collection('users').doc(_firebaseUser.uid).update({
       'tokens': FieldValue.arrayRemove([fcmToken])
     }).then((value) {
       _log.info('Removed token to user document');
@@ -214,4 +216,6 @@ class FirebaseAuthService extends AuthService {
     await GoogleSignIn().signOut();
     await _firebaseAuth.signOut();
   }
+
+
 }

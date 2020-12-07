@@ -59,7 +59,7 @@ class FirebaseLinkHandler {
         return;
       }
       // sign in
-      if (await auth.isSignInWithEmailLink(link)) {
+      if (auth.isSignInWithEmailLink(link)) {
         await auth.signInWithEmailAndLink(email: email, link: link);
       } else {
         _logger.warning("Link is not sign in with email link");
@@ -94,7 +94,7 @@ class FirebaseLinkHandler {
           androidInstallIfNotAvailable: androidInstallIfNotAvailable,
           androidMinimumVersion: androidMinimumVersion,
           userMustExist: userMustExist);
-    } on PlatformException catch (e) {
+    } on PlatformException {
       rethrow;
     }
   }

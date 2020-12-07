@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firestore_annotations/firestore_annotations.dart';
 import 'package:flutter/material.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:time_ago_provider/time_ago_provider.dart' as timeAgo;
 
 part 'mission.g.dart';
 
 @immutable
-@FirestoreDocument(hasSelfRef: true)
+@JsonSerializable(nullable: false)
 class Mission {
   final DocumentReference selfRef;
   final String description;
@@ -17,7 +17,7 @@ class Mission {
   final bool isStoodDown;
 
   String address() => selfRef
-      ?.documentID; // Tried a getter but there is a bug in firestore_annotations that doesn't allow the field to be ignored
+      ?.id; // Tried a getter but there is a bug in firestore_annotations that doesn't allow the field to be ignored
 
   String timeSincePresent() => timeAgo.format(time.toDate(), locale: "en_long");
 
