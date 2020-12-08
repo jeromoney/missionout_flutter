@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/app/create_screen/create_screen.dart';
 import 'package:missionout/app/detail_screen/detail_screen.dart';
@@ -22,10 +21,9 @@ class OverviewScreenModel {
   Stream<List<Mission>> fetchMissions() => team.fetchMissions();
 
   navigateToDetail(
-      {@required Mission mission,
-      @required DocumentReference documentReference}) {
+      {@required Mission mission}) {
     final MissionAddressArguments arguments =
-        MissionAddressArguments(mission.selfRef);
+        MissionAddressArguments(mission.documentReference);
     Navigator.pushNamed(context, DetailScreen.routeName, arguments: arguments);
   }
 

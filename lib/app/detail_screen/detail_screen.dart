@@ -26,7 +26,7 @@ class DetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final arguments =
         (ModalRoute.of(context).settings.arguments as MissionAddressArguments);
-    assert(arguments?.reference != null);
+    assert(arguments?.documentReference != null);
     return Provider<StreamController<bool>>(
       create: (_) => StreamController<bool>(),
       child: Builder(

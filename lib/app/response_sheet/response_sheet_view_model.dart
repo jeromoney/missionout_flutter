@@ -20,7 +20,7 @@ class ResponseSheetViewModel {
         this._user = context.watch<User>(),
         this._documentReference = (ModalRoute.of(context).settings.arguments
                 as MissionAddressArguments)
-            .reference;
+            .documentReference;
 
   Stream<Tuple2<Response, List<Response>>> responses() {
     return _team

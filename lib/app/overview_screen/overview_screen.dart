@@ -97,8 +97,7 @@ class _BuildMissionResultsState extends State<BuildMissionResults> {
                 ' — ' +
                 (DateFormat.yMMMd().format(mission.time.toDate()) ?? '')),
             onTap: () {
-              model.navigateToDetail(
-                  documentReference: mission.selfRef, mission: mission);
+              model.navigateToDetail( mission: mission);
             },
           );
         },

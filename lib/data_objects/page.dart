@@ -1,17 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firestore_annotations/firestore_annotations.dart';
 import 'package:flutter/foundation.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:missionout/data_objects/JsonConverters.dart';
 import 'package:missionout/data_objects/mission.dart';
 
 part 'page.g.dart';
 
-@FirestoreDocument(hasSelfRef: false)
+@immutable
+@JsonSerializable()
 class Page {
   final String creator;
   final String description;
   final String needForAction;
   final String address;
   final bool onlyEditors; // Page is restricted to Editors only
+  @TimestampJsonConverter()
   final Timestamp time;
 
   Page({
@@ -29,9 +32,9 @@ class Page {
       this.onlyEditors = false})
       : description = mission.description,
         needForAction = mission.needForAction,
-        address = mission.address(),
+        address = mission.address,
         time = Timestamp.now();
 
   Map<String, dynamic> toJson() =>
-      _$pageToMap(this); //some bug in iOS doesn't allow FieldValue
+      _$PageToJson(this); //some bug in iOS doesn't allow FieldValue
 }

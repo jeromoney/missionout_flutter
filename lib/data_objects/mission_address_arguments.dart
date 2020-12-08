@@ -1,8 +1,9 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Multipurpose arguments class that holds the current mission for several screens.
 class MissionAddressArguments {
-  final DocumentReference reference;
+  final DocumentReference documentReference;
 
-  MissionAddressArguments(this.reference);
+  MissionAddressArguments(this.documentReference):assert(documentReference!=null);
 }

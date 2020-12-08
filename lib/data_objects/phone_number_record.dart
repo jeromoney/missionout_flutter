@@ -1,14 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firestore_annotations/firestore_annotations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:logging/logging.dart';
+import 'package:missionout/data_objects/JsonConverters.dart';
 
 part 'phone_number_record.g.dart';
 
 @immutable
-@FirestoreDocument(hasSelfRef: true)
+@JsonSerializable()
 class PhoneNumberRecord {
+  @DocumentReferenceJsonConverter()
   final DocumentReference selfRef;
   final String uid;
   final String isoCode;
@@ -32,14 +34,14 @@ class PhoneNumberRecord {
   factory PhoneNumberRecord.fromSnapshot(DocumentSnapshot snapshot) {
     final log = Logger('PhoneNumberRecord');
     try {
-      return _$phoneNumberRecordFromSnapshot(snapshot);
+      return _$PhoneNumberRecordFromJson(snapshot.data());
     } on Exception catch (e) {
       log.warning("Phone number in firestore is corrupted", e);
       return null;
     }
   }
 
-  Map<String, dynamic> toMap() => _$phoneNumberRecordToMap(this);
+  Map<String, dynamic> toMap() => _$PhoneNumberRecordToJson(this);
 
   PhoneNumberRecord copyWith(
           {DocumentReference selfRef,

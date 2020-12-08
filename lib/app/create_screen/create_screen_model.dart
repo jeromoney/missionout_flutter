@@ -39,7 +39,7 @@ class CreateScreenModel {
       // there was an error adding mission to database
       throw HttpException("Error adding mission to database");
     }
-    final referencedMission = mission.copyWith(selfRef: reference);
+    final referencedMission = mission.copyWith(documentReference: reference);
 
     // send page to editors only
     final page = missionpage.Page.fromMission(
@@ -54,7 +54,7 @@ class CreateScreenModel {
     assert(reference != null);
     final MissionAddressArguments arguments =
         MissionAddressArguments(reference);
-    assert(arguments?.reference != null);
+    assert(arguments?.documentReference != null);
     Navigator.pushReplacementNamed(context, DetailScreen.routeName,
         arguments: arguments);
   }

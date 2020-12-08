@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firestore_annotations/firestore_annotations.dart';
 import 'package:flutter/material.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:logging/logging.dart';
 import 'package:missionout/data_objects/mission.dart';
 import 'package:missionout/data_objects/page.dart' as missionpage;
@@ -8,17 +8,15 @@ import 'package:missionout/data_objects/response.dart';
 import 'package:missionout/services/team/team.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-part 'firestore_team_generated.dart';
+part 'firestore_team.g.dart';
 
-@FirestoreDocument(hasSelfRef: false)
+@JsonSerializable()
 class FirestoreTeam implements Team {
   final _log = Logger('FirestoreTeam');
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   @override
-  @FirestoreAttribute(nullable: false)
   final String teamID;
   @override
-  @FirestoreAttribute(nullable: false)
   final String name;
   @override
   String chatURI;
@@ -41,7 +39,7 @@ class FirestoreTeam implements Team {
   }
 
   factory FirestoreTeam.fromSnapshot(DocumentSnapshot snapshot) =>
-      _$firestoreTeamFromSnapshot(snapshot);
+      _$FirestoreTeamFromJson(snapshot.data());
 
   @override
   void launchChat() => launch(chatURI);
@@ -105,7 +103,7 @@ class FirestoreTeam implements Team {
   }) async {
     // if document reference exists in mission variable, than we are updating an existing mission rather than creating a new one.
     DocumentReference result;
-    if (mission.selfRef == null) {
+    if (mission.documentReference == null) {
       // reference doesn't exist so create new mission
       result = await _db
           .collection('teams/$teamID/missions')
@@ -119,8 +117,8 @@ class FirestoreTeam implements Team {
       return result;
     } else {
       // reference is not null so we just update mission.
-      await mission.selfRef.set(mission.toMap(), SetOptions(merge: true));
-      result = mission.selfRef;
+      await mission.documentReference.set(mission.toMap(), SetOptions(merge: true));
+      result = mission.documentReference;
     }
     return result;
   }
@@ -145,7 +143,7 @@ class FirestoreTeam implements Team {
     @required Mission mission,
   }) {
     _db
-        .doc('teams/$teamID/missions/${mission.selfRef.id}')
+        .doc('teams/$teamID/missions/${mission.address}')
         .update({'isStoodDown': mission.isStoodDown});
   }
 

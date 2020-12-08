@@ -1,17 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firestore_annotations/firestore_annotations.dart';
 import 'package:flutter/foundation.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:missionout/data_objects/JsonConverters.dart';
 
 part 'response.g.dart';
 
-@FirestoreDocument(hasSelfRef: true)
+@immutable
+@JsonSerializable()
 class Response {
-  @FirestoreAttribute(ignore: true)
+  @JsonKey(ignore: true)
   static const RESPONSES = ['Responding', 'Delayed', 'Standby', 'Unavailable'];
-
+  @DocumentReferenceJsonConverter()
   final DocumentReference selfRef;
   final String teamMember;
   final String status;
+  @TimestampJsonConverter()
   final Timestamp time;
 
   Response(
@@ -26,9 +29,9 @@ class Response {
         this.selfRef = null;
 
   factory Response.fromSnapshot(DocumentSnapshot snapshot) =>
-      _$responseFromSnapshot(snapshot);
+      _$ResponseFromJson(snapshot.data());
 
-  Map<String, dynamic> toJson() => _$responseToMap(this);
+  Map<String, dynamic> toJson() => _$ResponseToJson(this);
 
   @override
   bool operator ==(other) {

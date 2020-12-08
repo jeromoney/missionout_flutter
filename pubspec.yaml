@@ -59,7 +59,12 @@ dev_dependencies:
   build_runner: ^1.10.0
   json_serializable: ^3.5.1
 
-
+targets:
+  $default:
+    builders:
+      json_serializable:
+        options:
+          nullable: false
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

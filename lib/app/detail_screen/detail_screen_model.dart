@@ -28,7 +28,7 @@ class DetailScreenModel {
         this.user = context.watch<User>(),
         this.documentReference = (ModalRoute.of(context).settings.arguments
                 as MissionAddressArguments)
-            .reference,
+            .documentReference,
         this.sheetStreamController = context.watch<StreamController<bool>>();
 
   Stream<LatLng> get missionLocation {
