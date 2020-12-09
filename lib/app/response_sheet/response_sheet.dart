@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:missionout/app/response_sheet/response_sheet_view_model.dart';
 import 'package:missionout/data_objects/response.dart';
-import 'package:tuple/tuple.dart';
 
 class ResponseSheet extends StatelessWidget {
   @override
@@ -9,8 +8,8 @@ class ResponseSheet extends StatelessWidget {
     final model = ResponseSheetViewModel(context);
     return Card(
       child: SingleChildScrollView(
-        child: StreamBuilder<Tuple2<Response, List<Response>>>(
-          stream: model.responses(),
+        child: StreamBuilder<List<Response>>(
+          stream: model.teamResponses(),
           builder: (context, snapshot) {
             // waiting
             if (snapshot.connectionState == ConnectionState.waiting)
@@ -25,9 +24,8 @@ class ResponseSheet extends StatelessWidget {
             }
 
             final responses = snapshot.data;
-
             // no results
-            if (responses.item1 == null && responses.item2.length == 0) {
+            if (responses.length == 0) {
               return Center(
                 child: Text('No responses yet.'),
                 widthFactor: 2.0,
@@ -36,7 +34,6 @@ class ResponseSheet extends StatelessWidget {
             }
 
             // success
-            responses.item2.removeWhere((response) => response == null);
             return _BuildResponsesResult(
               responses: responses,
             );
@@ -48,18 +45,18 @@ class ResponseSheet extends StatelessWidget {
 }
 
 class _BuildResponsesResult extends StatelessWidget {
-  final Response selfResponse;
-  final List<Response> otherResponses;
+  final List<Response> responses;
 
-  _BuildResponsesResult({Key key, @required responses})
-      : this.selfResponse = responses.item1,
-        this.otherResponses = responses.item2,
-        super(key: key);
+  _BuildResponsesResult({Key key, @required this.responses})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final model = ResponseSheetViewModel(context);
     List<DataRow> firstRow = [];
-    if (selfResponse != null) {
+    if (model.userIsInResponseList(responses)) {
+      final selfResponse = responses[0];
+      responses.removeAt(0);
       firstRow.add(DataRow(cells: <DataCell>[
         DataCell(Text(
           selfResponse.teamMember ?? '',
@@ -72,7 +69,7 @@ class _BuildResponsesResult extends StatelessWidget {
       ]));
     }
     List<DataRow> otherRows = [];
-    otherRows.addAll(otherResponses
+    otherRows.addAll(responses
         .map((response) => DataRow(cells: <DataCell>[
               DataCell(Text(
                 response.teamMember ?? '',

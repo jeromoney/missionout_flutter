@@ -184,7 +184,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
 
   @override
   Future deletePhoneNumber(PhoneNumberRecord phoneNumberRecord) async {
-    final documentReference = phoneNumberRecord.selfRef;
+    final documentReference = phoneNumberRecord.documentReference;
     assert(documentReference != null);
     await documentReference.delete();
   }

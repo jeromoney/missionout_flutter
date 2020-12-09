@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:missionout/data_objects/mission.dart';
 import 'package:missionout/data_objects/page.dart' as missionpage;
 import 'package:missionout/data_objects/response.dart';
+import 'package:missionout/services/user/user.dart';
 
 abstract class Team {
   final String teamID;

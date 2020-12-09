@@ -7,7 +7,6 @@ import 'package:missionout/data_objects/response.dart';
 import 'package:missionout/services/team/team.dart';
 import 'package:missionout/services/user/user.dart';
 import 'package:provider/provider.dart';
-import 'package:tuple/tuple.dart';
 
 class ResponseSheetViewModel {
   final BuildContext context;
@@ -22,20 +21,11 @@ class ResponseSheetViewModel {
                 as MissionAddressArguments)
             .documentReference;
 
-  Stream<Tuple2<Response, List<Response>>> responses() {
-    return _team
-        .fetchResponses(documentReference: _documentReference)
-        .map((responses) {
-      final index = responses
-          .indexWhere((response) => response.selfRef.path.contains(_user.uid));
-      Response selfResponse;
-      if (index == -1)
-        selfResponse = null;
-      else
-        selfResponse = responses.removeAt(index);
 
+  Stream<List<Response>> teamResponses(){
+    return _team.fetchResponses(documentReference: _documentReference).map((responseList) {
       // status that match so sort by name
-      responses.sort((response1, response2) {
+      responseList.sort((response1, response2) {
         if (response1.status == response2.status)
           return response1.teamMember.compareTo(response2.teamMember);
 
@@ -45,7 +35,17 @@ class ResponseSheetViewModel {
 
         return response1.status.compareTo(response2.status);
       });
-      return Tuple2<Response, List<Response>>(selfResponse, responses);
+
+      // Find the users own response and reorder to the front
+      final selfIndex = responseList.indexWhere((response) => response.teamMember == _user.displayName);
+      if (selfIndex != -1){
+        final selfResponse = responseList[selfIndex];
+        responseList.removeAt(selfIndex);
+        responseList.insert(0, selfResponse);
+      }
+      return responseList;
     });
   }
+
+  bool userIsInResponseList(List<Response> responses) => responses[0].teamMember == _user.displayName;
 }

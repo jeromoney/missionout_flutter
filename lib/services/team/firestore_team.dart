@@ -82,9 +82,8 @@ class FirestoreTeam implements Team {
     final ref = _db
         .collection('${documentReference.path}/responses')
         .orderBy('status', descending: true);
-    return ref.snapshots().map((snapShots) => snapShots.docs
-        .map((data) => Response.fromSnapshot(data))
-        .toList());
+    return ref.snapshots().map((snapShots) =>
+        snapShots.docs.map((data) => Response.fromSnapshot(data)).toList());
   }
 
   // firestore writes
@@ -117,7 +116,8 @@ class FirestoreTeam implements Team {
       return result;
     } else {
       // reference is not null so we just update mission.
-      await mission.documentReference.set(mission.toMap(), SetOptions(merge: true));
+      await mission.documentReference
+          .set(mission.toMap(), SetOptions(merge: true));
       result = mission.documentReference;
     }
     return result;

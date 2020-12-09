@@ -10,26 +10,35 @@ part 'response.g.dart';
 class Response {
   @JsonKey(ignore: true)
   static const RESPONSES = ['Responding', 'Delayed', 'Standby', 'Unavailable'];
-  @DocumentReferenceJsonConverter()
-  final DocumentReference selfRef;
+  @JsonKey(ignore: true)
+  final DocumentReference documentReference;
   final String teamMember;
   final String status;
   @TimestampJsonConverter()
   final Timestamp time;
 
-  Response(
-      {@required this.teamMember,
-      @required this.status,
-      this.selfRef,
-      this.time,
-      hashCode}); // Hacky- there is a bug in the firestore_annotations where hashCode is not being ignored. This allows the generated code to work
+  Response({
+    @required this.teamMember,
+    @required this.status,
+    this.documentReference,
+    this.time,
+  });
 
   Response.fromApp({@required this.teamMember, @required this.status})
       : time = Timestamp.now(),
-        this.selfRef = null;
+        this.documentReference = null;
+
+  Response addDocumentReference(
+          {@required DocumentReference documentReference}) =>
+      Response(
+          documentReference: documentReference,
+          teamMember: teamMember,
+          status: status,
+          time: time);
 
   factory Response.fromSnapshot(DocumentSnapshot snapshot) =>
-      _$ResponseFromJson(snapshot.data());
+      _$ResponseFromJson(snapshot.data())
+          .addDocumentReference(documentReference: snapshot.reference);
 
   Map<String, dynamic> toJson() => _$ResponseToJson(this);
 

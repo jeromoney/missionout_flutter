@@ -11,16 +11,6 @@ class TimestampJsonConverter implements JsonConverter<Timestamp, Timestamp> {
   Timestamp toJson(Timestamp value) => value;
 }
 
-class DocumentReferenceJsonConverter implements JsonConverter<DocumentReference, DocumentReference> {
-  const DocumentReferenceJsonConverter();
-
-  @override
-  DocumentReference fromJson(DocumentReference value) => value;
-
-  @override
-  DocumentReference toJson(DocumentReference value) => value;
-}
-
 class GeoPointJsonConverter implements JsonConverter<GeoPoint, GeoPoint> {
   const GeoPointJsonConverter();
 

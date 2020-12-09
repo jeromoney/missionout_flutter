@@ -3,15 +3,14 @@ import 'package:flutter/foundation.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:logging/logging.dart';
-import 'package:missionout/data_objects/JsonConverters.dart';
 
 part 'phone_number_record.g.dart';
 
 @immutable
 @JsonSerializable()
 class PhoneNumberRecord {
-  @DocumentReferenceJsonConverter()
-  final DocumentReference selfRef;
+  @JsonKey(ignore: true)
+  final DocumentReference documentReference;
   final String uid;
   final String isoCode;
   final String phoneNumber;
@@ -19,7 +18,7 @@ class PhoneNumberRecord {
   final bool allowCalls;
 
   const PhoneNumberRecord(
-      {this.selfRef,
+      {this.documentReference,
       @required this.uid,
       @required this.isoCode,
       @required this.phoneNumber,
@@ -29,6 +28,15 @@ class PhoneNumberRecord {
   // this should be a getter but problems with firestore annotations package
   PhoneNumber getPhoneNumber() =>
       PhoneNumber(isoCode: isoCode, phoneNumber: phoneNumber);
+
+  PhoneNumberRecord addDocumentReference(DocumentReference documentReference) =>
+      PhoneNumberRecord(
+        documentReference: documentReference,
+          uid: uid,
+          isoCode: isoCode,
+          phoneNumber: phoneNumber,
+          allowText: allowText,
+          allowCalls: allowCalls);
 
   /* constructors */
   factory PhoneNumberRecord.fromSnapshot(DocumentSnapshot snapshot) {
@@ -50,7 +58,7 @@ class PhoneNumberRecord {
           bool allowText,
           bool allowCalls}) =>
       PhoneNumberRecord(
-          selfRef: selfRef ?? this.selfRef,
+          documentReference: selfRef ?? this.documentReference,
           uid: uid ?? this.uid,
           isoCode: phoneNumber?.isoCode ?? this.isoCode,
           phoneNumber: phoneNumber?.phoneNumber ?? this.phoneNumber,

@@ -10,7 +10,7 @@ part 'mission.g.dart';
 @immutable
 @JsonSerializable()
 class Mission {
-  @DocumentReferenceJsonConverter()
+  @JsonKey(ignore: true)
   final DocumentReference documentReference;
   final String description;
   @TimestampJsonConverter()
