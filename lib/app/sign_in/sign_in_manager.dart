@@ -15,10 +15,10 @@ class SignInManager {
   SignInManager({@required this.authService, @required this.isLoadingNotifier});
 
   // ignore: missing_return
-  Future<User> _signIn(Future<User> Function() signInMethod) async {
+  Future<User> _signIn(Future<User> Function({String googleHostedDomain}) signInMethod, {String googleHostedDomain}) async {
     isLoadingNotifier.isLoading = true;
     try {
-      final User user = await signInMethod();
+      final User user = await signInMethod(googleHostedDomain: googleHostedDomain);
       isLoadingNotifier.isLoading = false;
       return user;
     } on PlatformException catch (e) {
@@ -34,9 +34,9 @@ class SignInManager {
     }
   }
 
-  Future signInWithGoogle() async {
+  Future signInWithGoogle({String googleHostedDomain}) async {
     try {
-      await _signIn(authService.signInWithGoogle);
+      await _signIn(authService.signInWithGoogle, googleHostedDomain: googleHostedDomain);
     } on auth.FirebaseAuthException {
       final googleSignIn = GoogleSignIn();
       googleSignIn.disconnect();

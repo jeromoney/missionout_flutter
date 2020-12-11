@@ -51,6 +51,9 @@ class AuthServiceAdapter extends AuthService {
   }
 
   @override
+  bool get userIsLoggedIn => false;
+
+  @override
   Future<Team> createTeam() => authService.createTeam();
 
   @override
@@ -117,7 +120,7 @@ class AuthServiceAdapter extends AuthService {
   Future<User> signInWithDemo() => authService.signInWithDemo();
 
   @override
-  Future<User> signInWithGoogle() => authService.signInWithGoogle();
+  Future<User> signInWithGoogle({String googleHostedDomain}) => authService.signInWithGoogle(googleHostedDomain: googleHostedDomain);
 
   @override
   Future<void> signOut() => authService.signOut();

@@ -2,6 +2,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:missionout/constants/constants.dart';
+import 'package:missionout/data_objects/app_setup.dart';
 import 'package:missionout/data_objects/is_loading_notifier.dart';
 import 'package:provider/provider.dart';
 
@@ -9,11 +10,15 @@ import 'log_in_screen_model.dart';
 
 class LogInScreen extends StatefulWidget {
   static const routeName = '/logInScreen';
+  AppSetup _appSetup;
 
-  final String gmailDomain = null;
-  final showGoogleButton = true;
-  final showAppleButton = true;
-  final showEmailLogin = true;
+  String get gmailDomain => _appSetup?.gmailDomain;
+
+  bool get showGoogleButton => true;
+
+  bool get showAppleButton => _appSetup?.showAppleButton ?? false;
+
+  bool get showEmailLogin => _appSetup?.showEmailLogin ?? false;
 
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
@@ -38,6 +43,7 @@ class _LogInScreenState extends State<LogInScreen> {
 
   @override
   Widget build(BuildContext context) {
+    widget._appSetup = ModalRoute.of(context).settings.arguments as AppSetup;
     final model = LoginScreenModel(context);
     return Consumer<IsLoadingNotifier>(
       builder: (_, IsLoadingNotifier isLoadingNotifier, __) {
@@ -49,6 +55,7 @@ class _LogInScreenState extends State<LogInScreen> {
               if (details.delta.dx > 0) Navigator.of(context).pop();
             },
             child: Scaffold(
+              appBar: AppBar(title: Text("MissionOut Log In"),),
               body: Center(
                 child: LayoutBuilder(
                   builder: (context, viewportConstraints) =>
@@ -64,7 +71,8 @@ class _LogInScreenState extends State<LogInScreen> {
                           if (widget.showGoogleButton)
                             GoogleSignInButton(
                               text: 'Log in with Google',
-                              onPressed: model.signInWithGoogle,
+                              onPressed: () => model.signInWithGoogle(
+                                  hostedDomain: widget.gmailDomain),
                             ),
                           if (model.isAppleSignInAvailable &&
                               widget.showAppleButton) ...[

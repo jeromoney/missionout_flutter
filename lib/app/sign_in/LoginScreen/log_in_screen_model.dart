@@ -30,9 +30,9 @@ class LoginScreenModel {
 
   bool get isAppleSignInAvailable => _appleSignInAvailable.isAvailable;
 
-  Future _signIn(Future Function() signInMethod) async {
+  Future _signIn(Future Function({String googleHostedDomain}) signInMethod, {String googleHostedDomain}) async {
     try {
-      await signInMethod();
+      await signInMethod(googleHostedDomain: googleHostedDomain);
     } on FirebaseAuthException{
       PlatformAlertDialog(
         title: "Team is not yet assigned",
@@ -42,7 +42,7 @@ class LoginScreenModel {
     }
   }
 
-  Future signInWithGoogle() async => _signIn(_signInManager.signInWithGoogle);
+  Future signInWithGoogle({String hostedDomain}) async => _signIn(_signInManager.signInWithGoogle, googleHostedDomain: hostedDomain);
 
   Future signInWithApple() async => _signIn(_signInManager.signInWithApple);
 

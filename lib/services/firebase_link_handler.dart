@@ -1,8 +1,15 @@
+import 'dart:async';
+import 'dart:core';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';
+import 'package:missionout/app/sign_in/LoginScreen/log_in_screen.dart';
 import 'package:missionout/constants/secrets.dart';
+import 'package:missionout/core/global_navigator_key.dart';
+import 'package:missionout/data_objects/app_setup.dart';
 import 'package:missionout/data_objects/is_loading_notifier.dart';
 import 'package:missionout/services/auth_service/auth_service.dart';
 import 'package:missionout/services/user/user.dart';
@@ -26,23 +33,24 @@ class FirebaseLinkHandler {
     _initDynamicLinks();
   }
 
+  // When app is opened, initializes DynamicLinks for when the app is running and
+  // when the app is shut down
   void _initDynamicLinks() async {
-    final PendingDynamicLinkData data =
+    final PendingDynamicLinkData dynamicLink =
         await FirebaseDynamicLinks.instance.getInitialLink();
-    final Uri deepLink = data?.link;
-    if (deepLink != null) _signInWithEmail(deepLink.toString());
+    // handle DynamicLinks if the app is already running
+    _routeDynamicLinks(dynamicLink);
+    // If app is launched with DynamicLink, handle it
     FirebaseDynamicLinks.instance.onLink(
-        onSuccess: (PendingDynamicLinkData dynamicLink) async {
-      final Uri link = dynamicLink?.link;
-      if (link?.path == Secrets.IOS_PATH) {
-        _signInToDemo();
-      } else if (link != null) _signInWithEmail(dynamicLink.toString());
-    }, onError: (OnLinkErrorException e) async {
-      _logger.warning("Error processing firebase link", e);
-    });
+        onSuccess: (PendingDynamicLinkData dynamicLink) async =>
+            _routeDynamicLinks(dynamicLink),
+        onError: (OnLinkErrorException e) async {
+          _logger.warning("Error processing firebase link", e);
+        });
   }
 
-  Future _signInWithEmail(String link) async {
+  Future _signInWithEmail(PendingDynamicLinkData dynamicLinkData) async {
+    final String link = dynamicLinkData.link.toString();
     final isLoadingProvider = context.read<IsLoadingNotifier>();
     try {
       isLoadingProvider.isLoading = true;
@@ -107,5 +115,42 @@ class FirebaseLinkHandler {
     } finally {
       isLoadingProvider.isLoading = false;
     }
+  }
+
+  _routeDynamicLinks(PendingDynamicLinkData data) {
+    // Do nothing
+    if (data == null) {
+      return;
+    }
+    // Sign into demo for iOS purposes
+    if (data.link?.path == Secrets.IOS_PATH) {
+      _signInToDemo();
+      return;
+    }
+    // Handle sign in with email link
+    if (data.link?.queryParameters["mode"] == "signin") {
+      _signInWithEmail(data);
+      return;
+    }
+    // Finally assume link is custom login screen
+    final teamDomain = data.link.path.substring(1);
+     _loginTeamCustomization(teamDomain);
+    return;
+  }
+
+  _loginTeamCustomization(String teamDomain) async {
+    if (auth.userIsLoggedIn){
+      _logger.warning("User is already signed in");
+      return;
+    }
+    final FirebaseFirestore db = FirebaseFirestore.instance;
+    final snapshot = await db.doc("app_setup/$teamDomain").get();
+    if (!snapshot.exists){
+      _logger.warning("Couldn't find setup document for domain: $teamDomain");
+      return;
+    }
+    final appSetup = AppSetup.fromSnapshot(snapshot);
+    final navKey = context.read<GlobalNavigatorKey>().navKey;
+    Navigator.pushNamed(navKey.currentContext, LogInScreen.routeName, arguments: appSetup);
   }
 }

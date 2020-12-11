@@ -3,6 +3,8 @@ import 'package:missionout/services/team/team.dart';
 import 'package:missionout/services/user/user.dart';
 
 abstract class AuthService {
+  bool get userIsLoggedIn;
+
 
   Future<User> currentUser();
 
@@ -27,7 +29,7 @@ abstract class AuthService {
     bool userMustExist = false,
   });
 
-  Future<User> signInWithGoogle();
+  Future<User> signInWithGoogle({String googleHostedDomain});
 
   Future<User> signInWithApple();
 

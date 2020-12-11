@@ -6,6 +6,9 @@ import 'package:missionout/services/team/team.dart';
 import 'package:missionout/services/user/user.dart';
 
 class MockAuthService extends AuthService {
+
+  @override
+  bool get userIsLoggedIn => true;
   @override
   Future<Team> createTeam() {
     // TODO: implement createTeam
@@ -60,7 +63,7 @@ class MockAuthService extends AuthService {
   }
 
   @override
-  Future<User> signInWithGoogle() {
+  Future<User> signInWithGoogle({String googleHostedDomain}) {
     // TODO: implement signInWithGoogle
     throw UnimplementedError();
   }

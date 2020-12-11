@@ -23,6 +23,8 @@ class FirebaseAuthService extends AuthService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   auth.User _firebaseUser;
   String teamID;
+  @override
+  bool get userIsLoggedIn => true;
 
 
   /// Combines data from Firebase with Firestore to return User
@@ -170,8 +172,8 @@ class FirebaseAuthService extends AuthService {
   }
 
   @override
-  Future<User> signInWithGoogle() async {
-    final googleSignIn = GoogleSignIn();
+  Future<User> signInWithGoogle({String googleHostedDomain}) async {
+    final googleSignIn = GoogleSignIn(hostedDomain: googleHostedDomain);
     final googleUser = await googleSignIn.signIn();
 
     if (googleUser == null)
