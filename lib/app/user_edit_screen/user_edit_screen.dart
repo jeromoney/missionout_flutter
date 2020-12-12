@@ -79,7 +79,7 @@ class _UserEditScreenBodyState extends State<_UserEditScreenBody> {
                   final snackbar = SnackBar(
                     content: Text("Saved name"),
                   );
-                  Scaffold.of(context).showSnackBar(snackbar);
+                  ScaffoldMessenger.of(context).showSnackBar(snackbar);
                 }
               },
               child: Text("Save"),

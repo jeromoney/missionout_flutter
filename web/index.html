@@ -4,7 +4,26 @@
   <meta charset="UTF-8">
   <title>mission_out</title>
 </head>
-<body>
+  <body>
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-messaging.js"></script>
+  <!-- Firebase Configuration -->
+  <script>
+      var firebaseConfig = {
+        apiKey: "...",
+        authDomain: "missionout.firebaseapp.com",
+        databaseURL: "https://missionout.firebaseio.com",
+        projectId: "missionout",
+        storageBucket: "missionout.appspot.com",
+        messagingSenderId: "...",
+        appId: "1:...:web:...",
+        measurementId: "G-...",
+      };
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+    </script>
+
   <script src="main.dart.js" type="application/javascript"></script>
-</body>
-</html>
+  </body>
+  </html>

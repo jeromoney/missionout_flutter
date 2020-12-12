@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logging/logging.dart';
 import 'package:missionout/app/auth_widget.dart';
@@ -24,6 +26,7 @@ Future<void> main() async {
   // Apple sign in is only available on iOS devices, so let's check that right away.
   final appleSignInAvailable = await AppleSignInAvailable.check();
   await Firebase.initializeApp();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   Logger.root.level = Level.ALL; // defaults to Level.INFO
   Logger.root.onRecord.listen((record) {
     print('${record.level.name}: ${record.time}: ${record.message}');
@@ -89,4 +92,16 @@ class MyApp extends StatelessWidget {
               userSnapshot: userSnapshot,
             ),
           ));
+}
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+    Logger.root.info("Received onResume message");
+    Logger.root.info(message);
+    // Android notifications are handled in java code
+    var iOSPlatformChannelSpecifics = IOSNotificationDetails(
+        presentSound: true, sound: "school_fire_alarm.m4a");
+    var platformChannelSpecifics =
+    NotificationDetails(iOS:iOSPlatformChannelSpecifics);
+    await FlutterLocalNotificationsPlugin().show(0, message.data["description"],
+        message.data["needForAction"], platformChannelSpecifics);
 }

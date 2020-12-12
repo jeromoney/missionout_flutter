@@ -140,7 +140,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
     });
   }
 
-  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
   Future _addTokenToFirestore() async {
     // Setting up the user will be the responsibility of the server.

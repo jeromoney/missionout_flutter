@@ -24,7 +24,7 @@ class UserEditScreenModel {
 
   Future removePhoneNumberRecord(PhoneNumberRecord phoneNumberRecord) async {
     await user.deletePhoneNumber(phoneNumberRecord);
-    Scaffold.of(context)
+    ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text("Deleted phone number")));
   }
 

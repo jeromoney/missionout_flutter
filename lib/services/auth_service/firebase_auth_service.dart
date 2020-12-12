@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:apple_sign_in/apple_sign_in.dart';
+import 'package:apple_sign_in/apple_sign_in.dart' as apple;
 import 'package:apple_sign_in/scope.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
@@ -20,7 +20,7 @@ class FirebaseAuthService extends AuthService {
   final _log = Logger('FirebaseAuthService');
   final auth.FirebaseAuth _firebaseAuth =  auth.FirebaseAuth.instance;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   auth.User _firebaseUser;
   String teamID;
   @override
@@ -133,10 +133,10 @@ class FirebaseAuthService extends AuthService {
   @override
   Future<User> signInWithApple() async {
     List<Scope> scopes = const [Scope.fullName, Scope.email];
-    final AuthorizationResult result = await AppleSignIn.performRequests(
-        [AppleIdRequest(requestedScopes: scopes)]);
+    final apple.AuthorizationResult result = await apple.AppleSignIn.performRequests(
+        [apple.AppleIdRequest(requestedScopes: scopes)]);
     switch (result.status) {
-      case AuthorizationStatus.authorized:
+      case apple.AuthorizationStatus.authorized:
         final appleIdCredential = result.credential;
         final oAuthProvider = auth.OAuthProvider('apple.com');
         final credential = oAuthProvider.credential(
@@ -157,12 +157,12 @@ class FirebaseAuthService extends AuthService {
               .updateProfile(displayName: displayName);
         }
         return _userFromFirebase(firebaseUser);
-      case AuthorizationStatus.error:
+      case apple.AuthorizationStatus.error:
         throw PlatformException(
           code: 'ERROR_AUTHORIZATION_DENIED',
           message: result.error.toString(),
         );
-      case AuthorizationStatus.cancelled:
+      case apple.AuthorizationStatus.cancelled:
         throw PlatformException(
           code: 'ERROR_ABORTED_BY_USER',
           message: 'Sign in aborted by user',
