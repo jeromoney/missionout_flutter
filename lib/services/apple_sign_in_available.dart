@@ -1,4 +1,5 @@
-import 'package:apple_sign_in/apple_sign_in.dart';
+import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 // A simple class to determine whether Apple Sign In is available. This could just
 // be a boolean, but this could trip up a provider tree search if a second boolean
@@ -8,6 +9,8 @@ class AppleSignInAvailable {
 
   const AppleSignInAvailable({this.isAvailable});
 
-  static Future<AppleSignInAvailable> check() async =>
-      AppleSignInAvailable(isAvailable: await AppleSignIn.isAvailable());
+  static AppleSignInAvailable check()  {
+    if (kIsWeb) return AppleSignInAvailable(isAvailable: false);
+    else return AppleSignInAvailable(isAvailable: Platform.isIOS);
+  }
 }

@@ -61,7 +61,7 @@ class FirebaseLinkHandler {
         return;
       }
       // check that email is set
-      final email = await emailStore.getEmail();
+      final email = await emailStore?.getEmail();
       if (email == null) {
         _logger.warning("Email not set");
         return;

@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logging/logging.dart';
@@ -24,9 +25,11 @@ Future<void> main() async {
   // Fix for: Unhandled Exception: ServicesBinding.defaultBinaryMessenger was accessed before the binding was initialized.
   WidgetsFlutterBinding.ensureInitialized();
   // Apple sign in is only available on iOS devices, so let's check that right away.
-  final appleSignInAvailable = await AppleSignInAvailable.check();
+  final appleSignInAvailable = AppleSignInAvailable.check();
   await Firebase.initializeApp();
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  if (!kIsWeb) {
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  }
   Logger.root.level = Level.ALL; // defaults to Level.INFO
   Logger.root.onRecord.listen((record) {
     print('${record.level.name}: ${record.time}: ${record.message}');
@@ -54,7 +57,8 @@ class MyApp extends StatelessWidget {
             Provider<AppleSignInAvailable>.value(value: appleSignInAvailable),
             Provider<FCMMessageHandler>(
               lazy: false,
-              create: (context) => FCMMessageHandler(context: context),
+              // Notifications aren't supported on web at the moment
+              create: (context) => kIsWeb ? null : FCMMessageHandler(context: context),
             ),
             Provider<AuthService>(
               lazy: false,
@@ -72,13 +76,14 @@ class MyApp extends StatelessWidget {
                     )),
             Provider<EmailSecureStore>(
               lazy: false,
-              create: (_) => EmailSecureStore(
+              create: (_) => kIsWeb ? null : EmailSecureStore(
                   flutterSecureStorage: FlutterSecureStorage()),
             ),
             ProxyProvider2<AuthService, EmailSecureStore, FirebaseLinkHandler>(
               lazy: false,
               update: (BuildContext context, AuthService authService,
-                      EmailSecureStore storage, __) =>
+                      // Firebase Dynamic Links are not supported on the web at the moment
+                      EmailSecureStore storage, __) => kIsWeb ? null :
                   FirebaseLinkHandler(
                 context: context,
                 auth: authService,

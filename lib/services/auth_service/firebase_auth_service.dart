@@ -4,6 +4,8 @@ import 'package:apple_sign_in/apple_sign_in.dart' as apple;
 import 'package:apple_sign_in/scope.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -20,7 +22,6 @@ class FirebaseAuthService extends AuthService {
   final _log = Logger('FirebaseAuthService');
   final auth.FirebaseAuth _firebaseAuth =  auth.FirebaseAuth.instance;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   auth.User _firebaseUser;
   String teamID;
   @override
@@ -56,8 +57,7 @@ class FirebaseAuthService extends AuthService {
   void dispose() {}
 
   @override
-  Stream<User> get onAuthStateChanged =>
-      _firebaseAuth.authStateChanges().asyncMap(_userFromFirebase);
+  Stream<User> get onAuthStateChanged => _firebaseAuth.authStateChanges().asyncMap(_userFromFirebase);
 
   @override
   Future<User> signInWithEmailAndPassword(String email, String password) async {
@@ -182,7 +182,7 @@ class FirebaseAuthService extends AuthService {
 
     final googleAuth = await googleUser.authentication;
 
-    if (googleAuth.accessToken == null || googleAuth.idToken == null)
+    if (googleAuth.idToken == null)
       throw PlatformException(
           code: 'ERROR_MISSING_GOOGLE_AUTH_TOKEN',
           message: 'Missing Google Auth Token');
@@ -206,14 +206,17 @@ class FirebaseAuthService extends AuthService {
     if (_firebaseUser == null)
       throw StateError("Signin out a user that is null");
     // remove token from Firestore from first, before user signs out
-    var fcmToken = await _firebaseMessaging.getToken();
-    _db.collection('users').doc(_firebaseUser.uid).update({
-      'tokens': FieldValue.arrayRemove([fcmToken])
-    }).then((value) {
-      _log.info('Removed token to user document');
-    }).catchError((error) {
-      _log.warning('Error removing token from user document', error);
-    });
+    if (!kIsWeb)
+      {
+        var fcmToken = await FirebaseMessaging.instance.getToken();
+        _db.collection('users').doc(_firebaseUser.uid).update({
+          'tokens': FieldValue.arrayRemove([fcmToken])
+        }).then((value) {
+          _log.info('Removed token to user document');
+        }).catchError((error) {
+          _log.warning('Error removing token from user document', error);
+        });
+      }
 
     await GoogleSignIn().signOut();
     await _firebaseAuth.signOut();

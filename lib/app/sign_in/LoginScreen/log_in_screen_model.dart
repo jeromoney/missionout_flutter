@@ -51,7 +51,7 @@ class LoginScreenModel {
     // different style
     final emailSecureStore = context.read<EmailSecureStore>();
     final log = Logger('LogInScreenModel getEmail method');
-    return emailSecureStore.getEmail().catchError((e) {
+    return emailSecureStore?.getEmail()?.catchError((e) {
       log.warning("Error retrieving saved email: $e");
     });
   }

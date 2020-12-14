@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
@@ -140,12 +141,12 @@ class MyFirebaseUser with ChangeNotifier implements User {
     });
   }
 
-  FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
   Future _addTokenToFirestore() async {
     // Setting up the user will be the responsibility of the server.
     // This method adds the user token to firestore
-    final fcmToken = await _firebaseMessaging.getToken();
+    if (kIsWeb){return;}
+    final fcmToken = await FirebaseMessaging.instance.getToken();
     await _db.collection('users').doc(this.uid).update({
       'tokens': FieldValue.arrayUnion([fcmToken])
     }).then((value) {

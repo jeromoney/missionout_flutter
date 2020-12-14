@@ -1,18 +1,15 @@
 import UIKit
 import Flutter
-import Firebase
 import GoogleMaps
+
 @UIApplicationMain
-@objc class AppDelegate: FlutterAppDelegate{
+@objc class AppDelegate: FlutterAppDelegate {
   override func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-    if #available(iOS 10.0, *) {
-      UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
-    }
+    GMSServices.provideAPIKey("AIzaSyAiXIGXt2iVitp_c6Rmuz9ebzOinpsch4o")
     GeneratedPluginRegistrant.register(with: self)
-    GMSServices.provideAPIKey("AIzaSyCP_6jcpufFZh45nm85ZGt1meLhPEeSn-M")
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }

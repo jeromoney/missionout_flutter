@@ -23,7 +23,7 @@ class SignInManager {
       return user;
     } on PlatformException catch (e) {
       isLoadingNotifier.isLoading = false;
-      _log.warning('Unable to complete sign in process', e);
+      _log.warning('Unable to complete sign in process: ${e.toString()}', e);
     } on auth.FirebaseAuthException {
       // User signed in but has not been assigned a team yet
       isLoadingNotifier.isLoading = false;

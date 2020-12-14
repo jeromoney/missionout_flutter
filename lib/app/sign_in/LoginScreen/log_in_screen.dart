@@ -10,16 +10,6 @@ import 'log_in_screen_model.dart';
 
 class LogInScreen extends StatefulWidget {
   static const routeName = '/logInScreen';
-  AppSetup _appSetup;
-
-  String get gmailDomain => _appSetup?.gmailDomain;
-
-  bool get showGoogleButton => true;
-
-  bool get showAppleButton => _appSetup?.showAppleButton ?? false;
-
-  bool get showEmailLogin => _appSetup?.showEmailLogin ?? false;
-
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
 
@@ -28,6 +18,11 @@ class LogInScreen extends StatefulWidget {
 }
 
 class _LogInScreenState extends State<LogInScreen> {
+  AppSetup _appSetup;
+  String get gmailDomain => _appSetup?.gmailDomain;
+  bool get showGoogleButton => true;
+  bool get showAppleButton => _appSetup?.showAppleButton ?? false;
+  bool get showEmailLogin => _appSetup?.showEmailLogin ?? false;
   @override
   void initState() {
     super.initState();
@@ -43,7 +38,7 @@ class _LogInScreenState extends State<LogInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    widget._appSetup = ModalRoute.of(context).settings.arguments as AppSetup;
+    _appSetup = ModalRoute.of(context).settings.arguments as AppSetup;
     final model = LoginScreenModel(context);
     return Consumer<IsLoadingNotifier>(
       builder: (_, IsLoadingNotifier isLoadingNotifier, __) {
@@ -68,25 +63,25 @@ class _LogInScreenState extends State<LogInScreen> {
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          if (widget.showGoogleButton)
+                          if (showGoogleButton)
                             GoogleSignInButton(
                               text: 'Log in with Google',
                               onPressed: () => model.signInWithGoogle(
-                                  hostedDomain: widget.gmailDomain),
+                                  hostedDomain: gmailDomain),
                             ),
                           if (model.isAppleSignInAvailable &&
-                              widget.showAppleButton) ...[
+                              showAppleButton) ...[
                             AppleSignInButton(
                               text: 'Log in with Apple',
                               style: AppleButtonStyle.white,
                               onPressed: model.signInWithApple,
                             )
                           ],
-                          if (widget.showEmailLogin &&
-                              (widget.showAppleButton ||
-                                  widget.showGoogleButton))
+                          if (showEmailLogin &&
+                              (showAppleButton ||
+                                  showGoogleButton))
                             Divider(),
-                          if (widget.showEmailLogin)
+                          if (showEmailLogin)
                             Form(
                               key: widget._formKey,
                               child: Column(

@@ -1,29 +1,77 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    Fore more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+  -->
+  <base href="/">
+
   <meta charset="UTF-8">
-  <title>mission_out</title>
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="A new Flutter project.">
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDc05VStrobT4OLpMqZoyalOsrb6yKVMUQ"></script>
+
+  <!-- iOS meta tags & icons -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="missionout">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>MissionOut</title>
+  <link rel="manifest" href="manifest.json">
+
+  <meta name="google-signin-client_id" content="76139268481-nq5h40fte7ip04r9nmh61roghk53t2hj.apps.googleusercontent.com">
+
 </head>
-  <body>
+<body>
+  <!-- This script installs service_worker.js to provide PWA functionality to
+       application. For more information, see:
+       https://developers.google.com/web/fundamentals/primers/service-workers -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('flutter-first-frame', function () {
+        navigator.serviceWorker.register('flutter_service_worker.js');
+      });
+    }
+  </script>
+
+
+
   <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-messaging.js"></script>
+
   <!-- Firebase Configuration -->
   <script>
-      var firebaseConfig = {
-        apiKey: "...",
-        authDomain: "missionout.firebaseapp.com",
-        databaseURL: "https://missionout.firebaseio.com",
-        projectId: "missionout",
-        storageBucket: "missionout.appspot.com",
-        messagingSenderId: "...",
-        appId: "1:...:web:...",
-        measurementId: "G-...",
-      };
-
-      // Initialize Firebase
-      firebase.initializeApp(firebaseConfig);
+   // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  var firebaseConfig = {
+    apiKey: "AIzaSyA3xua8p3RiDTOZ7kBdt6iWgjlfx3m91i0",
+    authDomain: "missionout.firebaseapp.com",
+    databaseURL: "https://missionout.firebaseio.com",
+    projectId: "missionout",
+    storageBucket: "missionout.appspot.com",
+    messagingSenderId: "76139268481",
+    appId: "1:76139268481:web:e31832b78fcf9fff0e8080",
+    measurementId: "G-414FS6KZTM"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
     </script>
 
+
   <script src="main.dart.js" type="application/javascript"></script>
-  </body>
-  </html>
+</body>
+</html>

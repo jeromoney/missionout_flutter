@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:missionout/constants/keys.dart';
 
@@ -22,16 +23,27 @@ class PlatformAlertDialog extends PlatformWidget {
   final String defaultActionText;
 
   Future<bool> show(BuildContext context) async {
-    return Platform.isIOS
-        ? await showCupertinoDialog<bool>(
-            context: context,
-            builder: (BuildContext context) => this,
-          )
-        : await showDialog<bool>(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) => this,
-          );
+    // Platform not implemented on web at the moment
+    if (kIsWeb) {
+      return await showDialog<bool>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) => this,
+      );
+    }
+    else if (Platform.isAndroid)
+    {
+      return await showDialog<bool>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) => this,
+      );
+    }
+    else
+      return await showCupertinoDialog<bool>(
+        context: context,
+        builder: (BuildContext context) => this,
+      );
   }
 
   @override
