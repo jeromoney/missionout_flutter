@@ -1,0 +1,15 @@
+{
+  "name": "test",
+  "version": "1.0.0",
+  "description": "unit testing for MissionOut Firestore Rules",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --exit"
+  },
+  "author": "Justin Matis",
+  "license": "ISC",
+  "devDependencies": {
+    "@firebase/testing": "^0.20.5",
+    "mocha": "^8.0.1"
+  }
+}
