@@ -1,7 +1,5 @@
-import 'dart:io';
-import 'package:flutter/foundation.dart' show kIsWeb;
-
 import 'package:flutter/material.dart';
+import 'package:missionout/core/platforms.dart';
 
 abstract class PlatformWidget extends StatelessWidget {
   Widget buildCupertinoWidget(BuildContext context);
@@ -10,11 +8,9 @@ abstract class PlatformWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (kIsWeb){    return buildMaterialWidget(context);}
-
-    if (Platform.isIOS) {
-      return buildCupertinoWidget(context);
-    }
+    // This code is a bit risky. Platforms.isIOS will trigger an exception in web
+    // , but it should be caught by Platforms.
+    if (Platforms.isIOS) return buildCupertinoWidget(context);
     return buildMaterialWidget(context);
   }
 }

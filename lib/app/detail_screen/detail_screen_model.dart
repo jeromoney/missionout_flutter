@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io' show Platform;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
@@ -7,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:missionout/app/create_screen/create_screen.dart';
+import 'package:missionout/core/platforms.dart';
 import 'package:missionout/data_objects/mission.dart';
 import 'package:missionout/data_objects/mission_address_arguments.dart';
 import 'package:missionout/data_objects/page.dart' as missionpage;
@@ -66,11 +66,12 @@ class DetailScreenModel {
     // currently optimized for gmaps. The location is opened
     // as a query "?q=" so the label is displayed.
     String url;
-    if (Platform.isAndroid) {
+    if (Platforms.isAndroid) {
       url = 'geo:0,0?q=$lat,$lon';
-    } else if (Platform.isIOS || Platform.isMacOS) {
+    } else if (Platforms.isIOS || Platforms.isMacOS) {
       url = 'http://maps.apple.com/?q=$lat,$lon';
     } else {
+      // TODO -- add support for web
       throw Exception("Non-supported platform");
     }
     launch(url);

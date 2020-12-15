@@ -4,7 +4,6 @@ import 'package:apple_sign_in/apple_sign_in.dart' as apple;
 import 'package:apple_sign_in/scope.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -12,6 +11,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logging/logging.dart';
+import 'package:missionout/core/platforms.dart';
 import 'package:missionout/services/auth_service/auth_service.dart';
 import 'package:missionout/services/team/firestore_team.dart';
 import 'package:missionout/services/team/team.dart';
@@ -206,7 +206,7 @@ class FirebaseAuthService extends AuthService {
     if (_firebaseUser == null)
       throw StateError("Signin out a user that is null");
     // remove token from Firestore from first, before user signs out
-    if (!kIsWeb)
+    if (!Platforms.isWeb)
       {
         var fcmToken = await FirebaseMessaging.instance.getToken();
         _db.collection('users').doc(_firebaseUser.uid).update({

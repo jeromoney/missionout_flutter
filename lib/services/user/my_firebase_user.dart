@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart' show kIsWeb;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
@@ -8,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:logging/logging.dart';
+import 'package:missionout/core/platforms.dart';
 import 'package:missionout/data_objects/phone_number_record.dart';
 import 'package:missionout/services/user/user.dart';
 
@@ -145,7 +145,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
   Future _addTokenToFirestore() async {
     // Setting up the user will be the responsibility of the server.
     // This method adds the user token to firestore
-    if (kIsWeb){return;}
+    if (Platforms.isWeb){return;}
     final fcmToken = await FirebaseMessaging.instance.getToken();
     await _db.collection('users').doc(this.uid).update({
       'tokens': FieldValue.arrayUnion([fcmToken])

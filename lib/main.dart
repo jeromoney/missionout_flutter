@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logging/logging.dart';
@@ -10,6 +9,7 @@ import 'package:missionout/app/auth_widget.dart';
 import 'package:missionout/app/auth_widget_builder.dart';
 import 'package:missionout/core/fcm_message_handler.dart';
 import 'package:missionout/core/global_navigator_key.dart';
+import 'package:missionout/core/platforms.dart';
 import 'package:missionout/data_objects/is_loading_notifier.dart';
 import 'package:missionout/services/apple_sign_in_available.dart';
 import 'package:missionout/services/auth_service/auth_service.dart';
@@ -27,7 +27,7 @@ Future<void> main() async {
   // Apple sign in is only available on iOS devices, so let's check that right away.
   final appleSignInAvailable = AppleSignInAvailable.check();
   await Firebase.initializeApp();
-  if (!kIsWeb) {
+  if (!Platforms.isWeb) {
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   }
   Logger.root.level = Level.ALL; // defaults to Level.INFO
@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
             Provider<FCMMessageHandler>(
               lazy: false,
               // Notifications aren't supported on web at the moment
-              create: (context) => kIsWeb ? null : FCMMessageHandler(context: context),
+              create: (context) => Platforms.isWeb ? null : FCMMessageHandler(context: context),
             ),
             Provider<AuthService>(
               lazy: false,
@@ -76,14 +76,14 @@ class MyApp extends StatelessWidget {
                     )),
             Provider<EmailSecureStore>(
               lazy: false,
-              create: (_) => kIsWeb ? null : EmailSecureStore(
+              create: (_) => Platforms.isWeb ? null : EmailSecureStore(
                   flutterSecureStorage: FlutterSecureStorage()),
             ),
             ProxyProvider2<AuthService, EmailSecureStore, FirebaseLinkHandler>(
               lazy: false,
               update: (BuildContext context, AuthService authService,
                       // Firebase Dynamic Links are not supported on the web at the moment
-                      EmailSecureStore storage, __) => kIsWeb ? null :
+                      EmailSecureStore storage, __) => Platforms.isWeb ? null :
                   FirebaseLinkHandler(
                 context: context,
                 auth: authService,
