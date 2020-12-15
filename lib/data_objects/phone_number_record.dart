@@ -42,7 +42,7 @@ class PhoneNumberRecord {
   factory PhoneNumberRecord.fromSnapshot(DocumentSnapshot snapshot) {
     final log = Logger('PhoneNumberRecord');
     try {
-      return _$PhoneNumberRecordFromJson(snapshot.data());
+      return _$PhoneNumberRecordFromJson(snapshot.data()).copyWith(documentReference: snapshot.reference);
     } on Exception catch (e) {
       log.warning("Phone number in firestore is corrupted", e);
       return null;
@@ -52,13 +52,13 @@ class PhoneNumberRecord {
   Map<String, dynamic> toMap() => _$PhoneNumberRecordToJson(this);
 
   PhoneNumberRecord copyWith(
-          {DocumentReference selfRef,
+          {DocumentReference documentReference,
           PhoneNumber phoneNumber,
           String uid,
           bool allowText,
           bool allowCalls}) =>
       PhoneNumberRecord(
-          documentReference: selfRef ?? this.documentReference,
+          documentReference: documentReference ?? this.documentReference,
           uid: uid ?? this.uid,
           isoCode: phoneNumber?.isoCode ?? this.isoCode,
           phoneNumber: phoneNumber?.phoneNumber ?? this.phoneNumber,

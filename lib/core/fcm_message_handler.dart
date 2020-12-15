@@ -27,7 +27,7 @@ class FCMMessageHandler {
     FirebaseMessaging.onMessage.listen((RemoteMessage remoteMessage) async {
       final navKey = context.read<GlobalNavigatorKey>().navKey;
       _log.info("Received onMessage message");
-      final notification = FCMMessage.fromMessage(remoteMessage.data);
+      final notification = FCMMessage.fromMessage(remoteMessage.notification);
       PlatformAlertDialog(
         title: "Update: ${notification.title}",
         content: notification.body,
