@@ -70,7 +70,11 @@ class DetailScreenModel {
       url = 'geo:0,0?q=$lat,$lon';
     } else if (Platforms.isIOS || Platforms.isMacOS) {
       url = 'http://maps.apple.com/?q=$lat,$lon';
-    } else {
+    }
+    else if (Platforms.isWeb){
+      url = "https://www.google.com/maps";
+    }
+    else {
       // TODO -- add support for web
       throw Exception("Non-supported platform");
     }

@@ -203,23 +203,24 @@ class FirebaseAuthService extends AuthService {
 
   @override
   Future signOut() async {
-    if (_firebaseUser == null)
-      throw StateError("Signin out a user that is null");
-    // remove token from Firestore from first, before user signs out
-    if (!Platforms.isWeb)
-      {
-        var fcmToken = await FirebaseMessaging.instance.getToken();
-        _db.collection('users').doc(_firebaseUser.uid).update({
-          'tokens': FieldValue.arrayRemove([fcmToken])
-        }).then((value) {
-          _log.info('Removed token to user document');
-        }).catchError((error) {
-          _log.warning('Error removing token from user document', error);
-        });
-      }
+      if (_firebaseUser == null)
+        throw StateError("Signin out a user that is null");
+      // remove token from Firestore from first, before user signs out
+      if (!Platforms.isWeb)
+        {
+          var fcmToken = await FirebaseMessaging.instance.getToken();
+          _db.collection('users').doc(_firebaseUser.uid).update({
+            'tokens': FieldValue.arrayRemove([fcmToken])
+          }).then((value) {
+            _log.info('Removed token to user document');
+          }).catchError((error) {
+            _log.warning('Error removing token from user document', error);
+          });
+        }
 
-    await GoogleSignIn().signOut();
-    await _firebaseAuth.signOut();
+      await GoogleSignIn().signOut();
+      await _firebaseAuth.signOut();
+
   }
 
 

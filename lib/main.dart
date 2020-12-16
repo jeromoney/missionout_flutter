@@ -21,13 +21,14 @@ import 'package:provider/provider.dart';
 
 import 'app/sign_in/sign_in_manager.dart';
 
-Future<void> main() async {
+Future main() async {
   // Fix for: Unhandled Exception: ServicesBinding.defaultBinaryMessenger was accessed before the binding was initialized.
   WidgetsFlutterBinding.ensureInitialized();
   // Apple sign in is only available on iOS devices, so let's check that right away.
   final appleSignInAvailable = AppleSignInAvailable.check();
   await Firebase.initializeApp();
   if (!Platforms.isWeb) {
+    FCMMessageHandler.initializeAndroidChannel();
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   }
   Logger.root.level = Level.ALL; // defaults to Level.INFO
@@ -83,7 +84,7 @@ class MyApp extends StatelessWidget {
               lazy: false,
               update: (BuildContext context, AuthService authService,
                       // Firebase Dynamic Links are not supported on the web at the moment
-                      EmailSecureStore storage, __) => Platforms.isWeb ? null :
+                      EmailSecureStore storage, __) =>
                   FirebaseLinkHandler(
                 context: context,
                 auth: authService,
@@ -92,10 +93,11 @@ class MyApp extends StatelessWidget {
             ),
           ],
           child: AuthWidgetBuilder(
-            builder: (BuildContext context, AsyncSnapshot<User> userSnapshot) =>
-                AuthWidget(
+            builder: (BuildContext context, AsyncSnapshot<User> userSnapshot) {
+              return AuthWidget(
               userSnapshot: userSnapshot,
-            ),
+            );
+            },
           ));
 }
 
@@ -104,7 +106,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     Logger.root.info(message);
     // Android notifications are handled in java code
     var iOSPlatformChannelSpecifics = IOSNotificationDetails(
-        presentSound: true, sound: "school_fire_alarm.m4a");
+        presentSound: true, sound: "school_fire_alarm");
     var platformChannelSpecifics =
     NotificationDetails(iOS:iOSPlatformChannelSpecifics);
     await FlutterLocalNotificationsPlugin().show(0, message.data["description"],

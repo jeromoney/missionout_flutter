@@ -6,6 +6,9 @@
        <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@drawable/notification_logo" />
        <meta-data android:name="com.google.android.geo.API_KEY"
            android:value="AIzaSyAiXIGXt2iVitp_c6Rmuz9ebzOinpsch4o"/>
+       <meta-data
+           android:name="com.google.firebase.messaging.default_notification_channel_id"
+           android:value="mission_pages" />
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

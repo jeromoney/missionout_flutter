@@ -97,7 +97,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
 
     final optionalKeys = ["isEditor"];
     final isMissingOptionalKey =
-        optionalKeys.any((requiredKey) => !data.containsKey(optionalKeys));
+        optionalKeys.any((optionalKey) => !data.containsKey(optionalKeys));
     if (isMissingOptionalKey)
       log.warning("Missing optional key; substituting null values.");
 
@@ -121,6 +121,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
       this.mobilePhoneNumber,
       this.voicePhoneNumber})
       : assert(teamID != null) {
+    if (Platforms.isWeb){return;}
     _addTokenToFirestore();
   }
 
@@ -145,7 +146,6 @@ class MyFirebaseUser with ChangeNotifier implements User {
   Future _addTokenToFirestore() async {
     // Setting up the user will be the responsibility of the server.
     // This method adds the user token to firestore
-    if (Platforms.isWeb){return;}
     final fcmToken = await FirebaseMessaging.instance.getToken();
     await _db.collection('users').doc(this.uid).update({
       'tokens': FieldValue.arrayUnion([fcmToken])
