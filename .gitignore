@@ -56,3 +56,5 @@ firestore_rules/*
 *secrets.dart
 *.last_build_id
 /firebase.json
+/.firebase/
+/.firebaserc
