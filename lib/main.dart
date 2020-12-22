@@ -20,6 +20,7 @@ import 'package:missionout/services/user/user.dart';
 import 'package:provider/provider.dart';
 
 import 'app/sign_in/sign_in_manager.dart';
+import 'data_objects/fcm_message.dart';
 
 Future main() async {
   // Fix for: Unhandled Exception: ServicesBinding.defaultBinaryMessenger was accessed before the binding was initialized.
@@ -29,7 +30,7 @@ Future main() async {
   await Firebase.initializeApp();
   if (!Platforms.isWeb) {
     FCMMessageHandler.initializeAndroidChannel();
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    FirebaseMessaging.onBackgroundMessage(FCMMessageHandler.pageMissionAlert);
   }
   Logger.root.level = Level.ALL; // defaults to Level.INFO
   Logger.root.onRecord.listen((record) {
@@ -104,11 +105,24 @@ class MyApp extends StatelessWidget {
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     Logger.root.info("Received onResume message");
     Logger.root.info(message);
-    // Android notifications are handled in java code
-    var iOSPlatformChannelSpecifics = IOSNotificationDetails(
-        presentSound: true, sound: "school_fire_alarm");
-    var platformChannelSpecifics =
-    NotificationDetails(iOS:iOSPlatformChannelSpecifics);
-    await FlutterLocalNotificationsPlugin().show(0, message.data["description"],
-        message.data["needForAction"], platformChannelSpecifics);
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+    AndroidNotificationDetails(
+      'mission_pages',
+      'Mission Pages',
+      'This channel is used to page out missions.',
+      sound: RawResourceAndroidNotificationSound('school_fire_alarm'),
+    );
+    const IOSNotificationDetails iOSPlatformChannelSpecifics =
+    IOSNotificationDetails(sound: 'slow_spring_board.aiff');
+    const MacOSNotificationDetails macOSPlatformChannelSpecifics =
+    MacOSNotificationDetails(sound: 'slow_spring_board.aiff');
+    const NotificationDetails platformChannelSpecifics = NotificationDetails(
+        android: androidPlatformChannelSpecifics,
+        iOS: iOSPlatformChannelSpecifics,
+        macOS: macOSPlatformChannelSpecifics);
+    final notification = FCMMessage.fromMessage(message.notification);
+    final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    await flutterLocalNotificationsPlugin.show(
+        0, notification.title, notification.body, platformChannelSpecifics,
+        payload: "hey diddle hey diddle");
 }
