@@ -40,4 +40,6 @@ abstract class Team {
     @required String docID,
     @required String uid,
   });
+
+  Future<DocumentReference> getDocumentReference(String path);
 }

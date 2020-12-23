@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logging/logging.dart';
 import 'package:missionout/app/auth_widget.dart';
@@ -18,9 +17,10 @@ import 'package:missionout/services/email_secure_store.dart';
 import 'package:missionout/services/firebase_link_handler.dart';
 import 'package:missionout/services/user/user.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 
 import 'app/sign_in/sign_in_manager.dart';
-import 'data_objects/fcm_message.dart';
 
 Future main() async {
   // Fix for: Unhandled Exception: ServicesBinding.defaultBinaryMessenger was accessed before the binding was initialized.
@@ -28,7 +28,12 @@ Future main() async {
   // Apple sign in is only available on iOS devices, so let's check that right away.
   final appleSignInAvailable = AppleSignInAvailable.check();
   await Firebase.initializeApp();
+  NotificationAppLaunchDetails notificationAppLaunchDetails;
   if (!Platforms.isWeb) {
+    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+    notificationAppLaunchDetails =
+    await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
     FCMMessageHandler.initializeAndroidChannel();
     FirebaseMessaging.onBackgroundMessage(FCMMessageHandler.pageMissionAlert);
   }
@@ -36,16 +41,17 @@ Future main() async {
   Logger.root.onRecord.listen((record) {
     print('${record.level.name}: ${record.time}: ${record.message}');
   });
-  runApp(MyApp(appleSignInAvailable: appleSignInAvailable));
+  runApp(MyApp(appleSignInAvailable: appleSignInAvailable, notificationAppLaunchDetails: notificationAppLaunchDetails));
 }
 
 class MyApp extends StatelessWidget {
   const MyApp(
       {this.initialAuthServiceType = AuthServiceType.firebase,
-      this.appleSignInAvailable});
+      this.appleSignInAvailable, this.notificationAppLaunchDetails});
 
   final AuthServiceType initialAuthServiceType;
   final AppleSignInAvailable appleSignInAvailable;
+  final NotificationAppLaunchDetails notificationAppLaunchDetails;
 
   @override
   Widget build(BuildContext context) => MultiProvider(
@@ -57,6 +63,7 @@ class MyApp extends StatelessWidget {
               create: (_) => IsLoadingNotifier(),
             ),
             Provider<AppleSignInAvailable>.value(value: appleSignInAvailable),
+            Provider<NotificationAppLaunchDetails>.value(value: notificationAppLaunchDetails),
             Provider<FCMMessageHandler>(
               lazy: false,
               // Notifications aren't supported on web at the moment
@@ -100,29 +107,4 @@ class MyApp extends StatelessWidget {
             );
             },
           ));
-}
-
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-    Logger.root.info("Received onResume message");
-    Logger.root.info(message);
-    const AndroidNotificationDetails androidPlatformChannelSpecifics =
-    AndroidNotificationDetails(
-      'mission_pages',
-      'Mission Pages',
-      'This channel is used to page out missions.',
-      sound: RawResourceAndroidNotificationSound('school_fire_alarm'),
-    );
-    const IOSNotificationDetails iOSPlatformChannelSpecifics =
-    IOSNotificationDetails(sound: 'slow_spring_board.aiff');
-    const MacOSNotificationDetails macOSPlatformChannelSpecifics =
-    MacOSNotificationDetails(sound: 'slow_spring_board.aiff');
-    const NotificationDetails platformChannelSpecifics = NotificationDetails(
-        android: androidPlatformChannelSpecifics,
-        iOS: iOSPlatformChannelSpecifics,
-        macOS: macOSPlatformChannelSpecifics);
-    final notification = FCMMessage.fromMessage(message.notification);
-    final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    await flutterLocalNotificationsPlugin.show(
-        0, notification.title, notification.body, platformChannelSpecifics,
-        payload: "hey diddle hey diddle");
 }

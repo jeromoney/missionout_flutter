@@ -1,10 +1,7 @@
 import 'dart:convert';
 
-import 'package:apple_sign_in/apple_sign_in.dart' as apple;
-import 'package:apple_sign_in/scope.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
-
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -17,16 +14,17 @@ import 'package:missionout/services/team/firestore_team.dart';
 import 'package:missionout/services/team/team.dart';
 import 'package:missionout/services/user/my_firebase_user.dart';
 import 'package:missionout/services/user/user.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class FirebaseAuthService extends AuthService {
   final _log = Logger('FirebaseAuthService');
-  final auth.FirebaseAuth _firebaseAuth =  auth.FirebaseAuth.instance;
+  final auth.FirebaseAuth _firebaseAuth = auth.FirebaseAuth.instance;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   auth.User _firebaseUser;
   String teamID;
+
   @override
   bool get userIsLoggedIn => true;
-
 
   /// Combines data from Firebase with Firestore to return User
   Future<MyFirebaseUser> _userFromFirebase(auth.User firebaseUser) async {
@@ -57,7 +55,8 @@ class FirebaseAuthService extends AuthService {
   void dispose() {}
 
   @override
-  Stream<User> get onAuthStateChanged => _firebaseAuth.authStateChanges().asyncMap(_userFromFirebase);
+  Stream<User> get onAuthStateChanged =>
+      _firebaseAuth.authStateChanges().asyncMap(_userFromFirebase);
 
   @override
   Future<User> signInWithEmailAndPassword(String email, String password) async {
@@ -132,42 +131,43 @@ class FirebaseAuthService extends AuthService {
 
   @override
   Future<User> signInWithApple() async {
-    List<Scope> scopes = const [Scope.fullName, Scope.email];
-    final apple.AuthorizationResult result = await apple.AppleSignIn.performRequests(
-        [apple.AppleIdRequest(requestedScopes: scopes)]);
-    switch (result.status) {
-      case apple.AuthorizationStatus.authorized:
-        final appleIdCredential = result.credential;
-        final oAuthProvider = auth.OAuthProvider('apple.com');
-        final credential = oAuthProvider.credential(
-          idToken: String.fromCharCodes(appleIdCredential.identityToken),
-          accessToken:
-              String.fromCharCodes(appleIdCredential.authorizationCode),
-        );
-
-        final authResult = await _firebaseAuth.signInWithCredential(credential);
-        final firebaseUser = authResult.user;
-        final appleFullName = appleIdCredential.fullName;
-        if (scopes.contains(Scope.fullName) &&
-            appleFullName.givenName != null &&
-            appleFullName.familyName != null) {
-          final displayName =
-              '${appleIdCredential.fullName.givenName} ${appleIdCredential.fullName.familyName}';
-          await auth.FirebaseAuth.instance.currentUser
-              .updateProfile(displayName: displayName);
-        }
-        return _userFromFirebase(firebaseUser);
-      case apple.AuthorizationStatus.error:
-        throw PlatformException(
-          code: 'ERROR_AUTHORIZATION_DENIED',
-          message: result.error.toString(),
-        );
-      case apple.AuthorizationStatus.cancelled:
-        throw PlatformException(
-          code: 'ERROR_ABORTED_BY_USER',
-          message: 'Sign in aborted by user',
-        );
-    }
+    final credential = await SignInWithApple.getAppleIDCredential(scopes: [
+      AppleIDAuthorizationScopes.email,
+      AppleIDAuthorizationScopes.fullName,
+    ]);
+    // switch (credential.authorizationCode) {
+    //   case apple.AuthorizationStatus.authorized:
+    //     final appleIdCredential = result.credential;
+    //     final oAuthProvider = auth.OAuthProvider('apple.com');
+    //     final credential = oAuthProvider.credential(
+    //       idToken: String.fromCharCodes(appleIdCredential.identityToken),
+    //       accessToken:
+    //           String.fromCharCodes(appleIdCredential.authorizationCode),
+    //     );
+    //
+    //     final authResult = await _firebaseAuth.signInWithCredential(credential);
+    //     final firebaseUser = authResult.user;
+    //     final appleFullName = appleIdCredential.fullName;
+    //     if (scopes.contains(Scope.fullName) &&
+    //         appleFullName.givenName != null &&
+    //         appleFullName.familyName != null) {
+    //       final displayName =
+    //           '${appleIdCredential.fullName.givenName} ${appleIdCredential.fullName.familyName}';
+    //       await auth.FirebaseAuth.instance.currentUser
+    //           .updateProfile(displayName: displayName);
+    //     }
+    //     return _userFromFirebase(firebaseUser);
+    //   case apple.AuthorizationStatus.error:
+    //     throw PlatformException(
+    //       code: 'ERROR_AUTHORIZATION_DENIED',
+    //       message: result.error.toString(),
+    //     );
+    //   case apple.AuthorizationStatus.cancelled:
+    //     throw PlatformException(
+    //       code: 'ERROR_ABORTED_BY_USER',
+    //       message: 'Sign in aborted by user',
+    //     );
+    // }
     return null;
   }
 
@@ -203,25 +203,21 @@ class FirebaseAuthService extends AuthService {
 
   @override
   Future signOut() async {
-      if (_firebaseUser == null)
-        throw StateError("Signin out a user that is null");
-      // remove token from Firestore from first, before user signs out
-      if (!Platforms.isWeb)
-        {
-          var fcmToken = await FirebaseMessaging.instance.getToken();
-          _db.collection('users').doc(_firebaseUser.uid).update({
-            'tokens': FieldValue.arrayRemove([fcmToken])
-          }).then((value) {
-            _log.info('Removed token to user document');
-          }).catchError((error) {
-            _log.warning('Error removing token from user document', error);
-          });
-        }
+    if (_firebaseUser == null)
+      throw StateError("Signin out a user that is null");
+    // remove token from Firestore from first, before user signs out
+    if (!Platforms.isWeb) {
+      var fcmToken = await FirebaseMessaging.instance.getToken();
+      _db.collection('users').doc(_firebaseUser.uid).update({
+        'tokens': FieldValue.arrayRemove([fcmToken])
+      }).then((value) {
+        _log.info('Removed token to user document');
+      }).catchError((error) {
+        _log.warning('Error removing token from user document', error);
+      });
+    }
 
-      await GoogleSignIn().signOut();
-      await _firebaseAuth.signOut();
-
+    await GoogleSignIn().signOut();
+    await _firebaseAuth.signOut();
   }
-
-
 }

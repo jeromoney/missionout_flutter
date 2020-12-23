@@ -13,6 +13,7 @@ import 'package:missionout/services/auth_service/auth_service.dart';
 import 'package:missionout/services/user/user.dart';
 import 'package:provider/provider.dart';
 
+
 enum AppStatus { signedOut, signedIn }
 
 class MissionOutApp extends StatelessWidget {
@@ -32,10 +33,11 @@ class MissionOutApp extends StatelessWidget {
         break;
 
       case AppStatus.signedIn:
-        if (context.watch<User>() == null)
+        if (context.watch<User>() == null) {
           initialScreen = SignOutScreen();
-        else
+        } else {
           initialScreen = OverviewScreen();
+        }
         break;
     }
 

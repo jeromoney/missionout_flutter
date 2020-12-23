@@ -52,7 +52,7 @@ class FCMMessageHandler {
     final notification = FCMMessage.fromMessage(remoteMessage.notification);
     await flutterLocalNotificationsPlugin.show(
         0, notification.title, notification.body, platformChannelSpecifics,
-        payload: "hey diddle hey diddle");
+        payload: remoteMessage?.data["missionDocumentPath"]);
   }
 
   static initializeAndroidChannel() async {

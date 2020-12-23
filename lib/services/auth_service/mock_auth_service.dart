@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:apple_sign_in/scope.dart';
 import 'package:missionout/services/auth_service/auth_service.dart';
 import 'package:missionout/services/team/team.dart';
 import 'package:missionout/services/user/user.dart';
@@ -48,7 +47,7 @@ class MockAuthService extends AuthService {
   }
 
   @override
-  Future<User> signInWithApple({List<Scope> scopes}) {
+  Future<User> signInWithApple({List<dynamic> scopes}) {
     // TODO: implement signInWithApple
     throw UnimplementedError();
   }

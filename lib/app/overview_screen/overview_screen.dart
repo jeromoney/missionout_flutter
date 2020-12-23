@@ -1,12 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
-
+import 'package:logging/logging.dart';
 import 'package:missionout/app/my_appbar/my_appbar.dart';
 import 'package:missionout/app/overview_screen/overview_screen_model.dart';
 import 'package:missionout/data_objects/mission.dart';
+import 'package:provider/provider.dart';
 
-class OverviewScreen extends StatelessWidget {
+class OverviewScreen extends StatefulWidget {
+  final _log = Logger('OverviewScreen');
   static const routeName = "/overviewScreen";
+
+  @override
+  _OverviewScreenState createState() => _OverviewScreenState();
+}
+
+class _OverviewScreenState extends State<OverviewScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Check if app was opened by mission notification
+    final NotificationAppLaunchDetails notificationAppLaunchDetails =
+        context.read<NotificationAppLaunchDetails>();
+    // Need null check for Flutter Web
+    if (notificationAppLaunchDetails != null &&
+        notificationAppLaunchDetails.didNotificationLaunchApp) {
+
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        widget._log.info("Received FCM payload: ${notificationAppLaunchDetails.payload}");
+        // App was launched from notification so navigate directly to detail page
+        directDetailScreenNavigation(context: context, path: notificationAppLaunchDetails.payload);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +124,7 @@ class _BuildMissionResultsState extends State<BuildMissionResults> {
                 ' — ' +
                 (DateFormat.yMMMd().format(mission.time.toDate()) ?? '')),
             onTap: () {
-              model.navigateToDetail( mission: mission);
+              model.navigateToDetail(mission: mission);
             },
           );
         },

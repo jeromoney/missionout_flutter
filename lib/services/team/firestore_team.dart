@@ -148,17 +148,25 @@ class FirestoreTeam implements Team {
   }
 
   @override
-  Future<void> addPage({
+  Future addPage({
     @required missionpage.Page page,
   }) async {
-    String missionDocId = page.address;
+    final pageCollection = '/${page.missionDocumentPath}/pages';
     await _db
-        .collection('teams/$teamID/missions/$missionDocId/pages')
+        .collection(pageCollection)
         .add(page.toJson())
         .then((documentReference) {
       return;
     }).catchError((error) {
       _log.warning('error in adding page to firestore.', error);
     });
+  }
+
+  @override
+  Future<DocumentReference> getDocumentReference(String path) async {
+    // This is a bit hackish. Opens the most recent mission rather than the specific
+    // mission. Problems could arise with multiple missions
+    // TODO- fix the hack to be more specific
+    return _db.doc(path);
   }
 }

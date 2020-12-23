@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/app/create_screen/create_screen.dart';
 import 'package:missionout/app/detail_screen/detail_screen.dart';
@@ -20,12 +21,21 @@ class OverviewScreenModel {
 
   Stream<List<Mission>> fetchMissions() => team.fetchMissions();
 
-  navigateToDetail(
-      {@required Mission mission}) {
+  navigateToDetail({@required Mission mission}) {
     final MissionAddressArguments arguments =
         MissionAddressArguments(mission.documentReference);
     Navigator.pushNamed(context, DetailScreen.routeName, arguments: arguments);
   }
 
   navigateToCreate() => Navigator.of(context).push(CreatePopupRoute());
+}
+
+directDetailScreenNavigation(
+    {@required BuildContext context, @required String path}) async {
+  // final team = context.watch<Team>();
+  // final DocumentReference documentReference =
+  //     await team.getDocumentReference(path);
+  final MissionAddressArguments arguments =
+      MissionAddressArguments(FirebaseFirestore.instance.doc(path));
+  Navigator.pushNamed(context, DetailScreen.routeName, arguments: arguments);
 }
