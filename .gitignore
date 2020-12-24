@@ -58,3 +58,4 @@ firestore_rules/*
 /firebase.json
 /.firebase/
 /.firebaserc
+/android/settings_aar.gradle

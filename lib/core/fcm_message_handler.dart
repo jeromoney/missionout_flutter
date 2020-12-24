@@ -14,7 +14,7 @@ class FCMMessageHandler {
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
-  void _initState() {
+  _initState() {
     _firebaseMessaging.requestPermission();
     _firebaseMessaging.getToken().then((String token) {
       assert(token != null);
@@ -32,22 +32,20 @@ class FCMMessageHandler {
     });
   }
 
-   static Future pageMissionAlert(RemoteMessage remoteMessage) async {
+  static Future pageMissionAlert(RemoteMessage remoteMessage) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
-    AndroidNotificationDetails(
+        AndroidNotificationDetails(
       'mission_pages',
       'Mission Pages',
       'This channel is used to page out missions.',
       sound: RawResourceAndroidNotificationSound('school_fire_alarm'),
     );
     const IOSNotificationDetails iOSPlatformChannelSpecifics =
-    IOSNotificationDetails(sound: 'slow_spring_board.aiff');
-    const MacOSNotificationDetails macOSPlatformChannelSpecifics =
-    MacOSNotificationDetails(sound: 'slow_spring_board.aiff');
+        IOSNotificationDetails(sound: 'school_fire_alarm.m4a',presentSound: true, presentAlert: true);
     const NotificationDetails platformChannelSpecifics = NotificationDetails(
-        android: androidPlatformChannelSpecifics,
-        iOS: iOSPlatformChannelSpecifics,
-        macOS: macOSPlatformChannelSpecifics);
+      android: androidPlatformChannelSpecifics,
+      iOS: iOSPlatformChannelSpecifics,
+    );
     final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     final notification = FCMMessage.fromMessage(remoteMessage.notification);
     await flutterLocalNotificationsPlugin.show(

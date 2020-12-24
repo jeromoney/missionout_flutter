@@ -32,10 +32,10 @@ class OverviewScreenModel {
 
 directDetailScreenNavigation(
     {@required BuildContext context, @required String path}) async {
-  // final team = context.watch<Team>();
-  // final DocumentReference documentReference =
-  //     await team.getDocumentReference(path);
+  final team = context.watch<Team>();
+  final DocumentReference documentReference =
+       await team.getDocumentReference(path);
   final MissionAddressArguments arguments =
-      MissionAddressArguments(FirebaseFirestore.instance.doc(path));
+      MissionAddressArguments(documentReference);
   Navigator.pushNamed(context, DetailScreen.routeName, arguments: arguments);
 }
