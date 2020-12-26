@@ -47,7 +47,7 @@ class MockAuthService extends AuthService {
   }
 
   @override
-  Future<User> signInWithApple({List<dynamic> scopes}) {
+  Future<User> signInWithApple({String googleHostedDomain}) {
     // TODO: implement signInWithApple
     throw UnimplementedError();
   }

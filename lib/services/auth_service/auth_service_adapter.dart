@@ -114,7 +114,7 @@ class AuthServiceAdapter extends AuthService {
           userMustExist: userMustExist);
 
   @override
-  Future<User> signInWithApple() => authService.signInWithApple();
+  Future<User> signInWithApple({String googleHostedDomain}) => authService.signInWithApple(googleHostedDomain: googleHostedDomain);
 
   @override
   Future<User> signInWithDemo() => authService.signInWithDemo();

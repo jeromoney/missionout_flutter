@@ -2,6 +2,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:missionout/constants/constants.dart';
+import 'package:missionout/core/platforms.dart';
 import 'package:missionout/data_objects/app_setup.dart';
 import 'package:missionout/data_objects/is_loading_notifier.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +22,7 @@ class _LogInScreenState extends State<LogInScreen> {
   AppSetup _appSetup;
   String get gmailDomain => _appSetup?.gmailDomain;
   bool get showGoogleButton => true;
-  bool get showAppleButton => _appSetup?.showAppleButton ?? false;
+  bool get showAppleButton => _appSetup?.showAppleButton ?? Platforms.isIOS;
   bool get showEmailLogin => _appSetup?.showEmailLogin ?? false;
   @override
   void initState() {

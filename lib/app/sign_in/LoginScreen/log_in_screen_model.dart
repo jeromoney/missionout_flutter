@@ -44,7 +44,7 @@ class LoginScreenModel {
 
   Future signInWithGoogle({String hostedDomain}) async => _signIn(_signInManager.signInWithGoogle, googleHostedDomain: hostedDomain);
 
-  Future signInWithApple() async => _signIn(_signInManager.signInWithApple);
+  Future signInWithApple({String hostedDomain}) async => _signIn(_signInManager.signInWithApple);
 
   static Future<String> getEmail(BuildContext context) async {
     // Method is called in init method with a different context, so slightly

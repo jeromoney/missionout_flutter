@@ -45,7 +45,5 @@ class SignInManager {
     }
   }
 
-  Future signInWithApple() async {
-    return await _signIn(authService.signInWithApple);
-  }
+  Future signInWithApple({String googleHostedDomain}) async => await _signIn(authService.signInWithApple);
 }

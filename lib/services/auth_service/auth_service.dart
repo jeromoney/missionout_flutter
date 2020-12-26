@@ -31,7 +31,7 @@ abstract class AuthService {
 
   Future<User> signInWithGoogle({String googleHostedDomain});
 
-  Future<User> signInWithApple();
+  Future<User> signInWithApple({String googleHostedDomain});
 
   Future<User> signInWithDemo();
 
