@@ -1,3 +1,5 @@
+import 'package:device_info/device_info.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';
@@ -6,13 +8,13 @@ import 'package:missionout/common_widgets/platform_alert_dialog.dart';
 import 'package:missionout/common_widgets/platform_exception_alert_dialog.dart';
 import 'package:missionout/constants/constants.dart';
 import 'package:missionout/constants/strings.dart';
+import 'package:missionout/core/platforms.dart';
 import 'package:missionout/services/apple_sign_in_available.dart';
 import 'package:missionout/services/auth_service/auth_service.dart';
 import 'package:missionout/services/email_secure_store.dart';
 import 'package:missionout/services/firebase_link_handler.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginScreenModel {
   final BuildContext context;
@@ -30,10 +32,11 @@ class LoginScreenModel {
 
   bool get isAppleSignInAvailable => _appleSignInAvailable.isAvailable;
 
-  Future _signIn(Future Function({String googleHostedDomain}) signInMethod, {String googleHostedDomain}) async {
+  Future _signIn(Future Function({String googleHostedDomain}) signInMethod,
+      {String googleHostedDomain}) async {
     try {
       await signInMethod(googleHostedDomain: googleHostedDomain);
-    } on FirebaseAuthException{
+    } on FirebaseAuthException {
       PlatformAlertDialog(
         title: "Team is not yet assigned",
         content: "Try another account or contact your team administrator",
@@ -42,11 +45,14 @@ class LoginScreenModel {
     }
   }
 
-  Future signInWithGoogle({String hostedDomain}) async => _signIn(_signInManager.signInWithGoogle, googleHostedDomain: hostedDomain);
+  Future signInWithGoogle({String hostedDomain}) async =>
+      _signIn(_signInManager.signInWithGoogle,
+          googleHostedDomain: hostedDomain);
 
-  Future signInWithApple({String hostedDomain}) async => _signIn(_signInManager.signInWithApple);
+  Future signInWithApple({String hostedDomain}) async =>
+      _signIn(_signInManager.signInWithApple);
 
-  static Future<String> getEmail(BuildContext context) async {
+  Future<String> getEmail() async {
     // Method is called in init method with a different context, so slightly
     // different style
     final emailSecureStore = context.read<EmailSecureStore>();
@@ -94,5 +100,17 @@ class LoginScreenModel {
         exception: e,
       ).show(context);
     }
+  }
+
+  // Apple Setup - Show Apple button only if iOS and running 13 or later. Since
+  // this method is async it needs to be used with a future builder
+  Future<bool> isCorrectIosVersion() async {
+    if (Platforms.isIOS) {
+      final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      final IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+      final systemVersion = iosInfo.systemVersion;
+      return systemVersion.startsWith(RegExp("1[3,4,5,6,7,8,9]\."));
+    }
+    return false;
   }
 }

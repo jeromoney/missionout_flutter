@@ -1,9 +1,7 @@
-import 'package:device_info/device_info.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:missionout/constants/constants.dart';
-import 'package:missionout/core/platforms.dart';
 import 'package:missionout/data_objects/app_setup.dart';
 import 'package:missionout/data_objects/is_loading_notifier.dart';
 import 'package:provider/provider.dart';
@@ -25,33 +23,7 @@ class _LogInScreenState extends State<LogInScreen> {
   String get gmailDomain => _appSetup?.gmailDomain;
   bool get showGoogleButton => true;
   bool showAppleButton = false;
-
   bool get showEmailLogin => _appSetup?.showEmailLogin ?? false;
-
-  @override
-  void initState() {
-    super.initState();
-    widget._emailController.text = "";
-    _setEmailField(context);
-  }
-
-  // Apple Setup - Show Apple button only if iOS and running 13 or later. Since
-  // this method is async it needs to be used with a future builder
-  Future<bool> _isCorrectIosVersion() async {
-    if (Platforms.isIOS) {
-      final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-      final IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-      final systemVersion = iosInfo.systemVersion;
-      return systemVersion.startsWith(RegExp("1[3,4,5,6,7,8,9]\."));
-    }
-    return false;
-  }
-
-  // TODO - refactor this with futurebuilder,
-  _setEmailField(BuildContext context) async {
-    widget._emailController.text = await LoginScreenModel.getEmail(context);
-    setState(() {});
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -90,9 +62,9 @@ class _LogInScreenState extends State<LogInScreen> {
                             ),
                           if (model.isAppleSignInAvailable) ...[
                             FutureBuilder(
-                              future: _isCorrectIosVersion(),
+                              future: model.isCorrectIosVersion(),
                               initialData: false,
-                              builder: (context, snapshot) {
+                              builder: (_, snapshot) {
                                 if (snapshot.hasData && snapshot.data) {
                                   return AppleSignInButton(
                                     text: 'Log in with Apple',
@@ -105,6 +77,7 @@ class _LogInScreenState extends State<LogInScreen> {
                               },
                             ),
                           ],
+                          // TODO -- showApple button should be streamlined into async future since it takes
                           if (showEmailLogin &&
                               (showAppleButton || showGoogleButton))
                             Divider(),
@@ -114,19 +87,30 @@ class _LogInScreenState extends State<LogInScreen> {
                               child: Column(
                                 children: <Widget>[
                                   Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: TextFormField(
-                                      controller: widget._emailController,
-                                      // ignore: missing_return
-                                      validator: (email) {
-                                        if (!EmailValidator.validate(email))
-                                          return 'Enter a valid email';
-                                      },
-                                      decoration: InputDecoration(
-                                        labelText: 'Email',
-                                        border: OutlineInputBorder(),
-                                      ),
-                                    ),
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: FutureBuilder(
+                                        future: model.getEmail(),
+                                        builder: (_, snapshot) {
+                                          String _emailVal = "";
+                                          if (snapshot.hasData) {
+                                            _emailVal = snapshot.data;
+                                          }
+                                          widget._emailController.text =
+                                              _emailVal;
+                                          return TextFormField(
+                                            controller: widget._emailController,
+                                            // ignore: missing_return
+                                            validator: (email) {
+                                              if (!EmailValidator.validate(
+                                                  email))
+                                                return 'Enter a valid email';
+                                            },
+                                            decoration: InputDecoration(
+                                              labelText: 'Email',
+                                              border: OutlineInputBorder(),
+                                            ),
+                                          );
+                                        }),
                                   ),
                                   SizedBox(
                                       width: Constants.column_width,
