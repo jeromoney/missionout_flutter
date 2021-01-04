@@ -1,17 +1,31 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
+import 'package:missionout/app/detail_screen/detail_screen.dart';
 import 'package:missionout/app/my_appbar/my_appbar.dart';
 import 'package:missionout/app/overview_screen/overview_screen_model.dart';
 import 'package:missionout/data_objects/mission.dart';
+import 'package:missionout/data_objects/mission_address_arguments.dart';
 import 'package:provider/provider.dart';
 
 class OverviewScreen extends StatelessWidget {
   static const routeName = "/overviewScreen";
   @override
   Widget build(BuildContext context) {
+    // If user clicks on notification, navigate to detail screen.
+    // TODO - Verify the backend works and sends out document reference path
+    // TODO - Refactor and move firestore logic somewhere more appropiate
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      final String documentPath = message.data["missionDocumentPath"];
+      final documentReference = FirebaseFirestore.instance.doc(documentPath);
+      final missionAddressArguments = MissionAddressArguments(documentReference);
+      Navigator.pushNamed(context, DetailScreen.routeName, arguments: missionAddressArguments);
+    });
+
     final model = OverviewScreenModel(context);
     if (model.user == null) return LinearProgressIndicator();
     return Scaffold(

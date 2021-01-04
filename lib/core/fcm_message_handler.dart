@@ -1,7 +1,9 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:logging/logging.dart';
+import 'package:missionout/core/global_navigator_key.dart';
 import 'package:missionout/data_objects/fcm_message.dart';
+import 'package:provider/provider.dart';
 
 class FCMMessageHandler {
   final _log = Logger('FCMMessageHandler');
@@ -24,13 +26,12 @@ class FCMMessageHandler {
         InitializationSettings(android: initializationSettingsAndroid);
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
     FirebaseMessaging.onMessage.listen(pageMissionAlert);
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      throw UnimplementedError();
-    });
+    // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    //   final String missionDocumentPath = message.data["missionDocumentPath"];
+    // });
   }
 
   static Future pageMissionAlert(RemoteMessage remoteMessage) async {
-
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
       'mission_pages',
