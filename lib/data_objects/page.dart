@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:missionout/data_objects/JsonConverters.dart';
+import 'package:missionout/data_objects/json_converters.dart';
 import 'package:missionout/data_objects/mission.dart';
 
 part 'page.g.dart';

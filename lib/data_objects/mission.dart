@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:time_ago_provider/time_ago_provider.dart' as timeAgo;
 
-import 'JsonConverters.dart';
+import 'json_converters.dart';
 
 part 'mission.g.dart';
 

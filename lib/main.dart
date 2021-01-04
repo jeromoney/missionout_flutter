@@ -1,5 +1,4 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -34,8 +33,8 @@ Future main() async {
     FlutterLocalNotificationsPlugin();
     notificationAppLaunchDetails =
     await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
-    FCMMessageHandler.initializeAndroidChannel();
-    FirebaseMessaging.onBackgroundMessage(FCMMessageHandler.pageMissionAlert);
+    // Initialize receiving FCM messages
+    FCMMessageHandler();
   }
   Logger.root.level = Level.ALL; // defaults to Level.INFO
   Logger.root.onRecord.listen((record) {
@@ -64,11 +63,6 @@ class MyApp extends StatelessWidget {
             ),
             Provider<AppleSignInAvailable>.value(value: appleSignInAvailable),
             Provider<NotificationAppLaunchDetails>.value(value: notificationAppLaunchDetails),
-            Provider<FCMMessageHandler>(
-              lazy: false,
-              // Notifications aren't supported on web at the moment
-              create: (context) => Platforms.isWeb ? null : FCMMessageHandler(context: context),
-            ),
             Provider<AuthService>(
               lazy: false,
               create: (_) => AuthServiceAdapter(
