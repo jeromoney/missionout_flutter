@@ -17,8 +17,9 @@ class OverviewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // If user clicks on notification, navigate to detail screen.
-    // TODO - Verify the backend works and sends out document reference path
-    // TODO - Refactor and move firestore logic somewhere more appropiate
+    // TODO - Refactor and move firestore logic somewhere more appropriate
+    // If app is running and notification is clicked, this function will run
+    // If app is terminated, use getInitialMessage instead
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       final String documentPath = message.data["missionDocumentPath"];
       final documentReference = FirebaseFirestore.instance.doc(documentPath);
@@ -125,6 +126,7 @@ class _BuildMissionResultsState extends State<BuildMissionResults> {
   @override
   void initState() {
     super.initState();
+    _log.info("Checking messages");
     // Check if app was opened by mission notification
     final NotificationAppLaunchDetails notificationAppLaunchDetails =
         context.read<NotificationAppLaunchDetails>();

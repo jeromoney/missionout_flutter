@@ -22,6 +22,13 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'app/sign_in/sign_in_manager.dart';
 
 Future main() async {
+  Logger.root.level = Level.ALL; // defaults to Level.INFO
+  Logger.root.onRecord.listen((record) {
+    print('${record.level.name}: ${record.time}: ${record.message}');
+  });
+
+  final log = Logger("main.dart");
+  log.info("Running missionout");
   // Fix for: Unhandled Exception: ServicesBinding.defaultBinaryMessenger was accessed before the binding was initialized.
   WidgetsFlutterBinding.ensureInitialized();
   // Apple sign in is only available on iOS devices, so let's check that right away.
@@ -33,13 +40,10 @@ Future main() async {
     FlutterLocalNotificationsPlugin();
     notificationAppLaunchDetails =
     await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+    log.info("Received FCM: ${notificationAppLaunchDetails.payload}");
     // Initialize receiving FCM messages
     FCMMessageHandler();
   }
-  Logger.root.level = Level.ALL; // defaults to Level.INFO
-  Logger.root.onRecord.listen((record) {
-    print('${record.level.name}: ${record.time}: ${record.message}');
-  });
   runApp(MyApp(appleSignInAvailable: appleSignInAvailable, notificationAppLaunchDetails: notificationAppLaunchDetails));
 }
 

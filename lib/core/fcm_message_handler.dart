@@ -1,9 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:logging/logging.dart';
-import 'package:missionout/core/global_navigator_key.dart';
 import 'package:missionout/data_objects/fcm_message.dart';
-import 'package:provider/provider.dart';
 
 class FCMMessageHandler {
   final _log = Logger('FCMMessageHandler');
@@ -17,18 +15,13 @@ class FCMMessageHandler {
   _initState() {
     _firebaseMessaging.requestPermission();
     initializeAndroidChannel();
-    FirebaseMessaging.onBackgroundMessage(FCMMessageHandler.pageMissionAlert);
-
+    FirebaseMessaging.onMessage.listen(pageMissionAlert);
     final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('notification_logo');
     final InitializationSettings initializationSettings =
         InitializationSettings(android: initializationSettingsAndroid);
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
-    FirebaseMessaging.onMessage.listen(pageMissionAlert);
-    // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    //   final String missionDocumentPath = message.data["missionDocumentPath"];
-    // });
   }
 
   static Future pageMissionAlert(RemoteMessage remoteMessage) async {
@@ -52,9 +45,13 @@ class FCMMessageHandler {
     );
     final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     final notification = FCMMessage.fromMessage(remoteMessage.notification);
-    // await flutterLocalNotificationsPlugin.show(
-    //     0, "I am here"+ notification.title, notification.body, platformChannelSpecifics,
-    //     payload: remoteMessage?.data["missionDocumentPath"]);
+
+    await flutterLocalNotificationsPlugin.show(
+        0,
+        notification.title,
+        notification.body,
+        platformChannelSpecifics,
+        payload: remoteMessage?.data["missionDocumentPath"]);
   }
 
   static initializeAndroidChannel() async {
