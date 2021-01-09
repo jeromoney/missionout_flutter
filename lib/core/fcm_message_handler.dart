@@ -69,5 +69,21 @@ class FCMMessageHandler {
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+    AndroidNotificationDetails(
+      'your other channel id',
+      'your other channel name',
+      'your other channel description',
+      sound: RawResourceAndroidNotificationSound('school_fire_alarm'),
+    );
+    RawResourceAndroidNotificationSound('school_fire_alarm').sound;
+    const NotificationDetails platformChannelSpecifics = NotificationDetails(
+        android: androidPlatformChannelSpecifics,
+    );
+    await flutterLocalNotificationsPlugin.show(
+        0,
+        'custom sound notification title',
+        'custom sound notification body',
+        platformChannelSpecifics);
   }
 }

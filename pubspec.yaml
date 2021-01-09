@@ -12,7 +12,7 @@ description: A concise dispatch app aimed at Search and Rescue
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.8+11
+version: 1.0.9+12
 
 environment:
   sdk: ">=2.3.0 <3.0.0"
@@ -21,9 +21,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
   apple_sign_in: ^0.1.0 #used for ios only
   cached_network_image: ^2.5.0
   cloud_firestore: ^0.14.4
@@ -35,7 +32,7 @@ dependencies:
   firebase_dynamic_links: ^0.6.3
   firebase_messaging: ^8.0.0-dev.10
   flutter_auth_buttons: ^0.10.0
-  flutter_local_notifications: ^3.0.2 # Used for iOS only
+  flutter_local_notifications: ^3.0.2
   flutter_secure_storage: ^3.3.1+1
   google_maps_flutter: ^1.0.6
   google_maps_flutter_web: ^0.1.0 #At some point, this library should be included in google_maps_flutter
@@ -50,7 +47,6 @@ dependencies:
   tel_input: ^0.2.2
   time_ago_provider: ^3.2.0
   url_launcher: ^5.4.7
-
 
 dev_dependencies:
   flutter_test:
