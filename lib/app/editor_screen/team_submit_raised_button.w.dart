@@ -33,12 +33,12 @@ class TeamSubmitRaisedButtonState extends State<TeamSubmitRaisedButton> {
           // close keyboard
           FocusScope.of(context).requestFocus(FocusNode());
           if (formKey.currentState.validate()) {
-            ScaffoldMessenger.of(context)
+            Scaffold.of(context)
                 .showSnackBar(SnackBar(content: Text('Processing Data')));
             try {
               final team = context.read<Team>();
               await team.updateChatURI(chatURIController.text);
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              Scaffold.of(context).hideCurrentSnackBar();
 
               team.chatURI = chatURIController.text;
               setState(() {
@@ -48,7 +48,7 @@ class TeamSubmitRaisedButtonState extends State<TeamSubmitRaisedButton> {
                 );
               });
             } catch (e) {
-              ScaffoldMessenger.of(context).showSnackBar(
+              Scaffold.of(context).showSnackBar(
                   SnackBar(content: Text('Error uploading information')));
               setState(() {
                 resultIcon = Icon(

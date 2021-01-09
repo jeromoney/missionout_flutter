@@ -51,7 +51,7 @@ class FCMMessageHandler {
         notification.title,
         notification.body,
         platformChannelSpecifics,
-        payload: remoteMessage?.data["missionDocumentPath"]);
+        payload: remoteMessage?.data["missionDocumentPath"],);
   }
 
   static initializeAndroidChannel() async {
@@ -64,26 +64,10 @@ class FCMMessageHandler {
         sound: RawResourceAndroidNotificationSound("school_fire_alarm"));
 
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-        FlutterLocalNotificationsPlugin();
+    FlutterLocalNotificationsPlugin();
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
+        AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
-    const AndroidNotificationDetails androidPlatformChannelSpecifics =
-    AndroidNotificationDetails(
-      'your other channel id',
-      'your other channel name',
-      'your other channel description',
-      sound: RawResourceAndroidNotificationSound('school_fire_alarm'),
-    );
-    RawResourceAndroidNotificationSound('school_fire_alarm').sound;
-    const NotificationDetails platformChannelSpecifics = NotificationDetails(
-        android: androidPlatformChannelSpecifics,
-    );
-    await flutterLocalNotificationsPlugin.show(
-        0,
-        'custom sound notification title',
-        'custom sound notification body',
-        platformChannelSpecifics);
   }
 }

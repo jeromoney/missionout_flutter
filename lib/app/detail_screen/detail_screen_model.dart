@@ -52,7 +52,7 @@ class DetailScreenModel {
     try {
       team.launchChat();
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      Scaffold.of(context).showSnackBar(SnackBar(
         content: Text('Error: Is Slack installed?'),
       ));
     }

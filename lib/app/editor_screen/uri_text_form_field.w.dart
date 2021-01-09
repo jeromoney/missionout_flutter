@@ -50,7 +50,7 @@ class URITextFormFieldState extends State<URITextFormField> {
                 final snackBar = SnackBar(
                     content: Text(
                         'Error launching URI. Try something like slack://channel?team={TEAM_ID}&id={CHANNEL_ID}'));
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                Scaffold.of(context).showSnackBar(snackBar);
               } finally {
                 // close keyboard
                 FocusScope.of(context).requestFocus(FocusNode());

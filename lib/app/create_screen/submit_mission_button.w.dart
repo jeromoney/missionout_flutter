@@ -69,7 +69,7 @@ class _SubmitMissionButtonState extends State<SubmitMissionButton> {
       child: Text('Submit'),
       onPressed: () async {
         if (Form.of(context).validate()) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          Scaffold.of(context).showSnackBar(SnackBar(
             content: Text('Processing'),
           ));
           final myMission = _fetchMission();
@@ -80,7 +80,7 @@ class _SubmitMissionButtonState extends State<SubmitMissionButton> {
             else
               await _model.addMission(mission: myMission);
           } on HttpException {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            Scaffold.of(context).showSnackBar(SnackBar(
               content: Text('Error uploading mission'),
             ));
             return;
