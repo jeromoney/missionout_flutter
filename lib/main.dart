@@ -34,17 +34,18 @@ Future main() async {
   // Apple sign in is only available on iOS devices, so let's check that right away.
   final appleSignInAvailable = AppleSignInAvailable.check();
   await Firebase.initializeApp();
-  NotificationAppLaunchDetails notificationAppLaunchDetails;
+  NotificationAppLaunchDetails details;
   if (!Platforms.isWeb) {
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
-    notificationAppLaunchDetails =
+    details =
     await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
-    log.info("Received FCM: ${notificationAppLaunchDetails.payload}");
+    log.info("Received FCM: ${details.payload}");
+    log.info("Was app opened by notification: ${details.didNotificationLaunchApp}");
     // Initialize receiving FCM messages
     FCMMessageHandler();
   }
-  runApp(MyApp(appleSignInAvailable: appleSignInAvailable, notificationAppLaunchDetails: notificationAppLaunchDetails));
+  runApp(MyApp(appleSignInAvailable: appleSignInAvailable, notificationAppLaunchDetails: details));
 }
 
 class MyApp extends StatelessWidget {

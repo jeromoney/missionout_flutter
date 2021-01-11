@@ -25,6 +25,8 @@ class FCMMessageHandler {
   }
 
   static Future pageMissionAlert(RemoteMessage remoteMessage) async {
+    final log = Logger('FCMMessageHandler');
+
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
       'mission_pages',
@@ -45,7 +47,7 @@ class FCMMessageHandler {
     );
     final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     final notification = FCMMessage.fromMessage(remoteMessage.notification);
-
+    log.info("FCM Message payload is: ${remoteMessage?.data["missionDocumentPath"]}");
     await flutterLocalNotificationsPlugin.show(
         0,
         notification.title,
