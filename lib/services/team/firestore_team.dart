@@ -72,7 +72,7 @@ class FirestoreTeam implements Team {
       @required String uid}) async {
     final snapshot =
         await _db.doc("${documentReference.path}/responses/$uid").get();
-    if (snapshot.data == null) return null;
+    if (snapshot.data == null || !snapshot.exists) return null;
     return Response.fromSnapshot(snapshot);
   }
 
