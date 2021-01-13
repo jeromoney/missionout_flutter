@@ -41,16 +41,18 @@ android {
 
     lintOptions {
         disable 'InvalidPackage'
+        checkReleaseBuilds false //<- add this line
     }
 
     defaultConfig {
         applicationId "com.beaterboofs.missionout.android"
         minSdkVersion 18
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
         manifestPlaceholders = [googleMapsApiKey:keystoreProperties['googleMapsApiKey']]
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     signingConfigs {
         release {
@@ -76,4 +78,7 @@ flutter {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.android.support:multidex:1.0.3'
+    testImplementation 'junit:junit:4.13.1'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
