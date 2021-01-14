@@ -20,13 +20,10 @@ class MyFirebaseUser with ChangeNotifier implements User {
 
   @override
   String get uid => !firebaseUser.isAnonymous ? firebaseUser.uid : 'anonymous';
-
   @override
   String get email => firebaseUser.email;
-
   @override
   String get photoUrl => firebaseUser.photoURL;
-
   @override
   String get displayName =>
       !firebaseUser.isAnonymous ? firebaseUser.displayName : 'anonymous';
@@ -65,7 +62,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
     // for retries
     for (var i = 1; i <= RETRY_COUNT; i++) {
       snapshot = await db.collection('users').doc(firebaseUser.uid).get();
-      if (snapshot.data == null) {
+      if (snapshot.data() == null) {
         if (i == RETRY_COUNT) {
           log.warning("Retries failed. Document still null");
           return null;

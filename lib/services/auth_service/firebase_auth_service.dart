@@ -179,9 +179,7 @@ class FirebaseAuthService extends AuthService {
     if (googleUser == null)
       throw PlatformException(
           code: 'ERROR_ABORTED_BY_USER', message: 'Sign in aborted by user');
-
     final googleAuth = await googleUser.authentication;
-
     if (googleAuth.idToken == null)
       throw PlatformException(
           code: 'ERROR_MISSING_GOOGLE_AUTH_TOKEN',
@@ -192,6 +190,11 @@ class FirebaseAuthService extends AuthService {
     );
     final auth.UserCredential authResult =
         await _firebaseAuth.signInWithCredential(credential);
+    if (authResult.additionalUserInfo.isNewUser){
+      final fcmToken = await FirebaseMessaging.instance.getToken();
+      _log.info("My token is $fcmToken");
+      // TODO - send notification from cloud to user
+    }
     return _userFromFirebase(authResult.user);
   }
 
@@ -216,7 +219,6 @@ class FirebaseAuthService extends AuthService {
         _log.warning('Error removing token from user document', error);
       });
     }
-
     await GoogleSignIn().signOut();
     await _firebaseAuth.signOut();
   }
