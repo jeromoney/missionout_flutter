@@ -113,7 +113,7 @@ class _BuildMissionResultsState extends State<BuildMissionResults> {
                     : Theme.of(context).textTheme.bodyText2),
             subtitle: Text((mission.needForAction ?? '') +
                 ' — ' +
-                (DateFormat.yMMMd().format(mission.time.toDate()) ?? '')),
+                DateFormat.yMMMd().format(mission.time?.toDate() ?? DateTime.now()) ?? ''),
             onTap: () {
               model.navigateToDetail(mission: mission);
             },

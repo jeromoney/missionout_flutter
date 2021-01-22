@@ -78,6 +78,7 @@ class __MissionFormState extends State<_MissionForm> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
+                      key: Key("Description"),
                       controller: descriptionController,
                       decoration: InputDecoration(
                           labelText: 'Description',
@@ -93,6 +94,7 @@ class __MissionFormState extends State<_MissionForm> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
+                      key: Key("Need for action"),
                       controller: actionController,
                       decoration: InputDecoration(
                           labelText: 'Need for action',

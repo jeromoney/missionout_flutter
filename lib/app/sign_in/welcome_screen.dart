@@ -33,12 +33,11 @@ class WelcomeScreen extends StatelessWidget {
             ),
           ),
           GestureDetector(
+            key: Key("privacyPolicy"),
             child: Text(
               "Read our privacy policy",
             ),
-            onTap: () {
-              launch(Constants.privacyPolicyURL);
-            },
+            onTap: () => launch(Constants.privacyPolicyURL),
           )
         ],
       ),

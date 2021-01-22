@@ -34,7 +34,7 @@ dependencies:
   flutter_auth_buttons: ^0.10.0
   flutter_local_notifications: ^3.0.3
   flutter_secure_storage: ^3.3.1+1
-  google_maps_flutter: ^1.1.0
+  google_maps_flutter: ^1.1.1
   google_maps_flutter_web: ^0.1.0 #At some point, this library should be included in google_maps_flutter
   google_sign_in: ^4.5.9
   intl: ^0.16.0
@@ -43,9 +43,10 @@ dependencies:
   logging: ">=0.11.4 <2.0.0"
   package_info: ^0.4.0
   phone_number: ^0.8.1
-  provider: ^4.3.2+4
+  provider: ^4.3.3
   tel_input: ^0.2.2
   time_ago_provider: ^3.2.0
+  tuple: ^1.0.3
   url_launcher: ^5.4.7
 
 dev_dependencies:

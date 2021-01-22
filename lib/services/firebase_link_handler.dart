@@ -26,11 +26,12 @@ class FirebaseLinkHandler {
   final EmailSecureStore emailStore;
   final BuildContext context;
 
-  FirebaseLinkHandler(
-      {Key key,
-      @required this.auth,
-      @required this.emailStore,
-      @required this.context}) {
+  FirebaseLinkHandler({
+    Key key,
+    @required this.auth,
+    @required this.emailStore,
+    @required this.context,
+  }) {
     _initDynamicLinks();
   }
 
@@ -110,7 +111,7 @@ class FirebaseLinkHandler {
     }
   }
 
-  Future _signInToDemo() async {
+  Future signInToDemo() async {
     final isLoadingProvider = context.read<IsLoadingNotifier>();
     try {
       isLoadingProvider.isLoading = true;
@@ -127,7 +128,7 @@ class FirebaseLinkHandler {
     }
     // Sign into demo for iOS purposes
     if (data.link?.path == Secrets.IOS_PATH) {
-      _signInToDemo();
+      signInToDemo();
       return;
     }
     // Handle sign in with email link
@@ -137,23 +138,24 @@ class FirebaseLinkHandler {
     }
     // Finally assume link is custom login screen
     final teamDomain = data.link.path.substring(1);
-     _loginTeamCustomization(teamDomain);
+    _loginTeamCustomization(teamDomain);
     return;
   }
 
   _loginTeamCustomization(String teamDomain) async {
-    if (auth.userIsLoggedIn){
+    if (auth.userIsLoggedIn) {
       _logger.warning("User is already signed in");
       return;
     }
     final FirebaseFirestore db = FirebaseFirestore.instance;
     final snapshot = await db.doc("app_setup/$teamDomain").get();
-    if (!snapshot.exists){
+    if (!snapshot.exists) {
       _logger.warning("Couldn't find setup document for domain: $teamDomain");
       return;
     }
     final appSetup = AppSetup.fromSnapshot(snapshot);
     final navKey = context.read<GlobalNavigatorKey>().navKey;
-    Navigator.pushNamed(navKey.currentContext, LogInScreen.routeName, arguments: appSetup);
+    Navigator.pushNamed(navKey.currentContext, LogInScreen.routeName,
+        arguments: appSetup);
   }
 }
