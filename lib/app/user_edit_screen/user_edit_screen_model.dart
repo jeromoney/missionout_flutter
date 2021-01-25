@@ -25,7 +25,7 @@ class UserEditScreenModel {
   Future removePhoneNumberRecord(PhoneNumberRecord phoneNumberRecord) async {
     await user.deletePhoneNumber(phoneNumberRecord);
     Scaffold.of(context)
-        .showSnackBar(SnackBar(content: Text("Deleted phone number")));
+        .showSnackBar(const SnackBar(content: Text("Deleted phone number")));
   }
 
   Future addPhoneNumber(PhoneNumberRecord phoneNumberRecord) async {
@@ -35,11 +35,11 @@ class UserEditScreenModel {
   Future updateName(String displayName) async =>
       await user.updateDisplayName(displayName: displayName);
 
-  validateName(String value) {
+  String validateName(String value) {
     if (value == "" || value == null) return "Name required";
   }
 
-  showPhoneInput() => phoneInputStreamController.add(true);
+  void showPhoneInput() => phoneInputStreamController.add(true);
 
-  hidePhoneInput() => phoneInputStreamController.add(false);
+  void hidePhoneInput() => phoneInputStreamController.add(false);
 }

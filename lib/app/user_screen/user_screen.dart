@@ -18,7 +18,7 @@ class _UserScreenState extends State<UserScreen> {
   Widget build(BuildContext context) {
     final model = UserScreenModel(context);
     return Scaffold(
-      appBar: MyAppBar(title: Strings.userScreenTitle),
+      appBar: const MyAppBar(title: Strings.userScreenTitle),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -26,39 +26,39 @@ class _UserScreenState extends State<UserScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               ListTile(
-                leading: Icon(Icons.group),
+                leading: const Icon(Icons.group),
                 title: Text(model.teamName),
-                enabled: true,
               ),
               ListTile(
-                leading: Icon(Icons.person),
+                leading: const Icon(Icons.person),
                 title: Text(model.displayName),
-                enabled: true,
               ),
               ListTile(
-                leading: Icon(Icons.email),
+                leading: const Icon(Icons.email),
                 title: Text(model.email),
-                enabled: true,
               ),
-              Divider(
+              const Divider(
                 thickness: 2,
               ),
               StreamBuilder(
                 stream: model.phoneNumbers,
                 builder: (_, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting)
-                    return CircularProgressIndicator();
-                  if (snapshot.hasError)
-                    return Text("Error retrieving phone numbers");
-                  final List<PhoneNumberRecord> phoneNumbers = snapshot.data;
-                  if (!snapshot.hasData || phoneNumbers.length == 0)
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  }
+                  if (snapshot.hasError) {
+                    return const Text("Error retrieving phone numbers");
+                  }
+                  final phoneNumbers = snapshot.data as List<PhoneNumberRecord>;
+                  if (!snapshot.hasData || phoneNumbers.isEmpty) {
+                    return const Padding(
+                      padding: EdgeInsets.all(8.0),
                       child:
                           Text("No phone numbers to receive alerts. Add one."),
                     );
+                  }
                   return ListView.separated(
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemBuilder: (_, index) {
                         final phoneNumberRecord = phoneNumbers[index];
@@ -69,9 +69,10 @@ class _UserScreenState extends State<UserScreen> {
                           builder: (_, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) return Container();
-                            if (!snapshot.hasData)
-                              return Text("Error with phone number");
-                            final String phoneNumberString = snapshot.data;
+                            if (!snapshot.hasData) {
+                              return const Text("Error with phone number");
+                            }
+                            final phoneNumberString = snapshot.data as String;
                             return ListTile(
                               title: Text(phoneNumberString),
                               trailing: Row(
@@ -101,7 +102,7 @@ class _UserScreenState extends State<UserScreen> {
                           },
                         );
                       },
-                      separatorBuilder: (_, __) => Divider(),
+                      separatorBuilder: (_, __) => const Divider(),
                       itemCount: phoneNumbers.length);
                 },
               ),
@@ -110,8 +111,8 @@ class _UserScreenState extends State<UserScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.edit),
         onPressed: model.editUserOptions,
+        child: const Icon(Icons.edit),
       ),
     );
   }

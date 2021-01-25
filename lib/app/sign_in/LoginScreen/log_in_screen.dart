@@ -31,16 +31,16 @@ class _LogInScreenState extends State<LogInScreen> {
     final model = LoginScreenModel(context);
     return Consumer<IsLoadingNotifier>(
       builder: (_, IsLoadingNotifier isLoadingNotifier, __) {
-        if (isLoadingNotifier.isLoading)
-          return Scaffold(body: LinearProgressIndicator());
-        else
+        if (isLoadingNotifier.isLoading) {
+          return const Scaffold(body: LinearProgressIndicator());
+        } else {
           return GestureDetector(
             onHorizontalDragUpdate: (details) {
               if (details.delta.dx > 0) Navigator.of(context).pop();
             },
             child: Scaffold(
               appBar: AppBar(
-                title: Text("MissionOut Log In"),
+                title: const Text("MissionOut Log In"),
               ),
               body: Center(
                 child: LayoutBuilder(
@@ -65,10 +65,9 @@ class _LogInScreenState extends State<LogInScreen> {
                               future: model.isCorrectIosVersion(),
                               initialData: false,
                               builder: (_, snapshot) {
-                                if (snapshot.hasData && snapshot.data) {
+                                if (snapshot.hasData && snapshot.data as bool) {
                                   return AppleSignInButton(
                                     text: 'Log in with Apple',
-                                    style: AppleButtonStyle.white,
                                     onPressed: model.signInWithApple,
                                   );
                                 } else {
@@ -80,7 +79,7 @@ class _LogInScreenState extends State<LogInScreen> {
                           // TODO -- showApple button should be streamlined into async future since it takes
                           if (showEmailLogin &&
                               (showAppleButton || showGoogleButton))
-                            Divider(),
+                            const Divider(),
                           if (showEmailLogin)
                             Form(
                               key: widget._formKey,
@@ -93,7 +92,7 @@ class _LogInScreenState extends State<LogInScreen> {
                                         builder: (_, snapshot) {
                                           String _emailVal = "";
                                           if (snapshot.hasData) {
-                                            _emailVal = snapshot.data;
+                                            _emailVal = snapshot.data as String;
                                           }
                                           widget._emailController.text =
                                               _emailVal;
@@ -102,10 +101,11 @@ class _LogInScreenState extends State<LogInScreen> {
                                             // ignore: missing_return
                                             validator: (email) {
                                               if (!EmailValidator.validate(
-                                                  email))
+                                                  email)) {
                                                 return 'Enter a valid email';
+                                              }
                                             },
-                                            decoration: InputDecoration(
+                                            decoration: const InputDecoration(
                                               labelText: 'Email',
                                               border: OutlineInputBorder(),
                                             ),
@@ -117,7 +117,6 @@ class _LogInScreenState extends State<LogInScreen> {
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: RaisedButton(
-                                          child: Text('Request email link'),
                                           onPressed: () async {
                                             if (!widget._formKey.currentState
                                                 .validate()) return;
@@ -125,6 +124,7 @@ class _LogInScreenState extends State<LogInScreen> {
                                                 email: widget
                                                     ._emailController.text);
                                           },
+                                          child: const Text('Request email link'),
                                         ),
                                       )),
                                 ],
@@ -138,6 +138,7 @@ class _LogInScreenState extends State<LogInScreen> {
               ),
             ),
           );
+        }
       },
     );
   }

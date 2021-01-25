@@ -11,8 +11,8 @@ import 'package:missionout/core/platforms.dart';
 import 'package:missionout/data_objects/phone_number_record.dart';
 import 'package:missionout/services/user/user.dart';
 
-const RETRY_COUNT = 5;
-const RETRY_WAIT = 3; // seconds
+const retryCount = 5;
+const retryWait = 3; // seconds
 
 class MyFirebaseUser with ChangeNotifier implements User {
   // Values from FirebaseUser
@@ -45,9 +45,10 @@ class MyFirebaseUser with ChangeNotifier implements User {
 
   static Future<MyFirebaseUser> fromFirebaseUser(
       auth.User firebaseUser) async {
-    if (firebaseUser.isAnonymous) // TODO -- REMOVE AFTER APP STORE APPROVAL
+    if (firebaseUser.isAnonymous) {
       return MyFirebaseUser(
           firebaseUser: firebaseUser, teamID: "demoteam.com", isEditor: true);
+    }
 
     final log = Logger('MyFirebaseUser');
     if (firebaseUser == null) {
@@ -60,18 +61,19 @@ class MyFirebaseUser with ChangeNotifier implements User {
     // When the user first logs in, the backend creates a record in Firestore.
     // However, this async task might be front-run by the app and hence the need
     // for retries
-    for (var i = 1; i <= RETRY_COUNT; i++) {
+    for (var i = 1; i <= retryCount; i++) {
       snapshot = await db.collection('users').doc(firebaseUser.uid).get();
       if (snapshot.data() == null) {
-        if (i == RETRY_COUNT) {
+        if (i == retryCount) {
           log.warning("Retries failed. Document still null");
           return null;
         }
         log.warning(
             "Race condition where the backend hasn't created the user account yet. Trying again");
-      } else
+      } else {
         break;
-      await Future.delayed(Duration(seconds: RETRY_WAIT));
+      }
+      await Future.delayed(const Duration(seconds: retryWait));
     }
 
     final Map data = snapshot.data();
@@ -82,25 +84,26 @@ class MyFirebaseUser with ChangeNotifier implements User {
       log.severe("Missing required key for Team document in Firestore");
       return null;
     }
-    final String snapshotTeamID = data['teamID'];
+    final snapshotTeamID = data['teamID'] as String;
     // If teamID is null, it means that backend set up script could not identify
     // the team automatically. e.g. User logged in from a normal gmail account.
     // Should return a null user but also automatically sign out user.
     if (snapshotTeamID == null) {
       log.warning(
           "Unable to identify the team that the user is assigned to. Logging out");
-      throw auth.FirebaseAuthException(message: "User has not been assigned to a team yet");
+      throw auth.FirebaseAuthException(code: "5987", message: "User has not been assigned to a team yet");
     }
 
     final optionalKeys = ["isEditor"];
     final isMissingOptionalKey =
         optionalKeys.any((optionalKey) => !data.containsKey(optionalKeys));
-    if (isMissingOptionalKey)
+    if (isMissingOptionalKey) {
       log.warning("Missing optional key; substituting null values.");
+    }
 
     bool isEditor;
     data.containsKey('isEditor')
-        ? isEditor = data['isEditor']
+        ? isEditor = data['isEditor'] as bool
         : isEditor = false;
 
     return MyFirebaseUser(
@@ -130,9 +133,9 @@ class MyFirebaseUser with ChangeNotifier implements User {
         ? mobilePhoneNumber = phoneNumber
         : voicePhoneNumber = phoneNumber;
     await _db.doc('users/$uid').update({
-      (type == PhoneType.mobile
+      type == PhoneType.mobile
           ? 'mobilePhoneNumber'
-          : 'voicePhoneNumber'): {
+          : 'voicePhoneNumber': {
         'isoCode': phoneNumber.isoCode,
         'phoneNumber': phoneNumber.phoneNumber
       },
@@ -144,7 +147,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
     // Setting up the user will be the responsibility of the server.
     // This method adds the user token to firestore
     final fcmToken = await FirebaseMessaging.instance.getToken();
-    await _db.collection('users').doc(this.uid).update({
+    await _db.collection('users').doc(uid).update({
       'tokens': FieldValue.arrayUnion([fcmToken])
     }).then((value) {
       _log.info('Added token to user document: $fcmToken', fcmToken);

@@ -59,3 +59,7 @@ firestore_rules/*
 /.firebase/
 /.firebaserc
 /android/settings_aar.gradle
+/android/Gemfile
+/android/Gemfile.lock
+/android/fastlane/Appfile
+/android/fastlane/Fastfile

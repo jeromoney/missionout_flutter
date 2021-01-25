@@ -21,7 +21,7 @@ class UserEditScreen extends StatelessWidget {
       child: Builder(
         builder: (context) => Stack(children: <Widget>[
           Scaffold(
-              appBar: MyAppBar(
+              appBar: const MyAppBar(
                 title: "Edit Profile",
               ),
               body: _UserEditScreenBody()),
@@ -58,7 +58,7 @@ class _UserEditScreenBodyState extends State<_UserEditScreenBody> {
               child: TextFormField(
                 controller: nameController,
                 validator: (value) => model.validateName(value),
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: "Name",
                   filled: true,
                   icon: Icon(Icons.person),
@@ -68,33 +68,35 @@ class _UserEditScreenBodyState extends State<_UserEditScreenBody> {
             ),
           ),
           Align(
-            alignment: Alignment(0.66, 0),
+            alignment: const Alignment(0.66, 0),
             child: FlatButton(
-              padding: EdgeInsets.all(0.0),
+              padding: const EdgeInsets.all(0.0),
               textColor: Theme.of(context).primaryColor,
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               onPressed: () async {
                 if (_formKey.currentState.validate()) {
                   await model.updateName(nameController.text);
-                  final snackbar = SnackBar(
+                  const snackbar = SnackBar(
                     content: Text("Saved name"),
                   );
                   Scaffold.of(context).showSnackBar(snackbar);
                 }
               },
-              child: Text("Save"),
+              child: const Text("Save"),
             ),
           ),
-          Divider(
+          const Divider(
             thickness: 2.0,
           ),
           StreamBuilder<List<PhoneNumberRecord>>(
             stream: model.phoneNumbers,
             builder: (_, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting)
-                return LinearProgressIndicator();
-              if (snapshot.hasError)
-                return Text("Error retrieving phone numbers");
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const LinearProgressIndicator();
+              }
+              if (snapshot.hasError) {
+                return const Text("Error retrieving phone numbers");
+              }
               return _PhoneNumberList(snapshot.data);
             },
           ),
@@ -102,8 +104,8 @@ class _UserEditScreenBodyState extends State<_UserEditScreenBody> {
             textColor: Colors.white,
             color: Theme.of(context).primaryColor,
             onPressed: model.showPhoneInput,
-            icon: Icon(Icons.add, size: 18),
-            label: Text("Add Phone Number"),
+            icon: const Icon(Icons.add, size: 18),
+            label: const Text("Add Phone Number"),
           ),
         ],
       ),
@@ -119,8 +121,7 @@ class _UserEditScreenBodyState extends State<_UserEditScreenBody> {
 
 class _PhoneNumberList extends StatefulWidget {
   final List<PhoneNumberRecord> phoneNumbers;
-
-  _PhoneNumberList(this.phoneNumbers);
+  const _PhoneNumberList(this.phoneNumbers);
 
   @override
   _PhoneNumberListState createState() => _PhoneNumberListState();
@@ -131,13 +132,14 @@ class _PhoneNumberListState extends State<_PhoneNumberList> {
   Widget build(BuildContext context) {
     final phoneNumbers = widget.phoneNumbers;
     final model = UserEditScreenModel(context);
-    if (phoneNumbers == null || phoneNumbers.length == 0)
-      return Padding(
-        padding: const EdgeInsets.all(8.0),
+    if (phoneNumbers == null || phoneNumbers.isEmpty) {
+      return const Padding(
+        padding: EdgeInsets.all(8.0),
         child: Text("No phone numbers. Add one now."),
       );
+    }
     return ListView.separated(
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         itemBuilder: (_, index) {
           final phoneNumberRecord = widget.phoneNumbers[index];
@@ -147,7 +149,7 @@ class _PhoneNumberListState extends State<_PhoneNumberList> {
                 .catchError((e) => phoneNumber.phoneNumber),
             initialData: "",
             builder: (_, parsedPhoneNumber) => ListTile(
-              title: Text(parsedPhoneNumber.data),
+              title: Text(parsedPhoneNumber.data as String),
               subtitle: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -170,7 +172,7 @@ class _PhoneNumberListState extends State<_PhoneNumberList> {
                 ],
               ),
               trailing: IconButton(
-                icon: Icon(
+                icon: const Icon(
                   Icons.remove_circle_outline,
                 ),
                 onPressed: () {
@@ -183,7 +185,7 @@ class _PhoneNumberListState extends State<_PhoneNumberList> {
             ),
           );
         },
-        separatorBuilder: (_, __) => Divider(),
+        separatorBuilder: (_, __) => const Divider(),
         itemCount: phoneNumbers.length);
   }
 }

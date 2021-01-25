@@ -21,22 +21,22 @@ class OverviewScreen extends StatelessWidget {
     // If app is running and notification is clicked, this function will run
     // If app is terminated, use getInitialMessage instead
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      final String documentPath = message.data["missionDocumentPath"];
+      final documentPath = message.data["missionDocumentPath"] as String;
       final documentReference = FirebaseFirestore.instance.doc(documentPath);
       final missionAddressArguments = MissionAddressArguments(documentReference);
       Navigator.pushNamed(context, DetailScreen.routeName, arguments: missionAddressArguments);
     });
 
     final model = OverviewScreenModel(context);
-    if (model.user == null) return LinearProgressIndicator();
+    if (model.user == null) return const LinearProgressIndicator();
     return Scaffold(
-        key: Key("Overview Screen"),
-        appBar: MyAppBar(title: 'Overview'),
+        key: const Key("Overview Screen"),
+        appBar: const MyAppBar(title: 'Overview'),
         body: BuildMissionStream(),
         floatingActionButton: model.isEditor // only show FAB to editors
             ? FloatingActionButton(
-                child: Icon(Icons.create),
                 onPressed: model.navigateToCreate,
+                child: const Icon(Icons.create),
               )
             : null);
   }

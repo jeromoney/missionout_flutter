@@ -12,12 +12,12 @@ import 'my_appbar_model.dart';
 
 enum Menu { signOut, userOptions, editorOptions, privacyPolicy }
 
-const EDITOR_OPTIONS_ENABLED = false;
+const editorOptionsEnabled = false;
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
 
-  MyAppBar({@required this.title});
+  const MyAppBar({@required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +39,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
               size: AppBar().preferredSize.height,
             ),
       PopupMenuButton<Menu>(
-        key: Key('PopupMenuButton'),
+        key: const Key('PopupMenuButton'),
         // Used for testing, since I can't find this with find.byType
         onSelected: (Menu result) async {
           switch (result) {
@@ -81,18 +81,18 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
             enabled: !{UserScreen.routeName, UserEditScreen.routeName}
                 .contains(ModalRoute.of(context)?.settings?.name),
             value: Menu.userOptions,
-            child: Text('Profile'),
+            child: const Text('Profile'),
           ),
-          if (user.isEditor && EDITOR_OPTIONS_ENABLED)
-            PopupMenuItem<Menu>(
+          if (user.isEditor && editorOptionsEnabled)
+            const PopupMenuItem<Menu>(
               value: Menu.editorOptions,
               child: Text('Editor Options'),
             ),
-          PopupMenuItem<Menu>(
+          const PopupMenuItem<Menu>(
             value: Menu.signOut,
             child: Text('Sign out'),
           ),
-          PopupMenuItem<Menu>(
+          const PopupMenuItem<Menu>(
             value: Menu.privacyPolicy,
             child: Text('Privacy Policy'),
           ),
@@ -102,5 +102,5 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

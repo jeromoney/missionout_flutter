@@ -24,7 +24,7 @@ class _EditDetailState extends State<EditDetail> {
       return Text(Strings.errorMessage);
     }
     // success
-    final Mission mission = widget.snapshot.data;
+    final mission = widget.snapshot.data as Mission;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,

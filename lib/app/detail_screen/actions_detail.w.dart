@@ -12,34 +12,34 @@ class ActionsDetail extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        Baseline(
+        const Baseline(
             baseline: 36,
             baselineType: TextBaseline.alphabetic,
             child: Text('Response')),
-        ResponseOptions(),
+        const ResponseOptions(),
         ButtonBar(
           children: <Widget>[
             IconButton(
-              icon: Icon(Icons.chat),
+              icon: const Icon(Icons.chat),
               onPressed:
                   model.chatURIAvailable ? () => model.launchChat() : null,
             ),
             Builder(builder: (context) {
               // waiting -- just show button as disabled
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return IconButton(
+                return const IconButton(
                   onPressed: null,
                   icon: Icon(Icons.map),
                 );
               }
               // error
               if (snapshot.data == null) {
-                return Text("There was an error.");
+                return const Text("There was an error.");
               }
               // success
-              final mission = snapshot.data;
+              final mission = snapshot.data as Mission;
               return IconButton(
-                icon: Icon(Icons.map),
+                icon: const Icon(Icons.map),
                 // If no location is provided, disable the button
                 onPressed: mission.location == null
                     ? null
@@ -47,7 +47,7 @@ class ActionsDetail extends StatelessWidget {
               );
             }),
             IconButton(
-              icon: Icon(Icons.people),
+              icon: const Icon(Icons.people),
               onPressed: model.displayResponseSheet,
             ),
           ],
@@ -58,8 +58,7 @@ class ActionsDetail extends StatelessWidget {
 }
 
 class ResponseOptions extends StatefulWidget {
-  ResponseOptions();
-
+  const ResponseOptions();
   @override
   _ResponseOptionsState createState() => _ResponseOptionsState();
 }
@@ -69,7 +68,7 @@ class _ResponseOptionsState extends State<ResponseOptions> {
   int _value;
   List<String> responseChips = Response.RESPONSES;
 
-  getInitialResponseState() async {
+  Future getInitialResponseState() async {
     if (_value == null) {
       _value = await _model.getCurrentlySelectedResponse();
       setState(() {});

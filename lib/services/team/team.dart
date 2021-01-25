@@ -24,7 +24,7 @@ abstract class Team {
   Future<Response> fetchUserResponse(
       {@required DocumentReference documentReference, @required String uid});
 
-  Future<dynamic> addMission({@required Mission mission});
+  Future<DocumentReference> addMission({@required Mission mission});
 
   void standDownMission({@required Mission mission});
 

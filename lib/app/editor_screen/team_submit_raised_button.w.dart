@@ -1,8 +1,8 @@
 part of 'editor_screen.dart';
 
 class TeamSubmitRaisedButton extends StatefulWidget {
-  final formKey;
-  final chatURIController;
+  final GlobalKey<FormState> formKey;
+  final TextEditingController chatURIController;
 
   const TeamSubmitRaisedButton({
     Key key,
@@ -11,12 +11,13 @@ class TeamSubmitRaisedButton extends StatefulWidget {
   }) : super(key: key);
 
   @override
+  // ignore: no_logic_in_create_state
   State createState() => TeamSubmitRaisedButtonState(
       chatURIController: chatURIController, formKey: formKey);
 }
 
 class TeamSubmitRaisedButtonState extends State<TeamSubmitRaisedButton> {
-  final formKey;
+  final GlobalKey<FormState> formKey;
   final TextEditingController chatURIController;
   Icon resultIcon;
 
@@ -34,7 +35,7 @@ class TeamSubmitRaisedButtonState extends State<TeamSubmitRaisedButton> {
           FocusScope.of(context).requestFocus(FocusNode());
           if (formKey.currentState.validate()) {
             Scaffold.of(context)
-                .showSnackBar(SnackBar(content: Text('Processing Data')));
+                .showSnackBar(const SnackBar(content: Text('Processing Data')));
             try {
               final team = context.read<Team>();
               await team.updateChatURI(chatURIController.text);
@@ -42,16 +43,16 @@ class TeamSubmitRaisedButtonState extends State<TeamSubmitRaisedButton> {
 
               team.chatURI = chatURIController.text;
               setState(() {
-                resultIcon = Icon(
+                resultIcon = const Icon(
                   Icons.check,
                   color: Colors.green,
                 );
               });
             } catch (e) {
               Scaffold.of(context).showSnackBar(
-                  SnackBar(content: Text('Error uploading information')));
+                  const SnackBar(content: Text('Error uploading information')));
               setState(() {
-                resultIcon = Icon(
+                resultIcon = const Icon(
                   Icons.error_outline,
                   color: Colors.red,
                 );
@@ -59,7 +60,7 @@ class TeamSubmitRaisedButtonState extends State<TeamSubmitRaisedButton> {
             }
           }
         },
-        child: Text('Submit'),
+        child: const Text('Submit'),
       ),
       resultIcon ?? Container()
     ]);

@@ -15,7 +15,7 @@ class PlatformExceptionAlertDialog extends PlatformAlertDialog {
         // This happens when we get a "Missing or insufficient permissions" error
         return 'This operation could not be completed due to a server error';
       }
-      return exception.details;
+      return exception.details as String;
     }
     return errors[exception.code] ?? exception.message;
   }

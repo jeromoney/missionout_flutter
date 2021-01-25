@@ -9,24 +9,25 @@ class InfoDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     // waiting
     if (snapshot.connectionState == ConnectionState.waiting) {
-      return LinearProgressIndicator();
+      return const LinearProgressIndicator();
     }
 
     // error
     if (snapshot.data == null) {
-      return Text("There was an error.");
+      return const Text("There was an error.");
     }
 
     // success
-    final Mission mission = snapshot.data;
+    final mission = snapshot.data as Mission;
     String locationAndTime;
     if (mission.locationDescription != null &&
-        mission.locationDescription != "")
+        mission.locationDescription != "") {
       locationAndTime =
           "${mission.locationDescription} — ${mission.timeSincePresent()}";
-    else
+    } else {
       locationAndTime = mission.timeSincePresent();
-    final strikeThroughStyle =
+    }
+    const strikeThroughStyle =
         TextStyle(decoration: TextDecoration.lineThrough);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
