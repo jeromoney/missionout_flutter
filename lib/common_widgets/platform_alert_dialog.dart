@@ -22,18 +22,19 @@ class PlatformAlertDialog extends PlatformWidget {
 
   Future<bool> show(BuildContext context) async {
     // Platform not implemented on web at the moment
-    if (Platforms.isWeb || Platforms.isAndroid) {
-      return await showDialog<bool>(
+    if (isWeb || isAndroid) {
+      return showDialog<bool>(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) => this,
       );
     }
-    else
-      return await showCupertinoDialog<bool>(
+    else {
+      return showCupertinoDialog<bool>(
         context: context,
         builder: (BuildContext context) => this,
       );
+    }
   }
 
   @override
@@ -59,21 +60,21 @@ class PlatformAlertDialog extends PlatformWidget {
     if (cancelActionText != null) {
       actions.add(
         PlatformAlertDialogAction(
+          onPressed: () => Navigator.of(context).pop(false),
           child: Text(
             cancelActionText,
-            key: Key(Keys.alertCancel),
+            key: const Key(Keys.alertCancel),
           ),
-          onPressed: () => Navigator.of(context).pop(false),
         ),
       );
     }
     actions.add(
       PlatformAlertDialogAction(
+        onPressed: () => Navigator.of(context).pop(true),
         child: Text(
           defaultActionText,
-          key: Key(Keys.alertDefault),
+          key: const Key(Keys.alertDefault),
         ),
-        onPressed: () => Navigator.of(context).pop(true),
       ),
     );
     return actions;
@@ -89,16 +90,16 @@ class PlatformAlertDialogAction extends PlatformWidget {
   @override
   Widget buildCupertinoWidget(BuildContext context) {
     return CupertinoDialogAction(
-      child: child,
       onPressed: onPressed,
+      child: child,
     );
   }
 
   @override
   Widget buildMaterialWidget(BuildContext context) {
     return FlatButton(
-      child: child,
       onPressed: onPressed,
+      child: child,
     );
   }
 }

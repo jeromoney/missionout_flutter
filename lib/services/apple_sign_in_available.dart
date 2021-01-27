@@ -10,7 +10,7 @@ class AppleSignInAvailable {
   const AppleSignInAvailable({this.isAvailable});
 
   static AppleSignInAvailable check()  {
-    if (Platforms.isWeb) return AppleSignInAvailable(isAvailable: false);
+    if (isWeb) return AppleSignInAvailable(isAvailable: false);
     else return AppleSignInAvailable(isAvailable: Platform.isIOS);
   }
 }

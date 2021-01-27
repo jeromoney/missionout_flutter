@@ -24,12 +24,12 @@ class DetailScreenModel {
   final StreamController<bool> sheetStreamController;
 
   DetailScreenModel(this.context)
-      : this.team = context.watch<Team>(),
-        this.user = context.watch<User>(),
-        this.documentReference = (ModalRoute.of(context).settings.arguments
+      : team = context.watch<Team>(),
+        user = context.watch<User>(),
+        documentReference = (ModalRoute.of(context).settings.arguments
                 as MissionAddressArguments)
             .documentReference,
-        this.sheetStreamController = context.watch<StreamController<bool>>();
+        sheetStreamController = context.watch<StreamController<bool>>();
 
   Stream<LatLng> get missionLocation {
     final mission =
@@ -66,12 +66,12 @@ class DetailScreenModel {
     // currently optimized for gmaps. The location is opened
     // as a query "?q=" so the label is displayed.
     String url;
-    if (Platforms.isAndroid) {
+    if (isAndroid) {
       url = 'geo:0,0?q=$lat,$lon';
-    } else if (Platforms.isIOS || Platforms.isMacOS) {
+    } else if (isIOS || isMacOS) {
       url = 'http://maps.apple.com/?q=$lat,$lon';
     }
-    else if (Platforms.isWeb){
+    else if (isWeb){
       url = "https://www.google.com/maps";
     }
     else {

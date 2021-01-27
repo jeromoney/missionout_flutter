@@ -68,7 +68,7 @@ class MyApp extends StatelessWidget {
                     )),
             Provider<EmailSecureStore>(
               lazy: false,
-              create: (_) => Platforms.isWeb
+              create: (_) => isWeb
                   ? null
                   : EmailSecureStore(
                       flutterSecureStorage: FlutterSecureStorage()),
@@ -111,7 +111,7 @@ Future<Tuple2<AppleSignInAvailable, NotificationAppLaunchDetails>>
   final appleSignInAvailable = AppleSignInAvailable.check();
   await Firebase.initializeApp();
   NotificationAppLaunchDetails details;
-  if (!Platforms.isWeb) {
+  if (!isWeb) {
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
         FlutterLocalNotificationsPlugin();
     details =

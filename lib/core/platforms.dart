@@ -2,33 +2,23 @@ import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 // dart:io is not supported by web so building out own class
+// Since Platform can crash an web app, I'm moving all the calls to this file
 
 enum Operating_Systems { Web, Android, IOS }
 
-class Platforms {
-  static bool get isWeb => kIsWeb;
+bool get isWeb => kIsWeb;
 
-  static bool get isAndroid {
-    try {
-      return Platform.isAndroid;
-    } on Exception {
-      return false;
-    }
-  }
+bool get isAndroid {
+  if (isWeb) return false;
+  return Platform.isAndroid;
+}
 
-  static bool get isIOS {
-    try {
-      return Platform.isIOS;
-    } on Exception  {
-      return false;
-    }
-  }
+bool get isIOS {
+  if (isWeb) return false;
+  return Platform.isIOS;
+}
 
-  static bool get isMacOS {
-    try {
-      return Platform.isMacOS;
-    } on Exception {
-      return false;
-    }
-  }
+bool get isMacOS {
+  if (isWeb) return false;
+  return Platform.isMacOS;
 }

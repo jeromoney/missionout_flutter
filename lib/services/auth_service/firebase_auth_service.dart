@@ -209,7 +209,7 @@ class FirebaseAuthService extends AuthService {
     if (_firebaseUser == null)
       throw StateError("Signin out a user that is null");
     // remove token from Firestore from first, before user signs out
-    if (!Platforms.isWeb) {
+    if (!isWeb) {
       var fcmToken = await FirebaseMessaging.instance.getToken();
       _db.collection('users').doc(_firebaseUser.uid).update({
         'tokens': FieldValue.arrayRemove([fcmToken])

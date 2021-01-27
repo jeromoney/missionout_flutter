@@ -39,7 +39,7 @@ class FirebaseLinkHandler {
   // when the app is shut down
   void _initDynamicLinks() async {
     // Web is not supported at the moment
-    if (Platforms.isWeb) return;
+    if (isWeb) return;
     final PendingDynamicLinkData dynamicLink =
         await FirebaseDynamicLinks.instance.getInitialLink();
     // handle DynamicLinks if the app is already running

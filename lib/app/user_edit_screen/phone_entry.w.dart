@@ -31,33 +31,33 @@ class _PhoneEntryState extends State<PhoneEntry> {
                   child: MyInternationalPhoneNumberInput(),
                 ),
                 CheckboxFormField(
-                  title: Text('Receive SMS text pages'),
-                  subtitle: Text('Message and data rates may apply'),
-                  secondary: Icon(
+                  title: const Text('Receive SMS text pages'),
+                  subtitle: const Text('Message and data rates may apply'),
+                  secondary: const Icon(
                     Icons.sms,
                     size: 24,
                   ),
-                  onSaved: (value) => this._allowTexts = value,
+                  onSaved: (value) => _allowTexts = value,
                   validator: (value) => value || _allowPhoneCalls
                       ? null
                       : "At least one option must be checked",
                 ),
                 CheckboxFormField(
-                  title: Text('Receive phone call pages'),
-                  secondary: Icon(
+                  title: const Text('Receive phone call pages'),
+                  secondary: const Icon(
                     Icons.phone,
                     size: 24,
                   ),
-                  onSaved: (value) => this._allowPhoneCalls = value,
+                  onSaved: (value) => _allowPhoneCalls = value,
                   validator: (value) => value || _allowTexts
                       ? null
                       : "At least one option must be checked",
                 ),
                 Builder(
                   builder: (context) => Align(
-                    alignment: Alignment(0.66, 0),
+                    alignment: const Alignment(0.66, 0),
                     child: FlatButton(
-                      padding: EdgeInsets.all(0.0),
+                      padding: const EdgeInsets.all(0.0),
                       textColor: Theme.of(context).primaryColor,
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       onPressed: () async {
@@ -79,7 +79,7 @@ class _PhoneEntryState extends State<PhoneEntry> {
                           context.read<StreamController<bool>>().add(false);
                         }
                       },
-                      child: Text("Save"),
+                      child: const Text("Save"),
                     ),
                   ),
                 ),
@@ -105,11 +105,9 @@ class _MyInternationalPhoneNumberInputState
     String hintText;
 
     return InternationalPhoneNumberInput(
-      countries: ["US"],
+      countries: const ["US"],
       inputDecoration: InputDecoration(labelText: labelText),
       hintText: hintText,
-      isEnabled: true,
-      formatInput: true,
       onInputChanged: (PhoneNumber phoneNumber) {
         context.read<PhoneNumberHolder>().phoneNumber = phoneNumber;
       },
@@ -128,8 +126,7 @@ class CheckboxFormField extends FormField<bool> {
       Widget secondary,
       FormFieldSetter<bool> onSaved,
       FormFieldValidator<bool> validator,
-      bool initialValue = false,
-      bool autoValidate = false})
+      bool initialValue = false})
       : super(
             onSaved: onSaved,
             validator: validator,

@@ -10,7 +10,7 @@ abstract class PlatformWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     // This code is a bit risky. Platforms.isIOS will trigger an exception in web
     // , but it should be caught by Platforms.
-    if (Platforms.isIOS) return buildCupertinoWidget(context);
+    if (isIOS) return buildCupertinoWidget(context);
     return buildMaterialWidget(context);
   }
 }

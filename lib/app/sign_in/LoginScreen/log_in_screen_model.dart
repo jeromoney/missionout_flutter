@@ -105,7 +105,7 @@ class LoginScreenModel {
   // Apple Setup - Show Apple button only if iOS and running 13 or later. Since
   // this method is async it needs to be used with a future builder
   Future<bool> isCorrectIosVersion() async {
-    if (Platforms.isIOS) {
+    if (isIOS) {
       final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
       final IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
       final systemVersion = iosInfo.systemVersion;

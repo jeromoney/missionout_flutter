@@ -121,7 +121,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
       this.mobilePhoneNumber,
       this.voicePhoneNumber})
       : assert(teamID != null) {
-    if (Platforms.isWeb){return;}
+    if (isWeb){return;}
     _addTokenToFirestore();
   }
 
