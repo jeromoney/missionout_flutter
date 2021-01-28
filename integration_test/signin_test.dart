@@ -1,11 +1,9 @@
-import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:missionout/app/create_screen/create_screen.dart';
 import 'package:missionout/app/detail_screen/detail_screen.dart';
-import 'package:missionout/core/platforms.dart';
 import 'package:missionout/main.dart';
 import 'package:missionout/services/apple_sign_in_available.dart';
 import 'package:tuple/tuple.dart';

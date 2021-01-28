@@ -85,6 +85,8 @@ class _ResponseOptionsState extends State<ResponseOptions> {
       children: List<Widget>.generate(responseChips.length, (int index) {
         return ChoiceChip(
           label: Text(responseChips[index]),
+          // TODO -- choose a suitable color
+          //selectedColor: Colors.accents[1],
           selected: _value == index,
           onSelected: (bool selected) {
             Response response;

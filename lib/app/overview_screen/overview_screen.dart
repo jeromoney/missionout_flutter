@@ -12,6 +12,55 @@ import 'package:missionout/data_objects/mission.dart';
 import 'package:missionout/data_objects/mission_address_arguments.dart';
 import 'package:provider/provider.dart';
 
+class BuildMissionResults extends StatefulWidget {
+  final List<Mission> missions;
+
+  const BuildMissionResults({Key key, @required this.missions})
+      : super(key: key);
+
+  @override
+  _BuildMissionResultsState createState() => _BuildMissionResultsState();
+}
+
+class BuildMissionStream extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final model = OverviewScreenModel(context);
+    if (model.team == null) return const LinearProgressIndicator();
+
+    return StreamBuilder<List<Mission>>(
+        stream: model.fetchMissions(),
+        builder: (context, snapshot) {
+          // waiting
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const LinearProgressIndicator();
+          }
+
+          // error
+          if (snapshot.data == null) {
+            return const Center(
+              child: Text('There was an error.'),
+            );
+          }
+
+          // successful query
+          final missions = snapshot.data;
+          // removing missions with incomplete fields. This is a little crude
+          missions.removeWhere((mission) => mission == null);
+
+          if (missions.isEmpty) {
+            return const Center(
+              child: Text('No recent results.'),
+            );
+          }
+
+          return BuildMissionResults(
+            missions: missions,
+          );
+        });
+  }
+}
+
 class OverviewScreen extends StatelessWidget {
   static const routeName = "/overviewScreen";
   @override
@@ -23,8 +72,10 @@ class OverviewScreen extends StatelessWidget {
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       final documentPath = message.data["missionDocumentPath"] as String;
       final documentReference = FirebaseFirestore.instance.doc(documentPath);
-      final missionAddressArguments = MissionAddressArguments(documentReference);
-      Navigator.pushNamed(context, DetailScreen.routeName, arguments: missionAddressArguments);
+      final missionAddressArguments =
+          MissionAddressArguments(documentReference);
+      Navigator.pushNamed(context, DetailScreen.routeName,
+          arguments: missionAddressArguments);
     });
 
     final model = OverviewScreenModel(context);
@@ -42,55 +93,6 @@ class OverviewScreen extends StatelessWidget {
   }
 }
 
-class BuildMissionStream extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final model = OverviewScreenModel(context);
-    if (model.team == null) return LinearProgressIndicator();
-
-    return StreamBuilder<List<Mission>>(
-        stream: model.fetchMissions(),
-        builder: (context, snapshot) {
-          // waiting
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return LinearProgressIndicator();
-          }
-
-          // error
-          if (snapshot.data == null) {
-            return Center(
-              child: Text('There was an error.'),
-            );
-          }
-
-          // successful query
-          final missions = snapshot.data;
-          // removing missions with incomplete fields. This is a little crude
-          missions.removeWhere((mission) => mission == null);
-
-          if (missions.length == 0) {
-            return Center(
-              child: Text('No recent results.'),
-            );
-          }
-
-          return BuildMissionResults(
-            missions: missions,
-          );
-        });
-  }
-}
-
-class BuildMissionResults extends StatefulWidget {
-  final List<Mission> missions;
-
-  const BuildMissionResults({Key key, @required this.missions})
-      : super(key: key);
-
-  @override
-  _BuildMissionResultsState createState() => _BuildMissionResultsState();
-}
-
 class _BuildMissionResultsState extends State<BuildMissionResults> {
   OverviewScreenModel model;
   final _log = Logger('_BuildMissionResultsState');
@@ -101,8 +103,15 @@ class _BuildMissionResultsState extends State<BuildMissionResults> {
     return ListView.separated(
         itemBuilder: (BuildContext context, int index) {
           final mission = widget.missions[index];
-          final strikeThroughStyle =
+          const strikeThroughStyle =
               TextStyle(decoration: TextDecoration.lineThrough);
+          final needForActionStr = mission.needForAction ?? '';
+          // Due the online/offline nature of Firestore, there is a brief moment
+          // when the time can be null. So just using the current time to avoid a
+          // a null issue for this brief moment. Hopefully the brief moment isn't
+          // all the time.
+          final DateTime dateTime = mission.time?.toDate() ?? DateTime.now();
+          final String timestampStr = '${DateFormat.yMMMd().format(dateTime)} ${DateFormat.Hm().format(dateTime)}';
           return ListTile(
             title: Text(mission.description ?? '',
                 style: mission.isStoodDown ?? false
@@ -111,15 +120,14 @@ class _BuildMissionResultsState extends State<BuildMissionResults> {
                         .bodyText2
                         .merge(strikeThroughStyle)
                     : Theme.of(context).textTheme.bodyText2),
-            subtitle: Text((mission.needForAction ?? '') +
-                ' — ' +
-                DateFormat.yMMMd().format(mission.time?.toDate() ?? DateTime.now()) ?? ''),
+            subtitle: Text(
+                '$needForActionStr — $timestampStr'),
             onTap: () {
               model.navigateToDetail(mission: mission);
             },
           );
         },
-        separatorBuilder: (context, index) => Divider(),
+        separatorBuilder: (context, index) => const Divider(),
         itemCount: widget.missions.length);
   }
 

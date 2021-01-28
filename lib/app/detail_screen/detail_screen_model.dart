@@ -44,21 +44,21 @@ class DetailScreenModel {
   Stream<Mission> fetchSingleMission() =>
       team.fetchSingleMission(documentReference: documentReference);
 
-  displayResponseSheet() => sheetStreamController.add(true);
+  void displayResponseSheet() => sheetStreamController.add(true);
 
-  hideResponseSheet() => sheetStreamController.add(false);
+  void hideResponseSheet() => sheetStreamController.add(false);
 
-  launchChat() {
+  void launchChat() {
     try {
       team.launchChat();
     } catch (e) {
-      Scaffold.of(context).showSnackBar(SnackBar(
+      Scaffold.of(context).showSnackBar(const SnackBar(
         content: Text('Error: Is Slack installed?'),
       ));
     }
   }
 
-  launchMap(Mission mission) {
+  void launchMap(Mission mission) {
     final geoPoint = mission.location;
     final lat = geoPoint.latitude;
     final lon = geoPoint.longitude;
@@ -69,6 +69,7 @@ class DetailScreenModel {
     if (isAndroid) {
       url = 'geo:0,0?q=$lat,$lon';
     } else if (isIOS || isMacOS) {
+      // TODO - open in caltopo, etc instead of just apple maps
       url = 'http://maps.apple.com/?q=$lat,$lon';
     }
     else if (isWeb){
@@ -89,22 +90,22 @@ class DetailScreenModel {
 
   bool get isEditor => user.isEditor;
 
-  addResponse({@required Response response}) => team.addResponse(
+  void addResponse({@required Response response}) => team.addResponse(
       response: response, docID: documentReference.id, uid: user.uid);
 
-  addPage({@required missionpage.Page page}) => team.addPage(page: page);
+  void addPage({@required missionpage.Page page}) => team.addPage(page: page);
 
-  standDownMission({@required Mission mission}) =>
+  void standDownMission({@required Mission mission}) =>
       team.standDownMission(mission: mission);
 
-  navigateToCreateScreen() {
+  void navigateToCreateScreen() {
     assert(documentReference != null);
     Navigator.of(context).pushReplacement(
       CreatePopupRoute(documentReference: documentReference),
     );
   }
 
-  navigateToOverviewScreen() => Navigator.of(context).pop();
+  void navigateToOverviewScreen() => Navigator.of(context).pop();
 
   Future<int> getCurrentlySelectedResponse() async {
     final response = await team.fetchUserResponse(
