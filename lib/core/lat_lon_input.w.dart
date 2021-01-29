@@ -15,7 +15,7 @@ class LatLonInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final keyboardType =
+    const keyboardType =
         TextInputType.numberWithOptions(signed: true, decimal: true);
     final inputFormatters = <TextInputFormatter>[
       FilteringTextInputFormatter.allow(RegExp('[0-9\.\-]'))
@@ -33,7 +33,7 @@ class LatLonInput extends StatelessWidget {
               child: TextFormField(
                 controller: latController,
                 keyboardType: keyboardType,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     labelText: 'Latitude', border: OutlineInputBorder()),
                 inputFormatters: inputFormatters,
                 validator: (value) {
@@ -45,7 +45,7 @@ class LatLonInput extends StatelessWidget {
               child: TextFormField(
                   controller: lonController,
                   keyboardType: keyboardType,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       labelText: 'Longitude', border: OutlineInputBorder()),
                   inputFormatters: inputFormatters,
                   validator: (value) {
@@ -65,7 +65,7 @@ String latValidator(String value, TextEditingController companionController) {
     // User left both fields blank
     return null;
   }
-  double parsedNumber = double.tryParse(value);
+  final parsedNumber = double.tryParse(value);
   if (parsedNumber == null) {
     // parser was unable to parse value i.e. not a number
     return 'Enter a valid number';
@@ -83,7 +83,7 @@ String lonValidator(String value, TextEditingController companionController) {
     // User left both fields blank
     return null;
   }
-  double parsedNumber = double.tryParse(value);
+  final parsedNumber = double.tryParse(value);
   if (parsedNumber == null) {
     // parser was unable to parse value i.e. not a number
     return 'Enter a valid number';

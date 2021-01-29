@@ -25,10 +25,10 @@ class LoginScreenModel {
   final _log = Logger('LogInScreenModel');
 
   LoginScreenModel(this.context)
-      : this._appleSignInAvailable = context.watch<AppleSignInAvailable>(),
-        this._signInManager = context.watch<SignInManager>(),
-        this._authService = context.watch<AuthService>(),
-        this._linkHandler = context.watch<FirebaseLinkHandler>();
+      : _appleSignInAvailable = context.watch<AppleSignInAvailable>(),
+        _signInManager = context.watch<SignInManager>(),
+        _authService = context.watch<AuthService>(),
+        _linkHandler = context.watch<FirebaseLinkHandler>();
 
   bool get isAppleSignInAvailable => _appleSignInAvailable.isAvailable;
 
@@ -62,7 +62,7 @@ class LoginScreenModel {
     });
   }
 
-  signInWithEmailAndPassword(String email, String password) async =>
+  Future signInWithEmailAndPassword(String email, String password) async =>
       _authService.signInWithEmailAndPassword(email, password);
 
   Future sendEmailLink({@required String email}) async {

@@ -48,10 +48,10 @@ class FirestoreTeam implements Team {
 
   @override
   Stream<List<Mission>> fetchMissions() {
-    const QUERY_LIMIT = 5;
+    const queryLimit = 5;
     final ref = _db
         .collection('teams/$teamID/missions')
-        .limit(QUERY_LIMIT)
+        .limit(queryLimit)
         .orderBy('time', descending: true);
     return ref.snapshots().map((snapShots) =>
         snapShots.docs.map((data) => Mission.fromSnapshot(data)).toList());
@@ -104,7 +104,7 @@ class FirestoreTeam implements Team {
     DocumentReference result;
     if (mission.documentReference == null) {
       // reference doesn't exist so create new mission
-      result = await _db
+      return _db
           .collection('teams/$teamID/missions')
           .add(mission.toMap())
           .then((value) {
@@ -113,7 +113,6 @@ class FirestoreTeam implements Team {
         _log.warning('Error adding mission to Firestore', error);
         return null; // returning null indicates problem with firebase. user probably should just retry
       });
-      return result;
     } else {
       // reference is not null so we just update mission.
       await mission.documentReference
@@ -124,12 +123,12 @@ class FirestoreTeam implements Team {
   }
 
   @override
-  addResponse({
+  Future addResponse({
     @required Response response,
     @required String docID,
     @required String uid,
   }) async {
-    DocumentReference document =
+    final document =
         _db.collection('teams/$teamID/missions/$docID/responses').doc(uid);
     if (response != null) {
       await document.set(response.toJson());

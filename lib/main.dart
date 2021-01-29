@@ -30,7 +30,7 @@ Future main() async {
 }
 
 class MyApp extends StatelessWidget {
-  MyApp(
+  const MyApp(
       {this.initialAuthServiceType = AuthServiceType.firebase,
       this.appleSignInAvailable,
       this.notificationAppLaunchDetails,

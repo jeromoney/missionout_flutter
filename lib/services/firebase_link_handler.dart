@@ -27,7 +27,6 @@ class FirebaseLinkHandler {
   final BuildContext context;
 
   FirebaseLinkHandler({
-    Key key,
     @required this.auth,
     @required this.emailStore,
     @required this.context,
@@ -37,7 +36,7 @@ class FirebaseLinkHandler {
 
   // When app is opened, initializes DynamicLinks for when the app is running and
   // when the app is shut down
-  void _initDynamicLinks() async {
+  Future _initDynamicLinks() async {
     // Web is not supported at the moment
     if (isWeb) return;
     final PendingDynamicLinkData dynamicLink =
@@ -121,7 +120,7 @@ class FirebaseLinkHandler {
     }
   }
 
-  _routeDynamicLinks(PendingDynamicLinkData data) {
+  void _routeDynamicLinks(PendingDynamicLinkData data) {
     // Do nothing
     if (data == null) {
       return;
@@ -142,7 +141,7 @@ class FirebaseLinkHandler {
     return;
   }
 
-  _loginTeamCustomization(String teamDomain) async {
+  Future _loginTeamCustomization(String teamDomain) async {
     if (auth.userIsLoggedIn) {
       _logger.warning("User is already signed in");
       return;

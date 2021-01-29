@@ -27,6 +27,7 @@ dependencies:
   crypto: ^2.1.5
   device_info: ^1.0.0
   email_validator: ^1.0.0
+  eraser: ^1.0.1
   firebase_auth: ^0.20.0+1
   firebase_core:  ^0.7.0
   firebase_dynamic_links: ^0.7.0

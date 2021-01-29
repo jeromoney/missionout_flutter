@@ -14,7 +14,7 @@ part 'submit_mission_button.w.dart';
 class CreateScreen extends StatelessWidget {
   final DocumentReference documentReference;
 
-  CreateScreen({this.documentReference});
+  const CreateScreen({this.documentReference});
 
   @override
   Widget build(BuildContext context) {
@@ -78,9 +78,9 @@ class __MissionFormState extends State<_MissionForm> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
-                      key: Key("Description"),
+                      key: const Key("Description"),
                       controller: descriptionController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                           labelText: 'Description',
                           border: OutlineInputBorder()),
                       validator: (value) {
@@ -94,9 +94,9 @@ class __MissionFormState extends State<_MissionForm> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
-                      key: Key("Need for action"),
+                      key: const Key("Need for action"),
                       controller: actionController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                           labelText: 'Need for action',
                           border: OutlineInputBorder()),
                     ),
@@ -105,7 +105,7 @@ class __MissionFormState extends State<_MissionForm> {
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
                       controller: locationController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                           labelText: 'Location description',
                           border: OutlineInputBorder()),
                     ),
@@ -116,7 +116,7 @@ class __MissionFormState extends State<_MissionForm> {
                     latController: latitudeController,
                   ),
                   Padding(
-                    padding: EdgeInsets.only(
+                    padding: const EdgeInsets.only(
                       top: 16.0,
                     ),
                     child: SubmitMissionButton(

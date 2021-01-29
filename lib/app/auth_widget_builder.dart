@@ -26,7 +26,6 @@ class AuthWidgetBuilder extends StatelessWidget {
                 value: user,
               ),
               FutureProvider<Team>(
-                initialData: null,
                 create: (_) async => authService.createTeam(),
                 catchError: (_, __) {
                   return null;
