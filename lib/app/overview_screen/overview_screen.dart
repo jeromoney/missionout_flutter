@@ -22,7 +22,7 @@ class BuildMissionResults extends StatefulWidget {
   _BuildMissionResultsState createState() => _BuildMissionResultsState();
 }
 
-class _BuildMissionResultsState extends State<BuildMissionResults> {
+class _BuildMissionResultsState extends State<BuildMissionResults> with WidgetsBindingObserver {
   OverviewScreenModel model;
   final _log = Logger('_BuildMissionResultsState');
 
@@ -64,12 +64,8 @@ class _BuildMissionResultsState extends State<BuildMissionResults> {
   void initState() {
     super.initState();
     _log.info("Clearing badges");
-    try {
-      OverviewScreenModel.clearBadges();
-    } on Exception catch (e) {
-      // TODO
-    }
-
+    OverviewScreenModel.clearBadges();
+    WidgetsBinding.instance.addObserver(this);
     _log.info("Checking messages");
     // Check if app was opened by mission notification
     final NotificationAppLaunchDetails notificationAppLaunchDetails =
@@ -85,6 +81,20 @@ class _BuildMissionResultsState extends State<BuildMissionResults> {
             context: context, path: notificationAppLaunchDetails.payload);
       });
     }
+  }
+
+  // clear badges if app is brought from background state
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed){
+      OverviewScreenModel.clearBadges();
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 }
 

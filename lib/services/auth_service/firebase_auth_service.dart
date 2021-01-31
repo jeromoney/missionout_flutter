@@ -1,9 +1,6 @@
-import 'dart:convert';
-
 import 'package:apple_sign_in/apple_sign_in.dart' as apple;
 import 'package:apple_sign_in/scope.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -104,19 +101,11 @@ class FirebaseAuthService extends AuthService {
     @required String androidMinimumVersion,
     bool userMustExist = false,
   }) async {
-    // Intercept the hush hush email and sign into demo mode
-    DocumentSnapshot hashRef =
-        await _db.doc('/demopassword/demopassword').get();
-    final hash = hashRef.data()['hashed'];
-    final bytes = utf8.encode(email); // data being hashed
-    final digest = sha1.convert(bytes);
-    if (digest.toString().toUpperCase() == hash) return signInWithDemo();
-
     if (userMustExist) {
       final List<String> signInMethods =
           await _firebaseAuth.fetchSignInMethodsForEmail(email);
       // List is empty if user not in database
-      if (signInMethods.isEmpty) throw StateError("User is not in database");
+      if (signInMethods.isEmpty) throw Exception("User is not in database");
     }
     return await _firebaseAuth.sendSignInLinkToEmail(
         email: email,
@@ -206,11 +195,12 @@ class FirebaseAuthService extends AuthService {
 
   @override
   Future signOut() async {
-    if (_firebaseUser == null)
-      throw StateError("Signin out a user that is null");
+    if (_firebaseUser == null) {
+      throw StateError("Signing out a user that is null");
+    }
     // remove token from Firestore from first, before user signs out
     if (!isWeb) {
-      var fcmToken = await FirebaseMessaging.instance.getToken();
+      final fcmToken = await FirebaseMessaging.instance.getToken();
       _db.collection('users').doc(_firebaseUser.uid).update({
         'tokens': FieldValue.arrayRemove([fcmToken])
       }).then((value) {

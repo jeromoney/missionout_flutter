@@ -78,7 +78,7 @@ class LoginScreenModel {
             androidInstallIfNotAvailable: true,
             androidMinimumVersion: '18',
             userMustExist: true);
-      } on StateError {
+      } on Exception {
         _log.warning("user entered an email that is not in database");
         PlatformAlertDialog(
           title: "Email not in database",

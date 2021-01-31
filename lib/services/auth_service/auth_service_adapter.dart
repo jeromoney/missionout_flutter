@@ -34,19 +34,23 @@ class AuthServiceAdapter extends AuthService {
   void _setup() {
     _firebaseAuthSubscription =
         _firebaseAuthService.onAuthStateChanged.listen((User user) {
-      if (authServiceType == AuthServiceType.firebase)
+      if (authServiceType == AuthServiceType.firebase) {
         _onAuthStateChangedController.add(user);
+      }
     }, onError: (error) {
-      if (authServiceType == AuthServiceType.firebase)
+      if (authServiceType == AuthServiceType.firebase) {
         _onAuthStateChangedController.addError(error);
+      }
     });
     _mockAuthSubscription =
         _mockAuthService.onAuthStateChanged.listen((User user) {
-      if (authServiceType == AuthServiceType.mock)
+      if (authServiceType == AuthServiceType.mock) {
         _onAuthStateChangedController.add(user);
+      }
     }, onError: (error) {
-      if (authServiceType == AuthServiceType.mock)
+      if (authServiceType == AuthServiceType.mock) {
         _onAuthStateChangedController.addError(error);
+      }
     });
   }
 

@@ -18,7 +18,6 @@ import 'package:missionout/services/firebase_link_handler.dart';
 import 'package:missionout/services/user/user.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
-
 import 'app/sign_in/sign_in_manager.dart';
 
 Future main() async {
@@ -34,6 +33,8 @@ class MyApp extends StatelessWidget {
       {this.initialAuthServiceType = AuthServiceType.firebase,
       this.appleSignInAvailable,
       this.notificationAppLaunchDetails,
+        //TODO - I shouldn't have run in demo mode, instead demo mode should be
+        // started by changing the initialAuthServiceType
       this.runInDemoMode = false});
 
   final AuthServiceType initialAuthServiceType;
