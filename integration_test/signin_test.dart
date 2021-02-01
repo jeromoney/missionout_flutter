@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -40,15 +42,17 @@ void main() {
     // create a mission and submit
     expect(find.byType(CreateScreen), findsOneWidget);
 
+
+    final randNumber = Random().nextDouble();
     await tester.enterText(
-        find.byKey(const Key("Description")), "A sample test mission");
+        find.byKey(const Key("Description")), "A sample test mission: $randNumber");
     await tester.enterText(find.byKey(const Key("Need for action")),
         "A sample test need for action");
     await tester.tap(find.byType(SubmitMissionButton));
     await tester.pumpAndSettle(const Duration(seconds: 5));
 
     expect(find.byType(DetailScreen), findsOneWidget);
-    expect(find.text("A sample test mission"), findsOneWidget);
+    expect(find.text("A sample test mission: $randNumber"), findsOneWidget);
   });
 
   testWidgets("Sign in and then sign out", (WidgetTester tester) async {

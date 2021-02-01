@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:missionout/core/location.dart';
 
 abstract class MissionMap extends StatelessWidget {
   final LatLng center;
-
-  MissionMap(this.center);
+  const MissionMap(this.center);
 }
