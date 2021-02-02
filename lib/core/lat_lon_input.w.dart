@@ -31,6 +31,7 @@ class LatLonInput extends StatelessWidget {
           children: <Widget>[
             Expanded(
               child: TextFormField(
+                key: const Key("Latitude Field"),
                 controller: latController,
                 keyboardType: keyboardType,
                 decoration: const InputDecoration(
@@ -43,6 +44,7 @@ class LatLonInput extends StatelessWidget {
             ),
             Expanded(
               child: TextFormField(
+                  key: const Key("Longitude Field"),
                   controller: lonController,
                   keyboardType: keyboardType,
                   decoration: const InputDecoration(

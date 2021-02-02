@@ -17,7 +17,9 @@ import 'package:missionout/data_objects/response.dart';
 import 'package:provider/provider.dart';
 
 part 'actions_detail.w.dart';
+
 part 'edit_detail.w.dart';
+
 part 'info_detail.w.dart';
 
 class DetailScreen extends StatelessWidget {
@@ -66,6 +68,7 @@ class _DetailScreenBuild extends StatelessWidget {
                 if (snapshot.hasError || snapshot.data == null) {
                   return SafeArea(
                       child: IconButton(
+                        key: const Key("back to overview screen"),
                     onPressed: model.navigateToOverviewScreen,
                     color: Colors.black,
                     icon: const Icon(Icons.cancel),
@@ -76,28 +79,23 @@ class _DetailScreenBuild extends StatelessWidget {
                   return const CircularProgressIndicator();
                 }
                 final location = snapshot.data;
-                try {
-                  return Container(
-                      constraints: BoxConstraints.expand(
-                          height: MediaQuery.of(context).size.height / 3),
-                      child: Stack(children: <Widget>[
-                        StreamBuilder(builder: (_, snapshot) {
-                          return GoogleMissionMap(location);
-                        }),
-                        SafeArea(
-                            child: IconButton(
-                          onPressed: model.navigateToOverviewScreen,
-                          icon: const Icon(
-                            Icons.cancel,
-                            size: 32,
-                            color: Colors.white,
-                          ),
-                        )),
-                      ]));
-                } catch (e) {
-                  _log.warning("Google Maps plugin crashed",e,StackTrace.current);
-                  return Container();
-                }
+                return Container(
+                    constraints: BoxConstraints.expand(
+                        height: MediaQuery.of(context).size.height / 3),
+                    child: Stack(children: <Widget>[
+                      StreamBuilder(builder: (_, snapshot) {
+                        return GoogleMissionMap(location);
+                      }),
+                      SafeArea(
+                          child: IconButton(
+                        onPressed: model.navigateToOverviewScreen,
+                        icon: const Icon(
+                          Icons.cancel,
+                          size: 32,
+                          color: Colors.white,
+                        ),
+                      )),
+                    ]));
               },
             ),
             const Padding(
