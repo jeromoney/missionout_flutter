@@ -72,7 +72,7 @@ class MyApp extends StatelessWidget {
               create: (_) => isWeb
                   ? null
                   : EmailSecureStore(
-                      flutterSecureStorage: FlutterSecureStorage()),
+                      flutterSecureStorage: const FlutterSecureStorage()),
             ),
             ProxyProvider2<AuthService, EmailSecureStore, FirebaseLinkHandler>(
               lazy: false,
@@ -102,6 +102,7 @@ Future<Tuple2<AppleSignInAvailable, NotificationAppLaunchDetails>>
     appSetup() async {
   Logger.root.level = Level.ALL; // defaults to Level.INFO
   Logger.root.onRecord.listen((record) {
+    // ignore: avoid_print
     print('${record.level.name}: ${record.time}: ${record.message}');
   });
   final log = Logger("main.dart");

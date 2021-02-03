@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eraser/eraser.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dnd/flutter_dnd.dart';
 import 'package:missionout/app/create_screen/create_screen.dart';
 import 'package:missionout/app/detail_screen/detail_screen.dart';
 import 'package:missionout/data_objects/mission.dart';
@@ -21,6 +22,13 @@ class OverviewScreenModel {
         user = context.watch<User>();
 
   bool get isEditor => user?.isEditor;
+
+  bool get isDNDOverridePossible {
+   if (isWeb){
+     return false;
+   }
+   return true;
+  }
 
   Stream<List<Mission>> fetchMissions() => team.fetchMissions();
 

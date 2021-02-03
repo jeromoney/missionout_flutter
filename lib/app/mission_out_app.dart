@@ -19,7 +19,7 @@ enum AppStatus { signedOut, signedIn }
 class MissionOutApp extends StatelessWidget {
   final AppStatus appStatus;
 
-  MissionOutApp({@required this.appStatus});
+  const MissionOutApp({@required this.appStatus});
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +66,7 @@ class WaitingScreen extends StatelessWidget {
   static const String routeName = "WaitingScreen";
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) => const Scaffold(
         body: LinearProgressIndicator(),
       );
 }
@@ -97,7 +97,7 @@ class _SignOutScreenState extends State<SignOutScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) => const Scaffold(
         body: LinearProgressIndicator(),
       );
 }

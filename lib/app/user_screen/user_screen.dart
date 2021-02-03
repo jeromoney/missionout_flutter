@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_dnd/flutter_dnd.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:missionout/app/my_appbar/my_appbar.dart';
+import 'package:missionout/app/overview_screen/overview_screen_model.dart';
 import 'package:missionout/app/user_screen/user_screen_model.dart';
 import 'package:missionout/constants/strings.dart';
+import 'package:missionout/core/platforms.dart';
 import 'package:missionout/data_objects/phone_number_record.dart';
 
 class UserScreen extends StatefulWidget {
@@ -14,6 +17,8 @@ class UserScreen extends StatefulWidget {
 }
 
 class _UserScreenState extends State<UserScreen> {
+  bool dndSwitch = false;
+
   @override
   Widget build(BuildContext context) {
     final model = UserScreenModel(context);
@@ -32,6 +37,11 @@ class _UserScreenState extends State<UserScreen> {
               ListTile(
                 leading: const Icon(Icons.person),
                 title: Text(model.displayName),
+              ),
+              ListTile(
+                leading: const Icon(Icons.do_not_disturb),
+                title: const Text("Do Not Disturb Override"),
+                trailing: _DoNotDisturbSwitch(dndSwitch: dndSwitch),
               ),
               ListTile(
                 leading: const Icon(Icons.email),
@@ -114,6 +124,39 @@ class _UserScreenState extends State<UserScreen> {
         onPressed: model.editUserOptions,
         child: const Icon(Icons.edit),
       ),
+    );
+  }
+}
+
+class _DoNotDisturbSwitch extends StatefulWidget {
+  const _DoNotDisturbSwitch({
+    Key key,
+    @required this.dndSwitch,
+  }) : super(key: key);
+  final bool dndSwitch;
+
+  @override
+  __DoNotDisturbSwitchState createState() => __DoNotDisturbSwitchState();
+}
+
+class __DoNotDisturbSwitchState extends State<_DoNotDisturbSwitch> {
+  bool statesd = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final model = OverviewScreenModel(context);
+    return Switch(
+      value: statesd,
+      onChanged: model.isDNDOverridePossible ?  (bool value) {
+        if (isWeb) {
+          return;
+        } else if (isAndroid) {
+          setState(() {
+            statesd = value;
+          });
+          //FlutterDnd.gotoPolicySettings();
+        } else if (isIOS) {}
+      } : null,
     );
   }
 }

@@ -15,6 +15,7 @@ class FCMMessageHandler {
     initializeAndroidChannel();
     FirebaseMessaging.onMessage.listen(pageMissionAlert);
     final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('notification_logo');
     const IOSInitializationSettings initializationSettingsIOS =
@@ -66,8 +67,7 @@ class FCMMessageHandler {
         'Mission Pages', // title
         'This channel is used to page out missions.', // description
         importance: Importance.max,
-        playSound: true,
-        sound: RawResourceAndroidNotificationSound("school_fire_alarm"));
+        sound: RawResourceAndroidNotificationSound("school_fire_alarm"));  //This is where the sound is set in android
 
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
         FlutterLocalNotificationsPlugin();
