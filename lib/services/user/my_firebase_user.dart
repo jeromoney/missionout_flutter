@@ -146,7 +146,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
   Future _addTokenToFirestore() async {
     // Setting up the user will be the responsibility of the server.
     // This method adds the user token to firestore
-    final fcmToken = await FirebaseMessaging.instance.getToken();
+    final fcmToken = await FirebaseMessaging().getToken();
     await _db.collection('users').doc(uid).update({
       'tokens': FieldValue.arrayUnion([fcmToken])
     }).then((value) {

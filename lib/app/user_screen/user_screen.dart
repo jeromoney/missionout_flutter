@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_dnd/flutter_dnd.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:logging/logging.dart';
 import 'package:missionout/app/my_appbar/my_appbar.dart';
-import 'package:missionout/app/overview_screen/overview_screen_model.dart';
 import 'package:missionout/app/user_screen/user_screen_model.dart';
 import 'package:missionout/constants/strings.dart';
 import 'package:missionout/core/platforms.dart';
@@ -40,7 +39,10 @@ class _UserScreenState extends State<UserScreen> {
               ),
               ListTile(
                 leading: const Icon(Icons.do_not_disturb),
-                title: const Text("Do Not Disturb Override"),
+                title: GestureDetector(
+                    key: const Key("Do Not Disturb"),
+                    onTap: model.doNotDisturbTextBehavior,
+                    child: const Text("Do Not Disturb Override")),
                 trailing: _DoNotDisturbSwitch(dndSwitch: dndSwitch),
               ),
               ListTile(
@@ -139,24 +141,30 @@ class _DoNotDisturbSwitch extends StatefulWidget {
   __DoNotDisturbSwitchState createState() => __DoNotDisturbSwitchState();
 }
 
-class __DoNotDisturbSwitchState extends State<_DoNotDisturbSwitch> {
-  bool statesd = false;
+class __DoNotDisturbSwitchState extends State<_DoNotDisturbSwitch>
+    with WidgetsBindingObserver {
+  final _logger = Logger("__DoNotDisturbSwitchState");
+  bool _isNotificationPolicyAccessGranted = false;
+
+  @override
+  void initState() {
+    super.initState();
+    updateUI();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final model = OverviewScreenModel(context);
+    final model = UserScreenModel(context);
     return Switch(
-      value: statesd,
-      onChanged: model.isDNDOverridePossible ?  (bool value) {
-        if (isWeb) {
-          return;
-        } else if (isAndroid) {
-          setState(() {
-            statesd = value;
-          });
-          //FlutterDnd.gotoPolicySettings();
-        } else if (isIOS) {}
-      } : null,
+      value: _isNotificationPolicyAccessGranted,
+      onChanged:
+          model.isDNDOverridePossible ? model.doNotDisturbOverride : null,
     );
+  }
+
+  Future updateUI() async {
+    if (!isAndroid) {
+      return;
+    }
   }
 }

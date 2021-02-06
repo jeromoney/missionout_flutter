@@ -145,14 +145,14 @@ class OverviewScreen extends StatelessWidget {
     // TODO - Refactor and move firestore logic somewhere more appropriate
     // If app is running and notification is clicked, this function will run
     // If app is terminated, use getInitialMessage instead
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      final documentPath = message.data["missionDocumentPath"] as String;
-      final documentReference = FirebaseFirestore.instance.doc(documentPath);
-      final missionAddressArguments =
-      MissionAddressArguments(documentReference);
-      Navigator.pushNamed(context, DetailScreen.routeName,
-          arguments: missionAddressArguments);
-    });
+    // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    //   final documentPath = message.data["missionDocumentPath"] as String;
+    //   final documentReference = FirebaseFirestore.instance.doc(documentPath);
+    //   final missionAddressArguments =
+    //   MissionAddressArguments(documentReference);
+    //   Navigator.pushNamed(context, DetailScreen.routeName,
+    //       arguments: missionAddressArguments);
+    // });
 
     final model = OverviewScreenModel(context);
     if (model.user == null) return const LinearProgressIndicator();

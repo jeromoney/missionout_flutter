@@ -27,7 +27,7 @@ abstract class User with ChangeNotifier {
   PhoneNumber voicePhoneNumber;
   PhoneNumber mobilePhoneNumber;
 
-  updatePhoneNumber(
+  void updatePhoneNumber(
       {@required PhoneNumber phoneNumber, @required PhoneType type});
 
   updateDisplayName({@required String displayName});

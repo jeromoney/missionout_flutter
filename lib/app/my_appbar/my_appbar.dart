@@ -78,6 +78,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
         },
         itemBuilder: (BuildContext context) => <PopupMenuEntry<Menu>>[
           PopupMenuItem<Menu>(
+            key: const Key("Profile"),
             enabled: !{UserScreen.routeName, UserEditScreen.routeName}
                 .contains(ModalRoute.of(context)?.settings?.name),
             value: Menu.userOptions,

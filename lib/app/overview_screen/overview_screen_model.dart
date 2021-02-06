@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eraser/eraser.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dnd/flutter_dnd.dart';
 import 'package:missionout/app/create_screen/create_screen.dart';
 import 'package:missionout/app/detail_screen/detail_screen.dart';
 import 'package:missionout/data_objects/mission.dart';
@@ -10,7 +9,6 @@ import 'package:missionout/services/team/team.dart';
 import 'package:missionout/services/user/user.dart';
 import 'package:provider/provider.dart';
 import 'package:missionout/core/platforms.dart';
-
 
 class OverviewScreenModel {
   final BuildContext context;
@@ -22,13 +20,6 @@ class OverviewScreenModel {
         user = context.watch<User>();
 
   bool get isEditor => user?.isEditor;
-
-  bool get isDNDOverridePossible {
-   if (isWeb){
-     return false;
-   }
-   return true;
-  }
 
   Stream<List<Mission>> fetchMissions() => team.fetchMissions();
 
@@ -45,14 +36,13 @@ class OverviewScreenModel {
     if (isWeb) return;
     Eraser.resetBadgeCountAndRemoveNotificationsFromCenter();
   }
-
 }
 
 Future directDetailScreenNavigation(
     {@required BuildContext context, @required String path}) async {
   final team = context.watch<Team>();
   final DocumentReference documentReference =
-       await team.getDocumentReference(path);
+      await team.getDocumentReference(path);
   final MissionAddressArguments arguments =
       MissionAddressArguments(documentReference);
   Navigator.pushNamed(context, DetailScreen.routeName, arguments: arguments);

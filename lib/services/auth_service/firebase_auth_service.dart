@@ -40,7 +40,7 @@ class FirebaseAuthService extends AuthService {
   @override
   Future<Team> createTeam() async {
     assert(teamID != null);
-    return await FirestoreTeam.fromTeamID(teamID);
+    return FirestoreTeam.fromTeamID(teamID);
   }
 
   @override
@@ -107,7 +107,7 @@ class FirebaseAuthService extends AuthService {
       // List is empty if user not in database
       if (signInMethods.isEmpty) throw Exception("User is not in database");
     }
-    return await _firebaseAuth.sendSignInLinkToEmail(
+    return _firebaseAuth.sendSignInLinkToEmail(
         email: email,
         actionCodeSettings: auth.ActionCodeSettings(
           url: url,
@@ -121,9 +121,9 @@ class FirebaseAuthService extends AuthService {
 
   @override
   Future<User> signInWithApple({String googleHostedDomain}) async {
-    List<Scope> scopes = const [Scope.fullName, Scope.email];
+    const scopes = [Scope.fullName, Scope.email];
     final apple.AuthorizationResult result = await apple.AppleSignIn.performRequests(
-        [apple.AppleIdRequest(requestedScopes: scopes)]);
+        [const apple.AppleIdRequest(requestedScopes: scopes)]);
     switch (result.status) {
       case apple.AuthorizationStatus.authorized:
         final appleIdCredential = result.credential;
@@ -165,14 +165,16 @@ class FirebaseAuthService extends AuthService {
     final googleSignIn = GoogleSignIn(hostedDomain: googleHostedDomain);
     final googleUser = await googleSignIn.signIn();
 
-    if (googleUser == null)
+    if (googleUser == null) {
       throw PlatformException(
           code: 'ERROR_ABORTED_BY_USER', message: 'Sign in aborted by user');
+    }
     final googleAuth = await googleUser.authentication;
-    if (googleAuth.idToken == null)
+    if (googleAuth.idToken == null) {
       throw PlatformException(
           code: 'ERROR_MISSING_GOOGLE_AUTH_TOKEN',
           message: 'Missing Google Auth Token');
+    }
     final credential = auth.GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
@@ -180,7 +182,7 @@ class FirebaseAuthService extends AuthService {
     final auth.UserCredential authResult =
         await _firebaseAuth.signInWithCredential(credential);
     if (authResult.additionalUserInfo.isNewUser){
-      final fcmToken = await FirebaseMessaging.instance.getToken();
+      final fcmToken = await FirebaseMessaging().getToken();
       _log.info("My token is $fcmToken");
       // TODO - send notification from cloud to user
     }
@@ -200,7 +202,7 @@ class FirebaseAuthService extends AuthService {
     }
     // remove token from Firestore from first, before user signs out
     if (!isWeb) {
-      final fcmToken = await FirebaseMessaging.instance.getToken();
+      final fcmToken = await FirebaseMessaging().getToken();
       _db.collection('users').doc(_firebaseUser.uid).update({
         'tokens': FieldValue.arrayRemove([fcmToken])
       }).then((value) {

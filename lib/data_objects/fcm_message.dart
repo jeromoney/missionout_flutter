@@ -7,8 +7,8 @@ class FCMMessage {
 
   const FCMMessage({@required this.title, @required this.body});
 
-  factory FCMMessage.fromMessage(RemoteNotification message) => FCMMessage(
-      title: message.title,
-      body: message.body,
-    );
+  // factory FCMMessage.fromMessage(RemoteNotification message) => FCMMessage(
+  //     title: message.title,
+  //     body: message.body,
+  //   );
 }
