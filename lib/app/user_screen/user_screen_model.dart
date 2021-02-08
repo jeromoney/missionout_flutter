@@ -39,29 +39,12 @@ class UserScreenModel {
       return false;
     }
     if (isAndroid) {
-      return false;
+      return true;
     }
     if (isIOS) {
       return true;
     }
     return false;
-  }
-
-  // ignore: avoid_positional_boolean_parameters
-  Future doNotDisturbOverride(bool value) async {
-    if (isWeb) {
-      return;
-    } else if (isAndroid) {
-      return;
-    } else if (isIOS) {
-      try {
-        final int result =
-            await _platform.invokeMethod("requestCriticalAlertEntitlement");
-        _logger.info("Here my result: $result");
-      } on PlatformException catch (e) {
-        _logger.warning("Failed to set IOS critical alert entitlement: $e");
-      }
-    }
   }
 
   void displayDNDInfoText() {
@@ -90,17 +73,28 @@ class UserScreenModel {
   // ignore: non_constant_identifier_names
   Future DNDButtonAction() async {
     if (isIOS) {
-      await allowIos();
+      await _allowIos();
       return;
     }
     if (isAndroid) {
-      // go go to page
+      await _goToAndroidAppSettings();
       return;
     }
     return;
   }
+  
+  Future _goToAndroidAppSettings() async{
+    _logger.info("Requesting permission for critical alerts");
+    try {
+      final int result =
+      await _platform.invokeMethod("requestCriticalAlertEntitlement");
+      _logger.info("Here my result: $result");
+    } on PlatformException catch (e) {
+      _logger.warning("Failed to set Android critical alert entitlement: $e");
+    }
+  }
 
-  Future allowIos() async {
+  Future _allowIos() async {
     _logger.info("Requesting permission for critical alerts");
     try {
       final int result =

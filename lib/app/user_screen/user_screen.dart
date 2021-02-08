@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-import 'package:logging/logging.dart';
 import 'package:missionout/app/my_appbar/my_appbar.dart';
 import 'package:missionout/app/user_screen/user_screen_model.dart';
 import 'package:missionout/constants/strings.dart';
-import 'package:missionout/core/platforms.dart';
 import 'package:missionout/data_objects/phone_number_record.dart';
 
 class UserScreen extends StatefulWidget {
@@ -16,8 +14,6 @@ class UserScreen extends StatefulWidget {
 }
 
 class _UserScreenState extends State<UserScreen> {
-  bool dndSwitch = false;
-
   @override
   Widget build(BuildContext context) {
     final model = UserScreenModel(context);
@@ -44,11 +40,17 @@ class _UserScreenState extends State<UserScreen> {
                     const Text("Override Do Not Disturb"),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: GestureDetector(onTap: model.displayDNDInfoText, child: const Icon(Icons.info_outline)),
+                      child: GestureDetector(
+                          onTap: model.displayDNDInfoText,
+                          child: const Icon(Icons.info_outline)),
                     ),
                   ],
                 ),
-                trailing: _DoNotDisturbSwitch(dndSwitch: dndSwitch),
+                trailing: MaterialButton(
+                    onPressed: model.isDNDOverridePossible
+                        ? model.DNDButtonAction
+                        : null,
+                    child: const Text("System Settings")),
               ),
               ListTile(
                 leading: const Icon(Icons.email),
@@ -132,45 +134,5 @@ class _UserScreenState extends State<UserScreen> {
         child: const Icon(Icons.edit),
       ),
     );
-  }
-}
-
-class _DoNotDisturbSwitch extends StatefulWidget {
-  const _DoNotDisturbSwitch({
-    Key key,
-    @required this.dndSwitch,
-  }) : super(key: key);
-  final bool dndSwitch;
-
-  @override
-  __DoNotDisturbSwitchState createState() => __DoNotDisturbSwitchState();
-}
-
-class __DoNotDisturbSwitchState extends State<_DoNotDisturbSwitch>
-    with WidgetsBindingObserver {
-  final _logger = Logger("__DoNotDisturbSwitchState");
-  bool _isNotificationPolicyAccessGranted = false;
-
-  @override
-  void initState() {
-    super.initState();
-    updateUI();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final model = UserScreenModel(context);
-    return MaterialButton(onPressed: model.DNDButtonAction, child: Text("System Settings"));
-    return Switch(
-      value: _isNotificationPolicyAccessGranted,
-      onChanged:
-          model.doNotDisturbOverride,
-    );
-  }
-
-  Future updateUI() async {
-    if (!isAndroid) {
-      return;
-    }
   }
 }
