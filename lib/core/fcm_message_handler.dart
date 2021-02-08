@@ -26,7 +26,7 @@ class FCMMessageHandler {
         InitializationSettings(
             android: initializationSettingsAndroid,
             iOS: initializationSettingsIOS);
-    flutterLocalNotificationsPlugin.initialize(initializationSettings);
+    //flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
   static Future initializeAndroidChannel() async {

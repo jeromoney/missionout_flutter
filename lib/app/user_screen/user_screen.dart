@@ -39,10 +39,15 @@ class _UserScreenState extends State<UserScreen> {
               ),
               ListTile(
                 leading: const Icon(Icons.do_not_disturb),
-                title: GestureDetector(
-                    key: const Key("Do Not Disturb"),
-                    onTap: model.doNotDisturbTextBehavior,
-                    child: const Text("Do Not Disturb Override")),
+                title: Wrap(
+                  children: [
+                    const Text("Override Do Not Disturb"),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: GestureDetector(onTap: model.displayDNDInfoText, child: const Icon(Icons.info_outline)),
+                    ),
+                  ],
+                ),
                 trailing: _DoNotDisturbSwitch(dndSwitch: dndSwitch),
               ),
               ListTile(
@@ -155,10 +160,11 @@ class __DoNotDisturbSwitchState extends State<_DoNotDisturbSwitch>
   @override
   Widget build(BuildContext context) {
     final model = UserScreenModel(context);
+    return MaterialButton(onPressed: model.DNDButtonAction, child: Text("System Settings"));
     return Switch(
       value: _isNotificationPolicyAccessGranted,
       onChanged:
-          model.isDNDOverridePossible ? model.doNotDisturbOverride : null,
+          model.doNotDisturbOverride,
     );
   }
 

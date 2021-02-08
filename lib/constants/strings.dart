@@ -4,9 +4,10 @@ class Strings {
   static const appName = 'MissionOut';
 
   // Android Channel Information
-  static const channelId ='mission_pages';
+  static const channelId = 'mission_pages';
   static const channelName = 'Mission Pages';
-  static const channelDescription = 'This channel is used to page out missions.';
+  static const channelDescription =
+      'This channel is used to page out missions.';
 
   // Generic strings
   static const ok = 'OK';
@@ -14,14 +15,12 @@ class Strings {
 
   // Logout
   static const logout = 'Logout';
-  static const logoutAreYouSure =
-      'Are you sure that you want to logout?';
+  static const logoutAreYouSure = 'Are you sure that you want to logout?';
   static const logoutFailed = 'Logout failed';
 
   // Sign In Page
   static const signIn = 'Sign in';
-  static const signInWithEmailPassword =
-      'Sign in with email and password';
+  static const signInWithEmailPassword = 'Sign in with email and password';
   static const signInWithEmailLink = 'Sign in with email link';
   static const signInWithFacebook = 'Sign in with Facebook';
   static const signInWithGoogle = 'Sign in with Google';
@@ -41,8 +40,7 @@ class Strings {
   static const sendResetLink = 'Send Reset Link';
   static const backToSignIn = 'Back to sign in';
   static const resetLinkSentTitle = 'Reset link sent';
-  static const resetLinkSentMessage =
-      'Check your email to reset your password';
+  static const resetLinkSentMessage = 'Check your email to reset your password';
   static const emailLabel = 'Email';
   static const emailHint = 'test@test.com';
   static const password8CharactersLabel = 'Password (8+ characters)';
@@ -66,8 +64,7 @@ class Strings {
       'Please submit your email address again to receive a new activation link.';
   static const userAlreadySignedIn =
       'Received an activation link but you are already signed in.';
-  static const isNotSignInWithEmailLinkMessage =
-      'Invalid activation link';
+  static const isNotSignInWithEmailLinkMessage = 'Invalid activation link';
 
   // Home page
   static const homePage = 'Home Page';
@@ -88,8 +85,7 @@ class Strings {
 
   // User Screen
   static const userScreenTitle = 'Profile';
-  static const phoneNumberError =
-      'Please correct errors in phone numbers';
+  static const phoneNumberError = 'Please correct errors in phone numbers';
   static const submit = 'Submit';
   static const anonymousName = 'anonymous';
   static const anonymousEmail = 'unknown email';
@@ -101,6 +97,10 @@ class Strings {
             
             In general, the setting will be located Settings >> Apps & Notification >> Notifications >> MissionOut >> Mission Pages >> Advanced >> Override Do Not Disturb
             """;
-
-
+  static const iOSDNDTitle = "Make it loud";
+  static const iOSDNDInfo = """
+  Critical Alerts will bypass volume and Do Not Disturb settings. These alerts are enabled by clicking on the button to the right.
+  
+  These loud alerts are disabled by going to Settings >> MissionOut >> Notifications >> Allow Critical Alerts. The location might vary slightly.
+  """;
 }
