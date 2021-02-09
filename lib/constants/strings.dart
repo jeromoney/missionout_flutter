@@ -93,9 +93,8 @@ class Strings {
       'Error occurred while submitting phone number.';
   static const androidDNDInfoTitle = "Android info";
   static const androidDNDInfo = """
-            On Android devices, Override Do Not Disturb is granted through the system Settings. Search for your phone model for specific directions.
-            
-            In general, the setting will be located Settings >> Apps & Notification >> Notifications >> MissionOut >> Mission Pages >> Advanced >> Override Do Not Disturb
+            On Android devices, Overriding Do Not Disturb is granted through the system Settings.
+            Click on System Settings >> Mission Pages >> Advanced >> Override Do Not Disturb
             """;
   static const iOSDNDTitle = "Make it loud";
   static const iOSDNDInfo = """

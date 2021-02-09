@@ -47,6 +47,7 @@ class _UserScreenState extends State<UserScreen> {
                   ],
                 ),
                 trailing: MaterialButton(
+                    key: const Key("Do Not Disturb"),
                     onPressed: model.isDNDOverridePossible
                         ? model.DNDButtonAction
                         : null,
