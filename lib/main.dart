@@ -5,10 +5,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logging/logging.dart';
 import 'package:missionout/app/auth_widget.dart';
 import 'package:missionout/app/auth_widget_builder.dart';
-import 'package:missionout/communication/communication_plugin.dart';
-import 'package:missionout/communication/firebase_cloud_messaging_communication_plugin.dart';
-import 'package:missionout/communication/firebase_communication_plugin.dart';
-import 'package:missionout/communication/flutter_local_notifications_communication_plugin.dart';
 import 'package:missionout/core/global_navigator_key.dart';
 import 'package:missionout/core/platforms.dart';
 import 'package:missionout/data_objects/is_loading_notifier.dart';
@@ -22,6 +18,7 @@ import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
 import 'app/sign_in/sign_in_manager.dart';
+import 'communication_plugin/communication_plugin.dart';
 
 Future main() async {
   final tuple = await appSetup();
@@ -115,11 +112,6 @@ Future<Tuple2<AppleSignInAvailable, NotificationAppLaunchDetails>>
   WidgetsFlutterBinding.ensureInitialized();
   // Apple sign in is only available on iOS devices, so let's check that right away.
   final appleSignInAvailable = AppleSignInAvailable.check();
-  final List<CommunicationPlugin> communicationPlugins = [
-    FirebaseCloudMessagingCommunicationPlugin(),
-    FirebaseCommunicationPlugin(),
-    FlutterLocalNotificationsCommunicationPlugin()
-  ];
   for (final plugin in communicationPlugins) {
     await plugin.init();
   }

@@ -1,13 +1,11 @@
 import 'package:apple_sign_in/apple_sign_in.dart' as apple;
 import 'package:apple_sign_in/scope.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logging/logging.dart';
-import 'package:missionout/core/platforms.dart';
+import 'package:missionout/communication_plugin/communication_plugin.dart';
 import 'package:missionout/services/auth_service/auth_service.dart';
 import 'package:missionout/services/team/firestore_team.dart';
 import 'package:missionout/services/team/team.dart';
@@ -17,7 +15,6 @@ import 'package:missionout/services/user/user.dart';
 class FirebaseAuthService extends AuthService {
   final _log = Logger('FirebaseAuthService');
   final auth.FirebaseAuth _firebaseAuth = auth.FirebaseAuth.instance;
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
   auth.User _firebaseUser;
   String teamID;
 
@@ -181,11 +178,6 @@ class FirebaseAuthService extends AuthService {
     );
     final auth.UserCredential authResult =
         await _firebaseAuth.signInWithCredential(credential);
-    if (authResult.additionalUserInfo.isNewUser){
-      final fcmToken = await FirebaseMessaging().getToken();
-      _log.info("My token is $fcmToken");
-      // TODO - send notification from cloud to user
-    }
     return _userFromFirebase(authResult.user);
   }
 
@@ -200,17 +192,10 @@ class FirebaseAuthService extends AuthService {
     if (_firebaseUser == null) {
       throw StateError("Signing out a user that is null");
     }
-    // remove token from Firestore from first, before user signs out
-    if (!isWeb) {
-      final fcmToken = await FirebaseMessaging().getToken();
-      _db.collection('users').doc(_firebaseUser.uid).update({
-        'tokens': FieldValue.arrayRemove([fcmToken])
-      }).then((value) {
-        _log.info('Removed token to user document');
-      }).catchError((error) {
-        _log.warning('Error removing token from user document', error);
-      });
+    for (final plugin in communicationPlugins) {
+      await plugin.signOut();
     }
+
     await GoogleSignIn().signOut();
     await _firebaseAuth.signOut();
   }

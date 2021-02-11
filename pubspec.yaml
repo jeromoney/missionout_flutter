@@ -33,6 +33,7 @@ dependencies:
   firebase_messaging: ^7.0.3
   flutter_auth_buttons: ^0.10.0
   flutter_local_notifications: ^4.0.1
+  flutter_ringtone_player: ^2.0.0
   flutter_secure_storage: ^3.3.1+1
   get: ^3.24.0
   google_maps_flutter: ^1.2.0

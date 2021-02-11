@@ -1,6 +1,6 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:logging/logging.dart';
-import 'package:missionout/communication/communication_plugin.dart';
+import 'package:missionout/communication_plugin/communication_plugin.dart';
 import 'package:missionout/constants/strings.dart';
 
 class FlutterLocalNotificationsCommunicationPlugin extends CommunicationPlugin {
@@ -46,4 +46,8 @@ class FlutterLocalNotificationsCommunicationPlugin extends CommunicationPlugin {
             AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
   }
+
+  @override
+  // ignore: missing_return
+  Future signOut() {}
 }
