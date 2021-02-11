@@ -1,22 +1,23 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:logging/logging.dart';
+import 'package:missionout/communication/communication_plugin.dart';
 import 'package:missionout/constants/strings.dart';
 
-class FCMMessageHandler {
-  final _logger = Logger("FCMMessageHandler");
-
-  FCMMessageHandler() {
-    _initState();
-  }
-
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-
-  void _initState() {
-    _firebaseMessaging.requestNotificationPermissions();
-    initializeAndroidChannel();
-
+class FlutterLocalNotificationsCommunicationPlugin extends CommunicationPlugin {
+  @override
+  Future init() async {
+    final log = Logger("FlutterLocalNotificationsInitializer");
     final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+    final details =
+        await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+    log.info("Received FCM: ${details.payload}");
+    log.info(
+        "Was app opened by notification: ${details.didNotificationLaunchApp}");
+    // Initialize receiving FCM messages
+
+    // android only
+    await _initializeAndroidChannel();
 
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('notification_logo');
@@ -26,10 +27,10 @@ class FCMMessageHandler {
         InitializationSettings(
             android: initializationSettingsAndroid,
             iOS: initializationSettingsIOS);
-    //flutterLocalNotificationsPlugin.initialize(initializationSettings);
+    flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
-  static Future initializeAndroidChannel() async {
+  static Future _initializeAndroidChannel() async {
     const AndroidNotificationChannel channel = AndroidNotificationChannel(
         Strings.channelId, // id
         Strings.channelName, // title

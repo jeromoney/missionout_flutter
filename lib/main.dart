@@ -1,4 +1,3 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -6,7 +5,10 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logging/logging.dart';
 import 'package:missionout/app/auth_widget.dart';
 import 'package:missionout/app/auth_widget_builder.dart';
-import 'package:missionout/core/fcm_message_handler.dart';
+import 'package:missionout/communication/communication_plugin.dart';
+import 'package:missionout/communication/firebase_cloud_messaging_communication_plugin.dart';
+import 'package:missionout/communication/firebase_communication_plugin.dart';
+import 'package:missionout/communication/flutter_local_notifications_communication_plugin.dart';
 import 'package:missionout/core/global_navigator_key.dart';
 import 'package:missionout/core/platforms.dart';
 import 'package:missionout/data_objects/is_loading_notifier.dart';
@@ -18,6 +20,7 @@ import 'package:missionout/services/firebase_link_handler.dart';
 import 'package:missionout/services/user/user.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
+
 import 'app/sign_in/sign_in_manager.dart';
 
 Future main() async {
@@ -33,14 +36,15 @@ class MyApp extends StatelessWidget {
       {this.initialAuthServiceType = AuthServiceType.firebase,
       this.appleSignInAvailable,
       this.notificationAppLaunchDetails,
-        //TODO - I shouldn't have run in demo mode, instead demo mode should be
-        // started by changing the initialAuthServiceType
+      //TODO - I shouldn't have run in demo mode, instead demo mode should be
+      // started by changing the initialAuthServiceType
       this.runInDemoMode = false});
 
   final AuthServiceType initialAuthServiceType;
   final AppleSignInAvailable appleSignInAvailable;
   final NotificationAppLaunchDetails notificationAppLaunchDetails;
   final bool runInDemoMode;
+
   @override
   Widget build(BuildContext context) => MultiProvider(
           providers: [
@@ -111,18 +115,13 @@ Future<Tuple2<AppleSignInAvailable, NotificationAppLaunchDetails>>
   WidgetsFlutterBinding.ensureInitialized();
   // Apple sign in is only available on iOS devices, so let's check that right away.
   final appleSignInAvailable = AppleSignInAvailable.check();
-  await Firebase.initializeApp();
-  NotificationAppLaunchDetails details;
-  if (!isWeb) {
-    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-        FlutterLocalNotificationsPlugin();
-    details =
-        await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
-    log.info("Received FCM: ${details.payload}");
-    log.info(
-        "Was app opened by notification: ${details.didNotificationLaunchApp}");
-    // Initialize receiving FCM messages
-    FCMMessageHandler();
+  final List<CommunicationPlugin> communicationPlugins = [
+    FirebaseCloudMessagingCommunicationPlugin(),
+    FirebaseCommunicationPlugin(),
+    FlutterLocalNotificationsCommunicationPlugin()
+  ];
+  for (final plugin in communicationPlugins) {
+    await plugin.init();
   }
-  return Tuple2(appleSignInAvailable, details);
+  return Tuple2(appleSignInAvailable, null);
 }

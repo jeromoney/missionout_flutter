@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:missionout/app/detail_screen/detail_screen.dart';
 import 'package:missionout/app/editor_screen/editor_screen.dart';
 import 'package:missionout/app/overview_screen/overview_screen.dart';
@@ -41,7 +42,7 @@ class MissionOutApp extends StatelessWidget {
         break;
     }
 
-    return MaterialApp(
+    return GetMaterialApp(
       navigatorKey: navKey,
       title: 'Mission Out',
       theme: ThemeData(primarySwatch: Colors.blueGrey),
