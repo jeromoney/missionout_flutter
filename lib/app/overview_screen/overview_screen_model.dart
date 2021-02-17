@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:eraser/eraser.dart';
+//import 'package:eraser/eraser.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/app/create_screen/create_screen.dart';
 import 'package:missionout/app/detail_screen/detail_screen.dart';
@@ -34,7 +34,7 @@ class OverviewScreenModel {
   static Future clearBadges() async {
     // Eraser code will crash web apps
     if (isWeb) return;
-    Eraser.resetBadgeCountAndRemoveNotificationsFromCenter();
+    //Eraser.resetBadgeCountAndRemoveNotificationsFromCenter();
   }
 }
 

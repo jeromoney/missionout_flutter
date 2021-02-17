@@ -15,6 +15,7 @@ import 'package:missionout/services/email_secure_store.dart';
 import 'package:missionout/services/firebase_link_handler.dart';
 import 'package:missionout/services/user/user.dart';
 import 'package:provider/provider.dart';
+import 'package:pushy_flutter/pushy_flutter.dart';
 import 'package:tuple/tuple.dart';
 
 import 'app/sign_in/sign_in_manager.dart';
@@ -110,6 +111,7 @@ Future<Tuple2<AppleSignInAvailable, NotificationAppLaunchDetails>>
   log.info("Running missionout");
   // Fix for: Unhandled Exception: ServicesBinding.defaultBinaryMessenger was accessed before the binding was initialized.
   WidgetsFlutterBinding.ensureInitialized();
+  Pushy.listen();
   // Apple sign in is only available on iOS devices, so let's check that right away.
   final appleSignInAvailable = AppleSignInAvailable.check();
   for (final plugin in communicationPlugins) {

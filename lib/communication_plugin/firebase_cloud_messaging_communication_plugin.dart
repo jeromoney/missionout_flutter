@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
-import 'package:get/get.dart';
+import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
 import 'package:logging/logging.dart';
 import 'package:missionout/communication_plugin/communication_plugin.dart';
+import 'package:missionout/communication_plugin/flutter_local_notifications_communication_plugin.dart';
 import 'package:missionout/core/platforms.dart';
 
 class FirebaseCloudMessagingCommunicationPlugin extends CommunicationPlugin {
@@ -17,8 +17,9 @@ class FirebaseCloudMessagingCommunicationPlugin extends CommunicationPlugin {
     firebaseMessaging.configure(
         onMessage: (Map<String, dynamic> message) async {
           _logger.info("onMessage $message");
-          FlutterRingtonePlayer.playNotification();
-          Get.snackbar("notification title", message.toString());
+          final notification = RemoteMessage.fromMap(message)?.notification;
+          FlutterLocalNotificationsCommunicationPlugin.displayNotification(
+              notification);
         },
         onResume: (Map<String, dynamic> message) async {
           _logger.info("onResume $message");

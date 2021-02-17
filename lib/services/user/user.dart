@@ -26,9 +26,16 @@ abstract class User with ChangeNotifier {
   final bool isEditor;
   PhoneNumber voicePhoneNumber;
   PhoneNumber mobilePhoneNumber;
+  bool enableIOSCriticalAlerts;
+  double iOSCriticalAlertsVolume;
+  String iOSSound;
 
   void updatePhoneNumber(
       {@required PhoneNumber phoneNumber, @required PhoneType type});
+
+  Future<bool> setEnableIOSCriticalAlerts({@required bool enable});
+
+  Future setIOSCriticalAlertsVolume({@required double volume});
 
   updateDisplayName({@required String displayName});
 

@@ -26,16 +26,15 @@ dependencies:
   cloud_firestore: ^0.14.4
   device_info: ^1.0.0
   email_validator: ^1.0.0
-  eraser: ^1.0.1
   firebase_auth: ^0.18.4+1
   firebase_core:  ^0.5.3
   firebase_dynamic_links: ^0.6.3
   firebase_messaging: ^7.0.3
+  firebase_messaging_platform_interface: ^1.0.0-dev.1
   flutter_auth_buttons: ^0.10.0
   flutter_local_notifications: ^4.0.1
   flutter_ringtone_player: ^2.0.0
   flutter_secure_storage: ^3.3.1+1
-  get: ^3.24.0
   google_maps_flutter: ^1.2.0
   google_maps_flutter_web: ^0.1.0 #At some point, this library should be included in google_maps_flutter
   google_sign_in: ^4.5.9
@@ -46,6 +45,7 @@ dependencies:
   package_info: ^0.4.0
   phone_number: ^0.8.1
   provider: ^4.3.3
+  pushy_flutter: ^1.1.6
   tel_input: ^0.2.2
   time_ago_provider: ^3.2.0
   tuple: ^1.0.3

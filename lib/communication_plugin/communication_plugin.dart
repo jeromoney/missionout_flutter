@@ -1,3 +1,5 @@
+import 'package:missionout/communication_plugin/pushy_communication_plugin.dart';
+
 import 'firebase_cloud_messaging_communication_plugin.dart';
 import 'firebase_communication_plugin.dart';
 import 'flutter_local_notifications_communication_plugin.dart';
@@ -10,5 +12,6 @@ abstract class CommunicationPlugin{
 final List<CommunicationPlugin> communicationPlugins = [
  FirebaseCloudMessagingCommunicationPlugin(),
  FirebaseCommunicationPlugin(),
- FlutterLocalNotificationsCommunicationPlugin()
+ FlutterLocalNotificationsCommunicationPlugin(),
+ PushyCommunicationPlugin()
 ];

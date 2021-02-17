@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:missionout/app/my_appbar/my_appbar.dart';
+import 'package:missionout/app/user_screen/android_options_user_screen.dart';
+import 'package:missionout/app/user_screen/ios_options_user_screen.dart';
 import 'package:missionout/app/user_screen/user_screen_model.dart';
 import 'package:missionout/constants/strings.dart';
+import 'package:missionout/core/platforms.dart';
 import 'package:missionout/data_objects/phone_number_record.dart';
 
 class UserScreen extends StatefulWidget {
@@ -34,29 +37,10 @@ class _UserScreenState extends State<UserScreen> {
                 title: Text(model.displayName),
               ),
               ListTile(
-                leading: const Icon(Icons.do_not_disturb),
-                title: Wrap(
-                  children: [
-                    const Text("Override Do Not Disturb"),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: GestureDetector(
-                          onTap: model.displayDNDInfoText,
-                          child: const Icon(Icons.info_outline)),
-                    ),
-                  ],
-                ),
-                trailing: MaterialButton(
-                    key: const Key("Do Not Disturb"),
-                    onPressed: model.isDNDOverridePossible
-                        ? model.DNDButtonAction
-                        : null,
-                    child: const Text("System Settings")),
-              ),
-              ListTile(
                 leading: const Icon(Icons.email),
                 title: Text(model.email),
               ),
+              _AdvancedOptions(),
               const Divider(
                 thickness: 2,
               ),
@@ -137,3 +121,37 @@ class _UserScreenState extends State<UserScreen> {
     );
   }
 }
+
+class _AdvancedOptions extends StatefulWidget {
+  @override
+  __AdvancedOptionsState createState() => __AdvancedOptionsState();
+}
+
+class __AdvancedOptionsState extends State<_AdvancedOptions> {
+  bool _optionsDisplayed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    if (isWeb) {
+      return Container();
+    }
+    if (_optionsDisplayed) {
+      if (isIOS) {
+        return IOSOptionsUserScreen();
+      } else if (isAndroid) {
+        return AndroidOptionsUserScreen();
+      }
+    }
+    return ListTile(
+      leading: const Icon(Icons.keyboard_arrow_down_sharp),
+      title: const Text("Advanced"),
+      subtitle: const Text("Override do not disturb"),
+      onTap: () {
+        setState(() {
+          _optionsDisplayed = true;
+        });
+      },
+    );
+  }
+}
+

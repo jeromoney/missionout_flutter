@@ -5,11 +5,13 @@ import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:logging/logging.dart';
 import 'package:missionout/core/platforms.dart';
 import 'package:missionout/data_objects/phone_number_record.dart';
 import 'package:missionout/services/user/user.dart';
+import 'package:pushy_flutter/pushy_flutter.dart';
 
 const retryCount = 5;
 const retryWait = 3; // seconds
@@ -20,10 +22,13 @@ class MyFirebaseUser with ChangeNotifier implements User {
 
   @override
   String get uid => !firebaseUser.isAnonymous ? firebaseUser.uid : 'anonymous';
+
   @override
   String get email => firebaseUser.email;
+
   @override
   String get photoUrl => firebaseUser.photoURL;
+
   @override
   String get displayName =>
       !firebaseUser.isAnonymous ? firebaseUser.displayName : 'anonymous';
@@ -39,12 +44,19 @@ class MyFirebaseUser with ChangeNotifier implements User {
   @override
   PhoneNumber mobilePhoneNumber;
 
+  @override
+  bool enableIOSCriticalAlerts;
+
+  @override
+  double iOSCriticalAlertsVolume;
+  @override
+  String iOSSound;
+
   // Implementation specific variables
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final _log = Logger('MyFirebaseUser');
 
-  static Future<MyFirebaseUser> fromFirebaseUser(
-      auth.User firebaseUser) async {
+  static Future<MyFirebaseUser> fromFirebaseUser(auth.User firebaseUser) async {
     if (firebaseUser.isAnonymous) {
       return MyFirebaseUser(
           firebaseUser: firebaseUser, teamID: "demoteam.com", isEditor: true);
@@ -91,10 +103,16 @@ class MyFirebaseUser with ChangeNotifier implements User {
     if (snapshotTeamID == null) {
       log.warning(
           "Unable to identify the team that the user is assigned to. Logging out");
-      throw auth.FirebaseAuthException(code: "5987", message: "User has not been assigned to a team yet");
+      throw auth.FirebaseAuthException(
+          code: "5987", message: "User has not been assigned to a team yet");
     }
 
-    final optionalKeys = ["isEditor"];
+    final optionalKeys = [
+      "isEditor",
+      "enableIOSCriticalAlerts",
+      "iOSCriticalAlertsVolume",
+      "iOSSound"
+    ];
     final isMissingOptionalKey =
         optionalKeys.any((optionalKey) => !data.containsKey(optionalKeys));
     if (isMissingOptionalKey) {
@@ -106,10 +124,28 @@ class MyFirebaseUser with ChangeNotifier implements User {
         ? isEditor = data['isEditor'] as bool
         : isEditor = false;
 
+    bool enableIOSCriticalAlerts;
+    data.containsKey('enableIOSCriticalAlerts')
+        ? enableIOSCriticalAlerts = data['enableIOSCriticalAlerts'] as bool
+        : enableIOSCriticalAlerts = false;
+
+    double iOSCriticalAlertsVolume;
+    data.containsKey('iOSCriticalAlertsVolume')
+        ? iOSCriticalAlertsVolume = data['iOSCriticalAlertsVolume'] as double
+        : iOSCriticalAlertsVolume = 1.0;
+
+    String iOSSound;
+    data.containsKey('iOSSound')
+        ? iOSSound = data['iOSSound'] as String
+        : iOSSound = "school_fire_alarm.m4a";
+
     return MyFirebaseUser(
       firebaseUser: firebaseUser,
       teamID: snapshotTeamID,
       isEditor: isEditor,
+      enableIOSCriticalAlerts: enableIOSCriticalAlerts,
+      iOSCriticalAlertsVolume: iOSCriticalAlertsVolume,
+      iOSSound: iOSSound,
     );
   }
 
@@ -119,29 +155,31 @@ class MyFirebaseUser with ChangeNotifier implements User {
       @required this.teamID,
       @required this.isEditor,
       this.mobilePhoneNumber,
-      this.voicePhoneNumber})
+      this.voicePhoneNumber,
+      this.enableIOSCriticalAlerts = false,
+      this.iOSCriticalAlertsVolume,
+      this.iOSSound})
       : assert(teamID != null) {
-    if (isWeb){return;}
+    if (isWeb) {
+      return;
+    }
+    _pushyRegister();
     _addTokenToFirestore();
   }
 
   @override
   Future updatePhoneNumber(
-      {@required PhoneNumber phoneNumber,
-      @required PhoneType type}) async {
+      {@required PhoneNumber phoneNumber, @required PhoneType type}) async {
     type == PhoneType.mobile
         ? mobilePhoneNumber = phoneNumber
         : voicePhoneNumber = phoneNumber;
     await _db.doc('users/$uid').update({
-      type == PhoneType.mobile
-          ? 'mobilePhoneNumber'
-          : 'voicePhoneNumber': {
+      type == PhoneType.mobile ? 'mobilePhoneNumber' : 'voicePhoneNumber': {
         'isoCode': phoneNumber.isoCode,
         'phoneNumber': phoneNumber.phoneNumber
       },
     });
   }
-
 
   Future _addTokenToFirestore() async {
     // Setting up the user will be the responsibility of the server.
@@ -158,8 +196,37 @@ class MyFirebaseUser with ChangeNotifier implements User {
   }
 
   @override
+  Future<bool> setEnableIOSCriticalAlerts({@required bool enable}) async {
+    await _db
+        .collection('users')
+        .doc(uid)
+        .update({"enableIOSCriticalAlerts": enable}).then((value) {
+      _log.info('Updated enableIOSCriticalAlerts to: $enable');
+      enableIOSCriticalAlerts = enable;
+      return enable;
+    }).catchError((error) {
+      _log.warning('Error updating enableIOSCriticalAlerts', error);
+      return enableIOSCriticalAlerts;
+    });
+  }
+
+  @override
+  Future setIOSCriticalAlertsVolume({double volume}) async {
+    await _db
+        .collection('users')
+        .doc(uid)
+        .update({"iOSCriticalAlertsVolume": volume}).then((value) {
+      _log.info('Updated IOSCriticalAlertsVolume to: $volume');
+      iOSCriticalAlertsVolume = volume;
+    }).catchError((error) {
+      _log.warning('Error updating enableIOSCriticalAlerts', error);
+    });
+  }
+
+  @override
   Future updateDisplayName({@required String displayName}) async {
-    await auth.FirebaseAuth.instance.currentUser.updateProfile(displayName: displayName);
+    await auth.FirebaseAuth.instance.currentUser
+        .updateProfile(displayName: displayName);
     firebaseUser = auth.FirebaseAuth.instance.currentUser;
     notifyListeners();
   }
@@ -190,4 +257,23 @@ class MyFirebaseUser with ChangeNotifier implements User {
     assert(documentReference != null);
     await documentReference.delete();
   }
+
+  Future _pushyRegister() async {
+    Pushy.toggleFCM(true);
+    try {
+      final String deviceToken = await Pushy.register();
+      _log.info("My pushy token is: $deviceToken");
+      await _db.collection('users').doc(uid).update({
+        'pushyTokens': FieldValue.arrayUnion([deviceToken])
+      }).then((value) {
+        _log.info('Added Pushy Device token: $deviceToken');
+      }).catchError((error) {
+        _log.warning('Error adding token to user document', error);
+      });
+    } on PlatformException catch (error) {
+      _log.warning("Error accessing Pushy token: $error");
+    }
+  }
+
+
 }

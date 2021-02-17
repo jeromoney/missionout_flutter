@@ -1,3 +1,4 @@
+import 'package:firebase_messaging_platform_interface/src/remote_notification.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:logging/logging.dart';
 import 'package:missionout/communication_plugin/communication_plugin.dart';
@@ -38,7 +39,6 @@ class FlutterLocalNotificationsCommunicationPlugin extends CommunicationPlugin {
         importance: Importance.max,
         sound: RawResourceAndroidNotificationSound(
             "school_fire_alarm")); //This is where the sound is set in android
-
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
         FlutterLocalNotificationsPlugin();
     await flutterLocalNotificationsPlugin
@@ -50,4 +50,30 @@ class FlutterLocalNotificationsCommunicationPlugin extends CommunicationPlugin {
   @override
   // ignore: missing_return
   Future signOut() {}
+
+  static void displayNotification(RemoteNotification notification) {
+    const androidNotificationDetails = AndroidNotificationDetails(
+        'mission_pages_in_app',
+        'Softer Mission Pages',
+        'Pages received while app is open',
+        importance: Importance.max,
+        priority: Priority.high,
+        showWhen: false);
+    const IOSNotificationDetails iosNotificationDetails =
+        IOSNotificationDetails(
+          presentAlert: true,
+          presentSound: true,
+          presentBadge: false,
+        );
+
+    const notificationDetails = NotificationDetails(
+        android: androidNotificationDetails, iOS: iosNotificationDetails);
+    final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    flutterLocalNotificationsPlugin.show(
+      0,
+      notification.title,
+      notification.body,
+      notificationDetails,
+    );
+  }
 }

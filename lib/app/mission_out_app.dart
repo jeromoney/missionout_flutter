@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:missionout/app/detail_screen/detail_screen.dart';
 import 'package:missionout/app/editor_screen/editor_screen.dart';
 import 'package:missionout/app/overview_screen/overview_screen.dart';
@@ -8,27 +7,34 @@ import 'package:missionout/app/sign_in/welcome_screen.dart';
 import 'package:missionout/app/user_edit_screen/user_edit_screen.dart';
 import 'package:missionout/app/user_screen/user_screen.dart';
 import 'package:missionout/common_widgets/platform_alert_dialog.dart';
+import 'package:missionout/communication_plugin/pushy_communication_plugin.dart';
 import 'package:missionout/constants/strings.dart';
 import 'package:missionout/core/global_navigator_key.dart';
 import 'package:missionout/services/auth_service/auth_service.dart';
 import 'package:missionout/services/user/user.dart';
 import 'package:provider/provider.dart';
+import 'package:pushy_flutter/pushy_flutter.dart';
 
 
 enum AppStatus { signedOut, signedIn }
 
-class MissionOutApp extends StatelessWidget {
+class MissionOutApp extends StatefulWidget {
   final AppStatus appStatus;
 
   const MissionOutApp({@required this.appStatus});
 
+  @override
+  _MissionOutAppState createState() => _MissionOutAppState();
+}
+
+class _MissionOutAppState extends State<MissionOutApp> {
   @override
   Widget build(BuildContext context) {
     Widget initialScreen;
     final GlobalKey<NavigatorState> navKey = GlobalKey<NavigatorState>();
     Provider.of<GlobalNavigatorKey>(context, listen: false).navKey = navKey;
 
-    switch (appStatus) {
+    switch (widget.appStatus) {
       case AppStatus.signedOut:
         initialScreen = WelcomeScreen();
         break;
@@ -42,7 +48,7 @@ class MissionOutApp extends StatelessWidget {
         break;
     }
 
-    return GetMaterialApp(
+    return MaterialApp(
       navigatorKey: navKey,
       title: 'Mission Out',
       theme: ThemeData(primarySwatch: Colors.blueGrey),
@@ -60,6 +66,14 @@ class MissionOutApp extends StatelessWidget {
         WaitingScreen.routeName: (context) => WaitingScreen(),
       },
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Start the Pushy service
+    Pushy.setNotificationListener(PushyCommunicationPlugin.backgroundNotificationListener);
   }
 }
 
