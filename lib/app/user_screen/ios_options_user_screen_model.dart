@@ -55,4 +55,8 @@ class IOSOptionsUserScreenModel {
   }
 
   static User getUserStatic(BuildContext context) => context.read<User>();
+
+  void setAlertSound(String alertSound) {
+    user.setIOSSound(alertSound);
+  }
 }

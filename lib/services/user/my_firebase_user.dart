@@ -275,5 +275,16 @@ class MyFirebaseUser with ChangeNotifier implements User {
     }
   }
 
-
+  @override
+  Future setIOSSound(String alertSound) async {
+    await _db
+        .collection('users')
+        .doc(uid)
+        .update({"iOSSound": alertSound}).then((value) {
+      _log.info('Updated iOSSound to: $alertSound');
+      iOSSound = alertSound;
+    }).catchError((error) {
+      _log.warning('Error updating iOSSound', error);
+    });
+  }
 }

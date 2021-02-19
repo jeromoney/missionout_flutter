@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:missionout/constants/strings.dart';
-import 'package:missionout/common_widgets/platform_alert_dialog.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:logging/logging.dart';
 import 'package:missionout/app/user_screen/ios_options_user_screen_model.dart';
+import 'package:missionout/common_widgets/platform_alert_dialog.dart';
+import 'package:missionout/constants/sound_list.dart';
+import 'package:missionout/constants/strings.dart';
 
 class IOSOptionsUserScreen extends StatefulWidget {
   @override
@@ -59,12 +62,12 @@ class _IOSOptionsUserScreenState extends State<IOSOptionsUserScreen>
                         Icons.info_outline,
                         color: Colors.accents[0],
                       ),
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 8.0),
-                      onPressed: (){
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      onPressed: () {
                         PlatformAlertDialog(
                           title: "Enable Critical Alerts in System Settings",
-                          content: "Goto Settings >> Notifications >> MissionOut >> Allow Critical Alerts.\nToggle on.",
+                          content:
+                              "Goto Settings >> Notifications >> MissionOut >> Allow Critical Alerts.\nToggle on.",
                           defaultActionText: Strings.ok,
                         ).show(context);
                       },
@@ -87,17 +90,20 @@ class _IOSOptionsUserScreenState extends State<IOSOptionsUserScreen>
           leading: const Icon(Icons.volume_mute),
           title: Slider(
             value: _sliderValue,
-            onChanged: (value) {
-              setState(() {
-                _sliderValue = value;
-              });
-            },
+            onChanged: _enableIOSCriticalAlertsToggle
+                ? (value) {
+                    setState(() {
+                      _sliderValue = value;
+                    });
+                  }
+                : null,
             onChangeEnd: (value) {
               model.setIOSCriticalAlertsVolume(volume: value);
             },
           ),
           trailing: const Icon(Icons.volume_up),
-          subtitle: const Text("Critical Alert volume"),
+          subtitle:
+              Text("Critical Alert volume: ${_sliderValue.toStringAsFixed(1)}"),
         ),
         ListTile(
           leading: const Icon(Icons.music_note),
@@ -128,45 +134,59 @@ class _MyDropDownMenu extends StatefulWidget {
   __MyDropDownMenuState createState() => __MyDropDownMenuState();
 }
 
-class __MyDropDownMenuState extends State<_MyDropDownMenu> {
-  dynamic dropdownValue = 'Option 3';
+class __MyDropDownMenuState extends State<_MyDropDownMenu> with RouteAware {
+  final _log = Logger("MyDropDownMenu");
+  dynamic dropdownValue = iosSounds[0];
+  final _player = AudioPlayer();
+
+  Future _playRingtone(soundStr) async {
+    _player.stop();
+    final assetPath = 'ios/Runner/sounds/$soundStr';
+    _log.info("Playing sound at: $assetPath");
+    await _player.setAsset(assetPath);
+    _player.play();
+  }
+
+  String _fileNameToDisplayName(String str){
+    String result = str.replaceAll("_", " ");
+    result = result.substring(0,result.length - 4);
+    return '${result[0].toUpperCase()}${result.substring(1)}';
+  }
 
   @override
-  Widget build(BuildContext context) {
-    return DropdownButton(
-      value: dropdownValue,
-      items: const <DropdownMenuItem>[
-        DropdownMenuItem(
-          value: 'Option 1',
-          child: Text('Option 1'),
-        ),
-        DropdownMenuItem(
-          value: 'Option 2',
-          child: Text('Option 2'),
-        ),
-        DropdownMenuItem(
-          value: 'Option 3',
-          child: Text('Option 3'),
-        ),
-        DropdownMenuItem(
-          value: 'Option 4',
-          child: Text('Option 4'),
-        ),
-        DropdownMenuItem(
-          value: 'Option 5',
-          child: Text('Option 5'),
-        ),
-        DropdownMenuItem(
-          value: 'Option 6',
-          child: Text('Option 6'),
-        ),
-      ],
-      onChanged: (value) {
-        setState(() {
-          dropdownValue = value;
-        });
-      },
-    );
+  Widget build(BuildContext context) => DropdownButton(
+        value: dropdownValue,
+        items: iosSounds
+            .map((soundStr) => DropdownMenuItem<String>(
+                  value: soundStr,
+                  child: Text(_fileNameToDisplayName(soundStr)),
+                ))
+            .toList(),
+        onChanged: (alertSound) {
+          _playRingtone(alertSound);
+          setState(() {
+            dropdownValue = alertSound;
+          });
+          final model = IOSOptionsUserScreenModel(context);
+          model.setAlertSound(alertSound as String);
+        },
+      );
+
+  @override
+  void dispose() {
+    _player.stop();
+    super.dispose();
+  }
+
+  @override
+  void didPush() {
+    _player.stop();
+    super.didPush();
+  }
+
+  @override
+  void didPushNext() {
+    _player.stop();
+    super.didPushNext();
   }
 }
-

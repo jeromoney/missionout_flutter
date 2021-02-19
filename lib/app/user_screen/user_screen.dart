@@ -145,7 +145,7 @@ class __AdvancedOptionsState extends State<_AdvancedOptions> {
     return ListTile(
       leading: const Icon(Icons.keyboard_arrow_down_sharp),
       title: const Text("Advanced"),
-      subtitle: const Text("Override do not disturb"),
+      subtitle: const Text("Custom Sounds, Override do not disturb"),
       onTap: () {
         setState(() {
           _optionsDisplayed = true;

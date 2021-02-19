@@ -33,13 +33,13 @@ dependencies:
   firebase_messaging_platform_interface: ^1.0.0-dev.1
   flutter_auth_buttons: ^0.10.0
   flutter_local_notifications: ^4.0.1
-  flutter_ringtone_player: ^2.0.0
   flutter_secure_storage: ^3.3.1+1
   google_maps_flutter: ^1.2.0
   google_maps_flutter_web: ^0.1.0 #At some point, this library should be included in google_maps_flutter
   google_sign_in: ^4.5.9
   intl: ^0.16.1
   intl_phone_number_input: ^0.6.0
+  just_audio: ^0.6.13
   json_annotation: ^3.0.1
   logging: ">=0.11.4 <2.0.0"
   package_info: ^0.4.0
@@ -87,8 +87,7 @@ flutter:
 
   assets:
     - graphics/missionoutlogo.png
-    - sounds/teleportSound.mp4
-    - sounds/teleportSound.m4a
+    - ios/Runner/sounds/
 
 
   # To add assets to your application, add an assets section, like this:

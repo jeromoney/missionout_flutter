@@ -44,4 +44,6 @@ abstract class User with ChangeNotifier {
   Future addPhoneNumber(PhoneNumberRecord phoneNumberRecord);
 
   Future deletePhoneNumber(PhoneNumberRecord phoneNumberRecord);
+
+  Future setIOSSound(String alertSound);
 }
