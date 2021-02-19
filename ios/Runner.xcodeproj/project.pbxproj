@@ -14,12 +14,19 @@
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
+		D00E817425E031D2003785C1 /* celebration.m4a in Resources */ = {isa = PBXBuildFile; fileRef = D00E816C25E031D1003785C1 /* celebration.m4a */; };
+		D00E817525E031D2003785C1 /* evil_plan.m4a in Resources */ = {isa = PBXBuildFile; fileRef = D00E816D25E031D1003785C1 /* evil_plan.m4a */; };
+		D00E817625E031D2003785C1 /* taps.m4a in Resources */ = {isa = PBXBuildFile; fileRef = D00E816E25E031D1003785C1 /* taps.m4a */; };
+		D00E817725E031D2003785C1 /* tocata.m4a in Resources */ = {isa = PBXBuildFile; fileRef = D00E816F25E031D1003785C1 /* tocata.m4a */; };
+		D00E817825E031D2003785C1 /* reveille.m4a in Resources */ = {isa = PBXBuildFile; fileRef = D00E817025E031D2003785C1 /* reveille.m4a */; };
+		D00E817925E031D2003785C1 /* bleeping.m4a in Resources */ = {isa = PBXBuildFile; fileRef = D00E817125E031D2003785C1 /* bleeping.m4a */; };
+		D00E817A25E031D2003785C1 /* life_of_riley.m4a in Resources */ = {isa = PBXBuildFile; fileRef = D00E817225E031D2003785C1 /* life_of_riley.m4a */; };
+		D00E817B25E031D2003785C1 /* ditty_pong.m4a in Resources */ = {isa = PBXBuildFile; fileRef = D00E817325E031D2003785C1 /* ditty_pong.m4a */; };
 		D0C9F2C025DF1FD100DF99A1 /* emergency_alarm.m4a in Resources */ = {isa = PBXBuildFile; fileRef = D0C9F2B425DF1FCF00DF99A1 /* emergency_alarm.m4a */; };
 		D0C9F2C125DF1FD100DF99A1 /* eee_ooo.m4a in Resources */ = {isa = PBXBuildFile; fileRef = D0C9F2B525DF1FCF00DF99A1 /* eee_ooo.m4a */; };
 		D0C9F2C225DF1FD100DF99A1 /* air_raid_siren.m4a in Resources */ = {isa = PBXBuildFile; fileRef = D0C9F2B625DF1FD000DF99A1 /* air_raid_siren.m4a */; };
 		D0C9F2C325DF1FD100DF99A1 /* reggae.m4a in Resources */ = {isa = PBXBuildFile; fileRef = D0C9F2B725DF1FD000DF99A1 /* reggae.m4a */; };
 		D0C9F2C425DF1FD100DF99A1 /* sparrow_alarm.m4a in Resources */ = {isa = PBXBuildFile; fileRef = D0C9F2B825DF1FD000DF99A1 /* sparrow_alarm.m4a */; };
-		D0C9F2C525DF1FD100DF99A1 /* future_alarm.m4a in Resources */ = {isa = PBXBuildFile; fileRef = D0C9F2B925DF1FD000DF99A1 /* future_alarm.m4a */; };
 		D0C9F2C625DF1FD100DF99A1 /* electronic_ringer.m4a in Resources */ = {isa = PBXBuildFile; fileRef = D0C9F2BA25DF1FD000DF99A1 /* electronic_ringer.m4a */; };
 		D0C9F2C925DF1FD100DF99A1 /* industrial_alarm.m4a in Resources */ = {isa = PBXBuildFile; fileRef = D0C9F2BD25DF1FD000DF99A1 /* industrial_alarm.m4a */; };
 		D0C9F2CA25DF1FD100DF99A1 /* rotary_phone.m4a in Resources */ = {isa = PBXBuildFile; fileRef = D0C9F2BE25DF1FD100DF99A1 /* rotary_phone.m4a */; };
@@ -62,12 +69,19 @@
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		ACFE6E4E1A0ADE52DF3F1E7B /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D00E816C25E031D1003785C1 /* celebration.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = celebration.m4a; sourceTree = "<group>"; };
+		D00E816D25E031D1003785C1 /* evil_plan.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = evil_plan.m4a; sourceTree = "<group>"; };
+		D00E816E25E031D1003785C1 /* taps.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = taps.m4a; sourceTree = "<group>"; };
+		D00E816F25E031D1003785C1 /* tocata.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = tocata.m4a; sourceTree = "<group>"; };
+		D00E817025E031D2003785C1 /* reveille.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = reveille.m4a; sourceTree = "<group>"; };
+		D00E817125E031D2003785C1 /* bleeping.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = bleeping.m4a; sourceTree = "<group>"; };
+		D00E817225E031D2003785C1 /* life_of_riley.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = life_of_riley.m4a; sourceTree = "<group>"; };
+		D00E817325E031D2003785C1 /* ditty_pong.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ditty_pong.m4a; sourceTree = "<group>"; };
 		D0C9F2B425DF1FCF00DF99A1 /* emergency_alarm.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = emergency_alarm.m4a; sourceTree = "<group>"; };
 		D0C9F2B525DF1FCF00DF99A1 /* eee_ooo.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = eee_ooo.m4a; sourceTree = "<group>"; };
 		D0C9F2B625DF1FD000DF99A1 /* air_raid_siren.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = air_raid_siren.m4a; sourceTree = "<group>"; };
 		D0C9F2B725DF1FD000DF99A1 /* reggae.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = reggae.m4a; sourceTree = "<group>"; };
 		D0C9F2B825DF1FD000DF99A1 /* sparrow_alarm.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = sparrow_alarm.m4a; sourceTree = "<group>"; };
-		D0C9F2B925DF1FD000DF99A1 /* future_alarm.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = future_alarm.m4a; sourceTree = "<group>"; };
 		D0C9F2BA25DF1FD000DF99A1 /* electronic_ringer.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = electronic_ringer.m4a; sourceTree = "<group>"; };
 		D0C9F2BD25DF1FD000DF99A1 /* industrial_alarm.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = industrial_alarm.m4a; sourceTree = "<group>"; };
 		D0C9F2BE25DF1FD100DF99A1 /* rotary_phone.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = rotary_phone.m4a; sourceTree = "<group>"; };
@@ -152,13 +166,20 @@
 		D0CC0C7925D8E134007E817C /* sounds */ = {
 			isa = PBXGroup;
 			children = (
+				D00E817125E031D2003785C1 /* bleeping.m4a */,
+				D00E816C25E031D1003785C1 /* celebration.m4a */,
+				D00E817325E031D2003785C1 /* ditty_pong.m4a */,
+				D00E816D25E031D1003785C1 /* evil_plan.m4a */,
+				D00E817225E031D2003785C1 /* life_of_riley.m4a */,
+				D00E817025E031D2003785C1 /* reveille.m4a */,
+				D00E816E25E031D1003785C1 /* taps.m4a */,
+				D00E816F25E031D1003785C1 /* tocata.m4a */,
 				D0C9F36C25DF736200DF99A1 /* blue_brick.m4a */,
 				D0C9F36D25DF736300DF99A1 /* wakey_wakey.m4a */,
 				D0C9F2B625DF1FD000DF99A1 /* air_raid_siren.m4a */,
 				D0C9F2B525DF1FCF00DF99A1 /* eee_ooo.m4a */,
 				D0C9F2BA25DF1FD000DF99A1 /* electronic_ringer.m4a */,
 				D0C9F2B425DF1FCF00DF99A1 /* emergency_alarm.m4a */,
-				D0C9F2B925DF1FD000DF99A1 /* future_alarm.m4a */,
 				D0C9F2BD25DF1FD000DF99A1 /* industrial_alarm.m4a */,
 				D0C9F2B725DF1FD000DF99A1 /* reggae.m4a */,
 				D0C9F2BE25DF1FD100DF99A1 /* rotary_phone.m4a */,
@@ -247,20 +268,27 @@
 				D0C9F2C425DF1FD100DF99A1 /* sparrow_alarm.m4a in Resources */,
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
 				D0CC0C7825D8E126007E817C /* GoogleService-Info.plist in Resources */,
+				D00E817825E031D2003785C1 /* reveille.m4a in Resources */,
+				D00E817B25E031D2003785C1 /* ditty_pong.m4a in Resources */,
 				D0C9F36F25DF736300DF99A1 /* wakey_wakey.m4a in Resources */,
 				D0C9F2C025DF1FD100DF99A1 /* emergency_alarm.m4a in Resources */,
+				D00E817725E031D2003785C1 /* tocata.m4a in Resources */,
 				D0C9F2CB25DF1FD100DF99A1 /* voriko.m4a in Resources */,
+				D00E817625E031D2003785C1 /* taps.m4a in Resources */,
+				D00E817525E031D2003785C1 /* evil_plan.m4a in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				D0C9F2C225DF1FD100DF99A1 /* air_raid_siren.m4a in Resources */,
+				D00E817A25E031D2003785C1 /* life_of_riley.m4a in Resources */,
 				D0CC0C7B25D8E134007E817C /* school_fire_alarm.m4a in Resources */,
 				D0C9F2C125DF1FD100DF99A1 /* eee_ooo.m4a in Resources */,
 				D0C9F36E25DF736300DF99A1 /* blue_brick.m4a in Resources */,
 				D0C9F2CA25DF1FD100DF99A1 /* rotary_phone.m4a in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
+				D00E817925E031D2003785C1 /* bleeping.m4a in Resources */,
 				D0C9F2C625DF1FD100DF99A1 /* electronic_ringer.m4a in Resources */,
 				D0C9F2C325DF1FD100DF99A1 /* reggae.m4a in Resources */,
-				D0C9F2C525DF1FD100DF99A1 /* future_alarm.m4a in Resources */,
 				D0C9F2C925DF1FD100DF99A1 /* industrial_alarm.m4a in Resources */,
+				D00E817425E031D2003785C1 /* celebration.m4a in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

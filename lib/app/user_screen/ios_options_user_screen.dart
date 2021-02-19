@@ -134,10 +134,12 @@ class _MyDropDownMenu extends StatefulWidget {
   __MyDropDownMenuState createState() => __MyDropDownMenuState();
 }
 
-class __MyDropDownMenuState extends State<_MyDropDownMenu> with RouteAware {
+class __MyDropDownMenuState extends State<_MyDropDownMenu>  with RouteAware, WidgetsBindingObserver{
   final _log = Logger("MyDropDownMenu");
-  dynamic dropdownValue = iosSounds[0];
+  dynamic _dropdownValue = iosSounds[0];
   final _player = AudioPlayer();
+  String _alertSound;
+  IOSOptionsUserScreenModel _model;
 
   Future _playRingtone(soundStr) async {
     _player.stop();
@@ -154,8 +156,10 @@ class __MyDropDownMenuState extends State<_MyDropDownMenu> with RouteAware {
   }
 
   @override
-  Widget build(BuildContext context) => DropdownButton(
-        value: dropdownValue,
+  Widget build(BuildContext context) {
+    _model = IOSOptionsUserScreenModel(context);
+    return DropdownButton(
+        value: _alertSound,
         items: iosSounds
             .map((soundStr) => DropdownMenuItem<String>(
                   value: soundStr,
@@ -163,18 +167,19 @@ class __MyDropDownMenuState extends State<_MyDropDownMenu> with RouteAware {
                 ))
             .toList(),
         onChanged: (alertSound) {
-          _playRingtone(alertSound);
+         _playRingtone(alertSound);
           setState(() {
-            dropdownValue = alertSound;
+            _alertSound = alertSound as String;
           });
-          final model = IOSOptionsUserScreenModel(context);
-          model.setAlertSound(alertSound as String);
+          _model.setAlertSound(_alertSound);
         },
       );
+  }
 
   @override
   void dispose() {
     _player.stop();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -188,5 +193,18 @@ class __MyDropDownMenuState extends State<_MyDropDownMenu> with RouteAware {
   void didPushNext() {
     _player.stop();
     super.didPushNext();
+  }
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    _player.stop();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    setState(() {
+      _alertSound = IOSOptionsUserScreenModel.getUserStatic(context).iOSSound;
+    });
   }
 }
