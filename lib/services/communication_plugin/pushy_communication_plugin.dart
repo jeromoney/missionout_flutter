@@ -1,11 +1,12 @@
-import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:get/get.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:logging/logging.dart';
 import 'package:missionout/services/communication_plugin/communication_plugin.dart';
 import 'package:pushy_flutter/pushy_flutter.dart';
 
-import 'flutter_local_notifications_communication_plugin.dart';
-
 class PushyCommunicationPlugin extends CommunicationPlugin {
+  final _log = Logger("PushyCommunicationPlugin");
 
   @override
   Future init() {
@@ -21,19 +22,20 @@ class PushyCommunicationPlugin extends CommunicationPlugin {
   // After the import statements, and outside any Widget class (top-level)
 
   static void backgroundNotificationListener(Map<String, dynamic> data) {
+    final _player = AudioPlayer();
+    //final assetPath = 'ios/Runner/sounds/evil_plan.m4a';
+    final assetPath = 'sounds/tong.m4a';
+    _player.setAsset(assetPath);
+    _player.play();
+
 // Print notification payload data
-    print('Received notification: $data');
+    Logger("PushyCommunicationPlugin").info('Received notification: $data');
 // Notification title
-    const notificationTitle = 'MyApp';
+    final  notificationTitle = data['title'] as String ?? "Mission Alert";
 // Attempt to extract the "message" property from the payload: {"message":"Hello World!"}
-    final String notificationText = data['message'] as String ?? 'Hello World!';
-// Android: Displays a system notification
-    final notification =
-        RemoteNotification(title: data.toString(), body: "dfdf");
-    FlutterLocalNotificationsCommunicationPlugin.displayNotification(
-        notification);
-// iOS: Displays an alert dialog
-    Pushy.notify(notificationTitle, notificationText, data);
+    final String notificationText = data['body'] as String ?? "Received mission alert";
+    Get.snackbar(notificationTitle, notificationText);
+
 // Clear iOS app badge number
     Pushy.clearBadge();
   }

@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:missionout/core/platforms.dart';
 import 'package:missionout/services/communication_plugin/communication_plugin.dart';
-import 'package:missionout/services/communication_plugin/flutter_local_notifications_communication_plugin.dart';
 
 class FirebaseCloudMessagingCommunicationPlugin extends CommunicationPlugin {
   final CommunicationPluginHolder parentHolder;
@@ -20,27 +18,8 @@ class FirebaseCloudMessagingCommunicationPlugin extends CommunicationPlugin {
   @override
 // ignore: missing_return
   Future init() {
-    final firebaseMessaging = FirebaseMessaging();
-    firebaseMessaging.configure(
-        onMessage: (Map<String, dynamic> message) async {
-          _logger.info("onMessage $message");
-          final notification = RemoteMessage.fromMap(message)?.notification;
-
-          parentHolder.pushRemoteMessage(notification);
-
-          FlutterLocalNotificationsCommunicationPlugin.displayNotification(
-              notification);
-        },
-        onResume: (Map<String, dynamic> message) async {
-          _logger.info("onResume $message");
-        },
-        onBackgroundMessage: _onBackgroundMessage,
-        onLaunch: (Map<String, dynamic> message) async {
-          _logger.info("onBackgroundMessage $message");
-        });
-
     // iOS only
-    firebaseMessaging.requestNotificationPermissions();
+    FirebaseMessaging.instance.requestPermission();
   }
 
   static Future _onBackgroundMessage(Map<String, dynamic> message) async {

@@ -57,10 +57,11 @@ class UserScreenModel {
       showDialog(
           context: context,
           barrierDismissible: true,
-          child: const AlertDialog(
-            title: Text(Strings.androidDNDInfoTitle),
-            content: SingleChildScrollView(child: Text(Strings.androidDNDInfo)),
-          ));
+          builder: (_) => const AlertDialog(
+                title: Text(Strings.androidDNDInfoTitle),
+                content:
+                    SingleChildScrollView(child: Text(Strings.androidDNDInfo)),
+              ));
     }
   }
 }

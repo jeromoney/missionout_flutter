@@ -13,9 +13,9 @@ abstract class CommunicationPlugin {
 }
 
 class CommunicationPluginHolder {
-  final _controller = StreamController<RemoteNotification>();
+  final _controller = StreamController<RemoteMessage>();
 
-  Stream<RemoteNotification> get remoteMessageStream => _controller.stream;
+  Stream<RemoteMessage> get remoteMessageStream => _controller.stream;
   List<CommunicationPlugin> plugins;
 
   CommunicationPluginHolder() {
@@ -26,5 +26,5 @@ class CommunicationPluginHolder {
     ];
   }
 
-  void pushRemoteMessage(RemoteNotification message) => _controller.sink.add(message);
+  void pushRemoteMessage(RemoteMessage message) => _controller.sink.add(message);
 }

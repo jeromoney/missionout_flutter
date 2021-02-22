@@ -1,4 +1,4 @@
-import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -23,7 +23,7 @@ class BuildMissionResults extends StatefulWidget {
 class _BuildMissionResultsState extends State<BuildMissionResults> with WidgetsBindingObserver {
   OverviewScreenModel model;
   final _log = Logger('_BuildMissionResultsState');
-  Stream<RemoteNotification> _remoteNotificationStream;
+  final Stream<RemoteMessage> _remoteNotificationStream = FirebaseMessaging.onMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -69,13 +69,10 @@ class _BuildMissionResultsState extends State<BuildMissionResults> with WidgetsB
     // Check if app was opened by mission notification
     final NotificationAppLaunchDetails notificationAppLaunchDetails =
         context.read<NotificationAppLaunchDetails>();
-
     // Subscribe to messages from the Communication Plugins
-    final communicationPluginHolder = context.read<CommunicationPluginHolder>();
-    _remoteNotificationStream = communicationPluginHolder.remoteMessageStream;
     _remoteNotificationStream.listen((message) {
-      final snackbar = SnackBar(content: Text(message.title),);
-      Scaffold.of(context).showSnackBar(snackbar);
+      final snackbar = SnackBar(content: Text(message.notification.title),);
+      ScaffoldMessenger.of(context).showSnackBar(snackbar);
     });
 
 
@@ -151,19 +148,6 @@ class OverviewScreen extends StatelessWidget {
   static const routeName = "/overviewScreen";
   @override
   Widget build(BuildContext context) {
-    // If user clicks on notification, navigate to detail screen.
-    // TODO - Refactor and move firestore logic somewhere more appropriate
-    // If app is running and notification is clicked, this function will run
-    // If app is terminated, use getInitialMessage instead
-    // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    //   final documentPath = message.data["missionDocumentPath"] as String;
-    //   final documentReference = FirebaseFirestore.instance.doc(documentPath);
-    //   final missionAddressArguments =
-    //   MissionAddressArguments(documentReference);
-    //   Navigator.pushNamed(context, DetailScreen.routeName,
-    //       arguments: missionAddressArguments);
-    // });
-
     final model = OverviewScreenModel(context);
     if (model.user == null) return const LinearProgressIndicator();
     return Scaffold(
