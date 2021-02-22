@@ -15,9 +15,9 @@ class ResponseSheetViewModel {
   final User _user;
 
   ResponseSheetViewModel(this.context)
-      : this._team = context.watch<Team>(),
-        this._user = context.watch<User>(),
-        this._documentReference = (ModalRoute.of(context).settings.arguments
+      : _team = context.watch<Team>(),
+        _user = context.watch<User>(),
+        _documentReference = (ModalRoute.of(context).settings.arguments
                 as MissionAddressArguments)
             .documentReference;
 
@@ -26,8 +26,9 @@ class ResponseSheetViewModel {
     return _team.fetchResponses(documentReference: _documentReference).map((responseList) {
       // status that match so sort by name
       responseList.sort((response1, response2) {
-        if (response1.status == response2.status)
+        if (response1.status == response2.status) {
           return response1.teamMember.compareTo(response2.teamMember);
+        }
 
         // statuses that are Responding should be first.
         if (response1.status == 'Responding') return -1;

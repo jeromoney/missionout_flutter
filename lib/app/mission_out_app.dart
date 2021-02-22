@@ -7,10 +7,10 @@ import 'package:missionout/app/sign_in/welcome_screen.dart';
 import 'package:missionout/app/user_edit_screen/user_edit_screen.dart';
 import 'package:missionout/app/user_screen/user_screen.dart';
 import 'package:missionout/common_widgets/platform_alert_dialog.dart';
-import 'package:missionout/communication_plugin/pushy_communication_plugin.dart';
 import 'package:missionout/constants/strings.dart';
 import 'package:missionout/core/global_navigator_key.dart';
 import 'package:missionout/services/auth_service/auth_service.dart';
+import 'package:missionout/services/communication_plugin/pushy_communication_plugin.dart';
 import 'package:missionout/services/user/user.dart';
 import 'package:provider/provider.dart';
 import 'package:pushy_flutter/pushy_flutter.dart';
@@ -107,7 +107,7 @@ class _SignOutScreenState extends State<SignOutScreen> {
         defaultActionText: Strings.ok,
       ).show(navKey.currentState.overlay.context);
       final authService = context.read<AuthService>();
-      authService.signOut();
+      authService.signOut(context: context);
     });
   }
 

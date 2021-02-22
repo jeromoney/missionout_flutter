@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:missionout/services/auth_service/auth_service.dart';
 import 'package:missionout/services/auth_service/firebase_auth_service.dart';
 import 'package:missionout/services/auth_service/mock_auth_service.dart';
@@ -127,5 +128,5 @@ class AuthServiceAdapter extends AuthService {
   Future<User> signInWithGoogle({String googleHostedDomain}) => authService.signInWithGoogle(googleHostedDomain: googleHostedDomain);
 
   @override
-  Future<void> signOut() => authService.signOut();
+  Future<void> signOut({@required BuildContext context}) => authService.signOut();
 }

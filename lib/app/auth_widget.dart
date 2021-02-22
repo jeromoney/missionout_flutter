@@ -40,9 +40,11 @@ class _AuthWidgetState extends State<AuthWidget> {
   @override
   void initState() {
     super.initState();
-    if (widget.runInDemoMode) WidgetsBinding.instance.addPostFrameCallback((_) {
+    if (widget.runInDemoMode) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
       final linkHandler = context.read<FirebaseLinkHandler>();
       linkHandler.signInToDemo();
     });
+    }
   }
 }

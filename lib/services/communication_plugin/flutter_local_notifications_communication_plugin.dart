@@ -1,10 +1,17 @@
 import 'package:firebase_messaging_platform_interface/src/remote_notification.dart';
+import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:logging/logging.dart';
-import 'package:missionout/communication_plugin/communication_plugin.dart';
+import 'package:missionout/services/communication_plugin/communication_plugin.dart';
 import 'package:missionout/constants/strings.dart';
 
 class FlutterLocalNotificationsCommunicationPlugin extends CommunicationPlugin {
+
+  FlutterLocalNotificationsCommunicationPlugin(){
+    init();
+  }
+
+
   @override
   Future init() async {
     final log = Logger("FlutterLocalNotificationsInitializer");

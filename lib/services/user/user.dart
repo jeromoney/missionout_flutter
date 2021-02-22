@@ -37,7 +37,7 @@ abstract class User with ChangeNotifier {
 
   Future setIOSCriticalAlertsVolume({@required double volume});
 
-  updateDisplayName({@required String displayName});
+  void updateDisplayName({@required String displayName});
 
   Stream<List<PhoneNumberRecord>> fetchPhoneNumbers();
 

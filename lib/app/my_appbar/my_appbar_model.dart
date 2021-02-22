@@ -13,7 +13,7 @@ class MyAppBarModel {
 
   signOut() {
     final authService = context.read<AuthService>();
-    authService.signOut();
+    authService.signOut(context: context);
   }
 
   navigateToUserOptions() {

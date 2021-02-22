@@ -1,11 +1,13 @@
 import 'package:apple_sign_in/apple_sign_in.dart' as apple;
 import 'package:apple_sign_in/scope.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logging/logging.dart';
-import 'package:missionout/communication_plugin/communication_plugin.dart';
+import 'package:missionout/services/communication_plugin/communication_plugin.dart';
 import 'package:missionout/services/auth_service/auth_service.dart';
 import 'package:missionout/services/team/firestore_team.dart';
 import 'package:missionout/services/team/team.dart';
@@ -188,10 +190,12 @@ class FirebaseAuthService extends AuthService {
   }
 
   @override
-  Future signOut() async {
+  Future signOut({@required BuildContext context}) async {
     if (_firebaseUser == null) {
       throw StateError("Signing out a user that is null");
     }
+
+    final communicationPlugins =  Provider.of<List<CommunicationPlugin>>(context, listen: false);
     for (final plugin in communicationPlugins) {
       await plugin.signOut();
     }

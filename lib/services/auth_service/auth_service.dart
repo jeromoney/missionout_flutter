@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:missionout/services/team/team.dart';
 import 'package:missionout/services/user/user.dart';
@@ -35,7 +36,7 @@ abstract class AuthService {
 
   Future<User> signInWithDemo();
 
-  Future<void> signOut();
+  Future<void> signOut({@required BuildContext context});
 
   Stream<User> get onAuthStateChanged;
 

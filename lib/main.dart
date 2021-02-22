@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -19,7 +20,7 @@ import 'package:pushy_flutter/pushy_flutter.dart';
 import 'package:tuple/tuple.dart';
 
 import 'app/sign_in/sign_in_manager.dart';
-import 'communication_plugin/communication_plugin.dart';
+import 'services/communication_plugin/communication_plugin.dart';
 
 Future main() async {
   final tuple = await appSetup();
@@ -48,6 +49,10 @@ class MyApp extends StatelessWidget {
           providers: [
             Provider<GlobalNavigatorKey>(
               create: (_) => GlobalNavigatorKey(),
+            ),
+            Provider<CommunicationPluginHolder>(
+              create: (_) => CommunicationPluginHolder(),
+              lazy: false,
             ),
             ChangeNotifierProvider<IsLoadingNotifier>(
               create: (_) => IsLoadingNotifier(),
@@ -111,11 +116,9 @@ Future<Tuple2<AppleSignInAvailable, NotificationAppLaunchDetails>>
   log.info("Running missionout");
   // Fix for: Unhandled Exception: ServicesBinding.defaultBinaryMessenger was accessed before the binding was initialized.
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   Pushy.listen();
   // Apple sign in is only available on iOS devices, so let's check that right away.
   final appleSignInAvailable = AppleSignInAvailable.check();
-  for (final plugin in communicationPlugins) {
-    await plugin.init();
-  }
   return Tuple2(appleSignInAvailable, null);
 }

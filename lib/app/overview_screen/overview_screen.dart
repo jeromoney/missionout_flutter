@@ -1,3 +1,4 @@
+import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -6,6 +7,7 @@ import 'package:logging/logging.dart';
 import 'package:missionout/app/my_appbar/my_appbar.dart';
 import 'package:missionout/app/overview_screen/overview_screen_model.dart';
 import 'package:missionout/data_objects/mission.dart';
+import 'package:missionout/services/communication_plugin/communication_plugin.dart';
 import 'package:provider/provider.dart';
 
 class BuildMissionResults extends StatefulWidget {
@@ -21,6 +23,7 @@ class BuildMissionResults extends StatefulWidget {
 class _BuildMissionResultsState extends State<BuildMissionResults> with WidgetsBindingObserver {
   OverviewScreenModel model;
   final _log = Logger('_BuildMissionResultsState');
+  Stream<RemoteNotification> _remoteNotificationStream;
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +69,16 @@ class _BuildMissionResultsState extends State<BuildMissionResults> with WidgetsB
     // Check if app was opened by mission notification
     final NotificationAppLaunchDetails notificationAppLaunchDetails =
         context.read<NotificationAppLaunchDetails>();
+
+    // Subscribe to messages from the Communication Plugins
+    final communicationPluginHolder = context.read<CommunicationPluginHolder>();
+    _remoteNotificationStream = communicationPluginHolder.remoteMessageStream;
+    _remoteNotificationStream.listen((message) {
+      final snackbar = SnackBar(content: Text(message.title),);
+      Scaffold.of(context).showSnackBar(snackbar);
+    });
+
+
     // Need null check for Flutter Web
     if (notificationAppLaunchDetails != null &&
         notificationAppLaunchDetails.didNotificationLaunchApp) {
@@ -90,6 +103,7 @@ class _BuildMissionResultsState extends State<BuildMissionResults> with WidgetsB
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _remoteNotificationStream.drain();
     super.dispose();
   }
 }

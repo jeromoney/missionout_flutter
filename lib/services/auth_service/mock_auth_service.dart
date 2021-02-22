@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:missionout/services/auth_service/auth_service.dart';
 import 'package:missionout/services/team/team.dart';
 import 'package:missionout/services/user/user.dart';
@@ -68,7 +69,7 @@ class MockAuthService extends AuthService {
   }
 
   @override
-  Future<void> signOut() {
+  Future<void> signOut({@required BuildContext context}) {
     // TODO: implement signOut
     throw UnimplementedError();
   }

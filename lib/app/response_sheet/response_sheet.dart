@@ -12,24 +12,25 @@ class ResponseSheet extends StatelessWidget {
           stream: model.teamResponses(),
           builder: (context, snapshot) {
             // waiting
-            if (snapshot.connectionState == ConnectionState.waiting)
-              return LinearProgressIndicator();
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const LinearProgressIndicator();
+            }
             // error
             if (snapshot.data == null) {
-              return Center(
-                child: Text('There was an error.'),
+              return const Center(
                 widthFactor: 2.0,
                 heightFactor: 5.0,
+                child: Text('There was an error.'),
               );
             }
 
             final responses = snapshot.data;
             // no results
-            if (responses.length == 0) {
-              return Center(
-                child: Text('No responses yet.'),
+            if (responses.isEmpty) {
+              return const Center(
                 widthFactor: 2.0,
                 heightFactor: 5.0,
+                child: Text('No responses yet.'),
               );
             }
 
@@ -47,7 +48,7 @@ class ResponseSheet extends StatelessWidget {
 class _BuildResponsesResult extends StatelessWidget {
   final List<Response> responses;
 
-  _BuildResponsesResult({Key key, @required this.responses})
+  const _BuildResponsesResult({Key key, @required this.responses})
       : super(key: key);
 
   @override
@@ -60,11 +61,11 @@ class _BuildResponsesResult extends StatelessWidget {
       firstRow.add(DataRow(cells: <DataCell>[
         DataCell(Text(
           selfResponse.teamMember ?? '',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: const TextStyle(fontWeight: FontWeight.bold),
         )),
         DataCell(Text(
           selfResponse.status ?? '',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: const TextStyle(fontWeight: FontWeight.bold),
         )),
       ]));
     }
@@ -80,7 +81,7 @@ class _BuildResponsesResult extends StatelessWidget {
 
     return SingleChildScrollView(
         child: DataTable(
-      columns: [
+      columns: const [
         DataColumn(label: Text('Team Member')),
         DataColumn(label: Text('Status')),
       ],
