@@ -56,8 +56,9 @@ class __MissionFormState extends State<_MissionForm> {
     return FutureBuilder(
       future: model.getCurrentMission(),
       builder: (_, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting)
-          return CircularProgressIndicator();
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        }
         final mission = snapshot.data as Mission;
         if (mission != null) {
           descriptionController.text = mission.description ?? '';

@@ -28,14 +28,12 @@ Future main() async {
 class MyApp extends StatelessWidget {
   const MyApp(
       {this.initialAuthServiceType = AuthServiceType.firebase,
-      this.appleSignInAvailable,
       this.notificationAppLaunchDetails,
       //TODO - I shouldn't have run in demo mode, instead demo mode should be
       // started by changing the initialAuthServiceType
       this.runInDemoMode = false});
 
   final AuthServiceType initialAuthServiceType;
-  final AppleSignInAvailable appleSignInAvailable;
   final NotificationAppLaunchDetails notificationAppLaunchDetails;
   final bool runInDemoMode;
 

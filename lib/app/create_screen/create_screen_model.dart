@@ -17,17 +17,17 @@ class CreateScreenModel {
   final DocumentReference _documentReference;
 
   CreateScreenModel(this.context)
-      : this._team = context.watch<Team>(),
-        this._user = context.watch<User>(),
-        this._documentReference = context.watch<DocumentReference>();
+      : _team = context.watch<Team>(),
+        _user = context.watch<User>(),
+        _documentReference = context.watch<DocumentReference>();
 
   String get displayName => _user.displayName;
 
   bool get isEditExistingMission => _documentReference != null;
 
-  addPage({@required missionpage.Page page}) => _team.addPage(page: page);
+  Future addPage({@required missionpage.Page page}) => _team.addPage(page: page);
 
-  editMission({@required Mission mission}) async {
+  Future editMission({@required Mission mission}) async {
     final reference = await _team.addMission(mission: mission);
     _navigateToDetail(reference);
   }
@@ -37,7 +37,7 @@ class CreateScreenModel {
         await _team.addMission(mission: mission);
     if (reference == null) {
       // there was an error adding mission to database
-      throw HttpException("Error adding mission to database");
+      throw const HttpException("Error adding mission to database");
     }
     final referencedMission = mission.copyWith(documentReference: reference);
 
@@ -50,7 +50,7 @@ class CreateScreenModel {
     _navigateToDetail(reference);
   }
 
-  _navigateToDetail(DocumentReference reference) {
+  void _navigateToDetail(DocumentReference reference) {
     assert(reference != null);
     final MissionAddressArguments arguments =
         MissionAddressArguments(reference);
@@ -60,8 +60,8 @@ class CreateScreenModel {
   }
 
   Future<Mission> getCurrentMission() async {
-    if (!isEditExistingMission) return Future(null);
-    return await _team
+    if (!isEditExistingMission) return Future(() => null);
+    return _team
         .fetchSingleMission(documentReference: _documentReference)
         .first;
   }

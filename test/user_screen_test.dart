@@ -43,6 +43,6 @@ void main() {
 
     await tester.tap(titleFinder);
     await tester.pumpAndSettle();
-    //expect(find.byWidget(AndroidOptionsUserScreen()), findsOneWidget);
+    expect(find.text("I am some choices for android"), findsOneWidget);
   }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 }

@@ -65,10 +65,10 @@ class _SubmitMissionButtonState extends State<SubmitMissionButton> {
   @override
   Widget build(BuildContext context) {
     _model = CreateScreenModel(context);
-    return RaisedButton(
+    return ElevatedButton(
       onPressed: () async {
         if (Form.of(context).validate()) {
-          Scaffold.of(context).showSnackBar(const SnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content: Text('Processing'),
           ));
           final myMission = _fetchMission();
@@ -80,7 +80,7 @@ class _SubmitMissionButtonState extends State<SubmitMissionButton> {
               await _model.addMission(mission: myMission);
             }
           } on HttpException {
-            Scaffold.of(context).showSnackBar(const SnackBar(
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
               content: Text('Error uploading mission'),
             ));
             return;

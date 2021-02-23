@@ -33,10 +33,10 @@ void main() {
     await tester.enterText(find.byKey(const Key("Need for action")),
         "A sample test need for action");
     await tester.tap(find.byType(SubmitMissionButton));
-    await tester.pumpAndSettle(const Duration(seconds: 5));
+    await tester.pumpAndSettle(const Duration(seconds: 15));
 
-    expect(find.byType(DetailScreen), findsOneWidget);
-    expect(find.text("A sample test mission: $randNumber"), findsOneWidget);
+    await expectLater(find.byType(DetailScreen), findsOneWidget);
+    await expectLater(find.text("A sample test mission: $randNumber"), findsOneWidget);
 
     // Go back to overview page and create a mission with a gps coordinate
     await tester.tap(find.byKey(const Key("back to overview screen")));
@@ -55,10 +55,9 @@ void main() {
     await tester.enterText(
         find.byKey(const Key("Longitude Field")), "-104.3444");
     await tester.tap(find.byType(SubmitMissionButton));
-    await tester.pumpAndSettle(const Duration(seconds: 5));
-
-    expect(find.byType(DetailScreen), findsOneWidget);
-    expect(find.text("A sample test mission: $randNumber"), findsOneWidget);
+    await tester.pumpAndSettle();
+    await expectLater(find.byType(DetailScreen), findsOneWidget);
+    await expectLater(find.text("A sample test mission: $randNumber"), findsOneWidget);
   });
 
   testWidgets("Sign in and then sign out", (WidgetTester tester) async {
@@ -73,7 +72,7 @@ void main() {
 
     expect(find.text("Ok"), findsOneWidget);
     await tester.tap(find.text("Ok"));
-    await tester.pumpAndSettle(const Duration(seconds: 30));
+    await tester.pumpAndSettle();
 
     //TODO -- figure out why it's can't find the welcome page
     //expect(find.text("Read our privacy policy"), findsOneWidget);
