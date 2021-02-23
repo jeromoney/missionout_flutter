@@ -6,7 +6,6 @@ import 'package:missionout/app/user_screen/android_options_user_screen.dart';
 import 'package:missionout/app/user_screen/ios_options_user_screen.dart';
 import 'package:missionout/app/user_screen/user_screen_model.dart';
 import 'package:missionout/constants/strings.dart';
-import 'package:missionout/core/platforms.dart';
 import 'package:missionout/data_objects/phone_number_record.dart';
 
 class UserScreen extends StatefulWidget {
@@ -132,14 +131,14 @@ class __AdvancedOptionsState extends State<_AdvancedOptions> {
 
   @override
   Widget build(BuildContext context) {
-    if (isWeb) {
-      return Container();
-    }
+    final platform = Theme.of(context).platform;
     if (_optionsDisplayed) {
-      if (isIOS) {
+      if (platform == TargetPlatform.iOS) {
         return IOSOptionsUserScreen();
-      } else if (isAndroid) {
+      } else if (platform == TargetPlatform.android) {
         return AndroidOptionsUserScreen();
+      } else {
+        return Container();
       }
     }
     return ListTile(
@@ -154,4 +153,3 @@ class __AdvancedOptionsState extends State<_AdvancedOptions> {
     );
   }
 }
-

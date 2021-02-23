@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:missionout/app/user_edit_screen/user_edit_screen.dart';
-import 'package:missionout/common_widgets/platform_alert_dialog.dart';
 import 'package:missionout/constants/strings.dart';
-import 'package:missionout/core/platforms.dart';
 import 'package:missionout/data_objects/phone_number_record.dart';
 import 'package:missionout/services/team/team.dart';
 import 'package:missionout/services/user/user.dart';
@@ -29,39 +27,12 @@ class UserScreenModel {
       Navigator.pushNamed(context, UserEditScreen.routeName);
 
   bool get isDNDOverridePossible {
-    if (isWeb) {
+    final platform = Theme.of(context).platform;
+    if (platform == TargetPlatform.android || platform == TargetPlatform.iOS) {
+      return true;
+    }
+    else {
       return false;
-    }
-    if (isAndroid) {
-      return true;
-    }
-    if (isIOS) {
-      return true;
-    }
-    return false;
-  }
-
-  void displayDNDInfoText() {
-    if (isWeb) {
-      return;
-    }
-    if (isIOS) {
-      PlatformAlertDialog(
-        defaultActionText: Strings.ok,
-        title: Strings.iOSDNDTitle,
-        content: Strings.iOSDNDInfo,
-      ).show(context);
-      return;
-    }
-    if (isAndroid) {
-      showDialog(
-          context: context,
-          barrierDismissible: true,
-          builder: (_) => const AlertDialog(
-                title: Text(Strings.androidDNDInfoTitle),
-                content:
-                    SingleChildScrollView(child: Text(Strings.androidDNDInfo)),
-              ));
     }
   }
 }

@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-//import 'package:eraser/eraser.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/app/create_screen/create_screen.dart';
 import 'package:missionout/app/detail_screen/detail_screen.dart';
@@ -8,7 +7,7 @@ import 'package:missionout/data_objects/mission_address_arguments.dart';
 import 'package:missionout/services/team/team.dart';
 import 'package:missionout/services/user/user.dart';
 import 'package:provider/provider.dart';
-import 'package:missionout/core/platforms.dart';
+import 'package:pushy_flutter/pushy_flutter.dart';
 
 class OverviewScreenModel {
   final BuildContext context;
@@ -32,9 +31,7 @@ class OverviewScreenModel {
   Future navigateToCreate() => Navigator.of(context).push(CreatePopupRoute());
 
   static Future clearBadges() async {
-    // Eraser code will crash web apps
-    if (isWeb) return;
-    //Eraser.resetBadgeCountAndRemoveNotificationsFromCenter();
+    Pushy.clearBadge();
   }
 }
 

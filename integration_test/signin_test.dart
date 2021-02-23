@@ -1,27 +1,19 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:missionout/app/create_screen/create_screen.dart';
 import 'package:missionout/app/detail_screen/detail_screen.dart';
 import 'package:missionout/app/overview_screen/overview_screen.dart';
-import 'package:missionout/core/platforms.dart';
 import 'package:missionout/main.dart';
-import 'package:missionout/services/apple_sign_in_available.dart';
-import 'package:tuple/tuple.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   testWidgets("Starting app goes to welcome screen",
       (WidgetTester tester) async {
-    final Tuple2<AppleSignInAvailable, NotificationAppLaunchDetails> tuple =
-        await appSetup();
-    await tester.pumpWidget(MyApp(
-      appleSignInAvailable: tuple.item1,
-      notificationAppLaunchDetails: tuple.item2,
-    ));
+    await appSetup();
+    await tester.pumpWidget(const MyApp());
     expect(find.byKey(const Key("Welcome Logo")), findsOneWidget);
   });
 
@@ -90,31 +82,19 @@ void main() {
   testWidgets(
       "Sign in and then go to profile page and click on do not disturb preference",
       (WidgetTester tester) async {
-        await signIn(tester);
-        // Check out the User Screen
-        await tester.tap(find.byKey(const Key('PopupMenuButton')));
-        await tester.pumpAndSettle();
+    await signIn(tester);
+    // Check out the User Screen
+    await tester.tap(find.byKey(const Key('PopupMenuButton')));
+    await tester.pumpAndSettle();
 
-        await tester.tap(find.byKey(const Key("Profile")));
-        await tester.pumpAndSettle();
-
-        await tester.tap(find.byKey(const Key("Do Not Disturb")));
-        await tester.pumpAndSettle();
-
-        // if (isAndroid) {
-        //   //expect(find.text("Android Info"), findsOneWidget);
-        //   await tester.tap(find.byKey(const Key("Profile")));
-        //   await tester.pumpAndSettle();
-        // }
-      });
+    await tester.tap(find.byKey(const Key("Profile")));
+    await tester.pumpAndSettle();
+  });
 }
 
 Future signIn(WidgetTester tester) async {
-  final Tuple2<AppleSignInAvailable, NotificationAppLaunchDetails> tuple =
-      await appSetup();
-  await tester.pumpWidget(MyApp(
-    appleSignInAvailable: tuple.item1,
-    notificationAppLaunchDetails: tuple.item2,
+  await appSetup();
+  await tester.pumpWidget(const MyApp(
     runInDemoMode: true,
   ));
   await tester.pumpAndSettle(const Duration(seconds: 15));

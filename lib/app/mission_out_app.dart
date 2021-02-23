@@ -68,14 +68,6 @@ class _MissionOutAppState extends State<MissionOutApp> {
       },
     );
   }
-
-  @override
-  void initState() {
-    super.initState();
-
-    // Start the Pushy service
-    Pushy.setNotificationListener(PushyCommunicationPlugin.backgroundNotificationListener);
-  }
 }
 
 class WaitingScreen extends StatelessWidget {

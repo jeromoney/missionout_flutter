@@ -195,11 +195,6 @@ class FirebaseAuthService extends AuthService {
       throw StateError("Signing out a user that is null");
     }
 
-    final communicationPlugins =  Provider.of<List<CommunicationPlugin>>(context, listen: false);
-    for (final plugin in communicationPlugins) {
-      await plugin.signOut();
-    }
-
     await GoogleSignIn().signOut();
     await _firebaseAuth.signOut();
   }

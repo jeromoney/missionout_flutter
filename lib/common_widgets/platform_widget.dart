@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:missionout/core/platforms.dart';
 
 abstract class PlatformWidget extends StatelessWidget {
   Widget buildCupertinoWidget(BuildContext context);
@@ -10,7 +9,7 @@ abstract class PlatformWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     // This code is a bit risky. Platforms.isIOS will trigger an exception in web
     // , but it should be caught by Platforms.
-    if (isIOS) return buildCupertinoWidget(context);
+    if (Theme.of(context).platform == TargetPlatform.iOS) return buildCupertinoWidget(context);
     return buildMaterialWidget(context);
   }
 }

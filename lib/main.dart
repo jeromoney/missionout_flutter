@@ -1,5 +1,4 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -8,7 +7,6 @@ import 'package:logging/logging.dart';
 import 'package:missionout/app/auth_widget.dart';
 import 'package:missionout/app/auth_widget_builder.dart';
 import 'package:missionout/core/global_navigator_key.dart';
-import 'package:missionout/core/platforms.dart';
 import 'package:missionout/data_objects/is_loading_notifier.dart';
 import 'package:missionout/services/apple_sign_in_available.dart';
 import 'package:missionout/services/auth_service/auth_service.dart';
@@ -18,17 +16,13 @@ import 'package:missionout/services/firebase_link_handler.dart';
 import 'package:missionout/services/user/user.dart';
 import 'package:provider/provider.dart';
 import 'package:pushy_flutter/pushy_flutter.dart';
-import 'package:tuple/tuple.dart';
 
 import 'app/sign_in/sign_in_manager.dart';
 import 'services/communication_plugin/communication_plugin.dart';
 
 Future main() async {
-  final tuple = await appSetup();
-  runApp(MyApp(
-    appleSignInAvailable: tuple.item1,
-    notificationAppLaunchDetails: tuple.item2,
-  ));
+  await appSetup();
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -58,7 +52,9 @@ class MyApp extends StatelessWidget {
             ChangeNotifierProvider<IsLoadingNotifier>(
               create: (_) => IsLoadingNotifier(),
             ),
-            Provider<AppleSignInAvailable>.value(value: appleSignInAvailable),
+            Provider<AppleSignInAvailable>(
+              create: (context) => AppleSignInAvailable(context),
+            ),
             Provider<NotificationAppLaunchDetails>.value(
                 value: notificationAppLaunchDetails),
             Provider<AuthService>(
@@ -77,10 +73,12 @@ class MyApp extends StatelessWidget {
                     )),
             Provider<EmailSecureStore>(
               lazy: false,
-              create: (_) => isWeb
-                  ? null
-                  : EmailSecureStore(
-                      flutterSecureStorage: const FlutterSecureStorage()),
+              create: (context) =>
+                  (Theme.of(context).platform == TargetPlatform.iOS ||
+                          Theme.of(context).platform == TargetPlatform.android)
+                      ? EmailSecureStore(
+                          flutterSecureStorage: const FlutterSecureStorage())
+                      : null,
             ),
             ProxyProvider2<AuthService, EmailSecureStore, FirebaseLinkHandler>(
               lazy: false,
@@ -106,8 +104,7 @@ class MyApp extends StatelessWidget {
           ));
 }
 
-Future<Tuple2<AppleSignInAvailable, NotificationAppLaunchDetails>>
-    appSetup() async {
+Future appSetup() async {
   Logger.root.level = Level.ALL; // defaults to Level.INFO
   Logger.root.onRecord.listen((record) {
     // ignore: avoid_print
@@ -119,7 +116,4 @@ Future<Tuple2<AppleSignInAvailable, NotificationAppLaunchDetails>>
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   Pushy.listen();
-  // Apple sign in is only available on iOS devices, so let's check that right away.
-  final appleSignInAvailable = AppleSignInAvailable.check();
-  return Tuple2(appleSignInAvailable, null);
 }

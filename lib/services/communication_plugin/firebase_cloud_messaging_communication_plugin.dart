@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
-import 'package:missionout/core/platforms.dart';
 import 'package:missionout/services/communication_plugin/communication_plugin.dart';
 
 class FirebaseCloudMessagingCommunicationPlugin extends CommunicationPlugin {
@@ -30,17 +29,16 @@ class FirebaseCloudMessagingCommunicationPlugin extends CommunicationPlugin {
   @override
   Future signOut() async {
     // remove token from Firestore from first, before user signs out
-    if (!isWeb) {
-      final fcmToken = await FirebaseMessaging().getToken();
-      final FirebaseFirestore db = FirebaseFirestore.instance;
-      final auth.FirebaseAuth _firebaseAuth = auth.FirebaseAuth.instance;
-      db.collection('users').doc(_firebaseAuth.currentUser.uid).update({
-        'tokens': FieldValue.arrayRemove([fcmToken])
-      }).then((value) {
-        _logger.info('Removed token to user document');
-      }).catchError((error) {
-        _logger.warning('Error removing token from user document', error);
-      });
-    }
+    //isWeb
+    final fcmToken = await FirebaseMessaging.instance.getToken();
+    final FirebaseFirestore db = FirebaseFirestore.instance;
+    final auth.FirebaseAuth _firebaseAuth = auth.FirebaseAuth.instance;
+    db.collection('users').doc(_firebaseAuth.currentUser.uid).update({
+      'tokens': FieldValue.arrayRemove([fcmToken])
+    }).then((value) {
+      _logger.info('Removed token to user document');
+    }).catchError((error) {
+      _logger.warning('Error removing token from user document', error);
+    });
   }
 }

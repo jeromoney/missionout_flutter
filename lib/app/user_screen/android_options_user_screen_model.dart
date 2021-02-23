@@ -1,13 +1,14 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';
-import 'package:missionout/core/platforms.dart';
 
 class AndroidOptionsUserScreenModel {
+  final BuildContext context;
   static const _platform =
   MethodChannel('missionout.beaterboofs.com/criticalAlertsEntitlement');
   final _log = Logger("IOSOptionsUserScreenModel");
 
-  AndroidOptionsUserScreenModel():assert(isAndroid);
+  AndroidOptionsUserScreenModel(this.context):assert(Theme.of(context).platform == TargetPlatform.android);
 
   Future _goToAndroidAppSettings() async{
     _log.info("Requesting permission for critical alerts");

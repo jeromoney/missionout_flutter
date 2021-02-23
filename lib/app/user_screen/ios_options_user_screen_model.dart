@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';
-import 'package:missionout/core/platforms.dart';
 import 'package:missionout/services/user/user.dart';
 import 'package:provider/provider.dart';
 
@@ -14,13 +13,12 @@ class IOSOptionsUserScreenModel {
   final User user;
 
   IOSOptionsUserScreenModel(this.context)
-      : assert(isIOS),
+      : assert(Theme.of(context).platform == TargetPlatform.iOS),
         user = context.watch<User>();
 
   // ignore: missing_return
   static Future<int> getCriticalAlertStatus() async {
     final log = Logger("IOSOptionsUserScreenModel");
-    assert(isIOS);
     try {
       final result =
           await _platform.invokeMethod("getCriticalAlertStatus") as int;
@@ -32,7 +30,6 @@ class IOSOptionsUserScreenModel {
   }
 
   Future requestCriticalAlertsIOS() async {
-    assert(isIOS);
     _log.info("Requesting permission for critical alerts");
     try {
       final int result =

@@ -7,7 +7,6 @@ import 'package:logging/logging.dart';
 import 'package:missionout/app/my_appbar/my_appbar.dart';
 import 'package:missionout/app/overview_screen/overview_screen_model.dart';
 import 'package:missionout/data_objects/mission.dart';
-import 'package:missionout/services/communication_plugin/communication_plugin.dart';
 import 'package:provider/provider.dart';
 
 class BuildMissionResults extends StatefulWidget {
@@ -69,13 +68,6 @@ class _BuildMissionResultsState extends State<BuildMissionResults> with WidgetsB
     // Check if app was opened by mission notification
     final NotificationAppLaunchDetails notificationAppLaunchDetails =
         context.read<NotificationAppLaunchDetails>();
-    // Subscribe to messages from the Communication Plugins
-    _remoteNotificationStream.listen((message) {
-      final snackbar = SnackBar(content: Text(message.notification.title),);
-      ScaffoldMessenger.of(context).showSnackBar(snackbar);
-    });
-
-
     // Need null check for Flutter Web
     if (notificationAppLaunchDetails != null &&
         notificationAppLaunchDetails.didNotificationLaunchApp) {

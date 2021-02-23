@@ -9,7 +9,6 @@ import 'package:logging/logging.dart';
 import 'package:missionout/app/sign_in/LoginScreen/log_in_screen.dart';
 import 'package:missionout/constants/secrets.dart';
 import 'package:missionout/core/global_navigator_key.dart';
-import 'package:missionout/core/platforms.dart';
 import 'package:missionout/data_objects/app_setup.dart';
 import 'package:missionout/data_objects/is_loading_notifier.dart';
 import 'package:missionout/services/auth_service/auth_service.dart';
@@ -38,7 +37,8 @@ class FirebaseLinkHandler {
   // when the app is shut down
   Future _initDynamicLinks() async {
     // Web is not supported at the moment
-    if (isWeb) return;
+    if (!(Theme.of(context).platform == TargetPlatform.iOS ||
+        Theme.of(context).platform == TargetPlatform.android)) return;
     final PendingDynamicLinkData dynamicLink =
         await FirebaseDynamicLinks.instance.getInitialLink();
     // handle DynamicLinks if the app is already running

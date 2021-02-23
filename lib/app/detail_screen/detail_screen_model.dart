@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:missionout/app/create_screen/create_screen.dart';
 import 'package:missionout/core/location.dart';
-import 'package:missionout/core/platforms.dart';
 import 'package:missionout/data_objects/mission.dart';
 import 'package:missionout/data_objects/mission_address_arguments.dart';
 import 'package:missionout/data_objects/page.dart' as missionpage;
@@ -66,18 +65,15 @@ class DetailScreenModel {
     // currently optimized for gmaps. The location is opened
     // as a query "?q=" so the label is displayed.
     String url;
-    if (isAndroid) {
+    final platform = Theme.of(context).platform;
+    if (platform == TargetPlatform.android) {
       url = 'geo:0,0?q=$lat,$lon';
-    } else if (isIOS || isMacOS) {
+    } else if (platform == TargetPlatform.iOS) {
       // TODO - open in caltopo, etc instead of just apple maps
       url = 'http://maps.apple.com/?q=$lat,$lon';
     }
-    else if (isWeb){
-      url = "https://www.google.com/maps";
-    }
     else {
-      // TODO -- add support for web
-      throw Exception("Non-supported platform");
+      url = "https://www.google.com/maps";
     }
     launch(url);
   }

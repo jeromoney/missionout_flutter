@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:logging/logging.dart';
-import 'package:missionout/core/platforms.dart';
 import 'package:missionout/data_objects/phone_number_record.dart';
 import 'package:missionout/services/user/user.dart';
 import 'package:pushy_flutter/pushy_flutter.dart';
@@ -160,9 +159,9 @@ class MyFirebaseUser with ChangeNotifier implements User {
       this.iOSCriticalAlertsVolume,
       this.iOSSound})
       : assert(teamID != null) {
-    if (isWeb) {
-      return;
-    }
+    // if (isWeb) {
+    //   return;
+    // }
     _pushyRegister();
     _addTokenToFirestore();
   }

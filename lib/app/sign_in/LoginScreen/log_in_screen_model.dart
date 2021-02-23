@@ -8,7 +8,6 @@ import 'package:missionout/common_widgets/platform_alert_dialog.dart';
 import 'package:missionout/common_widgets/platform_exception_alert_dialog.dart';
 import 'package:missionout/constants/constants.dart';
 import 'package:missionout/constants/strings.dart';
-import 'package:missionout/core/platforms.dart';
 import 'package:missionout/services/apple_sign_in_available.dart';
 import 'package:missionout/services/auth_service/auth_service.dart';
 import 'package:missionout/services/email_secure_store.dart';
@@ -105,12 +104,9 @@ class LoginScreenModel {
   // Apple Setup - Show Apple button only if iOS and running 13 or later. Since
   // this method is async it needs to be used with a future builder
   Future<bool> isCorrectIosVersion() async {
-    if (isIOS) {
-      final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-      final IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-      final systemVersion = iosInfo.systemVersion;
-      return systemVersion.startsWith(RegExp("1[3,4,5,6,7,8,9]\."));
-    }
-    return false;
+    final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    final IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+    final systemVersion = iosInfo.systemVersion;
+    return systemVersion.startsWith(RegExp("1[3,4,5,6,7,8,9]\."));
   }
 }

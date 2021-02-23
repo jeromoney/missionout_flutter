@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:missionout/constants/keys.dart';
-import 'package:missionout/core/platforms.dart';
 
 import 'platform_widget.dart';
 
@@ -22,7 +21,7 @@ class PlatformAlertDialog extends PlatformWidget {
 
   Future<bool> show(BuildContext context) async {
     // Platform not implemented on web at the moment
-    if (isWeb || isAndroid) {
+    if (Theme.of(context).platform != TargetPlatform.iOS) {
       return showDialog<bool>(
         context: context,
         barrierDismissible: false,

@@ -1,4 +1,3 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:logging/logging.dart';
@@ -22,21 +21,18 @@ class PushyCommunicationPlugin extends CommunicationPlugin {
   // After the import statements, and outside any Widget class (top-level)
 
   static void backgroundNotificationListener(Map<String, dynamic> data) {
+
     final _player = AudioPlayer();
-    //final assetPath = 'ios/Runner/sounds/evil_plan.m4a';
-    final assetPath = 'sounds/tong.m4a';
+    const assetPath = 'sounds/tong.m4a';
     _player.setAsset(assetPath);
     _player.play();
 
-// Print notification payload data
-    Logger("PushyCommunicationPlugin").info('Received notification: $data');
-// Notification title
+    Logger("PushyCommunicationPlugin").info('Received notification Pushy: $data');
+  // Notification title
     final  notificationTitle = data['title'] as String ?? "Mission Alert";
-// Attempt to extract the "message" property from the payload: {"message":"Hello World!"}
     final String notificationText = data['body'] as String ?? "Received mission alert";
     Get.snackbar(notificationTitle, notificationText);
-
-// Clear iOS app badge number
+  // Clear iOS app badge number
     Pushy.clearBadge();
   }
 
