@@ -29,6 +29,34 @@ void main() {
     await tester.tap(titleFinder);
     await tester.pumpAndSettle();
     expect(find.text("Alert Sound"), findsOneWidget);
+
+    await tester.tap(find.byType(Switch));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(Switch));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(Switch));
+    await tester.pumpAndSettle();
+
+    await tester.drag(find.byType(Slider), const Offset(100, 0));
+    await tester.drag(find.byType(Slider), const Offset(0, 0));
+    await tester.drag(find.byType(Slider), const Offset(50, 0));
+
+    await tester.tap(find.byType(Switch));
+    await tester.pumpAndSettle();
+
+    await tester.drag(find.byType(Slider), const Offset(100, 0));
+    await tester.drag(find.byType(Slider), const Offset(0, 0));
+    await tester.drag(find.byType(Slider), const Offset(50, 0));
+
+    final dropDownMenu = find.byKey(const Key("My Dropdown Menu"));
+    await tester.tap(dropDownMenu);
+    await tester.pumpAndSettle();
+
+    expect(find.text("Air raid siren"), findsWidgets);
+
+    await tester.tap(find.text("Evil plan").last);
+
+    await tester.pumpAndSettle();
   }, variant: TargetPlatformVariant.only(TargetPlatform.iOS));
 
   testWidgets(

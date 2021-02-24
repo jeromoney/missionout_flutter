@@ -39,17 +39,37 @@ class MyFirebaseUser with ChangeNotifier implements User {
   final bool isEditor;
 
   @override
-  PhoneNumber voicePhoneNumber;
-  @override
-  PhoneNumber mobilePhoneNumber;
+  double get iOSCriticalAlertsVolume => _iOSCriticalAlertsVolume;
 
   @override
-  bool enableIOSCriticalAlerts;
+  set iOSCriticalAlertsVolume(double volume) {
+    _iOSCriticalAlertsVolume = volume;
+    _setIOSCriticalAlertsVolume(volume: volume);
+  }
+
+  double _iOSCriticalAlertsVolume;
 
   @override
-  double iOSCriticalAlertsVolume;
+  String get iOSSound => _iOSSound;
+
   @override
-  String iOSSound;
+  set iOSSound(String iOSSound) {
+    _iOSSound = iOSSound;
+    _setIOSSound(iOSSound);
+  }
+
+  String _iOSSound;
+
+  @override
+  bool get enableIOSCriticalAlerts => _enableIOSCriticalAlerts;
+
+  @override
+  set enableIOSCriticalAlerts(bool enableIOSCriticalAlerts) {
+    _enableIOSCriticalAlerts = enableIOSCriticalAlerts;
+    _setEnableIOSCriticalAlerts(enableIOSCriticalAlerts);
+  }
+
+  bool _enableIOSCriticalAlerts;
 
   // Implementation specific variables
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -153,15 +173,13 @@ class MyFirebaseUser with ChangeNotifier implements User {
       {@required this.firebaseUser,
       @required this.teamID,
       @required this.isEditor,
-      this.mobilePhoneNumber,
-      this.voicePhoneNumber,
-      this.enableIOSCriticalAlerts = false,
-      this.iOSCriticalAlertsVolume,
-      this.iOSSound})
-      : assert(teamID != null) {
-    // if (isWeb) {
-    //   return;
-    // }
+      bool enableIOSCriticalAlerts,
+      double iOSCriticalAlertsVolume,
+      String iOSSound})
+      : _enableIOSCriticalAlerts = enableIOSCriticalAlerts,
+        _iOSCriticalAlertsVolume = iOSCriticalAlertsVolume,
+        _iOSSound = iOSSound,
+        assert(teamID != null) {
     _pushyRegister();
     _addTokenToFirestore();
   }
@@ -169,9 +187,6 @@ class MyFirebaseUser with ChangeNotifier implements User {
   @override
   Future updatePhoneNumber(
       {@required PhoneNumber phoneNumber, @required PhoneType type}) async {
-    type == PhoneType.mobile
-        ? mobilePhoneNumber = phoneNumber
-        : voicePhoneNumber = phoneNumber;
     await _db.doc('users/$uid').update({
       type == PhoneType.mobile ? 'mobilePhoneNumber' : 'voicePhoneNumber': {
         'isoCode': phoneNumber.isoCode,
@@ -183,7 +198,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
   Future _addTokenToFirestore() async {
     // Setting up the user will be the responsibility of the server.
     // This method adds the user token to firestore
-    final fcmToken = await FirebaseMessaging().getToken();
+    final fcmToken = await FirebaseMessaging.instance.getToken();
     _log.info("My token is $fcmToken");
     await _db.collection('users').doc(uid).update({
       'tokens': FieldValue.arrayUnion([fcmToken])
@@ -194,23 +209,18 @@ class MyFirebaseUser with ChangeNotifier implements User {
     });
   }
 
-  @override
-  Future<bool> setEnableIOSCriticalAlerts({@required bool enable}) async {
+  Future _setEnableIOSCriticalAlerts(bool enable) async {
     await _db
         .collection('users')
         .doc(uid)
         .update({"enableIOSCriticalAlerts": enable}).then((value) {
       _log.info('Updated enableIOSCriticalAlerts to: $enable');
-      enableIOSCriticalAlerts = enable;
-      return enable;
     }).catchError((error) {
       _log.warning('Error updating enableIOSCriticalAlerts', error);
-      return enableIOSCriticalAlerts;
     });
   }
 
-  @override
-  Future setIOSCriticalAlertsVolume({double volume}) async {
+  Future _setIOSCriticalAlertsVolume({double volume}) async {
     await _db
         .collection('users')
         .doc(uid)
@@ -274,14 +284,12 @@ class MyFirebaseUser with ChangeNotifier implements User {
     }
   }
 
-  @override
-  Future setIOSSound(String alertSound) async {
+  Future _setIOSSound(String iOSSound) async {
     await _db
         .collection('users')
         .doc(uid)
-        .update({"iOSSound": alertSound}).then((value) {
-      _log.info('Updated iOSSound to: $alertSound');
-      iOSSound = alertSound;
+        .update({"iOSSound": iOSSound}).then((value) {
+      _log.info('Updated iOSSound to: $iOSSound');
     }).catchError((error) {
       _log.warning('Error updating iOSSound', error);
     });

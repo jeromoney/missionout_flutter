@@ -1,7 +1,6 @@
 const List<String> iosSounds = [
   "air_raid_siren.m4a",
   "bleeping.m4a",
-  "blue_brick.m4a",
   "celebration.m4a",
   "ditty_pong.m4a",
   "eee_ooo.m4a",

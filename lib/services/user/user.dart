@@ -12,9 +12,7 @@ abstract class User with ChangeNotifier {
       this.photoUrl,
       this.displayName,
       @required this.teamID,
-      @required this.isEditor,
-      this.voicePhoneNumber,
-      this.mobilePhoneNumber});
+      @required this.isEditor,});
 
   final String uid;
   final String email;
@@ -24,18 +22,12 @@ abstract class User with ChangeNotifier {
   // Values held in Firestore
   final String teamID;
   final bool isEditor;
-  PhoneNumber voicePhoneNumber;
-  PhoneNumber mobilePhoneNumber;
   bool enableIOSCriticalAlerts;
   double iOSCriticalAlertsVolume;
   String iOSSound;
 
   void updatePhoneNumber(
       {@required PhoneNumber phoneNumber, @required PhoneType type});
-
-  Future<bool> setEnableIOSCriticalAlerts({@required bool enable});
-
-  Future setIOSCriticalAlertsVolume({@required double volume});
 
   void updateDisplayName({@required String displayName});
 
@@ -44,6 +36,4 @@ abstract class User with ChangeNotifier {
   Future addPhoneNumber(PhoneNumberRecord phoneNumberRecord);
 
   Future deletePhoneNumber(PhoneNumberRecord phoneNumberRecord);
-
-  Future setIOSSound(String alertSound);
 }

@@ -14,7 +14,7 @@ class IOSOptionsUserScreenModel {
 
   IOSOptionsUserScreenModel(this.context)
       : assert(Theme.of(context).platform == TargetPlatform.iOS),
-        user = context.watch<User>();
+        user = context.read<User>();
 
   // ignore: missing_return
   static Future<int> getCriticalAlertStatus() async {
@@ -29,31 +29,33 @@ class IOSOptionsUserScreenModel {
     }
   }
 
-  Future requestCriticalAlertsIOS() async {
+  Future _requestCriticalAlertsIOS() async {
     _log.info("Requesting permission for critical alerts");
     try {
-      final int result =
+      final result =
           await _platform.invokeMethod("requestCriticalAlertEntitlement");
-      _log.info("Here my result: $result");
+      _log.info("My critical alert entitlement: $result");
     } on PlatformException catch (e) {
       _log.warning("Failed to set IOS critical alert entitlement: $e");
     }
   }
 
   Future toggleCriticalAlerts({@required bool enable}) async {
-    await user.setEnableIOSCriticalAlerts(enable: enable);
+    user.enableIOSCriticalAlerts = enable;
     if (enable) {
-      requestCriticalAlertsIOS();
+      _requestCriticalAlertsIOS();
     }
   }
 
-  Future setIOSCriticalAlertsVolume({@required double volume}) {
-    user.setIOSCriticalAlertsVolume(volume: volume);
-  }
+  set iOSCriticalAlertsVolume(double volume) =>
+      user.iOSCriticalAlertsVolume = volume;
+  double get iOSCriticalAlertsVolume => user.iOSCriticalAlertsVolume;
 
-  static User getUserStatic(BuildContext context) => context.read<User>();
+  set iOSSound(String iOSSound) =>
+      user.iOSSound = iOSSound;
+  String get iOSSound => user.iOSSound;
 
-  void setAlertSound(String alertSound) {
-    user.setIOSSound(alertSound);
-  }
+  set enableIOSCriticalAlerts(bool enableIOSCriticalAlerts) =>
+      user.enableIOSCriticalAlerts = enableIOSCriticalAlerts;
+  bool get enableIOSCriticalAlerts => user.enableIOSCriticalAlerts;
 }

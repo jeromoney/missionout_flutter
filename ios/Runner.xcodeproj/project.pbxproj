@@ -31,7 +31,6 @@
 		D0C9F2C925DF1FD100DF99A1 /* industrial_alarm.m4a in Resources */ = {isa = PBXBuildFile; fileRef = D0C9F2BD25DF1FD000DF99A1 /* industrial_alarm.m4a */; };
 		D0C9F2CA25DF1FD100DF99A1 /* rotary_phone.m4a in Resources */ = {isa = PBXBuildFile; fileRef = D0C9F2BE25DF1FD100DF99A1 /* rotary_phone.m4a */; };
 		D0C9F2CB25DF1FD100DF99A1 /* voriko.m4a in Resources */ = {isa = PBXBuildFile; fileRef = D0C9F2BF25DF1FD100DF99A1 /* voriko.m4a */; };
-		D0C9F36E25DF736300DF99A1 /* blue_brick.m4a in Resources */ = {isa = PBXBuildFile; fileRef = D0C9F36C25DF736200DF99A1 /* blue_brick.m4a */; };
 		D0C9F36F25DF736300DF99A1 /* wakey_wakey.m4a in Resources */ = {isa = PBXBuildFile; fileRef = D0C9F36D25DF736300DF99A1 /* wakey_wakey.m4a */; };
 		D0CC0C7825D8E126007E817C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D0CC0C7725D8E126007E817C /* GoogleService-Info.plist */; };
 		D0CC0C7B25D8E134007E817C /* school_fire_alarm.m4a in Resources */ = {isa = PBXBuildFile; fileRef = D0CC0C7A25D8E134007E817C /* school_fire_alarm.m4a */; };
@@ -105,7 +104,6 @@
 		D0C9F2BD25DF1FD000DF99A1 /* industrial_alarm.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = industrial_alarm.m4a; sourceTree = "<group>"; };
 		D0C9F2BE25DF1FD100DF99A1 /* rotary_phone.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = rotary_phone.m4a; sourceTree = "<group>"; };
 		D0C9F2BF25DF1FD100DF99A1 /* voriko.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = voriko.m4a; sourceTree = "<group>"; };
-		D0C9F36C25DF736200DF99A1 /* blue_brick.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = blue_brick.m4a; sourceTree = "<group>"; };
 		D0C9F36D25DF736300DF99A1 /* wakey_wakey.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = wakey_wakey.m4a; sourceTree = "<group>"; };
 		D0CC0C7725D8E126007E817C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D0CC0C7A25D8E134007E817C /* school_fire_alarm.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = school_fire_alarm.m4a; sourceTree = "<group>"; };
@@ -209,7 +207,6 @@
 				D00E817025E031D2003785C1 /* reveille.m4a */,
 				D00E816E25E031D1003785C1 /* taps.m4a */,
 				D00E816F25E031D1003785C1 /* tocata.m4a */,
-				D0C9F36C25DF736200DF99A1 /* blue_brick.m4a */,
 				D0C9F36D25DF736300DF99A1 /* wakey_wakey.m4a */,
 				D0C9F2B625DF1FD000DF99A1 /* air_raid_siren.m4a */,
 				D0C9F2B525DF1FCF00DF99A1 /* eee_ooo.m4a */,
@@ -363,7 +360,6 @@
 				D00E817A25E031D2003785C1 /* life_of_riley.m4a in Resources */,
 				D0CC0C7B25D8E134007E817C /* school_fire_alarm.m4a in Resources */,
 				D0C9F2C125DF1FD100DF99A1 /* eee_ooo.m4a in Resources */,
-				D0C9F36E25DF736300DF99A1 /* blue_brick.m4a in Resources */,
 				D0C9F2CA25DF1FD100DF99A1 /* rotary_phone.m4a in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
 				D00E817925E031D2003785C1 /* bleeping.m4a in Resources */,
