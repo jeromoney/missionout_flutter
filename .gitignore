@@ -63,3 +63,4 @@ firestore_rules/*
 /android/Gemfile.lock
 /android/fastlane/Appfile
 /android/fastlane/Fastfile
+/coverage.json

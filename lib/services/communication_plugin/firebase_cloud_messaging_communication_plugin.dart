@@ -7,12 +7,17 @@ import 'package:missionout/services/communication_plugin/communication_plugin.da
 
 class FirebaseCloudMessagingCommunicationPlugin extends CommunicationPlugin {
   final CommunicationPluginHolder parentHolder;
+  final _tokenList = "tokens";
+
 
   final _logger = Logger("FirebaseCloudMessagingCommunicationPlugin");
 
   FirebaseCloudMessagingCommunicationPlugin({@required this.parentHolder}) {
     init();
   }
+
+  @override
+  String toString() => "Firebase Messaging Plugin";
 
   @override
 // ignore: missing_return
@@ -40,5 +45,11 @@ class FirebaseCloudMessagingCommunicationPlugin extends CommunicationPlugin {
     }).catchError((error) {
       _logger.warning('Error removing token from user document', error);
     });
+  }
+
+  @override
+  Future<TokenHolder> getToken() async {
+    final token = await FirebaseMessaging.instance.getToken();
+    return TokenHolder(token: token, tokenList: _tokenList);
   }
 }

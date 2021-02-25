@@ -1,15 +1,18 @@
 import 'dart:async';
 
-import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 
 import 'firebase_cloud_messaging_communication_plugin.dart';
-import 'flutter_local_notifications_communication_plugin.dart';
 import 'pushy_communication_plugin.dart';
 
 abstract class CommunicationPlugin {
   Future init();
 
   Future signOut();
+
+  // returns a token and the field in firestore in which to place the token
+  Future<TokenHolder> getToken();
 }
 
 class CommunicationPluginHolder {
@@ -21,10 +24,15 @@ class CommunicationPluginHolder {
   CommunicationPluginHolder() {
     plugins = [
       FirebaseCloudMessagingCommunicationPlugin(parentHolder: this),
-      FlutterLocalNotificationsCommunicationPlugin(),
       PushyCommunicationPlugin(),
     ];
   }
 
   void pushRemoteMessage(RemoteMessage message) => _controller.sink.add(message);
+}
+
+class TokenHolder{
+  final String token;
+  final String tokenList;
+  TokenHolder({@required this.token,@required this.tokenList});
 }

@@ -2,6 +2,8 @@ import UIKit
 import Flutter
 import GoogleMaps
 import UserNotifications
+import Pushy
+import Firebase
 
 
 @UIApplicationMain
@@ -56,6 +58,39 @@ import UserNotifications
                                 message: "Critical Alert information is unavailable",
                                 details: nil))
         }
+    }
+    
+    // APNs has assigned the device a unique token
+    override func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        // Call internal Pushy SDK method
+        Pushy.shared?.application(application, didRegisterForRemoteNotificationsWithDeviceToken:deviceToken)
+
+        // Pass token to Firebase SDK
+        Messaging.messaging().apnsToken = deviceToken
+    }
+
+    // APNs failed to register the device for push notifications
+    override func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        // Call internal Pushy SDK method
+        Pushy.shared?.application(application, didFailToRegisterForRemoteNotificationsWithError:error)
+    }
+
+    // Device received notification (legacy callback)
+    override func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any]) {
+        // Call internal Pushy SDK method
+        Pushy.shared?.application(application, didReceiveRemoteNotification:userInfo)
+
+        // With swizzling disabled you must let Messaging know about the message, for Analytics
+        Messaging.messaging().appDidReceiveMessage(userInfo)
+    }
+
+    // Device received notification (with completion handler)
+    override func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        // Call internal Pushy SDK method
+        Pushy.shared?.application(application, didReceiveRemoteNotification:userInfo, fetchCompletionHandler: completionHandler)
+
+        // With swizzling disabled you must let Messaging know about the message, for Analytics
+        Messaging.messaging().appDidReceiveMessage(userInfo)
     }
 }
 

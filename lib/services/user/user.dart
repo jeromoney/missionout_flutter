@@ -13,6 +13,8 @@ abstract class User with ChangeNotifier {
       this.displayName,
       @required this.teamID,
       @required this.isEditor,});
+  BuildContext context;
+
 
   final String uid;
   final String email;

@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logging/logging.dart';
-import 'package:missionout/services/communication_plugin/communication_plugin.dart';
 import 'package:missionout/services/auth_service/auth_service.dart';
 import 'package:missionout/services/team/firestore_team.dart';
 import 'package:missionout/services/team/team.dart';

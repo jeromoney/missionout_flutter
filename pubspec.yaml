@@ -45,11 +45,10 @@ dependencies:
   package_info: ^2.0.0
   phone_number: ^0.8.1
   provider: ^4.3.3
-  pushy_flutter: ^1.1.6
+  pushy_flutter: ^1.1.9
   tel_input: ^0.2.2
   time_ago_provider: ^3.2.0
-  tuple: ^1.0.3
-  url_launcher: ^5.4.7
+  url_launcher: ^6.0.0
 
 dev_dependencies:
   flutter_test:

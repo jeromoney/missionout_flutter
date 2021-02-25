@@ -6,10 +6,14 @@ import 'package:pushy_flutter/pushy_flutter.dart';
 
 class PushyCommunicationPlugin extends CommunicationPlugin {
   final _log = Logger("PushyCommunicationPlugin");
+  final _tokenList = "pushyTokens";
+
+  @override
+  String toString() => "Pushy Plugin";
 
   @override
   Future init() {
-    // TODO: implement init
+    Pushy.toggleFCM(true);
   }
 
   @override
@@ -34,6 +38,12 @@ class PushyCommunicationPlugin extends CommunicationPlugin {
     Get.snackbar(notificationTitle, notificationText);
   // Clear iOS app badge number
     Pushy.clearBadge();
+  }
+
+  @override
+  Future<TokenHolder> getToken() async {
+    final token = await Pushy.register();
+    return TokenHolder(token: token, tokenList: _tokenList);
   }
 
 }

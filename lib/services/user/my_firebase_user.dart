@@ -2,20 +2,32 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:logging/logging.dart';
 import 'package:missionout/data_objects/phone_number_record.dart';
+import 'package:missionout/services/communication_plugin/communication_plugin.dart';
 import 'package:missionout/services/user/user.dart';
-import 'package:pushy_flutter/pushy_flutter.dart';
+import 'package:provider/provider.dart';
 
 const retryCount = 5;
 const retryWait = 3; // seconds
 
 class MyFirebaseUser with ChangeNotifier implements User {
+  BuildContext _context;
+  @override
+  BuildContext get context => _context;
+  @override
+  set context(BuildContext context){
+    _context = context;
+    // Added token to object so we want to add tokens now
+    if (_context != null) {
+      _addTokenToFirestore();
+    }
+  }
+
   // Values from FirebaseUser
   auth.User firebaseUser;
 
@@ -179,10 +191,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
       : _enableIOSCriticalAlerts = enableIOSCriticalAlerts,
         _iOSCriticalAlertsVolume = iOSCriticalAlertsVolume,
         _iOSSound = iOSSound,
-        assert(teamID != null) {
-    _pushyRegister();
-    _addTokenToFirestore();
-  }
+        assert(teamID != null);
 
   @override
   Future updatePhoneNumber(
@@ -198,15 +207,22 @@ class MyFirebaseUser with ChangeNotifier implements User {
   Future _addTokenToFirestore() async {
     // Setting up the user will be the responsibility of the server.
     // This method adds the user token to firestore
-    final fcmToken = await FirebaseMessaging.instance.getToken();
-    _log.info("My token is $fcmToken");
-    await _db.collection('users').doc(uid).update({
-      'tokens': FieldValue.arrayUnion([fcmToken])
-    }).then((value) {
-      _log.info('Added token to user document: $fcmToken', fcmToken);
-    }).catchError((error) {
-      _log.warning('Error adding token to user document', error);
-    });
+    final communicationPluginHolder = context.read<CommunicationPluginHolder>();
+    for (final plugin in communicationPluginHolder.plugins){
+      try {
+        TokenHolder tokenHolder = await plugin.getToken();
+        _log.info("My $plugin token is ${tokenHolder.token}");
+        await _db.collection('users').doc(uid).update({
+          tokenHolder.tokenList: FieldValue.arrayUnion([tokenHolder.token])
+        }).then((value) {
+          _log.info('Added $plugin token to user document');
+        }).catchError((error) {
+          _log.warning('Error adding $plugin token to user document', error);
+        });
+      } on PlatformException catch (e) {
+        _log.warning("Unable to access $plugin token: $e");
+      }
+    }
   }
 
   Future _setEnableIOSCriticalAlerts(bool enable) async {
@@ -267,23 +283,6 @@ class MyFirebaseUser with ChangeNotifier implements User {
     await documentReference.delete();
   }
 
-  Future _pushyRegister() async {
-    Pushy.toggleFCM(true);
-    try {
-      final String deviceToken = await Pushy.register();
-      _log.info("My pushy token is: $deviceToken");
-      await _db.collection('users').doc(uid).update({
-        'pushyTokens': FieldValue.arrayUnion([deviceToken])
-      }).then((value) {
-        _log.info('Added Pushy Device token: $deviceToken');
-      }).catchError((error) {
-        _log.warning('Error adding token to user document', error);
-      });
-    } on PlatformException catch (error) {
-      _log.warning("Error accessing Pushy token: $error");
-    }
-  }
-
   Future _setIOSSound(String iOSSound) async {
     await _db
         .collection('users')
@@ -294,4 +293,5 @@ class MyFirebaseUser with ChangeNotifier implements User {
       _log.warning('Error updating iOSSound', error);
     });
   }
+
 }

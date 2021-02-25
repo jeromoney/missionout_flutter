@@ -114,4 +114,5 @@ Future appSetup() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   Pushy.listen();
+  Pushy.toggleMethodSwizzling(false);
 }

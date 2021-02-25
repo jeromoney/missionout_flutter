@@ -20,6 +20,9 @@ class AuthWidgetBuilder extends StatelessWidget {
         final user = snapshot.data;
         if (user != null) {
           assert(user.teamID != null);
+          if (context != null) {
+            user.context = context;
+          }
           return MultiProvider(
             providers: [
               ChangeNotifierProvider<User>.value(

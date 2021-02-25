@@ -1,4 +1,3 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -22,7 +21,6 @@ class BuildMissionResults extends StatefulWidget {
 class _BuildMissionResultsState extends State<BuildMissionResults> with WidgetsBindingObserver {
   OverviewScreenModel model;
   final _log = Logger('_BuildMissionResultsState');
-  final Stream<RemoteMessage> _remoteNotificationStream = FirebaseMessaging.onMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +90,6 @@ class _BuildMissionResultsState extends State<BuildMissionResults> with WidgetsB
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    _remoteNotificationStream.drain();
     super.dispose();
   }
 }
