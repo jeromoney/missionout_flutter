@@ -14,6 +14,7 @@ class IOSOptionsUserScreen extends StatefulWidget {
 
 class _IOSOptionsUserScreenState extends State<IOSOptionsUserScreen>
     with WidgetsBindingObserver {
+  final _log = Logger("IOSOptionsUserScreen");
   double _sliderValue = 1.0;
   bool _enableIOSCriticalAlerts =false;
   bool _criticalAlertContradiction = false;
@@ -98,16 +99,17 @@ class _IOSOptionsUserScreenState extends State<IOSOptionsUserScreen>
                     });
                   }
                 : null,
-            onChangeEnd: (double volume) =>
-                _model.iOSCriticalAlertsVolume = volume,
+            onChangeEnd: (double volume) {
+              _model.iOSCriticalAlertsVolume = volume;
+            },
           ),
           trailing: const Icon(Icons.volume_up),
           subtitle:
               Text("Critical Alert volume: ${_sliderValue.toStringAsFixed(1)}"),
         ),
-        ListTile(
-          leading: const Icon(Icons.music_note),
-          title: const Text("Alert Sound"),
+        const ListTile(
+          leading: Icon(Icons.music_note),
+          title: Text("Alert Sound"),
           trailing: _MyDropDownMenu(),
         ),
       ],

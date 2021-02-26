@@ -242,7 +242,6 @@ class MyFirebaseUser with ChangeNotifier implements User {
         .doc(uid)
         .update({"iOSCriticalAlertsVolume": volume}).then((value) {
       _log.info('Updated IOSCriticalAlertsVolume to: $volume');
-      iOSCriticalAlertsVolume = volume;
     }).catchError((error) {
       _log.warning('Error updating enableIOSCriticalAlerts', error);
     });
