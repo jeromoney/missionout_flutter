@@ -29,7 +29,7 @@ class TeamSubmitRaisedButtonState extends State<TeamSubmitRaisedButton> {
   @override
   Widget build(BuildContext context) {
     return Row(children: <Widget>[
-      RaisedButton(
+      ElevatedButton(
         onPressed: () async {
           // close keyboard
           FocusScope.of(context).requestFocus(FocusNode());

@@ -69,7 +69,7 @@ class _IOSOptionsUserScreenState extends State<IOSOptionsUserScreen>
                         PlatformAlertDialog(
                           title: "Enable Critical Alerts in System Settings",
                           content:
-                              "Goto Settings >> Notifications >> MissionOut >> Allow Critical Alerts.\nToggle on.",
+                              "Go to Settings >> Notifications >> MissionOut >> Allow Critical Alerts.\nToggle on.",
                           defaultActionText: Strings.ok,
                         ).show(context);
                       },
@@ -107,10 +107,17 @@ class _IOSOptionsUserScreenState extends State<IOSOptionsUserScreen>
           subtitle:
               Text("Critical Alert volume: ${_sliderValue.toStringAsFixed(1)}"),
         ),
-        const ListTile(
-          leading: Icon(Icons.music_note),
-          title: Text("Alert Sound"),
-          trailing: _MyDropDownMenu(),
+         ListTile(
+          leading: const Icon(Icons.music_note),
+          title: LayoutBuilder(builder: (_,constraints){
+            if (constraints.maxWidth < 60){
+              return Container();
+            }
+            else {
+              return const Text("Alert Sound");
+            }
+          }) ,
+          trailing: const _MyDropDownMenu(),
         ),
       ],
     );
