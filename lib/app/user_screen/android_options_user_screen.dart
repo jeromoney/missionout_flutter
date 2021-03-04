@@ -59,7 +59,6 @@ class __MyDropDownMenuState extends State<_MyDropDownMenu>
   final _log = Logger("MyDropDownMenu");
   final _player = AudioPlayer();
   String _alertSound;
-  AndroidOptionsUserScreenModel _model;
 
   @override
   void initState() {
@@ -89,7 +88,7 @@ class __MyDropDownMenuState extends State<_MyDropDownMenu>
   }
 
   String _fileNameToDisplayName(String str) {
-    String result = str.replaceAll("_", " ");
+    final String result = str.replaceAll("_", " ");
     return '${result[0].toUpperCase()}${result.substring(1)}';
   }
 

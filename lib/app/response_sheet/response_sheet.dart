@@ -54,7 +54,7 @@ class _BuildResponsesResult extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = ResponseSheetViewModel(context);
-    List<DataRow> firstRow = [];
+    final List<DataRow> firstRow = [];
     if (model.userIsInResponseList(responses)) {
       final selfResponse = responses[0];
       responses.removeAt(0);
@@ -69,7 +69,7 @@ class _BuildResponsesResult extends StatelessWidget {
         )),
       ]));
     }
-    List<DataRow> otherRows = [];
+    final List<DataRow> otherRows = [];
     otherRows.addAll(responses
         .map((response) => DataRow(cells: <DataCell>[
               DataCell(Text(

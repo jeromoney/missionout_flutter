@@ -33,7 +33,6 @@ class URITextFormFieldState extends State<URITextFormField> {
                 hintText: 'URI address of chat app'),
           ),
           FlatButton(
-            child: Text('Try URI'),
             onPressed: () async {
               try {
                 await launch(controller
@@ -56,6 +55,7 @@ class URITextFormFieldState extends State<URITextFormField> {
                 FocusScope.of(context).requestFocus(FocusNode());
               }
             },
+            child: Text('Try URI'),
           ),
         ]);
   }

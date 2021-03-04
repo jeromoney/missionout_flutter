@@ -29,16 +29,12 @@ class _EditDetailState extends State<EditDetail> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        _model.isEditor
-            ? Divider(
+        if (_model.isEditor) const Divider(
                 thickness: 1,
-              )
-            : SizedBox.shrink(),
-        _model.isEditor
-            ? ButtonBar(
+              ) else const SizedBox.shrink(),
+        if (_model.isEditor) ButtonBar(
                 children: <Widget>[
-                  FlatButton(
-                    child: const Text(Strings.pageTeam),
+                  TextButton(
                     onPressed: () async {
                       final bool requestPage = await PlatformAlertDialog(
                         title: Strings.pageTeamQuestion,
@@ -49,22 +45,20 @@ class _EditDetailState extends State<EditDetail> {
                       if (requestPage) {
                         final page = missionpage.Page.fromMission(
                             creator: _model.displayName ?? "unknown person",
-                            mission: mission,
-                            onlyEditors: false);
+                            mission: mission);
                         _model.addPage(page: page);
                         Navigator.pop(context);
                       }
                     },
+                    child: const Text(Strings.pageTeam),
                   ),
-                  FlatButton(
-                    child: const Text('Edit'),
+                  TextButton(
                     onPressed: () {
                       _model.navigateToCreateScreen();
                     },
+                    child: const Text('Edit'),
                   ),
-                  FlatButton(
-                    child: Text(
-                        mission.isStoodDown ? '(un)Standown' : 'Stand down'),
+                  TextButton(
                     onPressed: () {
                       final newMission =
                           mission.copyWith(isStoodDown: !mission.isStoodDown);
@@ -72,10 +66,11 @@ class _EditDetailState extends State<EditDetail> {
                         mission: newMission,
                       );
                     },
+                    child: Text(
+                        mission.isStoodDown ? '(un)Standown' : 'Stand down'),
                   ),
                 ],
-              )
-            : SizedBox.shrink(),
+              ) else const SizedBox.shrink(),
       ],
     );
   }

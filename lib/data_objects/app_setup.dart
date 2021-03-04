@@ -12,7 +12,7 @@ class AppSetup {
   final bool showEmailLogin;
   final String team;
 
-  AppSetup(
+  const AppSetup(
       {@required this.gmailDomain,
       @required this.showAppleButton,
       @required this.showEmailLogin,

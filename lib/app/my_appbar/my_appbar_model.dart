@@ -9,7 +9,7 @@ class MyAppBarModel {
   final BuildContext context;
   final User user;
 
-  MyAppBarModel(this.context) : this.user = context.watch<User>();
+  MyAppBarModel(this.context) : user = context.watch<User>();
 
   signOut() {
     final authService = context.read<AuthService>();

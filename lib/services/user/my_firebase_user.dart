@@ -209,7 +209,7 @@ class MyFirebaseUser with ChangeNotifier implements User {
     final communicationPluginHolder = context.read<CommunicationPluginHolder>();
     for (final plugin in communicationPluginHolder.plugins){
       try {
-        TokenHolder tokenHolder = await plugin.getToken();
+        final TokenHolder tokenHolder = await plugin.getToken();
         _log.info("My $plugin token is ${tokenHolder.token}");
         await _db.collection('users').doc(uid).update({
           tokenHolder.tokenList: FieldValue.arrayUnion([tokenHolder.token])

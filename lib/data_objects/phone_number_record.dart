@@ -59,7 +59,7 @@ class PhoneNumberRecord {
       PhoneNumberRecord(
           documentReference: documentReference ?? this.documentReference,
           uid: uid ?? this.uid,
-          isoCode: phoneNumber?.isoCode ?? this.isoCode,
+          isoCode: phoneNumber?.isoCode ?? isoCode,
           phoneNumber: phoneNumber?.phoneNumber ?? this.phoneNumber,
           allowText: allowText ?? this.allowText,
           allowCalls: allowCalls ?? this.allowCalls);

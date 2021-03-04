@@ -17,7 +17,7 @@ class Response {
   @TimestampJsonConverter()
   final Timestamp time;
 
-  Response({
+  const Response({
     @required this.teamMember,
     @required this.status,
     this.documentReference,
@@ -26,7 +26,7 @@ class Response {
 
   Response.fromApp({@required this.teamMember, @required this.status})
       : time = Timestamp.now(),
-        this.documentReference = null;
+        documentReference = null;
 
   Response addDocumentReference(
           {@required DocumentReference documentReference}) =>

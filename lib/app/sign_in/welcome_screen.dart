@@ -26,18 +26,18 @@ class WelcomeScreen extends StatelessWidget {
             child: Align(
               alignment: Alignment.bottomCenter,
               child: RaisedButton(
-                child: Text('Log in'),
                 onPressed: () =>
                     Navigator.pushNamed(context, LogInScreen.routeName),
+                child: Text('Log in'),
               ),
             ),
           ),
           GestureDetector(
             key: Key("privacyPolicy"),
+            onTap: () => launch(Constants.privacyPolicyURL),
             child: Text(
               "Read our privacy policy",
             ),
-            onTap: () => launch(Constants.privacyPolicyURL),
           )
         ],
       ),

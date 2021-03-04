@@ -23,7 +23,7 @@ class Page {
   String get missionDocumentPath => mission.documentReference.path;
   set missionDocumentPath(String doNotUse) {throw UnimplementedError("Setter is only used for JSON serialization");}
 
-  Page({
+  const Page({
     this.mission,
     this.creator,
     this.onlyEditors,

@@ -41,8 +41,8 @@ class Mission {
     this.needForAction,
     this.locationDescription,
     this.isStoodDown = false,
-  })  : this.time = null,
-        this.documentReference = null;
+  })  : time = null,
+        documentReference = null;
 
   Mission copyWith({
     DocumentReference documentReference,
@@ -55,7 +55,7 @@ class Mission {
       Mission(
         documentReference: documentReference ?? this.documentReference,
         description: description ?? this.description,
-        time: this.time,
+        time: time,
         location: location ?? this.location,
         needForAction: needForAction ?? this.needForAction,
         locationDescription: locationDescription ?? this.locationDescription,

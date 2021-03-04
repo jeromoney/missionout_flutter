@@ -25,16 +25,14 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
     final photoURLAvailable = user.photoUrl != null;
     final model = MyAppBarModel(context);
     return AppBar(title: Text(title), actions: <Widget>[
-      photoURLAvailable
-          ? Container(
+      if (photoURLAvailable) Container(
               width: AppBar().preferredSize.height,
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   image: DecorationImage(
                     fit: BoxFit.cover,
                     image: CachedNetworkImageProvider(model.user.photoUrl),
-                  )))
-          : Icon(
+                  ))) else Icon(
               Icons.account_circle,
               size: AppBar().preferredSize.height,
             ),
