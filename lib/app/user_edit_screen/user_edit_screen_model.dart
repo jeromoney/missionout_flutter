@@ -13,9 +13,9 @@ class UserEditScreenModel {
   final StreamController<bool> phoneInputStreamController;
 
   UserEditScreenModel(this.context)
-      : this.team = context.watch<Team>(),
-        this.user = context.watch<User>(),
-        this.phoneInputStreamController =
+      : team = context.watch<Team>(),
+        user = context.watch<User>(),
+        phoneInputStreamController =
             context.watch<StreamController<bool>>();
 
   Stream<List<PhoneNumberRecord>> get phoneNumbers => user.fetchPhoneNumbers();
@@ -40,6 +40,4 @@ class UserEditScreenModel {
   }
 
   void showPhoneInput() => phoneInputStreamController.add(true);
-
-  void hidePhoneInput() => phoneInputStreamController.add(false);
 }

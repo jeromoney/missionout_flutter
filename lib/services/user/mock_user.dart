@@ -1,39 +1,45 @@
-import 'package:flutter/src/widgets/framework.dart';
+import 'dart:async';
+
+import 'package:flutter/material.dart';
 import 'package:missionout/data_objects/phone_number_record.dart';
 import 'package:missionout/services/user/user.dart';
 
-class MockUser implements User{
+class MockUser implements User {
+  final _phoneNumberStreamController = StreamController<List<PhoneNumberRecord>>();
+  
+  final List<PhoneNumberRecord> _phoneNumberRecords = [
+     const PhoneNumberRecord(
+        uid: "a1242",
+        isoCode: "+1",
+        allowText: true,
+        phoneNumber: "7195551234",
+        allowCalls: false),
+    const PhoneNumberRecord(
+        uid: "a1242",
+        isoCode: "+1",
+        allowText: true,
+        phoneNumber: "+15105551234",
+        allowCalls: false)
+  ];
+
   @override
+  // ignore: missing_return
   Future addPhoneNumber(PhoneNumberRecord phoneNumberRecord) {
-    // TODO: implement addPhoneNumber
-    throw UnimplementedError();
+    _phoneNumberRecords.add(phoneNumberRecord);
+    _phoneNumberStreamController.add(_phoneNumberRecords);
   }
 
   @override
+  // ignore: missing_return
   Future deletePhoneNumber(PhoneNumberRecord phoneNumberRecord) {
-    // TODO: implement deletePhoneNumber
-    throw UnimplementedError();
+    _phoneNumberRecords.remove(phoneNumberRecord);
+    _phoneNumberStreamController.add(_phoneNumberRecords);
   }
 
   @override
-  Stream<List<PhoneNumberRecord>> fetchPhoneNumbers() => null;
-
-  @override
-  Future<bool> setEnableIOSCriticalAlerts({bool enable}) {
-    // TODO: implement setEnableIOSCriticalAlerts
-    throw UnimplementedError();
-  }
-
-  @override
-  Future setIOSCriticalAlertsVolume({double volume}) {
-    // TODO: implement setIOSCriticalAlertsVolume
-    throw UnimplementedError();
-  }
-
-  @override
-  Future setIOSSound(String alertSound) {
-    // TODO: implement setIOSSound
-    throw UnimplementedError();
+  Stream<List<PhoneNumberRecord>> fetchPhoneNumbers() {
+    _phoneNumberStreamController.add(_phoneNumberRecords);
+    return _phoneNumberStreamController.stream;
   }
 
   @override
@@ -56,20 +62,12 @@ class MockUser implements User{
   String iOSSound;
 
   @override
-  PhoneNumber mobilePhoneNumber;
-
-  @override
-  PhoneNumber voicePhoneNumber;
-
-  @override
   void addListener(listener) {
     // TODO: implement addListener
   }
 
   @override
   String displayName = "Joe Blow";
-
-
 
   @override
   void dispose() {
@@ -85,8 +83,7 @@ class MockUser implements User{
   bool get hasListeners => throw UnimplementedError();
 
   @override
-  // TODO: implement isEditor
-  bool get isEditor => throw UnimplementedError();
+  bool get isEditor => true;
 
   @override
   void notifyListeners() {
@@ -112,5 +109,4 @@ class MockUser implements User{
 
   @override
   BuildContext context;
-
 }

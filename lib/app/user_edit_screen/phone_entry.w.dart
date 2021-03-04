@@ -37,10 +37,7 @@ class _PhoneEntryState extends State<PhoneEntry> {
                     Icons.sms,
                     size: 24,
                   ),
-                  onSaved: (value) {
-                     _allowTexts = value;
-                     print("hello");
-                  },
+                  onSaved: (value) => _allowTexts = value,
                   validator: (value) => value || _allowPhoneCalls
                       ? null
                       : "At least one option must be checked",
@@ -135,7 +132,7 @@ class CheckboxFormField extends FormField<bool> {
       Widget subtitle,
       Widget secondary,
       FormFieldSetter<bool> onSaved,
-        FormFieldValidator<bool> validator,
+      FormFieldValidator<bool> validator,
       bool initialValue = false})
       : super(
             onSaved: onSaved,

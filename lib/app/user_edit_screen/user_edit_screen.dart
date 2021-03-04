@@ -164,14 +164,12 @@ class _PhoneNumberListState extends State<_PhoneNumberList> {
                 ],
               ),
               trailing: IconButton(
+                key: const Key("Delete Phone Number"),
                 icon: const Icon(
                   Icons.remove_circle_outline,
                 ),
                 onPressed: () {
                   model.removePhoneNumberRecord(phoneNumberRecord);
-                  setState(() {
-                    phoneNumbers.removeAt(index);
-                  });
                 },
               ));
         },

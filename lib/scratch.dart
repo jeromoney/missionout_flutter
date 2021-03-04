@@ -15,7 +15,13 @@ Widget getWidgetWithProviders(Widget widget) => MultiProvider(
         Provider<PhoneNumberHolder>(
           create: (_) => PhoneNumberHolder(),
         ),
-        Provider<StreamController<bool>>(create: (_) => StreamController<bool>(),),
+        Provider<StreamController<bool>>(
+          create: (_) => StreamController<bool>(),
+        ),
       ],
       child: MaterialApp(home: widget),
     );
+
+void main() {
+  runApp(getWidgetWithProviders(UserEditScreen()));
+}
