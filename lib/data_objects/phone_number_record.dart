@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:logging/logging.dart';
 
@@ -64,4 +63,10 @@ class PhoneNumberRecord {
           phoneNumber: phoneNumber?.phoneNumber ?? this.phoneNumber,
           allowText: allowText ?? this.allowText,
           allowCalls: allowCalls ?? this.allowCalls);
+}
+
+class PhoneNumber {
+  final String isoCode;
+  final String phoneNumber;
+  PhoneNumber({@required this.isoCode,@required this.phoneNumber});
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:intl_phone_number_input/src/utils/phone_number.dart';
 import 'package:missionout/data_objects/phone_number_record.dart';
 import 'package:missionout/services/user/user.dart';
 
@@ -39,7 +38,7 @@ class MockUser implements User{
 
   @override
   void updateDisplayName({String displayName}) {
-    // TODO: implement updateDisplayName
+    this.displayName = displayName;
   }
 
   @override
@@ -68,8 +67,9 @@ class MockUser implements User{
   }
 
   @override
-  // TODO: implement displayName
-  String get displayName => "Joe Blow";
+  String displayName = "Joe Blow";
+
+
 
   @override
   void dispose() {

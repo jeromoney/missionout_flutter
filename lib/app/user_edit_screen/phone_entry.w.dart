@@ -37,7 +37,10 @@ class _PhoneEntryState extends State<PhoneEntry> {
                     Icons.sms,
                     size: 24,
                   ),
-                  onSaved: (value) => _allowTexts = value,
+                  onSaved: (value) {
+                     _allowTexts = value;
+                     print("hello");
+                  },
                   validator: (value) => value || _allowPhoneCalls
                       ? null
                       : "At least one option must be checked",
@@ -56,10 +59,7 @@ class _PhoneEntryState extends State<PhoneEntry> {
                 Builder(
                   builder: (context) => Align(
                     alignment: const Alignment(0.66, 0),
-                    child: FlatButton(
-                      padding: const EdgeInsets.all(0.0),
-                      textColor: Theme.of(context).primaryColor,
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    child: TextButton(
                       onPressed: () async {
                         setState(() {
                           _formKey.currentState.save();
@@ -71,7 +71,7 @@ class _PhoneEntryState extends State<PhoneEntry> {
                           final phoneNumberRecord = PhoneNumberRecord(
                             uid: uid,
                             isoCode: phoneNumber.isoCode,
-                            phoneNumber: phoneNumber.phoneNumber,
+                            phoneNumber: "+1${phoneNumber.phoneNumber}",
                             allowCalls: _allowPhoneCalls,
                             allowText: _allowTexts,
                           );
@@ -103,14 +103,24 @@ class _MyInternationalPhoneNumberInputState
   Widget build(BuildContext context) {
     String labelText;
     String hintText;
-
-    return InternationalPhoneNumberInput(
-      countries: const ["US"],
-      inputDecoration: InputDecoration(labelText: labelText),
-      hintText: hintText,
-      onInputChanged: (PhoneNumber phoneNumber) {
+    return TextFormField(
+      decoration: const InputDecoration(
+        labelText: "Phone Number",
+      ),
+      keyboardType: TextInputType.phone,
+      validator: (String value) {
+        if (value.length < 10) {
+          return "too short";
+        } else if (value.length > 10) {
+          return "too long";
+        }
+        final phoneNumber = PhoneNumber(isoCode: "+1", phoneNumber: value);
         context.read<PhoneNumberHolder>().phoneNumber = phoneNumber;
       },
+      inputFormatters: <TextInputFormatter>[
+        FilteringTextInputFormatter.allow(RegExp('[0-9]'))
+      ],
+      autovalidateMode: AutovalidateMode.onUserInteraction,
     );
   }
 }
@@ -125,13 +135,13 @@ class CheckboxFormField extends FormField<bool> {
       Widget subtitle,
       Widget secondary,
       FormFieldSetter<bool> onSaved,
-      FormFieldValidator<bool> validator,
+        FormFieldValidator<bool> validator,
       bool initialValue = false})
       : super(
             onSaved: onSaved,
             validator: validator,
             initialValue: initialValue,
-            autovalidateMode: AutovalidateMode.always,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             builder: (FormFieldState<bool> state) => CheckboxListTile(
                   secondary: secondary,
                   dense: state.hasError,

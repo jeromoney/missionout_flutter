@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:missionout/app/my_appbar/my_appbar.dart';
 import 'package:missionout/app/user_screen/android_options_user_screen.dart';
 import 'package:missionout/app/user_screen/ios_options_user_screen.dart';
@@ -66,43 +65,31 @@ class _UserScreenState extends State<UserScreen> {
                       itemBuilder: (_, index) {
                         final phoneNumberRecord = phoneNumbers[index];
                         final phoneNumber = phoneNumberRecord.getPhoneNumber();
-                        return FutureBuilder(
-                          future: PhoneNumber.getParsableNumber(phoneNumber)
-                              .catchError((e) => phoneNumber.phoneNumber),
-                          builder: (_, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) return Container();
-                            if (!snapshot.hasData) {
-                              return const Text("Error with phone number");
-                            }
-                            final phoneNumberString = snapshot.data as String;
-                            return ListTile(
-                              title: Text(phoneNumberString),
-                              trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Icon(
-                                      Icons.phone,
-                                      color: phoneNumberRecord.allowCalls
-                                          ? Colors.green
-                                          : null,
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Icon(
-                                      Icons.sms,
-                                      color: phoneNumberRecord.allowText
-                                          ? Colors.green
-                                          : null,
-                                    ),
-                                  )
-                                ],
+                        return ListTile(
+                          title: Text(phoneNumber.phoneNumber),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Icon(
+                                  Icons.phone,
+                                  color: phoneNumberRecord.allowCalls
+                                      ? Colors.green
+                                      : null,
+                                ),
                               ),
-                            );
-                          },
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Icon(
+                                  Icons.sms,
+                                  color: phoneNumberRecord.allowText
+                                      ? Colors.green
+                                      : null,
+                                ),
+                              )
+                            ],
+                          ),
                         );
                       },
                       separatorBuilder: (_, __) => const Divider(),

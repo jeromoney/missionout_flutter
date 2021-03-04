@@ -6,7 +6,6 @@ import 'package:missionout/common_widgets/platform_alert_dialog.dart';
 import 'package:missionout/constants/sound_list.dart';
 import 'package:missionout/constants/strings.dart';
 
-
 class IOSOptionsUserScreen extends StatefulWidget {
   @override
   _IOSOptionsUserScreenState createState() => _IOSOptionsUserScreenState();
@@ -16,7 +15,7 @@ class _IOSOptionsUserScreenState extends State<IOSOptionsUserScreen>
     with WidgetsBindingObserver {
   final _log = Logger("IOSOptionsUserScreen");
   double _sliderValue = 1.0;
-  bool _enableIOSCriticalAlerts =false;
+  bool _enableIOSCriticalAlerts = false;
   bool _criticalAlertContradiction = false;
   IOSOptionsUserScreenModel _model;
 
@@ -30,8 +29,7 @@ class _IOSOptionsUserScreenState extends State<IOSOptionsUserScreen>
         _sliderValue = _model.iOSCriticalAlertsVolume ?? 1.0;
         _enableIOSCriticalAlerts = _model.enableIOSCriticalAlerts ?? false;
       });
-      sanityCheckCriticalAlertStatus(
-          expectedStatus: _enableIOSCriticalAlerts);
+      sanityCheckCriticalAlertStatus(expectedStatus: _enableIOSCriticalAlerts);
     });
   }
 
@@ -107,16 +105,15 @@ class _IOSOptionsUserScreenState extends State<IOSOptionsUserScreen>
           subtitle:
               Text("Critical Alert volume: ${_sliderValue.toStringAsFixed(1)}"),
         ),
-         ListTile(
+        ListTile(
           leading: const Icon(Icons.music_note),
-          title: LayoutBuilder(builder: (_,constraints){
-            if (constraints.maxWidth < 60){
+          title: LayoutBuilder(builder: (_, constraints) {
+            if (constraints.maxWidth < 60) {
               return Container();
-            }
-            else {
+            } else {
               return const Text("Alert Sound");
             }
-          }) ,
+          }),
           trailing: const _MyDropDownMenu(),
         ),
       ],
@@ -127,8 +124,7 @@ class _IOSOptionsUserScreenState extends State<IOSOptionsUserScreen>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {}
-    sanityCheckCriticalAlertStatus(
-        expectedStatus: _enableIOSCriticalAlerts);
+    sanityCheckCriticalAlertStatus(expectedStatus: _enableIOSCriticalAlerts);
   }
 
   @override
@@ -139,8 +135,7 @@ class _IOSOptionsUserScreenState extends State<IOSOptionsUserScreen>
 }
 
 class _MyDropDownMenu extends StatefulWidget {
-   const _MyDropDownMenu(): super(key: const Key("My Dropdown Menu"));
-
+  const _MyDropDownMenu() : super(key: const Key("My Dropdown Menu"));
 
   @override
   __MyDropDownMenuState createState() => __MyDropDownMenuState();
@@ -160,10 +155,9 @@ class __MyDropDownMenuState extends State<_MyDropDownMenu>
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       _model = IOSOptionsUserScreenModel(context);
       setState(() {
-        if (!iosSounds.contains(_model.iOSSound) || _model.iOSSound == null){
-          _alertSound = iosSounds[0];
-        }
-        else {
+        if (!ringTones.contains(_model.iOSSound) || _model.iOSSound == null) {
+          _alertSound = ringTones[0];
+        } else {
           _alertSound = _model.iOSSound;
         }
       });
@@ -172,7 +166,7 @@ class __MyDropDownMenuState extends State<_MyDropDownMenu>
 
   Future _playRingtone(soundStr) async {
     _player.stop();
-    final assetPath = 'ios/Runner/sounds/$soundStr';
+    final assetPath = 'ios/Runner/sounds/$soundStr.m4a';
     _log.info("Playing sound at: $assetPath");
     await _player.setAsset(assetPath);
     await _player.setVolume(_model.iOSCriticalAlertsVolume ?? 1.0);
@@ -180,8 +174,7 @@ class __MyDropDownMenuState extends State<_MyDropDownMenu>
   }
 
   String _fileNameToDisplayName(String str) {
-    String result = str.replaceAll("_", " ");
-    result = result.substring(0, result.length - 4);
+    final result = str.replaceAll("_", " ");
     return '${result[0].toUpperCase()}${result.substring(1)}';
   }
 
@@ -189,7 +182,7 @@ class __MyDropDownMenuState extends State<_MyDropDownMenu>
   Widget build(BuildContext context) {
     return DropdownButton(
       value: _alertSound,
-      items: iosSounds
+      items: ringTones
           .map((soundStr) => DropdownMenuItem<String>(
                 value: soundStr,
                 child: Text(_fileNameToDisplayName(soundStr)),
@@ -228,6 +221,4 @@ class __MyDropDownMenuState extends State<_MyDropDownMenu>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     _player.stop();
   }
-
-
 }

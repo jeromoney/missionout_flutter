@@ -1,4 +1,3 @@
-import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:logging/logging.dart';
 import 'package:missionout/services/communication_plugin/communication_plugin.dart';
@@ -35,7 +34,6 @@ class PushyCommunicationPlugin extends CommunicationPlugin {
   // Notification title
     final  notificationTitle = data['title'] as String ?? "Mission Alert";
     final String notificationText = data['body'] as String ?? "Received mission alert";
-    Get.snackbar(notificationTitle, notificationText);
   // Clear iOS app badge number
     Pushy.clearBadge();
   }

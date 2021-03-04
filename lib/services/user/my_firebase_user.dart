@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:logging/logging.dart';
 import 'package:missionout/data_objects/phone_number_record.dart';
 import 'package:missionout/services/communication_plugin/communication_plugin.dart';

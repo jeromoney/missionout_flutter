@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:flutter/services.dart';
 import 'package:missionout/app/user_edit_screen/user_edit_screen_model.dart';
 import 'package:missionout/common_widgets/my_blur.dart';
 import 'package:missionout/data_objects/phone_number_record.dart';
@@ -69,17 +69,14 @@ class _UserEditScreenBodyState extends State<_UserEditScreenBody> {
           ),
           Align(
             alignment: const Alignment(0.66, 0),
-            child: FlatButton(
-              padding: const EdgeInsets.all(0.0),
-              textColor: Theme.of(context).primaryColor,
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            child: TextButton(
               onPressed: () async {
                 if (_formKey.currentState.validate()) {
                   await model.updateName(nameController.text);
                   const snackbar = SnackBar(
                     content: Text("Saved name"),
                   );
-                  Scaffold.of(context).showSnackBar(snackbar);
+                  ScaffoldMessenger.of(context).showSnackBar(snackbar);
                 }
               },
               child: const Text("Save"),
@@ -100,9 +97,7 @@ class _UserEditScreenBodyState extends State<_UserEditScreenBody> {
               return _PhoneNumberList(snapshot.data);
             },
           ),
-          RaisedButton.icon(
-            textColor: Colors.white,
-            color: Theme.of(context).primaryColor,
+          ElevatedButton.icon(
             onPressed: model.showPhoneInput,
             icon: const Icon(Icons.add, size: 18),
             label: const Text("Add Phone Number"),
@@ -121,6 +116,7 @@ class _UserEditScreenBodyState extends State<_UserEditScreenBody> {
 
 class _PhoneNumberList extends StatefulWidget {
   final List<PhoneNumberRecord> phoneNumbers;
+
   const _PhoneNumberList(this.phoneNumbers);
 
   @override
@@ -144,12 +140,8 @@ class _PhoneNumberListState extends State<_PhoneNumberList> {
         itemBuilder: (_, index) {
           final phoneNumberRecord = widget.phoneNumbers[index];
           final phoneNumber = phoneNumberRecord.getPhoneNumber();
-          return FutureBuilder(
-            future: PhoneNumber.getParsableNumber(phoneNumber)
-                .catchError((e) => phoneNumber.phoneNumber),
-            initialData: "",
-            builder: (_, parsedPhoneNumber) => ListTile(
-              title: Text(parsedPhoneNumber.data as String),
+          return ListTile(
+              title: Text(phoneNumber.phoneNumber),
               subtitle: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -181,9 +173,7 @@ class _PhoneNumberListState extends State<_PhoneNumberList> {
                     phoneNumbers.removeAt(index);
                   });
                 },
-              ),
-            ),
-          );
+              ));
         },
         separatorBuilder: (_, __) => const Divider(),
         itemCount: phoneNumbers.length);

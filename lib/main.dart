@@ -116,3 +116,4 @@ Future appSetup() async {
   Pushy.listen();
   Pushy.toggleMethodSwizzling(false);
 }
+

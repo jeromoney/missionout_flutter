@@ -1,7 +1,9 @@
-package com.beaterboofs.missionout.android
+package com.beaterboofs.missionout
 
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
+import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
@@ -10,14 +12,23 @@ import androidx.annotation.NonNull
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
+
 class MainActivity: FlutterActivity() {
     private val CHANNEL = "missionout.beaterboofs.com/criticalAlertsEntitlement"
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger,CHANNEL).setMethodCallHandler { call, result ->
-            openAppNotificationSettings(context)
+            if ("requestCriticalAlertEntitlement" == call.method) {
+                openAppNotificationSettings(context)
+            }
+            else{
+                result.notImplemented()
+            }
         }
     }
+
+
+
     // https://stackoverflow.com/questions/32366649/any-way-to-link-to-the-android-notification-settings-for-my-app
     private fun openAppNotificationSettings(context: Context) {
         val intent = Intent().apply {

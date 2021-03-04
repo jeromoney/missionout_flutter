@@ -1,23 +1,35 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.beaterboofs.missionout.android">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.beaterboofs.missionout">
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <application
-        android:label="MissionOut"
+        android:name="com.beaterboofs.missionout.Application"
         android:icon="@mipmap/launcher_icon"
-        android:name="com.beaterboofs.missionout.Application">
+        android:label="MissionOut">
+
+        <!-- Set custom default icon. This is used when no icon is set for incoming notification messages.
+     See README(https://goo.gl/l4GJaQ) for more. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/notification_logo" />
+        <!-- Set color used with incoming notification messages. This is used when no color is set for the incoming
+             notification message. See README(https://goo.gl/6BKBk7) for more. -->
+
         <!-- Pushy Declarations -->
 
         <!-- Internal Notification Receiver -->
         <!-- Do not modify - internal BroadcastReceiver that sends notifications to your Flutter app -->
+
         <receiver android:name="me.pushy.sdk.flutter.internal.PushyInternalReceiver" android:exported="false">
             <intent-filter>
                 <!-- Do not modify this -->
                 <action android:name="pushy.me" />
             </intent-filter>
         </receiver>
+
         <!-- Pushy Firebase Service -->
         <service
             android:name="me.pushy.sdk.services.PushyFirebaseService"
@@ -54,27 +66,27 @@
             android:stopWithTask="false" />
 
         <!-- End Pushy Declarations -->
-       <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@drawable/notification_logo" />
-       <meta-data android:name="com.google.android.geo.API_KEY"
-           android:value="${googleMapsApiKey}"/>
-       <meta-data
-           android:name="com.google.firebase.messaging.default_notification_channel_id"
-           android:value="mission_pages" />
+        <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@drawable/notification_logo" />
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="${googleMapsApiKey}"/>
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="mission_pages" />
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
+            android:launchMode="singleTop"
+            android:theme="@style/LaunchTheme"
             android:windowSoftInputMode="adjustResize">
             <!-- Specifies an Android theme to apply to this Activity as soon as
                  the Android process has started. This theme is visible to the user
                  while the Flutter UI initializes. After that, this theme continues
                  to determine the Window background behind the Flutter UI. -->
             <meta-data
-              android:name="io.flutter.embedding.android.NormalTheme"
-              android:resource="@style/NormalTheme"
-              />
+                android:name="io.flutter.embedding.android.NormalTheme"
+                android:resource="@style/NormalTheme"
+                />
             <intent-filter>
                 <action android:name="FLUTTER_NOTIFICATION_CLICK" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -85,9 +97,9 @@
                  gap between the end of Android's launch screen and the painting of
                  Flutter's first frame. -->
             <meta-data
-              android:name="io.flutter.embedding.android.SplashScreenDrawable"
-              android:resource="@drawable/launch_background"
-              />
+                android:name="io.flutter.embedding.android.SplashScreenDrawable"
+                android:resource="@drawable/launch_background"
+                />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

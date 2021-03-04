@@ -24,7 +24,7 @@ class UserEditScreenModel {
 
   Future removePhoneNumberRecord(PhoneNumberRecord phoneNumberRecord) async {
     await user.deletePhoneNumber(phoneNumberRecord);
-    Scaffold.of(context)
+    ScaffoldMessenger.of(context)
         .showSnackBar(const SnackBar(content: Text("Deleted phone number")));
   }
 
@@ -33,7 +33,7 @@ class UserEditScreenModel {
   }
 
   Future updateName(String displayName) async =>
-      await user.updateDisplayName(displayName: displayName);
+      user.updateDisplayName(displayName: displayName);
 
   String validateName(String value) {
     if (value == "" || value == null) return "Name required";
