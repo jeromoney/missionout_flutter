@@ -1,8 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:logging/logging.dart';
 import 'package:missionout/app/auth_widget.dart';
 import 'package:missionout/app/auth_widget_builder.dart';
@@ -11,11 +13,11 @@ import 'package:missionout/data_objects/is_loading_notifier.dart';
 import 'package:missionout/services/apple_sign_in_available.dart';
 import 'package:missionout/services/auth_service/auth_service.dart';
 import 'package:missionout/services/auth_service/auth_service_adapter.dart';
+import 'package:missionout/services/communication_plugin/flutter_local_notifications_communication_plugin.dart';
 import 'package:missionout/services/email_secure_store.dart';
 import 'package:missionout/services/firebase_link_handler.dart';
 import 'package:missionout/services/user/user.dart';
 import 'package:provider/provider.dart';
-import 'package:pushy_flutter/pushy_flutter.dart';
 
 import 'app/sign_in/sign_in_manager.dart';
 import 'services/communication_plugin/communication_plugin.dart';
@@ -113,7 +115,17 @@ Future appSetup() async {
   // Fix for: Unhandled Exception: ServicesBinding.defaultBinaryMessenger was accessed before the binding was initialized.
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  Pushy.listen();
-  Pushy.toggleMethodSwizzling(false);
+  FirebaseMessaging.onBackgroundMessage(foo);
+  FlutterLocalNotificationsCommunicationPlugin();
+  FirebaseMessaging.onBackgroundMessage(foo);
 }
 
+
+Future<void> foo(RemoteMessage message) async {
+  print("foox");
+  final _player = AudioPlayer();
+  final assetPath = 'android/app/src/main/res/raw/wakey_wakey.mp3';
+  await _player.setAsset(assetPath);
+  _player.play();
+
+}

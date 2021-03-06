@@ -4,7 +4,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 import 'firebase_cloud_messaging_communication_plugin.dart';
-import 'pushy_communication_plugin.dart';
 
 abstract class CommunicationPlugin {
   Future init();
@@ -24,7 +23,6 @@ class CommunicationPluginHolder {
   CommunicationPluginHolder() {
     plugins = [
       FirebaseCloudMessagingCommunicationPlugin(parentHolder: this),
-      PushyCommunicationPlugin(),
     ];
   }
 

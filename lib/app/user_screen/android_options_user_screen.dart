@@ -12,7 +12,7 @@ class AndroidOptionsUserScreen extends StatefulWidget {
 
 class _AndroidOptionsUserScreenState extends State<AndroidOptionsUserScreen> {
   bool _value = false;
-
+  int i = 3;
   @override
   Widget build(BuildContext context) {
     final model = AndroidOptionsUserScreenModel(context);
@@ -105,7 +105,6 @@ class __MyDropDownMenuState extends State<_MyDropDownMenu>
           .toList(),
       onChanged: (String alertSound) {
         _playRingtone(alertSound);
-        model.setAlertSound(alertSound);
         setState(() {
           _alertSound = alertSound;
         });

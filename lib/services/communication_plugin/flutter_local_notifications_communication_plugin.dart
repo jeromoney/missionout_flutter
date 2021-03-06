@@ -43,7 +43,7 @@ class FlutterLocalNotificationsCommunicationPlugin {
         Strings.channelDescription, // description
         importance: Importance.max,
         sound: RawResourceAndroidNotificationSound(
-            "school_fire_alarm")); //This is where the sound is set in android
+            "wakey_wakey")); //This is where the sound is set in android
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
         FlutterLocalNotificationsPlugin();
     await flutterLocalNotificationsPlugin
@@ -77,29 +77,5 @@ class FlutterLocalNotificationsCommunicationPlugin {
       notification.body,
       notificationDetails,
     );
-  }
-
-  Future<void> createNotificationChannel(String alertSound) async {
-    final AndroidNotificationChannel androidNotificationChannel =
-    AndroidNotificationChannel(
-        Strings.channelId, // id
-        Strings.channelName, // title
-        Strings.channelDescription, // description
-        importance: Importance.max,
-        sound: RawResourceAndroidNotificationSound(
-            alertSound));
-    await _flutterLocalNotifications
-        .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()
-        ?.createNotificationChannel(androidNotificationChannel);
-  }
-
-  Future<void> deleteNotificationChannel() async {
-    const String channelId = Strings.channelId;
-    await _flutterLocalNotifications
-        .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()
-        ?.deleteNotificationChannel(channelId);
-
   }
 }

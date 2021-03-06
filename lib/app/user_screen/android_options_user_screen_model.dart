@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';
-import 'package:missionout/services/communication_plugin/flutter_local_notifications_communication_plugin.dart';
 
 class AndroidOptionsUserScreenModel {
   final androidSound = "Hello World";
@@ -23,9 +22,4 @@ class AndroidOptionsUserScreenModel {
     }
   }
 
-  Future<void> setAlertSound(String alertSound) async {
-    final _notificationsPlugin = FlutterLocalNotificationsCommunicationPlugin();
-    await _notificationsPlugin.deleteNotificationChannel();
-    await _notificationsPlugin.createNotificationChannel("voriko");
-  }
 }

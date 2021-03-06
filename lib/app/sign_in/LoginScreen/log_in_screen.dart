@@ -1,6 +1,6 @@
+import 'package:auth_buttons/auth_buttons.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:missionout/constants/constants.dart';
 import 'package:missionout/data_objects/app_setup.dart';
 import 'package:missionout/data_objects/is_loading_notifier.dart';
@@ -55,7 +55,7 @@ class _LogInScreenState extends State<LogInScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           if (showGoogleButton)
-                            GoogleSignInButton(
+                          GoogleAuthButton(
                               text: 'Log in with Google',
                               onPressed: () => model.signInWithGoogle(
                                   hostedDomain: gmailDomain),
@@ -66,7 +66,7 @@ class _LogInScreenState extends State<LogInScreen> {
                               initialData: false,
                               builder: (_, snapshot) {
                                 if (snapshot.hasData && snapshot.data as bool) {
-                                  return AppleSignInButton(
+                                  return AppleAuthButton(
                                     text: 'Log in with Apple',
                                     onPressed: model.signInWithApple,
                                   );
