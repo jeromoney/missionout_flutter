@@ -47,16 +47,6 @@ class DetailScreenModel {
 
   void hideResponseSheet() => sheetStreamController.add(false);
 
-  void launchChat() {
-    try {
-      team.launchChat();
-    } catch (e) {
-      Scaffold.of(context).showSnackBar(const SnackBar(
-        content: Text('Error: Is Slack installed?'),
-      ));
-    }
-  }
-
   void launchMap(Mission mission) {
     final geoPoint = mission.location;
     final lat = geoPoint.latitude;

@@ -19,11 +19,6 @@ class ActionsDetail extends StatelessWidget {
         const ResponseOptions(),
         ButtonBar(
           children: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.chat),
-              onPressed:
-                  model.chatURIAvailable ? () => model.launchChat() : null,
-            ),
             Builder(builder: (context) {
               // waiting -- just show button as disabled
               if (snapshot.connectionState == ConnectionState.waiting) {
