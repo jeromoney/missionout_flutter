@@ -1,11 +1,10 @@
-part of 'user_edit_screen.dart';
-
+part of 'user_screen.dart';
 class PhoneEntry extends StatefulWidget {
   @override
-  State createState() => _PhoneEntryState();
+  State createState() => PhoneEntryState();
 }
 
-class _PhoneEntryState extends State<PhoneEntry> {
+class PhoneEntryState extends State<PhoneEntry> {
   /// If user selects checkbox, phone text entry appears.
   bool _allowPhoneCalls = false;
   bool _allowTexts = false;
@@ -13,7 +12,7 @@ class _PhoneEntryState extends State<PhoneEntry> {
 
   @override
   Widget build(BuildContext context) {
-    final model = UserEditScreenModel(context);
+    final model = UserScreenModel(context);
     return Align(
       alignment: Alignment.topCenter,
       child: Card(

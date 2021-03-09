@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:missionout/app/detail_screen/detail_screen.dart';
-import 'package:missionout/app/editor_screen/editor_screen.dart';
 import 'package:missionout/app/overview_screen/overview_screen.dart';
 import 'package:missionout/app/sign_in/LoginScreen/log_in_screen.dart';
 import 'package:missionout/app/sign_in/welcome_screen.dart';
-import 'package:missionout/app/user_edit_screen/user_edit_screen.dart';
 import 'package:missionout/app/user_screen/user_screen.dart';
 import 'package:missionout/common_widgets/platform_alert_dialog.dart';
 import 'package:missionout/constants/strings.dart';
@@ -53,9 +51,7 @@ class _MissionOutAppState extends State<MissionOutApp> {
       home: initialScreen,
       routes: {
         OverviewScreen.routeName: (context) => OverviewScreen(),
-        EditorScreen.routeName: (context) => EditorScreen(),
         UserScreen.routeName: (context) => UserScreen(),
-        UserEditScreen.routeName: (context) => UserEditScreen(),
         DetailScreen.routeName: (context) => DetailScreen(),
         // Sign In Screens
         WelcomeScreen.routeName: (context) => WelcomeScreen(),

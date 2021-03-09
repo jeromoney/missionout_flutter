@@ -22,6 +22,7 @@ class _AndroidOptionsUserScreenState extends State<AndroidOptionsUserScreen> {
           leading: const Icon(Icons.do_not_disturb),
           title: const Text("Override Do Not Disturb"),
           trailing: Switch(
+            key: const Key("Android Do not disturb"),
             value: _value,
             onChanged: (bool value) {
               model.goToAndroidAppSettings();
@@ -93,9 +94,7 @@ class __MyDropDownMenuState extends State<_MyDropDownMenu>
   }
 
   @override
-  Widget build(BuildContext context) {
-    final model = AndroidOptionsUserScreenModel(context);
-    return DropdownButton(
+  Widget build(BuildContext context) => DropdownButton(
       value: _alertSound,
       items: ringTones
           .map((soundStr) => DropdownMenuItem<String>(
@@ -111,7 +110,6 @@ class __MyDropDownMenuState extends State<_MyDropDownMenu>
         //_model.androidSound = _alertSound;
       },
     );
-  }
 
   @override
   void dispose() {

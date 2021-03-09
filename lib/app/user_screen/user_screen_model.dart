@@ -1,5 +1,6 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:missionout/app/user_edit_screen/user_edit_screen.dart';
 import 'package:missionout/constants/strings.dart';
 import 'package:missionout/data_objects/phone_number_record.dart';
 import 'package:missionout/services/team/team.dart';
@@ -10,10 +11,13 @@ class UserScreenModel {
   final BuildContext context;
   final Team team;
   final User user;
+  final StreamController<bool> phoneInputStreamController;
 
   UserScreenModel(this.context)
       : team = context.watch<Team>(),
-        user = context.watch<User>();
+        user = context.watch<User>(),
+        phoneInputStreamController =
+        context.watch<StreamController<bool>>();
 
   Stream<List<PhoneNumberRecord>> get phoneNumbers => user.fetchPhoneNumbers();
 
@@ -23,16 +27,16 @@ class UserScreenModel {
 
   String get email => user.email ?? Strings.anonymousEmail;
 
-  void editUserOptions() =>
-      Navigator.pushNamed(context, UserEditScreen.routeName);
-
-  bool get isDNDOverridePossible {
-    final platform = Theme.of(context).platform;
-    if (platform == TargetPlatform.android || platform == TargetPlatform.iOS) {
-      return true;
-    }
-    else {
-      return false;
-    }
+  Future removePhoneNumberRecord(PhoneNumberRecord phoneNumberRecord) async {
+    await user.deletePhoneNumber(phoneNumberRecord);
+    ScaffoldMessenger.of(context)
+        .showSnackBar(const SnackBar(content: Text("Deleted phone number")));
   }
+
+  Future addPhoneNumber(PhoneNumberRecord phoneNumberRecord) async {
+    await user.addPhoneNumber(phoneNumberRecord);
+  }
+
+
+  void showPhoneInput() => phoneInputStreamController.add(true);
 }

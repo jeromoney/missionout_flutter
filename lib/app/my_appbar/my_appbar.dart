@@ -1,7 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:missionout/app/user_edit_screen/user_edit_screen.dart';
-import 'package:missionout/app/user_screen/user_screen.dart';
 import 'package:missionout/common_widgets/platform_alert_dialog.dart';
 import 'package:missionout/constants/constants.dart';
 import 'package:missionout/services/user/user.dart';
@@ -62,11 +60,6 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
               }
               break;
 
-            case Menu.editorOptions:
-              {
-                model.navigateToEditorOptions();
-              }
-              break;
             case Menu.privacyPolicy:
               {
                 launch(Constants.privacyPolicyURL);
@@ -75,12 +68,10 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
           }
         },
         itemBuilder: (BuildContext context) => <PopupMenuEntry<Menu>>[
-          PopupMenuItem<Menu>(
-            key: const Key("Profile"),
-            enabled: !{UserScreen.routeName, UserEditScreen.routeName}
-                .contains(ModalRoute.of(context)?.settings?.name),
+          const PopupMenuItem<Menu>(
+            key:  Key("Profile"),
             value: Menu.userOptions,
-            child: const Text('Profile'),
+            child:  Text('Profile'),
           ),
           if (user.isEditor && editorOptionsEnabled)
             const PopupMenuItem<Menu>(

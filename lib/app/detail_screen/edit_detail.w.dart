@@ -17,11 +17,11 @@ class _EditDetailState extends State<EditDetail> {
     _model = DetailScreenModel(context);
     // waiting
     if (widget.snapshot.connectionState == ConnectionState.waiting) {
-      return LinearProgressIndicator();
+      return const LinearProgressIndicator();
     }
     // error
     if (widget.snapshot.data == null) {
-      return Text(Strings.errorMessage);
+      return const Text(Strings.errorMessage);
     }
     // success
     final mission = widget.snapshot.data as Mission;

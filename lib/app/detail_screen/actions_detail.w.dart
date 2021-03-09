@@ -79,9 +79,10 @@ class _ResponseOptionsState extends State<ResponseOptions> {
       runSpacing: 4.0, // gap between lines
       children: List<Widget>.generate(responseChips.length, (int index) {
         return ChoiceChip(
-          label: Text(responseChips[index]),
-          // TODO -- choose a suitable color
-          //selectedColor: Colors.accents[1],
+          label: Text(responseChips[index],style: TextStyle(color: Colors.grey.shade700),),
+          selectedColor: Colors.grey.shade300,
+          backgroundColor: Colors.white,
+          shape: const StadiumBorder(side: BorderSide(color: Colors.grey),),
           selected: _value == index,
           onSelected: (bool selected) {
             Response response;
